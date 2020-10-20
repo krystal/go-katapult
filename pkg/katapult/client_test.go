@@ -190,7 +190,7 @@ func TestClient_Do(t *testing.T) {
 			v:          &strings.Builder{},
 			expected:   "",
 			respBody:   `hi`,
-			respStatus: http.StatusNoContent, // 204
+			respStatus: http.StatusNoContent,
 		},
 		{
 			name:       "when request times out",
@@ -208,7 +208,7 @@ func TestClient_Do(t *testing.T) {
 					"(it may not exist or have expired)",
 				Detail: json.RawMessage(`{}`),
 			},
-			respStatus: http.StatusForbidden, // 403
+			respStatus: http.StatusForbidden,
 			//nolint:lll
 			respBody: `{
   "error": {
