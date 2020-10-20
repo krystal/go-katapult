@@ -1,21 +1,48 @@
 GOPATH ?= $(HOME)/go
-
-BINDIR := bin
-GOBIN_HELPER := github.com/myitcv/gobin
 SOURCES := $(shell find . -name "*.go" -or -name "go.mod" -or -name "go.sum")
 
-TOOLS += github.com/golangci/golangci-lint/cmd/golangci-lint@v1.31.0
-
-export GOBIN := $(CURDIR)/$(BINDIR)
+TOOLSDIR := tools
+export GOBIN := $(CURDIR)/$(TOOLSDIR)
 export PATH := $(GOBIN):$(PATH)
 export GO111MODULE=on
+
+GOBIN_SRC := github.com/myitcv/gobin
+GOBIN_BIN := $(GOBIN)/gobin
 
 ifdef VERBOSE
 V = -v
 endif
 
-.PHONY: bootstrap
-bootstrap: tools
+# Default target
+.DEFAULT_GOAL := test
+
+#
+# Tools
+#
+
+define tool # 1: binary-name, 2: go-src-path
+TOOLS += $(GOBIN)/$(1)
+
+$(GOBIN)/$(1): $(GOBIN_BIN)
+	$(GOBIN_BIN) "$(2)"
+endef
+
+$(GOBIN_BIN): %:
+	GO111MODULE=off go get -u $(GOBIN_SRC)
+
+$(eval $(call tool,golangci-lint,github.com/golangci/golangci-lint/cmd/golangci-lint@v1.31.0))
+
+.PHONY: tools
+tools: $(GOBIN_BIN) $(TOOLS)
+
+#
+# Development
+#
+
+.PHONY: clean
+clean:
+	rm -rf $(GOBIN)
+	rm -f ./coverage.out ./go.mod.tidy-check ./go.sum.tidy-check
 
 .PHONY: test
 test:
@@ -26,9 +53,36 @@ test-deps:
 	go test all
 
 .PHONY: lint
-lint:
+lint: $(TOOLS)
 	$(info Running Go linters)
 	GOGC=off $(GOBIN)/golangci-lint $(V) run
+
+#
+# Coverage
+#
+
+.PHONY: cov
+cov: coverage.out
+
+.PHONY: cov-html
+cov-html: coverage.out
+	go tool cover -html=./coverage.out
+
+.PHONY: cov-func
+cov-func: coverage.out
+	go tool cover -func=./coverage.out
+
+coverage.out: $(SOURCES)
+	go test $(V) -covermode=count -coverprofile=./coverage.out ./...
+
+#
+# Dependencies
+#
+
+.PHONY: deps
+deps:
+	$(info Downloading dependencies)
+	go mod download
 
 .PHONY: tidy
 tidy:
@@ -49,38 +103,3 @@ check-tidy:
 	-rm -f go.mod go.sum
 	-mv go.mod.tidy-check go.mod
 	-mv go.sum.tidy-check go.sum
-
-.PHONY: clean
-clean:
-	rm -rf $(GOBIN)
-	rm -f ./coverage.out ./go.mod.tidy-check ./go.sum.tidy-check
-
-.PHONY: cov
-cov: coverage.out
-
-.PHONY: cov-html
-cov-html: coverage.out
-	go tool cover -html=./coverage.out
-
-.PHONY: cov-func
-cov-func: coverage.out
-	go tool cover -func=./coverage.out
-
-.PHONY: tools
-tools: $(GOBIN_HELPER) $(TOOLS) $(TOOLS_INTERNAL)
-
-.PHONY: $(TOOLS)
-$(TOOLS): %:
-	$(GOBIN)/gobin "$*"
-
-.PHONY: $(GOBIN_HELPER)
-$(GOBIN_HELPER): %:
-	GO111MODULE=off go get -u $(GOBIN_HELPER)
-
-.PHONY: deps
-deps:
-	$(info Downloading dependencies)
-	go mod download
-
-coverage.out: $(SOURCES)
-	go test $(V) -covermode=count -coverprofile=./coverage.out ./...
