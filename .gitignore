@@ -1,3 +1,4 @@
 .envrc*
 /coverage.out
 bin/*
+tools/*
