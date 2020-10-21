@@ -93,11 +93,11 @@ func (s *OrganizationsService) Get(
 
 func (s *OrganizationsService) CreateManaged(
 	ctx context.Context,
-	parent *Organization,
+	parentOrg string,
 	name string,
 	subDomain string,
 ) (*Organization, *Response, error) {
-	u, err := s.path.Parse(fmt.Sprintf("organizations/%s/managed", parent.ID))
+	u, err := s.path.Parse(fmt.Sprintf("organizations/%s/managed", parentOrg))
 	if err != nil {
 		return nil, nil, err
 	}
