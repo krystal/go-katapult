@@ -1,5 +1,6 @@
 GOPATH ?= $(HOME)/go
-SOURCES := $(shell find . -name "*.go" -or -name "go.mod" -or -name "go.sum")
+SOURCES := $(shell find . -name "*.go" -or -name "go.mod" -or -name "go.sum" \
+	-or -name "Makefile")
 
 TOOLSDIR := tools
 export GOBIN := $(CURDIR)/$(TOOLSDIR)
