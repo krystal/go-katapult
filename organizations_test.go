@@ -65,6 +65,8 @@ func TestOrganizationsService_List(t *testing.T) {
 			mux.HandleFunc("/core/v1/organizations",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
+					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
 				},
@@ -186,6 +188,8 @@ func TestOrganizationsService_Get(t *testing.T) {
 			mux.HandleFunc(fmt.Sprintf("/core/v1/organizations/%s", tt.id),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
+					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
 				},
@@ -217,7 +221,7 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 	}
 	tests := []struct {
 		name         string
-		parent       *Organization
+		parentOrg    string
 		orgName      string
 		orgSubDomain string
 		expected     *Organization
@@ -228,7 +232,7 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 	}{
 		{
 			name:         "create a managed organization",
-			parent:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
+			parentOrg:    "org_O648YDMEYeLmqdmn",
 			orgName:      "NERV Corp.",
 			orgSubDomain: "nerv",
 			expected: &Organization{
@@ -280,7 +284,7 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 		},
 		{
 			name:         "managed org limit reached",
-			parent:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
+			parentOrg:    "org_O648YDMEYeLmqdmn",
 			orgName:      "NERV Corp.",
 			orgSubDomain: "nerv",
 			err: "organization_limit_reached: The maxmium number of " +
@@ -296,7 +300,7 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 		},
 		{
 			name:         "non-existent Organization",
-			parent:       &Organization{ID: "org_nopewhatbye"},
+			parentOrg:    "org_nopewhatbye",
 			orgName:      "NERV Corp.",
 			orgSubDomain: "nerv",
 			err: "organization_not_found: No organization was found matching " +
@@ -312,7 +316,7 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 		},
 		{
 			name:         "suspended Organization",
-			parent:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
+			parentOrg:    "org_O648YDMEYeLmqdmn",
 			orgName:      "NERV Corp.",
 			orgSubDomain: "nerv",
 			err: "organization_suspended: An organization was found from the " +
@@ -328,7 +332,7 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 		},
 		{
 			name:         "validation error for new org details",
-			parent:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
+			parentOrg:    "org_O648YDMEYeLmqdmn",
 			orgName:      "NERV Corp.",
 			orgSubDomain: "acme",
 			err: "validation_error: A validation error occurred with the " +
@@ -354,9 +358,10 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 			defer teardown()
 
 			mux.HandleFunc(
-				fmt.Sprintf("/core/v1/organizations/%s/managed", tt.parent.ID),
+				fmt.Sprintf("/core/v1/organizations/%s/managed", tt.parentOrg),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "POST", r.Method)
+					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
 
 					body := &reqBody{}
 					err := strictUmarshal(r.Body, body)
@@ -373,7 +378,7 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 
 			org, resp, err := c.Organizations.CreateManaged(
 				context.Background(),
-				tt.parent, tt.orgName, tt.orgSubDomain,
+				tt.parentOrg, tt.orgName, tt.orgSubDomain,
 			)
 
 			if tt.err == "" {

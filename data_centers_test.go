@@ -66,6 +66,8 @@ func TestDataCentersService_List(t *testing.T) {
 			mux.HandleFunc("/core/v1/data_centers",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
+					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
 				},
@@ -138,6 +140,8 @@ func TestDataCentersService_Get(t *testing.T) {
 			mux.HandleFunc(fmt.Sprintf("/core/v1/data_centers/%s", tt.id),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
+					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
 				},

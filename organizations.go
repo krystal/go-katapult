@@ -3,19 +3,21 @@ package katapult
 import (
 	"context"
 	"fmt"
+	"net/url"
 
 	"github.com/augurysys/timestamp"
 )
 
 type OrganizationsService struct {
 	*service
-	*pathHelper
+	path *url.URL
 }
 
 func NewOrganizationsService(s *service) *OrganizationsService {
-	p, _ := newPathHelper("/core/v1/")
-
-	return &OrganizationsService{service: s, pathHelper: p}
+	return &OrganizationsService{
+		service: s,
+		path:    &url.URL{Path: "/core/v1/"},
+	}
 }
 
 type Organization struct {
@@ -47,9 +49,12 @@ type OrganizationsResponseBody struct {
 func (s *OrganizationsService) List(
 	ctx context.Context,
 ) ([]*Organization, *Response, error) {
-	u, _ := s.RequestPath("organizations")
+	u, err := s.path.Parse("organizations")
+	if err != nil {
+		return nil, nil, err
+	}
 
-	req, err := s.client.NewRequestWithContext(ctx, "GET", u, nil)
+	req, err := s.client.NewRequestWithContext(ctx, "GET", u.Path, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -67,12 +72,12 @@ func (s *OrganizationsService) Get(
 	ctx context.Context,
 	subDomainOrID string,
 ) (*Organization, *Response, error) {
-	u, err := s.RequestPath(fmt.Sprintf("organizations/%s", subDomainOrID))
+	u, err := s.path.Parse(fmt.Sprintf("organizations/%s", subDomainOrID))
 	if err != nil {
 		return nil, nil, err
 	}
 
-	req, err := s.client.NewRequestWithContext(ctx, "GET", u, nil)
+	req, err := s.client.NewRequestWithContext(ctx, "GET", u.Path, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -88,11 +93,11 @@ func (s *OrganizationsService) Get(
 
 func (s *OrganizationsService) CreateManaged(
 	ctx context.Context,
-	parent *Organization,
+	parentOrg string,
 	name string,
 	subDomain string,
 ) (*Organization, *Response, error) {
-	u, err := s.RequestPath(fmt.Sprintf("organizations/%s/managed", parent.ID))
+	u, err := s.path.Parse(fmt.Sprintf("organizations/%s/managed", parentOrg))
 	if err != nil {
 		return nil, nil, err
 	}
@@ -102,7 +107,7 @@ func (s *OrganizationsService) CreateManaged(
 		SubDomain: subDomain,
 	}
 
-	req, err := s.client.NewRequestWithContext(ctx, "POST", u, reqBody)
+	req, err := s.client.NewRequestWithContext(ctx, "POST", u.Path, reqBody)
 	if err != nil {
 		return nil, nil, err
 	}
