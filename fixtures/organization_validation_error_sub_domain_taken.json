@@ -1,0 +1,9 @@
+{
+  "error": {
+    "code": "validation_error",
+    "description": "A validation error occurred with the object that was being created/updated/deleted",
+    "detail": {
+      "errors": ["Sub domain has already been taken"]
+    }
+  }
+}

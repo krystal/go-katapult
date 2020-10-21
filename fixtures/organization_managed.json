@@ -1,0 +1,46 @@
+{
+  "organization": {
+    "id": "org_TZQHTxMg1G8COlfu",
+    "name": "NERV Corp.",
+    "sub_domain": "nerv",
+    "infrastructure_domain": "nerv.test.kpult.com",
+    "personal": false,
+    "created_at": 1603211871,
+    "suspended": false,
+    "managed": true,
+    "billing_name": "ACME Inc",
+    "address1": "273  Elk Avenue",
+    "address2": "Clarklake",
+    "address3": "",
+    "address4": "",
+    "postcode": "49234",
+    "vat_number": "GB123456789",
+    "currency": {
+      "id": "cur_8UFhhlYAcRLf3ua6",
+      "name": "United States Dollars",
+      "iso_code": "USD",
+      "symbol": "$"
+    },
+    "country": {
+      "id": "ctry_V5UmyvGWYlC1pPPg",
+      "name": "United States of America",
+      "iso_code2": "US",
+      "iso_code3": "USA",
+      "time_zone": "America/NewYork",
+      "eu": false
+    },
+    "country_state": {
+      "id": "ctct_E62qc88s24FD3XIR",
+      "name": "Michigan",
+      "code": "MI",
+      "country": {
+        "id": "ctry_V5UmyvGWYlC1pPPg",
+        "name": "United States of America",
+        "iso_code2": "US",
+        "iso_code3": "USA",
+        "time_zone": "America/NewYork",
+        "eu": false
+      }
+    }
+  }
+}

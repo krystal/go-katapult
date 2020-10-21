@@ -18,7 +18,7 @@ func TestOrganizationsService_List(t *testing.T) {
 		err        string
 		errResp    *ErrorResponse
 		respStatus int
-		respBody   string
+		respBody   []byte
 	}{
 		{
 			name: "fetch list of data centers",
@@ -41,26 +41,7 @@ func TestOrganizationsService_List(t *testing.T) {
 				},
 			},
 			respStatus: http.StatusOK,
-			respBody: `{
-  "organizations": [
-    {
-      "id": "org_O648YDMEYeLmqdmn",
-      "name": "ACME Inc.",
-      "sub_domain": "acme",
-      "personal": false,
-      "created_at": 1589052170,
-      "suspended": false
-    },
-    {
-      "id": "org_c0CU62PqQgkON2rZ",
-      "name": "Lex Corp.",
-      "sub_domain": "lex-corp",
-      "personal": true,
-      "created_at": 1542225631,
-      "suspended": false
-    }
-  ]
-}`,
+			respBody:   fixture("organizations_list"),
 		},
 		{
 			name: "invalid API token response",
@@ -73,14 +54,7 @@ func TestOrganizationsService_List(t *testing.T) {
 				Detail: json.RawMessage(`{}`),
 			},
 			respStatus: http.StatusForbidden,
-			//nolint:lll
-			respBody: `{
-  "error": {
-    "code": "invalid_api_token",
-    "description": "The API token provided was not valid (it may not exist or have expired)",
-    "detail": {}
-  }
-}`,
+			respBody:   fixture("invalid_api_token_error"),
 		},
 	}
 	for _, tt := range tests {
@@ -92,7 +66,7 @@ func TestOrganizationsService_List(t *testing.T) {
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					w.WriteHeader(tt.respStatus)
-					fmt.Fprint(w, tt.respBody)
+					_, _ = w.Write(tt.respBody)
 				},
 			)
 
@@ -123,7 +97,7 @@ func TestOrganizationsService_Get(t *testing.T) {
 		err        string
 		errResp    *ErrorResponse
 		respStatus int
-		respBody   string
+		respBody   []byte
 	}{
 		{
 			name: "specific Organization",
@@ -173,52 +147,7 @@ func TestOrganizationsService_Get(t *testing.T) {
 				},
 			},
 			respStatus: http.StatusOK,
-			respBody: `{
-  "organization": {
-    "id": "org_O648YDMEYeLmqdmn",
-    "name": "ACME Inc.",
-    "sub_domain": "acme",
-    "infrastructure_domain": "acme.test.kpult.com",
-    "personal": false,
-    "created_at": 1589052170,
-    "suspended": false,
-    "managed": false,
-    "billing_name": "ACME Inc",
-    "address1": "273  Elk Avenue",
-    "address2": "Clarklake",
-    "address3": "",
-    "address4": "",
-    "postcode": "49234",
-    "vat_number": "GB123456789",
-    "currency": {
-      "id": "cur_8UFhhlYAcRLf3ua6",
-      "name": "United States Dollars",
-      "iso_code": "USD",
-      "symbol": "$"
-    },
-    "country": {
-      "id": "ctry_V5UmyvGWYlC1pPPg",
-      "name": "United States of America",
-      "iso_code2": "US",
-      "iso_code3": "USA",
-      "time_zone": "America/NewYork",
-      "eu": false
-    },
-    "country_state": {
-      "id": "ctct_E62qc88s24FD3XIR",
-      "name": "Michigan",
-      "code": "MI",
-      "country": {
-        "id": "ctry_V5UmyvGWYlC1pPPg",
-        "name": "United States of America",
-        "iso_code2": "US",
-        "iso_code3": "USA",
-        "time_zone": "America/NewYork",
-        "eu": false
-      }
-    }
-  }
-}`,
+			respBody:   fixture("organization_get"),
 		},
 		{
 			name: "non-existent Organization",
@@ -232,14 +161,7 @@ func TestOrganizationsService_Get(t *testing.T) {
 				Detail: json.RawMessage(`{}`),
 			},
 			respStatus: http.StatusNotFound,
-			//nolint:lll
-			respBody: `{
-  "error": {
-    "code": "organization_not_found",
-    "description": "No organization was found matching any of the criteria provided in the arguments",
-    "detail": {}
-  }
-}`,
+			respBody:   fixture("organization_not_found_error"),
 		},
 		{
 			name: "suspended Organization",
@@ -253,14 +175,7 @@ func TestOrganizationsService_Get(t *testing.T) {
 				Detail: json.RawMessage(`{}`),
 			},
 			respStatus: http.StatusForbidden,
-			//nolint:lll
-			respBody: `{
-  "error": {
-    "code": "organization_suspended",
-    "description": "An organization was found from the arguments provided but it was suspended",
-    "detail": {}
-  }
-}`,
+			respBody:   fixture("organization_suspended_error"),
 		},
 	}
 	for _, tt := range tests {
@@ -272,7 +187,7 @@ func TestOrganizationsService_Get(t *testing.T) {
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					w.WriteHeader(tt.respStatus)
-					fmt.Fprint(w, tt.respBody)
+					_, _ = w.Write(tt.respBody)
 				},
 			)
 
@@ -309,7 +224,7 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 		err          string
 		errResp      *ErrorResponse
 		respStatus   int
-		respBody     string
+		respBody     []byte
 	}{
 		{
 			name:         "create a managed organization",
@@ -361,56 +276,11 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 				},
 			},
 			respStatus: http.StatusCreated,
-			respBody: `{
-  "organization": {
-    "id": "org_TZQHTxMg1G8COlfu",
-    "name": "NERV Corp.",
-    "sub_domain": "nerv",
-    "infrastructure_domain": "nerv.test.kpult.com",
-    "personal": false,
-    "created_at": 1603211871,
-    "suspended": false,
-    "managed": true,
-    "billing_name": "ACME Inc",
-    "address1": "273  Elk Avenue",
-    "address2": "Clarklake",
-    "address3": "",
-    "address4": "",
-    "postcode": "49234",
-    "vat_number": "GB123456789",
-    "currency": {
-      "id": "cur_8UFhhlYAcRLf3ua6",
-      "name": "United States Dollars",
-      "iso_code": "USD",
-      "symbol": "$"
-    },
-    "country": {
-      "id": "ctry_V5UmyvGWYlC1pPPg",
-      "name": "United States of America",
-      "iso_code2": "US",
-      "iso_code3": "USA",
-      "time_zone": "America/NewYork",
-      "eu": false
-    },
-    "country_state": {
-      "id": "ctct_E62qc88s24FD3XIR",
-      "name": "Michigan",
-      "code": "MI",
-      "country": {
-        "id": "ctry_V5UmyvGWYlC1pPPg",
-        "name": "United States of America",
-        "iso_code2": "US",
-        "iso_code3": "USA",
-        "time_zone": "America/NewYork",
-        "eu": false
-      }
-    }
-  }
-}`,
+			respBody:   fixture("organization_managed"),
 		},
 		{
-			name:         "non-existent Organization",
-			parent:       &Organization{ID: "org_nopewhatbye"},
+			name:         "managed org limit reached",
+			parent:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
 			orgName:      "NERV Corp.",
 			orgSubDomain: "nerv",
 			err: "organization_limit_reached: The maxmium number of " +
@@ -422,14 +292,7 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 				Detail: json.RawMessage(`{}`),
 			},
 			respStatus: http.StatusUnprocessableEntity,
-			//nolint:lll
-			respBody: `{
-  "error": {
-    "code": "organization_limit_reached",
-    "description": "The maxmium number of organizations that can be created has been reached",
-    "detail": {}
-  }
-}`,
+			respBody:   fixture("organization_limit_reached_error"),
 		},
 		{
 			name:         "non-existent Organization",
@@ -445,14 +308,7 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 				Detail: json.RawMessage(`{}`),
 			},
 			respStatus: http.StatusNotFound,
-			//nolint:lll
-			respBody: `{
-  "error": {
-    "code": "organization_not_found",
-    "description": "No organization was found matching any of the criteria provided in the arguments",
-    "detail": {}
-  }
-}`,
+			respBody:   fixture("organization_not_found_error"),
 		},
 		{
 			name:         "suspended Organization",
@@ -468,14 +324,7 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 				Detail: json.RawMessage(`{}`),
 			},
 			respStatus: http.StatusForbidden,
-			//nolint:lll
-			respBody: `{
-  "error": {
-    "code": "organization_suspended",
-    "description": "An organization was found from the arguments provided but it was suspended",
-    "detail": {}
-  }
-}`,
+			respBody:   fixture("organization_suspended_error"),
 		},
 		{
 			name:         "validation error for new org details",
@@ -489,25 +338,14 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 				Description: "A validation error occurred with the object " +
 					"that was being created/updated/deleted",
 				Detail: json.RawMessage(`{
-      "errors": [
-        "Sub domain has already been taken"
-      ]
+      "errors": ["Sub domain has already been taken"]
     }`,
 				),
 			},
 			respStatus: http.StatusUnprocessableEntity,
-			//nolint:lll
-			respBody: `{
-  "error": {
-    "code": "validation_error",
-    "description": "A validation error occurred with the object that was being created/updated/deleted",
-    "detail": {
-      "errors": [
-        "Sub domain has already been taken"
-      ]
-    }
-  }
-}`,
+			respBody: fixture(
+				"organization_validation_error_sub_domain_taken",
+			),
 		},
 	}
 	for _, tt := range tests {
@@ -529,7 +367,7 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 					}, body)
 
 					w.WriteHeader(tt.respStatus)
-					fmt.Fprint(w, tt.respBody)
+					_, _ = w.Write(tt.respBody)
 				},
 			)
 

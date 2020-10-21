@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "organization_suspended",
+    "description": "An organization was found from the arguments provided but it was suspended",
+    "detail": {}
+  }
+}

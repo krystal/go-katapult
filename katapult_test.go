@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -59,4 +60,14 @@ func strictUmarshal(r io.Reader, v interface{}) error {
 	d.DisallowUnknownFields()
 
 	return d.Decode(v)
+}
+
+func fixture(name string) []byte {
+	file := fmt.Sprintf("fixtures/%s.json", name)
+	c, err := ioutil.ReadFile(file)
+	if err != nil {
+		panic(err)
+	}
+
+	return c
 }

@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "data_center_not_found",
+    "description": "No data centers was found matching any of the criteria provided in the arguments",
+    "detail": {}
+  }
+}

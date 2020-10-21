@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -158,7 +157,7 @@ func TestClient_Do(t *testing.T) {
 		err        string
 		errResp    *ErrorResponse
 		respStatus int
-		respBody   string
+		respBody   []byte
 		respDelay  time.Duration
 	}{
 		{
@@ -167,26 +166,26 @@ func TestClient_Do(t *testing.T) {
 			v:          &testResponseBody{},
 			expected:   &testResponseBody{ID: "foo", Name: "bar"},
 			respStatus: http.StatusOK,
-			respBody:   `{"id":"foo","name":"bar"}`,
+			respBody:   []byte(`{"id":"foo","name":"bar"}`),
 		},
 		{
 			name:       "body is copied to v when it is a io.Writer",
 			v:          &strings.Builder{},
 			expected:   `{"id":"foo"}`,
 			respStatus: http.StatusOK,
-			respBody:   `{"id":"foo"}`,
+			respBody:   []byte(`{"id":"foo"}`),
 		},
 		{
 			name:       "request body is submitted to the remote server",
 			reqBody:    `hello world`,
 			respStatus: http.StatusOK,
-			respBody:   `hi`,
+			respBody:   []byte(`hi`),
 		},
 		{
 			name:       "response body is ignored when response is HTTP 204",
 			v:          &strings.Builder{},
 			expected:   "",
-			respBody:   `hi`,
+			respBody:   []byte(`hi`),
 			respStatus: http.StatusNoContent,
 		},
 		{
@@ -206,14 +205,7 @@ func TestClient_Do(t *testing.T) {
 				Detail: json.RawMessage(`{}`),
 			},
 			respStatus: http.StatusForbidden,
-			//nolint:lll
-			respBody: `{
-  "error": {
-    "code": "invalid_api_token",
-    "description": "The API token provided was not valid (it may not exist or have expired)",
-    "detail": {}
-  }
-}`,
+			respBody:   fixture("invalid_api_token_error"),
 		},
 	}
 	for _, tt := range tests {
@@ -251,7 +243,7 @@ func TestClient_Do(t *testing.T) {
 					}
 
 					w.WriteHeader(tt.respStatus)
-					fmt.Fprint(w, tt.respBody)
+					_, _ = w.Write(tt.respBody)
 				},
 			)
 
