@@ -3,6 +3,7 @@ package katapult
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -135,6 +136,9 @@ func (c *Client) Do(
 	}
 
 	response.Error = responseBody.Error
+	if response.Error == nil {
+		return response, errors.New("unexpected response")
+	}
 
 	return response, fmt.Errorf("%s: %s",
 		response.Error.Code,
