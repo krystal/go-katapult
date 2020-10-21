@@ -18,8 +18,7 @@ import (
 )
 
 const (
-	testDefaultBaseURL = "https://api.katapult.io/core/"
-	testAPIVersion     = "v1"
+	testDefaultBaseURL = "https://api.katapult.io/"
 	testUserAgent      = "go-katapult"
 )
 
@@ -54,7 +53,6 @@ func TestNewClient(t *testing.T) {
 
 			assert.Equal(t, testDefaultBaseURL, c.BaseURL.String())
 			assert.Equal(t, testUserAgent, c.UserAgent)
-			assert.Equal(t, testAPIVersion, c.common.apiVersion)
 			assert.IsType(t, new(JSONCodec), c.codec)
 
 			if tt.httpClient == nil {
@@ -130,8 +128,7 @@ func TestClient_NewRequestWithContext(t *testing.T) {
 			if tt.err != "" {
 				assert.EqualError(t, err, tt.err)
 			} else {
-				expectedURL, err := baseURL.Parse(tt.urlStr)
-				require.NoError(t, err)
+				expectedURL, _ := baseURL.Parse(tt.urlStr)
 
 				assert.NoError(t, err)
 				assert.Equal(t, tt.ctx, req.Context())

@@ -13,8 +13,7 @@ import (
 )
 
 const (
-	defaultBaseURL = "https://api.katapult.io/core/"
-	apiVersion     = "v1"
+	defaultBaseURL = "https://api.katapult.io/"
 	userAgent      = "go-katapult"
 	defaultTimeout = time.Second * 60
 )
@@ -48,10 +47,9 @@ func NewClient(httpClient HTTPClient) *Client {
 		UserAgent: userAgent,
 	}
 	c.common.client = c
-	c.common.apiVersion = apiVersion
 
-	c.DataCenters = &DataCentersService{&c.common}
-	c.Organizations = &OrganizationsService{&c.common}
+	c.DataCenters = NewDataCentersService(&c.common)
+	c.Organizations = NewOrganizationsService(&c.common)
 
 	return c
 }

@@ -88,7 +88,7 @@ func TestOrganizationsService_List(t *testing.T) {
 			c, mux, _, teardown := setup()
 			defer teardown()
 
-			mux.HandleFunc("/v1/organizations",
+			mux.HandleFunc("/core/v1/organizations",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					w.WriteHeader(tt.respStatus)
@@ -268,7 +268,7 @@ func TestOrganizationsService_Get(t *testing.T) {
 			c, mux, _, teardown := setup()
 			defer teardown()
 
-			mux.HandleFunc(fmt.Sprintf("/v1/organizations/%s", tt.id),
+			mux.HandleFunc(fmt.Sprintf("/core/v1/organizations/%s", tt.id),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					w.WriteHeader(tt.respStatus)
@@ -516,7 +516,7 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 			defer teardown()
 
 			mux.HandleFunc(
-				fmt.Sprintf("/v1/organizations/%s/managed", tt.parent.ID),
+				fmt.Sprintf("/core/v1/organizations/%s/managed", tt.parent.ID),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "POST", r.Method)
 
