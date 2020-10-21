@@ -75,7 +75,7 @@ func TestDataCentersService_List(t *testing.T) {
 					"(it may not exist or have expired)",
 				Detail: json.RawMessage(`{}`),
 			},
-			respStatus: http.StatusForbidden, // 403
+			respStatus: http.StatusForbidden,
 			//nolint:lll
 			respBody: `{
   "error": {
@@ -140,7 +140,7 @@ func TestDataCentersService_Get(t *testing.T) {
 					Name: "USA",
 				},
 			},
-			respStatus: 200,
+			respStatus: http.StatusOK,
 			respBody: `{
   "data_center": {
     "id": "loc_a2417980b9874c0",
@@ -164,7 +164,7 @@ func TestDataCentersService_Get(t *testing.T) {
 					"criteria provided in the arguments",
 				Detail: json.RawMessage(`{}`),
 			},
-			respStatus: 404,
+			respStatus: http.StatusNotFound,
 			//nolint:lll
 			respBody: `{
   "error": {

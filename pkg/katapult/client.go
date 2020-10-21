@@ -29,7 +29,8 @@ type Client struct {
 	BaseURL   *url.URL
 	UserAgent string
 
-	DataCenters *DataCentersService
+	DataCenters   *DataCentersService
+	Organizations *OrganizationsService
 }
 
 func NewClient(httpClient HTTPClient) *Client {
@@ -49,6 +50,7 @@ func NewClient(httpClient HTTPClient) *Client {
 	c.common.apiVersion = apiVersion
 
 	c.DataCenters = &DataCentersService{&c.common}
+	c.Organizations = &OrganizationsService{&c.common}
 
 	return c
 }

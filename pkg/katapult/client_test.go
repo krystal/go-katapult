@@ -7,11 +7,8 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
-	"net/http/httptest"
 	"net/url"
-	"os"
 	"strings"
 	"testing"
 	"time"
@@ -25,60 +22,6 @@ const (
 	testAPIVersion     = "v1"
 	testUserAgent      = "go-katapult"
 )
-
-// setup sets up a test HTTP server along with a github.Client that is
-// configured to talk to that test server. Tests should register handlers on
-// mux which provide mock responses for the API method being tested.
-func setup() (
-	client *Client,
-	mux *http.ServeMux,
-	serverURL string,
-	teardown func(),
-) {
-	// mux is the HTTP request multiplexer used with the test server.
-	mux = http.NewServeMux()
-	baseURL, err := url.Parse(testDefaultBaseURL)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	path := baseURL.Path
-	if path[len(path)-1:] == "/" {
-		path = path[0 : len(path)-1]
-	}
-
-	// We want to ensure that tests catch mistakes where the endpoint URL is
-	// specified as absolute rather than relative. It only makes a difference
-	// when there's a non-empty base URL path. So, use that. See issue #752.
-	apiHandler := http.NewServeMux()
-	apiHandler.Handle(path+"/", http.StripPrefix(path, mux))
-	apiHandler.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
-		fmt.Fprintln(
-			os.Stderr,
-			"FAIL: Request for unhandled request in test server received:",
-		)
-		fmt.Fprintln(os.Stderr)
-		fmt.Fprintln(os.Stderr, "\t"+req.URL.String())
-	})
-
-	// server is a test HTTP server used to provide mock API responses.
-	server := httptest.NewServer(apiHandler)
-
-	// client is the GitHub client being tested and is
-	// configured to use test server.
-	client = NewClient(nil)
-	url, _ := url.Parse(server.URL + baseURL.Path)
-	client.BaseURL = url
-
-	return client, mux, url.String(), server.Close
-}
-
-type testCtxKey int
-
-type testResponseBody struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-}
 
 type customTestHTTPClient struct{}
 
@@ -247,7 +190,7 @@ func TestClient_Do(t *testing.T) {
 			v:          &strings.Builder{},
 			expected:   "",
 			respBody:   `hi`,
-			respStatus: http.StatusNoContent, // 204
+			respStatus: http.StatusNoContent,
 		},
 		{
 			name:       "when request times out",
@@ -265,7 +208,7 @@ func TestClient_Do(t *testing.T) {
 					"(it may not exist or have expired)",
 				Detail: json.RawMessage(`{}`),
 			},
-			respStatus: http.StatusForbidden, // 403
+			respStatus: http.StatusForbidden,
 			//nolint:lll
 			respBody: `{
   "error": {
