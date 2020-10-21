@@ -3,17 +3,19 @@ package katapult
 import (
 	"context"
 	"fmt"
+	"net/url"
 )
 
 type DataCentersService struct {
 	*service
-	*pathHelper
+	path *url.URL
 }
 
 func NewDataCentersService(s *service) *DataCentersService {
-	p, _ := newPathHelper("/core/v1/")
-
-	return &DataCentersService{service: s, pathHelper: p}
+	return &DataCentersService{
+		service: s,
+		path:    &url.URL{Path: "/core/v1/"},
+	}
 }
 
 type DataCenter struct {
@@ -31,9 +33,12 @@ type DataCentersResponseBody struct {
 func (s *DataCentersService) List(
 	ctx context.Context,
 ) ([]*DataCenter, *Response, error) {
-	u, _ := s.RequestPath("data_centers")
+	u, err := s.path.Parse("data_centers")
+	if err != nil {
+		return nil, nil, err
+	}
 
-	req, err := s.client.NewRequestWithContext(ctx, "GET", u, nil)
+	req, err := s.client.NewRequestWithContext(ctx, "GET", u.Path, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -51,12 +56,12 @@ func (s *DataCentersService) Get(
 	ctx context.Context,
 	id string,
 ) (*DataCenter, *Response, error) {
-	u, err := s.RequestPath(fmt.Sprintf("data_centers/%s", id))
+	u, err := s.path.Parse(fmt.Sprintf("data_centers/%s", id))
 	if err != nil {
 		return nil, nil, err
 	}
 
-	req, err := s.client.NewRequestWithContext(ctx, "GET", u, nil)
+	req, err := s.client.NewRequestWithContext(ctx, "GET", u.Path, nil)
 	if err != nil {
 		return nil, nil, err
 	}
