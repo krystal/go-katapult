@@ -65,6 +65,8 @@ func TestOrganizationsService_List(t *testing.T) {
 			mux.HandleFunc("/core/v1/organizations",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
+					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
 				},
@@ -186,6 +188,8 @@ func TestOrganizationsService_Get(t *testing.T) {
 			mux.HandleFunc(fmt.Sprintf("/core/v1/organizations/%s", tt.id),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
+					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
 				},
@@ -357,6 +361,7 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 				fmt.Sprintf("/core/v1/organizations/%s/managed", tt.parent.ID),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "POST", r.Method)
+					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
 
 					body := &reqBody{}
 					err := strictUmarshal(r.Body, body)
