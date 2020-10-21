@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "organization_limit_reached",
+    "description": "The maxmium number of organizations that can be created has been reached",
+    "detail": {}
+  }
+}

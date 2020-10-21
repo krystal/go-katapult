@@ -17,7 +17,7 @@ func TestDataCentersService_List(t *testing.T) {
 		err        string
 		errResp    *ErrorResponse
 		respStatus int
-		respBody   string
+		respBody   []byte
 	}{
 		{
 			name: "fetch list of data centers",
@@ -42,28 +42,7 @@ func TestDataCentersService_List(t *testing.T) {
 				},
 			},
 			respStatus: http.StatusOK,
-			respBody: `{
-  "data_centers": [
-    {
-      "id": "loc_25d48761871e4bf",
-      "name": "Shirebury",
-      "permalink": "shirebury",
-      "country": {
-        "id": "ctry_2f2dc89a5956437",
-        "name": "United Kingdom"
-      }
-    },
-    {
-      "id": "loc_a2417980b9874c0",
-      "name": "New Town",
-      "permalink": "newtown",
-      "country": {
-        "id": "ctry_9a989e68e0ad866",
-        "name": "USA"
-      }
-    }
-  ]
-}`,
+			respBody:   fixture("data_centers_list"),
 		},
 		{
 			name: "invalid API token response",
@@ -76,14 +55,7 @@ func TestDataCentersService_List(t *testing.T) {
 				Detail: json.RawMessage(`{}`),
 			},
 			respStatus: http.StatusForbidden,
-			//nolint:lll
-			respBody: `{
-  "error": {
-    "code": "invalid_api_token",
-    "description": "The API token provided was not valid (it may not exist or have expired)",
-    "detail": {}
-  }
-}`,
+			respBody:   fixture("invalid_api_token_error"),
 		},
 	}
 	for _, tt := range tests {
@@ -95,7 +67,7 @@ func TestDataCentersService_List(t *testing.T) {
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					w.WriteHeader(tt.respStatus)
-					fmt.Fprint(w, tt.respBody)
+					_, _ = w.Write(tt.respBody)
 				},
 			)
 
@@ -126,7 +98,7 @@ func TestDataCentersService_Get(t *testing.T) {
 		err        string
 		errResp    *ErrorResponse
 		respStatus int
-		respBody   string
+		respBody   []byte
 	}{
 		{
 			name: "specific Data Center",
@@ -141,17 +113,7 @@ func TestDataCentersService_Get(t *testing.T) {
 				},
 			},
 			respStatus: http.StatusOK,
-			respBody: `{
-  "data_center": {
-    "id": "loc_a2417980b9874c0",
-    "name": "New Town",
-    "permalink": "newtown",
-    "country": {
-      "id": "ctry_9a989e68e0ad866",
-      "name": "USA"
-    }
-  }
-}`,
+			respBody:   fixture("data_center_get"),
 		},
 		{
 			name: "non-existent Data Center",
@@ -165,14 +127,7 @@ func TestDataCentersService_Get(t *testing.T) {
 				Detail: json.RawMessage(`{}`),
 			},
 			respStatus: http.StatusNotFound,
-			//nolint:lll
-			respBody: `{
-  "error": {
-    "code": "data_center_not_found",
-    "description": "No data centers was found matching any of the criteria provided in the arguments",
-    "detail": {}
-  }
-}`,
+			respBody:   fixture("data_center_not_found_error"),
 		},
 	}
 	for _, tt := range tests {
@@ -184,7 +139,7 @@ func TestDataCentersService_Get(t *testing.T) {
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					w.WriteHeader(tt.respStatus)
-					fmt.Fprint(w, tt.respBody)
+					_, _ = w.Write(tt.respBody)
 				},
 			)
 
