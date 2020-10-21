@@ -7,6 +7,13 @@ import (
 
 type DataCentersService struct {
 	*service
+	*pathHelper
+}
+
+func NewDataCentersService(s *service) *DataCentersService {
+	p, _ := newPathHelper("/core/v1/")
+
+	return &DataCentersService{service: s, pathHelper: p}
 }
 
 type DataCenter struct {
@@ -24,7 +31,7 @@ type DataCentersResponseBody struct {
 func (s *DataCentersService) List(
 	ctx context.Context,
 ) ([]*DataCenter, *Response, error) {
-	u := s.RequestPath("data_centers")
+	u, _ := s.RequestPath("data_centers")
 
 	req, err := s.client.NewRequestWithContext(ctx, "GET", u, nil)
 	if err != nil {
@@ -44,7 +51,10 @@ func (s *DataCentersService) Get(
 	ctx context.Context,
 	id string,
 ) (*DataCenter, *Response, error) {
-	u := s.RequestPath(fmt.Sprintf("data_centers/%s", id))
+	u, err := s.RequestPath(fmt.Sprintf("data_centers/%s", id))
+	if err != nil {
+		return nil, nil, err
+	}
 
 	req, err := s.client.NewRequestWithContext(ctx, "GET", u, nil)
 	if err != nil {

@@ -3,6 +3,7 @@ package katapult
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -12,8 +13,7 @@ import (
 )
 
 const (
-	defaultBaseURL = "https://api.katapult.io/core/"
-	apiVersion     = "v1"
+	defaultBaseURL = "https://api.katapult.io/"
 	userAgent      = "go-katapult"
 	defaultTimeout = time.Second * 60
 )
@@ -47,10 +47,9 @@ func NewClient(httpClient HTTPClient) *Client {
 		UserAgent: userAgent,
 	}
 	c.common.client = c
-	c.common.apiVersion = apiVersion
 
-	c.DataCenters = &DataCentersService{&c.common}
-	c.Organizations = &OrganizationsService{&c.common}
+	c.DataCenters = NewDataCentersService(&c.common)
+	c.Organizations = NewOrganizationsService(&c.common)
 
 	return c
 }
@@ -135,6 +134,9 @@ func (c *Client) Do(
 	}
 
 	response.Error = responseBody.Error
+	if response.Error == nil {
+		return response, errors.New("unexpected response")
+	}
 
 	return response, fmt.Errorf("%s: %s",
 		response.Error.Code,

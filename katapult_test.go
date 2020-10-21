@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -22,7 +21,7 @@ type testResponseBody struct {
 }
 
 // setup creates a test HTTP server for mock API responses, and creates a
-// Katapult client configure to talk to the mock server.
+// Katapult client configured to talk to the mock server.
 func setup() (
 	client *Client,
 	mux *http.ServeMux,
@@ -30,29 +29,19 @@ func setup() (
 	teardown func(),
 ) {
 	mux = http.NewServeMux()
-	baseURL, err := url.Parse(testDefaultBaseURL)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	path := baseURL.Path
-	if path[len(path)-1:] == "/" {
-		path = path[0 : len(path)-1]
-	}
-
-	apiHandler := http.NewServeMux()
-	apiHandler.Handle(path+"/", http.StripPrefix(path, mux))
-	apiHandler.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(
 			os.Stderr,
 			"FAIL: Request for unhandled request in test server received:",
 		)
 		fmt.Fprintln(os.Stderr)
-		fmt.Fprintln(os.Stderr, "\t"+req.URL.String())
+		fmt.Fprintln(os.Stderr, "\t"+r.URL.String())
+		w.WriteHeader(http.StatusNotImplemented)
+		fmt.Fprint(w, "")
 	})
 
-	server := httptest.NewServer(apiHandler)
-	url, _ := url.Parse(server.URL + baseURL.Path)
+	server := httptest.NewServer(mux)
+	url, _ := url.Parse(server.URL + "/")
 	client = NewClient(nil)
 	client.BaseURL = url
 

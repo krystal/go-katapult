@@ -91,7 +91,7 @@ func TestDataCentersService_List(t *testing.T) {
 			c, mux, _, teardown := setup()
 			defer teardown()
 
-			mux.HandleFunc("/v1/data_centers",
+			mux.HandleFunc("/core/v1/data_centers",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					w.WriteHeader(tt.respStatus)
@@ -180,7 +180,7 @@ func TestDataCentersService_Get(t *testing.T) {
 			c, mux, _, teardown := setup()
 			defer teardown()
 
-			mux.HandleFunc(fmt.Sprintf("/v1/data_centers/%s", tt.id),
+			mux.HandleFunc(fmt.Sprintf("/core/v1/data_centers/%s", tt.id),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					w.WriteHeader(tt.respStatus)

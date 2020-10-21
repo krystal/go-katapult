@@ -9,6 +9,13 @@ import (
 
 type OrganizationsService struct {
 	*service
+	*pathHelper
+}
+
+func NewOrganizationsService(s *service) *OrganizationsService {
+	p, _ := newPathHelper("/core/v1/")
+
+	return &OrganizationsService{service: s, pathHelper: p}
 }
 
 type Organization struct {
@@ -40,7 +47,7 @@ type OrganizationsResponseBody struct {
 func (s *OrganizationsService) List(
 	ctx context.Context,
 ) ([]*Organization, *Response, error) {
-	u := s.RequestPath("organizations")
+	u, _ := s.RequestPath("organizations")
 
 	req, err := s.client.NewRequestWithContext(ctx, "GET", u, nil)
 	if err != nil {
@@ -60,7 +67,10 @@ func (s *OrganizationsService) Get(
 	ctx context.Context,
 	subDomainOrID string,
 ) (*Organization, *Response, error) {
-	u := s.RequestPath(fmt.Sprintf("organizations/%s", subDomainOrID))
+	u, err := s.RequestPath(fmt.Sprintf("organizations/%s", subDomainOrID))
+	if err != nil {
+		return nil, nil, err
+	}
 
 	req, err := s.client.NewRequestWithContext(ctx, "GET", u, nil)
 	if err != nil {
@@ -82,7 +92,10 @@ func (s *OrganizationsService) CreateManaged(
 	name string,
 	subDomain string,
 ) (*Organization, *Response, error) {
-	u := s.RequestPath(fmt.Sprintf("organizations/%s/managed", parent.ID))
+	u, err := s.RequestPath(fmt.Sprintf("organizations/%s/managed", parent.ID))
+	if err != nil {
+		return nil, nil, err
+	}
 
 	reqBody := &Organization{
 		Name:      name,
