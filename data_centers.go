@@ -25,7 +25,7 @@ type DataCenter struct {
 	Country   *Country `json:"country,omitempty"`
 }
 
-type DataCentersResponseBody struct {
+type dataCentersResponseBody struct {
 	DataCenter  *DataCenter   `json:"data_center,omitempty"`
 	DataCenters []*DataCenter `json:"data_centers,omitempty"`
 }
@@ -43,7 +43,7 @@ func (s *DataCentersService) List(
 		return nil, nil, err
 	}
 
-	var body *DataCentersResponseBody
+	var body dataCentersResponseBody
 	resp, err := s.client.Do(req, &body)
 	if err != nil {
 		return nil, resp, err
@@ -66,7 +66,7 @@ func (s *DataCentersService) Get(
 		return nil, nil, err
 	}
 
-	var body *DataCentersResponseBody
+	var body dataCentersResponseBody
 	resp, err := s.client.Do(req, &body)
 	if err != nil {
 		return nil, resp, err

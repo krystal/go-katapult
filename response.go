@@ -12,14 +12,14 @@ func newResponse(r *http.Response) *Response {
 type Response struct {
 	*http.Response
 
-	Error *ErrorResponse
+	Error *ResponseError
 }
 
-type ErrorResponseBody struct {
-	Error *ErrorResponse `json:"error,omitempty"`
+type errorResponseBody struct {
+	Error *ResponseError `json:"error,omitempty"`
 }
 
-type ErrorResponse struct {
+type ResponseError struct {
 	Code        string          `json:"code,omitempty"`
 	Description string          `json:"description,omitempty"`
 	Detail      json.RawMessage `json:"detail,omitempty"`

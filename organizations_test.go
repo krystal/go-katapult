@@ -11,12 +11,34 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+var (
+	fixtureOrganizationSuspendedErr = "organization_suspended: " +
+		"An organization was found from the arguments provided but it was " +
+		"suspended"
+	fixtureOrganizationSuspendedErrorResponse = &ResponseError{
+		Code: "organization_suspended",
+		Description: "An organization was found from the arguments " +
+			"provided but it was suspended",
+		Detail: json.RawMessage(`{}`),
+	}
+
+	fixtureOrganizationNotFoundErr = "organization_not_found: " +
+		"No organization was found matching any of the criteria provided " +
+		"in the arguments"
+	fixtureOrganizationNotFoundErrorResponse = &ResponseError{
+		Code: "organization_not_found",
+		Description: "No organization was found matching any of the " +
+			"criteria provided in the arguments",
+		Detail: json.RawMessage(`{}`),
+	}
+)
+
 func TestOrganizationsService_List(t *testing.T) {
 	tests := []struct {
 		name       string
 		orgs       []*Organization
 		err        string
-		errResp    *ErrorResponse
+		errResp    *ResponseError
 		respStatus int
 		respBody   []byte
 	}{
@@ -44,15 +66,9 @@ func TestOrganizationsService_List(t *testing.T) {
 			respBody:   fixture("organizations_list"),
 		},
 		{
-			name: "invalid API token response",
-			err: "invalid_api_token: The API token provided was not valid " +
-				"(it may not exist or have expired)",
-			errResp: &ErrorResponse{
-				Code: "invalid_api_token",
-				Description: "The API token provided was not valid " +
-					"(it may not exist or have expired)",
-				Detail: json.RawMessage(`{}`),
-			},
+			name:       "invalid API token response",
+			err:        fixtureInvalidAPITokenErr,
+			errResp:    fixtureInvalidAPITokenStruct,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("invalid_api_token_error"),
 		},
@@ -97,7 +113,7 @@ func TestOrganizationsService_Get(t *testing.T) {
 		id         string
 		expected   *Organization
 		err        string
-		errResp    *ErrorResponse
+		errResp    *ResponseError
 		respStatus int
 		respBody   []byte
 	}{
@@ -152,30 +168,18 @@ func TestOrganizationsService_Get(t *testing.T) {
 			respBody:   fixture("organization_get"),
 		},
 		{
-			name: "non-existent Organization",
-			id:   "org_nopethisbegone",
-			err: "organization_not_found: No organization was found matching " +
-				"any of the criteria provided in the arguments",
-			errResp: &ErrorResponse{
-				Code: "organization_not_found",
-				Description: "No organization was found matching any of the " +
-					"criteria provided in the arguments",
-				Detail: json.RawMessage(`{}`),
-			},
+			name:       "non-existent Organization",
+			id:         "org_nopethisbegone",
+			err:        fixtureOrganizationNotFoundErr,
+			errResp:    fixtureOrganizationNotFoundErrorResponse,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
 		{
-			name: "suspended Organization",
-			id:   "acme",
-			err: "organization_suspended: An organization was found from the " +
-				"arguments provided but it was suspended",
-			errResp: &ErrorResponse{
-				Code: "organization_suspended",
-				Description: "An organization was found from the arguments " +
-					"provided but it was suspended",
-				Detail: json.RawMessage(`{}`),
-			},
+			name:       "suspended Organization",
+			id:         "acme",
+			err:        fixtureOrganizationSuspendedErr,
+			errResp:    fixtureOrganizationSuspendedErrorResponse,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
@@ -226,7 +230,7 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 		orgSubDomain string
 		expected     *Organization
 		err          string
-		errResp      *ErrorResponse
+		errResp      *ResponseError
 		respStatus   int
 		respBody     []byte
 	}{
@@ -289,7 +293,7 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 			orgSubDomain: "nerv",
 			err: "organization_limit_reached: The maxmium number of " +
 				"organizations that can be created has been reached",
-			errResp: &ErrorResponse{
+			errResp: &ResponseError{
 				Code: "organization_limit_reached",
 				Description: "The maxmium number of organizations that can " +
 					"be created has been reached",
@@ -303,32 +307,20 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 			parentOrg:    "org_nopewhatbye",
 			orgName:      "NERV Corp.",
 			orgSubDomain: "nerv",
-			err: "organization_not_found: No organization was found matching " +
-				"any of the criteria provided in the arguments",
-			errResp: &ErrorResponse{
-				Code: "organization_not_found",
-				Description: "No organization was found matching any of the " +
-					"criteria provided in the arguments",
-				Detail: json.RawMessage(`{}`),
-			},
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("organization_not_found_error"),
+			err:          fixtureOrganizationNotFoundErr,
+			errResp:      fixtureOrganizationNotFoundErrorResponse,
+			respStatus:   http.StatusNotFound,
+			respBody:     fixture("organization_not_found_error"),
 		},
 		{
 			name:         "suspended Organization",
 			parentOrg:    "org_O648YDMEYeLmqdmn",
 			orgName:      "NERV Corp.",
 			orgSubDomain: "nerv",
-			err: "organization_suspended: An organization was found from the " +
-				"arguments provided but it was suspended",
-			errResp: &ErrorResponse{
-				Code: "organization_suspended",
-				Description: "An organization was found from the arguments " +
-					"provided but it was suspended",
-				Detail: json.RawMessage(`{}`),
-			},
-			respStatus: http.StatusForbidden,
-			respBody:   fixture("organization_suspended_error"),
+			err:          fixtureOrganizationSuspendedErr,
+			errResp:      fixtureOrganizationSuspendedErrorResponse,
+			respStatus:   http.StatusForbidden,
+			respBody:     fixture("organization_suspended_error"),
 		},
 		{
 			name:         "validation error for new org details",
@@ -337,7 +329,7 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 			orgSubDomain: "acme",
 			err: "validation_error: A validation error occurred with the " +
 				"object that was being created/updated/deleted",
-			errResp: &ErrorResponse{
+			errResp: &ResponseError{
 				Code: "validation_error",
 				Description: "A validation error occurred with the object " +
 					"that was being created/updated/deleted",

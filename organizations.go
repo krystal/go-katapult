@@ -41,7 +41,7 @@ type Organization struct {
 	CountryState         *CountryState        `json:"country_state,omitempty"`
 }
 
-type OrganizationsResponseBody struct {
+type organizationsResponseBody struct {
 	Organization  *Organization   `json:"organization,omitempty"`
 	Organizations []*Organization `json:"organizations,omitempty"`
 }
@@ -59,7 +59,7 @@ func (s *OrganizationsService) List(
 		return nil, nil, err
 	}
 
-	var body *OrganizationsResponseBody
+	var body organizationsResponseBody
 	resp, err := s.client.Do(req, &body)
 	if err != nil {
 		return nil, resp, err
@@ -70,9 +70,9 @@ func (s *OrganizationsService) List(
 
 func (s *OrganizationsService) Get(
 	ctx context.Context,
-	subDomainOrID string,
+	id string,
 ) (*Organization, *Response, error) {
-	u, err := s.path.Parse(fmt.Sprintf("organizations/%s", subDomainOrID))
+	u, err := s.path.Parse(fmt.Sprintf("organizations/%s", id))
 	if err != nil {
 		return nil, nil, err
 	}
@@ -82,7 +82,7 @@ func (s *OrganizationsService) Get(
 		return nil, nil, err
 	}
 
-	var body *OrganizationsResponseBody
+	var body organizationsResponseBody
 	resp, err := s.client.Do(req, &body)
 	if err != nil {
 		return nil, resp, err
@@ -93,11 +93,11 @@ func (s *OrganizationsService) Get(
 
 func (s *OrganizationsService) CreateManaged(
 	ctx context.Context,
-	parentOrg string,
+	parentID string,
 	name string,
 	subDomain string,
 ) (*Organization, *Response, error) {
-	u, err := s.path.Parse(fmt.Sprintf("organizations/%s/managed", parentOrg))
+	u, err := s.path.Parse(fmt.Sprintf("organizations/%s/managed", parentID))
 	if err != nil {
 		return nil, nil, err
 	}
@@ -112,7 +112,7 @@ func (s *OrganizationsService) CreateManaged(
 		return nil, nil, err
 	}
 
-	var body *OrganizationsResponseBody
+	var body organizationsResponseBody
 	resp, err := s.client.Do(req, &body)
 	if err != nil {
 		return nil, resp, err

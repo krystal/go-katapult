@@ -104,7 +104,7 @@ func (c *Client) Do(
 ) (*Response, error) {
 	ctx := req.Context()
 
-	resp, err := c.client.Do(req)
+	r, err := c.client.Do(req)
 	if err != nil {
 		select {
 		case <-ctx.Done():
@@ -114,34 +114,38 @@ func (c *Client) Do(
 
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer r.Body.Close()
 
-	response := newResponse(resp)
+	resp := newResponse(r)
 	if resp.StatusCode/100 == 2 {
 		if v != nil && resp.StatusCode != 204 {
 			if w, ok := v.(io.Writer); ok {
-				_, err = io.Copy(w, resp.Body)
+				_, err = io.Copy(w, r.Body)
 			} else {
 				err = c.codec.Decode(resp.Body, v)
 			}
 		}
 
-		return response, err
+		return resp, err
 	}
 
-	responseBody := &ErrorResponseBody{}
-	err = c.codec.Decode(resp.Body, responseBody)
+	return c.handleErrorResponse(resp)
+}
+
+func (c *Client) handleErrorResponse(resp *Response) (*Response, error) {
+	var body errorResponseBody
+	err := c.codec.Decode(resp.Body, &body)
 	if err != nil {
-		return response, err
+		return resp, err
 	}
 
-	response.Error = responseBody.Error
-	if response.Error == nil {
-		return response, errors.New("unexpected response")
+	if body.Error == nil {
+		return resp, errors.New("unexpected response")
 	}
+	resp.Error = body.Error
 
-	return response, fmt.Errorf("%s: %s",
-		response.Error.Code,
-		response.Error.Description,
+	return resp, fmt.Errorf("%s: %s",
+		resp.Error.Code,
+		resp.Error.Description,
 	)
 }

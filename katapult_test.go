@@ -21,6 +21,17 @@ type testResponseBody struct {
 	Name string `json:"name"`
 }
 
+var (
+	fixtureInvalidAPITokenErr = "invalid_api_token: The API token provided " +
+		"was not valid (it may not exist or have expired)"
+	fixtureInvalidAPITokenStruct = &ResponseError{
+		Code: "invalid_api_token",
+		Description: "The API token provided was not valid " +
+			"(it may not exist or have expired)",
+		Detail: json.RawMessage(`{}`),
+	}
+)
+
 // setup creates a test HTTP server for mock API responses, and creates a
 // Katapult client configured to talk to the mock server.
 func setup() (
