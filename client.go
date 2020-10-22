@@ -29,6 +29,7 @@ type Client struct {
 	BaseURL   *url.URL
 	UserAgent string
 
+	Certificates  *CertificatesService
 	DataCenters   *DataCentersService
 	Networks      *NetworksService
 	Organizations *OrganizationsService
@@ -49,6 +50,7 @@ func NewClient(httpClient HTTPClient) *Client {
 	}
 	c.common.client = c
 
+	c.Certificates = NewCertificatesService(&c.common)
 	c.DataCenters = NewDataCentersService(&c.common)
 	c.Networks = NewNetworksService(&c.common)
 	c.Organizations = NewOrganizationsService(&c.common)
@@ -98,10 +100,7 @@ func (c *Client) NewRequestWithContext(
 	return req, nil
 }
 
-func (c *Client) Do(
-	req *http.Request,
-	v interface{},
-) (*Response, error) {
+func (c *Client) Do(req *http.Request, v interface{}) (*Response, error) {
 	ctx := req.Context()
 
 	r, err := c.client.Do(req)
@@ -133,19 +132,24 @@ func (c *Client) Do(
 }
 
 func (c *Client) handleErrorResponse(resp *Response) (*Response, error) {
-	var body errorResponseBody
+	var body responseErrorBody
 	err := c.codec.Decode(resp.Body, &body)
 	if err != nil {
 		return resp, err
 	}
 
-	if body.Error == nil {
+	if body.ErrorInfo == nil {
 		return resp, errors.New("unexpected response")
 	}
-	resp.Error = body.Error
+	resp.Error = body.ErrorInfo
 
 	return resp, fmt.Errorf("%s: %s",
 		resp.Error.Code,
 		resp.Error.Description,
 	)
+}
+
+type ListOptions struct {
+	Page    int `url:"page,omitempty"`
+	PerPage int `url:"per_page,omitempty"`
 }

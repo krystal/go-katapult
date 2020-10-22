@@ -12,15 +12,28 @@ func newResponse(r *http.Response) *Response {
 type Response struct {
 	*http.Response
 
-	Error *ResponseError
+	Pagination *Pagination
+	Error      *ResponseError
 }
 
-type errorResponseBody struct {
-	Error *ResponseError `json:"error,omitempty"`
+func (r *Response) Paginated() bool {
+	return r.Pagination.TotalPages > 0
+}
+
+type Pagination struct {
+	CurrentPage int  `json:"current_page,omitempty"`
+	TotalPages  int  `json:"total_pages,omitempty"`
+	Total       int  `json:"total,omitempty"`
+	PerPage     int  `json:"per_page,omitempty"`
+	LargeSet    bool `json:"large_set,omitempty"`
 }
 
 type ResponseError struct {
 	Code        string          `json:"code,omitempty"`
 	Description string          `json:"description,omitempty"`
 	Detail      json.RawMessage `json:"detail,omitempty"`
+}
+
+type responseErrorBody struct {
+	ErrorInfo *ResponseError `json:"error,omitempty"`
 }

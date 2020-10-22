@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "certificate_not_found",
+    "description": "No certificate was found matching any of the criteria provided in the arguments",
+    "detail": {}
+  }
+}
