@@ -1,0 +1,19 @@
+{
+  "pagination": {
+    "current_page": 2,
+    "total_pages": 2,
+    "total": 3,
+    "per_page": 2,
+    "large_set": false
+  },
+  "certificates": [
+    {
+      "id": "cert_BJz8pI5zjmABRsE0",
+      "name": "test-3.example.com",
+      "issuer": "self_signed",
+      "state": "issued",
+      "expires_at": 1667472488,
+      "last_issued_at": 1602326866
+    }
+  ]
+}

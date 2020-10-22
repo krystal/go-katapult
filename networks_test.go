@@ -2,7 +2,6 @@ package katapult
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"testing"
@@ -13,17 +12,17 @@ import (
 func TestNetworksService_List(t *testing.T) {
 	tests := []struct {
 		name       string
-		org        string
+		orgID      string
 		nets       []*Network
 		vnets      []*VirtualNetwork
 		err        string
-		errResp    *ErrorResponse
+		errResp    *ResponseError
 		respStatus int
 		respBody   []byte
 	}{
 		{
-			name: "fetch list of networks",
-			org:  "org_O648YDMEYeLmqdmn",
+			name:  "fetch list of networks",
+			orgID: "org_O648YDMEYeLmqdmn",
 			nets: []*Network{
 				{
 					ID:   "netw_zDW7KYAeqqfRfVag",
@@ -59,18 +58,28 @@ func TestNetworksService_List(t *testing.T) {
 			respBody:   fixture("networks_list"),
 		},
 		{
-			name: "invalid API token response",
-			org:  "org_O648YDMEYeLmqdmn",
-			err: "invalid_api_token: The API token provided was not valid " +
-				"(it may not exist or have expired)",
-			errResp: &ErrorResponse{
-				Code: "invalid_api_token",
-				Description: "The API token provided was not valid " +
-					"(it may not exist or have expired)",
-				Detail: json.RawMessage(`{}`),
-			},
+			name:       "invalid API token response",
+			orgID:      "org_O648YDMEYeLmqdmn",
+			err:        fixtureInvalidAPITokenErr,
+			errResp:    fixtureInvalidAPITokenStruct,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("invalid_api_token_error"),
+		},
+		{
+			name:       "non-existent Organization",
+			orgID:      "org_nopethisbegone",
+			err:        fixtureOrganizationNotFoundErr,
+			errResp:    fixtureOrganizationNotFoundErrorResponse,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("organization_not_found_error"),
+		},
+		{
+			name:       "suspended Organization",
+			orgID:      "org_O648YDMEYeLmqdmn",
+			err:        fixtureOrganizationSuspendedErr,
+			errResp:    fixtureOrganizationSuspendedErrorResponse,
+			respStatus: http.StatusForbidden,
+			respBody:   fixture("organization_suspended_error"),
 		},
 	}
 	for _, tt := range tests {
@@ -81,18 +90,19 @@ func TestNetworksService_List(t *testing.T) {
 			mux.HandleFunc(
 				fmt.Sprintf(
 					"/core/v1/organizations/%s/available_networks",
-					tt.org,
+					tt.orgID,
 				),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
 				},
 			)
 
 			nets, vnets, resp, err := c.Networks.List(
-				context.Background(), tt.org,
+				context.Background(), tt.orgID,
 			)
 
 			if tt.err == "" {

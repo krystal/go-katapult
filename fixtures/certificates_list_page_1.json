@@ -1,0 +1,27 @@
+{
+  "pagination": {
+    "current_page": 1,
+    "total_pages": 2,
+    "total": 3,
+    "per_page": 2,
+    "large_set": false
+  },
+  "certificates": [
+    {
+      "id": "cert_Xr8jREhulOP3UJoM",
+      "name": "test1.example.com",
+      "issuer": "lets_encrypt",
+      "state": "issued",
+      "expires_at": 1611139536,
+      "last_issued_at": 1603190706
+    },
+    {
+      "id": "cert_HJxL4lqK5o7Qy3mM",
+      "name": "test-2.example.com",
+      "issuer": "custom",
+      "state": "issued",
+      "expires_at": 1610016353,
+      "last_issued_at": 1602067569
+    }
+  ]
+}

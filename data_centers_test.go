@@ -15,7 +15,7 @@ func TestDataCentersService_List(t *testing.T) {
 		name       string
 		dcs        []*DataCenter
 		err        string
-		errResp    *ErrorResponse
+		errResp    *ResponseError
 		respStatus int
 		respBody   []byte
 	}{
@@ -45,15 +45,9 @@ func TestDataCentersService_List(t *testing.T) {
 			respBody:   fixture("data_centers_list"),
 		},
 		{
-			name: "invalid API token response",
-			err: "invalid_api_token: The API token provided was not valid " +
-				"(it may not exist or have expired)",
-			errResp: &ErrorResponse{
-				Code: "invalid_api_token",
-				Description: "The API token provided was not valid " +
-					"(it may not exist or have expired)",
-				Detail: json.RawMessage(`{}`),
-			},
+			name:       "invalid API token response",
+			err:        fixtureInvalidAPITokenErr,
+			errResp:    fixtureInvalidAPITokenStruct,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("invalid_api_token_error"),
 		},
@@ -98,7 +92,7 @@ func TestDataCentersService_Get(t *testing.T) {
 		id         string
 		expected   *DataCenter
 		err        string
-		errResp    *ErrorResponse
+		errResp    *ResponseError
 		respStatus int
 		respBody   []byte
 	}{
@@ -122,7 +116,7 @@ func TestDataCentersService_Get(t *testing.T) {
 			id:   "loc_nopethisbegone",
 			err: "data_center_not_found: No data centers was found matching " +
 				"any of the criteria provided in the arguments",
-			errResp: &ErrorResponse{
+			errResp: &ResponseError{
 				Code: "data_center_not_found",
 				Description: "No data centers was found matching any of the " +
 					"criteria provided in the arguments",

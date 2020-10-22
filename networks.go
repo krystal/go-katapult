@@ -30,17 +30,17 @@ type VirtualNetwork struct {
 	DataCenter *DataCenter `json:"data_center,omitempty"`
 }
 
-type NetworksResponseBody struct {
+type networksResponseBody struct {
 	Networks        []*Network        `json:"networks,omitempty"`
 	VirtualNetworks []*VirtualNetwork `json:"virtual_networks,omitempty"`
 }
 
 func (s *NetworksService) List(
 	ctx context.Context,
-	org string,
+	orgID string,
 ) ([]*Network, []*VirtualNetwork, *Response, error) {
 	u, err := s.path.Parse(
-		fmt.Sprintf("organizations/%s/available_networks", org),
+		fmt.Sprintf("organizations/%s/available_networks", orgID),
 	)
 	if err != nil {
 		return nil, nil, nil, err
@@ -51,7 +51,7 @@ func (s *NetworksService) List(
 		return nil, nil, nil, err
 	}
 
-	var body *NetworksResponseBody
+	var body networksResponseBody
 	resp, err := s.client.Do(req, &body)
 	if err != nil {
 		return nil, nil, resp, err

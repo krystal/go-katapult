@@ -3,7 +3,6 @@ package katapult
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"errors"
 	"io/ioutil"
 	"net/http"
@@ -155,7 +154,7 @@ func TestClient_Do(t *testing.T) {
 		v          interface{}
 		expected   interface{}
 		err        string
-		errResp    *ErrorResponse
+		errResp    *ResponseError
 		respStatus int
 		respBody   []byte
 		respDelay  time.Duration
@@ -195,15 +194,9 @@ func TestClient_Do(t *testing.T) {
 			respDelay:  10,
 		},
 		{
-			name: "response is an error",
-			err: "invalid_api_token: The API token provided was not valid " +
-				"(it may not exist or have expired)",
-			errResp: &ErrorResponse{
-				Code: "invalid_api_token",
-				Description: "The API token provided was not valid " +
-					"(it may not exist or have expired)",
-				Detail: json.RawMessage(`{}`),
-			},
+			name:       "response is an error",
+			err:        fixtureInvalidAPITokenErr,
+			errResp:    fixtureInvalidAPITokenStruct,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("invalid_api_token_error"),
 		},
