@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "dns_zone_already_verified",
+    "description": "This DNS zone is already verified, and does not require any verification details",
+    "detail": {}
+  }
+}

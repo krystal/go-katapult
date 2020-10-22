@@ -1,0 +1,12 @@
+{
+  "error": {
+    "code": "validation_error",
+    "description": "A validation error occurred with the object that was being created/updated/deleted",
+    "detail": {
+      "errors": [
+        "Failed reticulating 3-dimensional splines",
+        "Failed preparing captive simulators"
+      ]
+    }
+  }
+}

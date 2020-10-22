@@ -30,6 +30,7 @@ type Client struct {
 	UserAgent string
 
 	Certificates  *CertificatesService
+	DNSZones      *DNSZonesService
 	DataCenters   *DataCentersService
 	Networks      *NetworksService
 	Organizations *OrganizationsService
@@ -51,6 +52,7 @@ func NewClient(httpClient HTTPClient) *Client {
 	c.common.client = c
 
 	c.Certificates = NewCertificatesService(&c.common)
+	c.DNSZones = NewDNSZonesService(&c.common)
 	c.DataCenters = NewDataCentersService(&c.common)
 	c.Networks = NewNetworksService(&c.common)
 	c.Organizations = NewOrganizationsService(&c.common)

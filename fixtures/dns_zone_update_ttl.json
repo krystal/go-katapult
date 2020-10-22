@@ -1,0 +1,9 @@
+{
+  "dns_zone": {
+    "id": "dnszone_lwz66kyviwCQyqQc",
+    "name": "test-2.example.com",
+    "ttl": 1842,
+    "verified": true,
+    "infrastructure_zone": false
+  }
+}

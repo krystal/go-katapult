@@ -30,6 +30,33 @@ var (
 			"(it may not exist or have expired)",
 		Detail: json.RawMessage(`{}`),
 	}
+
+	fixturePermissionDeniedErr = "permission_denied: The authenticated " +
+		"identity is not permitted to perform this action"
+	fixturePermissionDeniedResponseError = &ResponseError{
+		Code: "permission_denied",
+		Description: "The authenticated identity is not permitted to perform " +
+			"this action",
+		//nolint:lll
+		Detail: json.RawMessage(`{
+      "details": "Additional information regarding the reason why permission was denied"
+    }`),
+	}
+
+	fixtureValidationErrorErr = "validation_error: A validation error " +
+		"occurred with the object that was being created/updated/deleted"
+	fixtureValidationErrorResponseError = &ResponseError{
+		Code: "validation_error",
+		Description: "A validation error occurred with the object that was " +
+			"being created/updated/deleted",
+		Detail: json.RawMessage(`{
+      "errors": [
+        "Failed reticulating 3-dimensional splines",
+        "Failed preparing captive simulators"
+      ]
+    }`,
+		),
+	}
 )
 
 // setup creates a test HTTP server for mock API responses, and creates a
