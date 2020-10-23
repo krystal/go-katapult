@@ -15,7 +15,7 @@ var (
 	fixtureOrganizationSuspendedErr = "organization_suspended: " +
 		"An organization was found from the arguments provided but it was " +
 		"suspended"
-	fixtureOrganizationSuspendedErrorResponse = &ResponseError{
+	fixtureOrganizationSuspendedResponseError = &ResponseError{
 		Code: "organization_suspended",
 		Description: "An organization was found from the arguments " +
 			"provided but it was suspended",
@@ -25,7 +25,7 @@ var (
 	fixtureOrganizationNotFoundErr = "organization_not_found: " +
 		"No organization was found matching any of the criteria provided " +
 		"in the arguments"
-	fixtureOrganizationNotFoundErrorResponse = &ResponseError{
+	fixtureOrganizationNotFoundResponseError = &ResponseError{
 		Code: "organization_not_found",
 		Description: "No organization was found matching any of the " +
 			"criteria provided in the arguments",
@@ -68,7 +68,7 @@ func TestOrganizationsService_List(t *testing.T) {
 		{
 			name:       "invalid API token response",
 			err:        fixtureInvalidAPITokenErr,
-			errResp:    fixtureInvalidAPITokenStruct,
+			errResp:    fixtureInvalidAPITokenResponseError,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("invalid_api_token_error"),
 		},
@@ -88,7 +88,9 @@ func TestOrganizationsService_List(t *testing.T) {
 				},
 			)
 
-			orgs, resp, err := c.Organizations.List(context.Background())
+			got, resp, err := c.Organizations.List(context.Background())
+
+			assert.Equal(t, tt.respStatus, resp.StatusCode)
 
 			if tt.err == "" {
 				assert.NoError(t, err)
@@ -97,7 +99,7 @@ func TestOrganizationsService_List(t *testing.T) {
 			}
 
 			if tt.orgs != nil {
-				assert.Equal(t, tt.orgs, orgs)
+				assert.Equal(t, tt.orgs, got)
 			}
 
 			if tt.errResp != nil {
@@ -171,7 +173,7 @@ func TestOrganizationsService_Get(t *testing.T) {
 			name:       "non-existent Organization",
 			id:         "org_nopethisbegone",
 			err:        fixtureOrganizationNotFoundErr,
-			errResp:    fixtureOrganizationNotFoundErrorResponse,
+			errResp:    fixtureOrganizationNotFoundResponseError,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
@@ -179,7 +181,7 @@ func TestOrganizationsService_Get(t *testing.T) {
 			name:       "suspended Organization",
 			id:         "acme",
 			err:        fixtureOrganizationSuspendedErr,
-			errResp:    fixtureOrganizationSuspendedErrorResponse,
+			errResp:    fixtureOrganizationSuspendedResponseError,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
@@ -199,7 +201,9 @@ func TestOrganizationsService_Get(t *testing.T) {
 				},
 			)
 
-			org, resp, err := c.Organizations.Get(context.Background(), tt.id)
+			got, resp, err := c.Organizations.Get(context.Background(), tt.id)
+
+			assert.Equal(t, tt.respStatus, resp.StatusCode)
 
 			if tt.err == "" {
 				assert.NoError(t, err)
@@ -208,7 +212,7 @@ func TestOrganizationsService_Get(t *testing.T) {
 			}
 
 			if tt.expected != nil {
-				assert.Equal(t, tt.expected, org)
+				assert.Equal(t, tt.expected, got)
 			}
 
 			if tt.errResp != nil {
@@ -308,7 +312,7 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 			orgName:      "NERV Corp.",
 			orgSubDomain: "nerv",
 			err:          fixtureOrganizationNotFoundErr,
-			errResp:      fixtureOrganizationNotFoundErrorResponse,
+			errResp:      fixtureOrganizationNotFoundResponseError,
 			respStatus:   http.StatusNotFound,
 			respBody:     fixture("organization_not_found_error"),
 		},
@@ -318,7 +322,7 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 			orgName:      "NERV Corp.",
 			orgSubDomain: "nerv",
 			err:          fixtureOrganizationSuspendedErr,
-			errResp:      fixtureOrganizationSuspendedErrorResponse,
+			errResp:      fixtureOrganizationSuspendedResponseError,
 			respStatus:   http.StatusForbidden,
 			respBody:     fixture("organization_suspended_error"),
 		},
@@ -368,10 +372,12 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 				},
 			)
 
-			org, resp, err := c.Organizations.CreateManaged(
+			got, resp, err := c.Organizations.CreateManaged(
 				context.Background(),
 				tt.parentOrg, tt.orgName, tt.orgSubDomain,
 			)
+
+			assert.Equal(t, tt.respStatus, resp.StatusCode)
 
 			if tt.err == "" {
 				assert.NoError(t, err)
@@ -380,7 +386,7 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 			}
 
 			if tt.expected != nil {
-				assert.Equal(t, tt.expected, org)
+				assert.Equal(t, tt.expected, got)
 			}
 
 			if tt.errResp != nil {

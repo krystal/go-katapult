@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "dns_zone_not_found",
+    "description": "No DNS zone was found matching any of the criteria provided in the arguments",
+    "detail": {}
+  }
+}

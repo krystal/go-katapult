@@ -30,6 +30,7 @@ type Client struct {
 	UserAgent string
 
 	Certificates  *CertificatesService
+	DNSZones      *DNSZonesService
 	DataCenters   *DataCentersService
 	Networks      *NetworksService
 	Organizations *OrganizationsService
@@ -51,6 +52,7 @@ func NewClient(httpClient HTTPClient) *Client {
 	c.common.client = c
 
 	c.Certificates = NewCertificatesService(&c.common)
+	c.DNSZones = NewDNSZonesService(&c.common)
 	c.DataCenters = NewDataCentersService(&c.common)
 	c.Networks = NewNetworksService(&c.common)
 	c.Organizations = NewOrganizationsService(&c.common)
@@ -128,10 +130,10 @@ func (c *Client) Do(req *http.Request, v interface{}) (*Response, error) {
 		return resp, err
 	}
 
-	return c.handleErrorResponse(resp)
+	return c.handleResponseError(resp)
 }
 
-func (c *Client) handleErrorResponse(resp *Response) (*Response, error) {
+func (c *Client) handleResponseError(resp *Response) (*Response, error) {
 	var body responseErrorBody
 	err := c.codec.Decode(resp.Body, &body)
 	if err != nil {

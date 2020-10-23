@@ -60,40 +60,40 @@ func (s CertificatesService) List(
 	}
 	u.RawQuery = qs.Encode()
 
-	req, err := s.client.NewRequestWithContext(ctx, "GET", u.String(), nil)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var body certificatesResponseBody
-	resp, err := s.client.Do(req, &body)
-	if err != nil {
-		return nil, resp, err
-	}
+	body, resp, err := s.doRequest(ctx, "GET", u.String(), nil)
 	resp.Pagination = body.Pagination
 
-	return body.Certificates, resp, nil
+	return body.Certificates, resp, err
 }
 
 func (s CertificatesService) Get(
 	ctx context.Context,
 	id string,
 ) (*Certificate, *Response, error) {
-	u, err := s.path.Parse(fmt.Sprintf("certificates/%s", id))
+	u := fmt.Sprintf("certificates/%s", id)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+
+	return body.Certificate, resp, err
+}
+
+func (s *CertificatesService) doRequest(
+	ctx context.Context,
+	method string,
+	urlStr string,
+	body interface{},
+) (*certificatesResponseBody, *Response, error) {
+	u, err := s.path.Parse(urlStr)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	req, err := s.client.NewRequestWithContext(ctx, "GET", u.Path, nil)
+	req, err := s.client.NewRequestWithContext(ctx, method, u.String(), body)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	var body certificatesResponseBody
-	resp, err := s.client.Do(req, &body)
-	if err != nil {
-		return nil, resp, err
-	}
+	var respBody certificatesResponseBody
+	resp, err := s.client.Do(req, &respBody)
 
-	return body.Certificate, resp, nil
+	return &respBody, resp, err
 }

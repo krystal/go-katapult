@@ -119,7 +119,7 @@ func TestClient_NewRequestWithContext(t *testing.T) {
 				require.NoError(t, err)
 			}
 
-			req, err := c.NewRequestWithContext(
+			got, err := c.NewRequestWithContext(
 				tt.ctx, tt.method, tt.urlStr, tt.body,
 			)
 
@@ -129,12 +129,12 @@ func TestClient_NewRequestWithContext(t *testing.T) {
 				expectedURL, _ := baseURL.Parse(tt.urlStr)
 
 				assert.NoError(t, err)
-				assert.Equal(t, tt.ctx, req.Context())
-				assert.Equal(t, tt.method, req.Method)
-				assert.Equal(t, expectedURL.String(), req.URL.String())
+				assert.Equal(t, tt.ctx, got.Context())
+				assert.Equal(t, tt.method, got.Method)
+				assert.Equal(t, expectedURL.String(), got.URL.String())
 
 				if tt.body != nil {
-					body, err := ioutil.ReadAll(req.Body)
+					body, err := ioutil.ReadAll(got.Body)
 					assert.NoError(t, err)
 					assert.Equal(t,
 						tt.expectedBody,
@@ -196,7 +196,7 @@ func TestClient_Do(t *testing.T) {
 		{
 			name:       "response is an error",
 			err:        fixtureInvalidAPITokenErr,
-			errResp:    fixtureInvalidAPITokenStruct,
+			errResp:    fixtureInvalidAPITokenResponseError,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("invalid_api_token_error"),
 		},
@@ -248,16 +248,16 @@ func TestClient_Do(t *testing.T) {
 			)
 			require.NoError(t, err)
 
-			resp, err := c.Do(req, tt.v)
+			got, err := c.Do(req, tt.v)
 
 			if tt.errResp != nil {
-				assert.Equal(t, tt.errResp, resp.Error)
+				assert.Equal(t, tt.errResp, got.Error)
 			}
 
 			if tt.err != "" {
 				assert.EqualError(t, err, tt.err)
 			} else {
-				assert.Equal(t, tt.respStatus, resp.StatusCode)
+				assert.Equal(t, tt.respStatus, got.StatusCode)
 
 				switch v := tt.v.(type) {
 				case *strings.Builder:

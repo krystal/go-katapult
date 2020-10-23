@@ -61,7 +61,7 @@ func TestNetworksService_List(t *testing.T) {
 			name:       "invalid API token response",
 			orgID:      "org_O648YDMEYeLmqdmn",
 			err:        fixtureInvalidAPITokenErr,
-			errResp:    fixtureInvalidAPITokenStruct,
+			errResp:    fixtureInvalidAPITokenResponseError,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("invalid_api_token_error"),
 		},
@@ -69,7 +69,7 @@ func TestNetworksService_List(t *testing.T) {
 			name:       "non-existent Organization",
 			orgID:      "org_nopethisbegone",
 			err:        fixtureOrganizationNotFoundErr,
-			errResp:    fixtureOrganizationNotFoundErrorResponse,
+			errResp:    fixtureOrganizationNotFoundResponseError,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
@@ -77,7 +77,7 @@ func TestNetworksService_List(t *testing.T) {
 			name:       "suspended Organization",
 			orgID:      "org_O648YDMEYeLmqdmn",
 			err:        fixtureOrganizationSuspendedErr,
-			errResp:    fixtureOrganizationSuspendedErrorResponse,
+			errResp:    fixtureOrganizationSuspendedResponseError,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
@@ -101,9 +101,11 @@ func TestNetworksService_List(t *testing.T) {
 				},
 			)
 
-			nets, vnets, resp, err := c.Networks.List(
+			got1, got2, resp, err := c.Networks.List(
 				context.Background(), tt.orgID,
 			)
+
+			assert.Equal(t, tt.respStatus, resp.StatusCode)
 
 			if tt.err == "" {
 				assert.NoError(t, err)
@@ -112,11 +114,11 @@ func TestNetworksService_List(t *testing.T) {
 			}
 
 			if tt.nets != nil {
-				assert.Equal(t, tt.nets, nets)
+				assert.Equal(t, tt.nets, got1)
 			}
 
 			if tt.vnets != nil {
-				assert.Equal(t, tt.vnets, vnets)
+				assert.Equal(t, tt.vnets, got2)
 			}
 
 			if tt.errResp != nil {

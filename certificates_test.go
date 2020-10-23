@@ -123,7 +123,7 @@ func TestCertificatesService_List(t *testing.T) {
 			name:       "invalid API token response",
 			org:        "org_O648YDMEYeLmqdmn",
 			err:        fixtureInvalidAPITokenErr,
-			errResp:    fixtureInvalidAPITokenStruct,
+			errResp:    fixtureInvalidAPITokenResponseError,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("invalid_api_token_error"),
 		},
@@ -152,6 +152,8 @@ func TestCertificatesService_List(t *testing.T) {
 			got, resp, err := c.Certificates.List(
 				context.Background(), tt.org, tt.opts,
 			)
+
+			assert.Equal(t, tt.respStatus, resp.StatusCode)
 
 			if tt.err == "" {
 				assert.NoError(t, err)
@@ -244,7 +246,7 @@ func TestCertificatesService_Get(t *testing.T) {
 			name:       "non-existent Organization",
 			id:         "org_nopethisbegone",
 			err:        fixtureOrganizationNotFoundErr,
-			errResp:    fixtureOrganizationNotFoundErrorResponse,
+			errResp:    fixtureOrganizationNotFoundResponseError,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
@@ -252,7 +254,7 @@ func TestCertificatesService_Get(t *testing.T) {
 			name:       "suspended Organization",
 			id:         "acme",
 			err:        fixtureOrganizationSuspendedErr,
-			errResp:    fixtureOrganizationSuspendedErrorResponse,
+			errResp:    fixtureOrganizationSuspendedResponseError,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
@@ -272,7 +274,9 @@ func TestCertificatesService_Get(t *testing.T) {
 				},
 			)
 
-			org, resp, err := c.Certificates.Get(context.Background(), tt.id)
+			got, resp, err := c.Certificates.Get(context.Background(), tt.id)
+
+			assert.Equal(t, tt.respStatus, resp.StatusCode)
 
 			if tt.err == "" {
 				assert.NoError(t, err)
@@ -281,7 +285,7 @@ func TestCertificatesService_Get(t *testing.T) {
 			}
 
 			if tt.expected != nil {
-				assert.Equal(t, tt.expected, org)
+				assert.Equal(t, tt.expected, got)
 			}
 
 			if tt.errResp != nil {

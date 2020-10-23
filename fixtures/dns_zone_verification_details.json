@@ -1,0 +1,6 @@
+{
+  "details": {
+    "nameservers": ["ns1.katapult.io", "ns2.katapult.io"],
+    "txt_record": "M0Y0SzE1TzNJTUZPSDRoQUV0TDZ4MEZwckFqbW1FNHI="
+  }
+}

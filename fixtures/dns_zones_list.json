@@ -1,0 +1,32 @@
+{
+  "pagination": {
+    "current_page": 1,
+    "total_pages": 1,
+    "total": 3,
+    "per_page": 30,
+    "large_set": false
+  },
+  "dns_zones": [
+    {
+      "id": "dnszone_k75eFc4UBOgeE5Zy",
+      "name": "test1.example.com",
+      "ttl": 3600,
+      "verified": true,
+      "infrastructure_zone": true
+    },
+    {
+      "id": "dnszone_lwz66kyviwCQyqQc",
+      "name": "test-2.example.com",
+      "ttl": 3600,
+      "verified": true,
+      "infrastructure_zone": false
+    },
+    {
+      "id": "dnszone_qr9KPhSwkGNh7IMb",
+      "name": "test-3.example.com",
+      "ttl": 3600,
+      "verified": true,
+      "infrastructure_zone": false
+    }
+  ]
+}
