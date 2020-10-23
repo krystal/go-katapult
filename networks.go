@@ -39,23 +39,30 @@ func (s *NetworksService) List(
 	ctx context.Context,
 	orgID string,
 ) ([]*Network, []*VirtualNetwork, *Response, error) {
-	u, err := s.path.Parse(
-		fmt.Sprintf("organizations/%s/available_networks", orgID),
-	)
+	u := fmt.Sprintf("organizations/%s/available_networks", orgID)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+
+	return body.Networks, body.VirtualNetworks, resp, err
+}
+
+func (s *NetworksService) doRequest(
+	ctx context.Context,
+	method string,
+	urlStr string,
+	body interface{},
+) (*networksResponseBody, *Response, error) {
+	u, err := s.path.Parse(urlStr)
 	if err != nil {
-		return nil, nil, nil, err
+		return nil, nil, err
 	}
 
-	req, err := s.client.NewRequestWithContext(ctx, "GET", u.Path, nil)
+	req, err := s.client.NewRequestWithContext(ctx, method, u.String(), body)
 	if err != nil {
-		return nil, nil, nil, err
+		return nil, nil, err
 	}
 
-	var body networksResponseBody
-	resp, err := s.client.Do(req, &body)
-	if err != nil {
-		return nil, nil, resp, err
-	}
+	var respBody networksResponseBody
+	resp, err := s.client.Do(req, &respBody)
 
-	return body.Networks, body.VirtualNetworks, resp, nil
+	return &respBody, resp, err
 }

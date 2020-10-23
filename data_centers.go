@@ -33,44 +33,40 @@ type dataCentersResponseBody struct {
 func (s *DataCentersService) List(
 	ctx context.Context,
 ) ([]*DataCenter, *Response, error) {
-	u, err := s.path.Parse("data_centers")
-	if err != nil {
-		return nil, nil, err
-	}
+	u := "data_centers"
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 
-	req, err := s.client.NewRequestWithContext(ctx, "GET", u.Path, nil)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var body dataCentersResponseBody
-	resp, err := s.client.Do(req, &body)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return body.DataCenters, resp, nil
+	return body.DataCenters, resp, err
 }
 
 func (s *DataCentersService) Get(
 	ctx context.Context,
 	id string,
 ) (*DataCenter, *Response, error) {
-	u, err := s.path.Parse(fmt.Sprintf("data_centers/%s", id))
+	u := fmt.Sprintf("data_centers/%s", id)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+
+	return body.DataCenter, resp, err
+}
+
+func (s *DataCentersService) doRequest(
+	ctx context.Context,
+	method string,
+	urlStr string,
+	body interface{},
+) (*dataCentersResponseBody, *Response, error) {
+	u, err := s.path.Parse(urlStr)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	req, err := s.client.NewRequestWithContext(ctx, "GET", u.Path, nil)
+	req, err := s.client.NewRequestWithContext(ctx, method, u.String(), body)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	var body dataCentersResponseBody
-	resp, err := s.client.Do(req, &body)
-	if err != nil {
-		return nil, resp, err
-	}
+	var respBody dataCentersResponseBody
+	resp, err := s.client.Do(req, &respBody)
 
-	return body.DataCenter, resp, nil
+	return &respBody, resp, err
 }

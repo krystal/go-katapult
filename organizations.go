@@ -49,46 +49,20 @@ type organizationsResponseBody struct {
 func (s *OrganizationsService) List(
 	ctx context.Context,
 ) ([]*Organization, *Response, error) {
-	u, err := s.path.Parse("organizations")
-	if err != nil {
-		return nil, nil, err
-	}
+	u := "organizations"
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 
-	req, err := s.client.NewRequestWithContext(ctx, "GET", u.Path, nil)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var body organizationsResponseBody
-	resp, err := s.client.Do(req, &body)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return body.Organizations, resp, nil
+	return body.Organizations, resp, err
 }
 
 func (s *OrganizationsService) Get(
 	ctx context.Context,
 	id string,
 ) (*Organization, *Response, error) {
-	u, err := s.path.Parse(fmt.Sprintf("organizations/%s", id))
-	if err != nil {
-		return nil, nil, err
-	}
+	u := fmt.Sprintf("organizations/%s", id)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 
-	req, err := s.client.NewRequestWithContext(ctx, "GET", u.Path, nil)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var body organizationsResponseBody
-	resp, err := s.client.Do(req, &body)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return body.Organization, resp, nil
+	return body.Organization, resp, err
 }
 
 func (s *OrganizationsService) CreateManaged(
@@ -97,26 +71,31 @@ func (s *OrganizationsService) CreateManaged(
 	name string,
 	subDomain string,
 ) (*Organization, *Response, error) {
-	u, err := s.path.Parse(fmt.Sprintf("organizations/%s/managed", parentID))
+	u := fmt.Sprintf("organizations/%s/managed", parentID)
+	reqBody := &Organization{Name: name, SubDomain: subDomain}
+	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
+
+	return body.Organization, resp, err
+}
+
+func (s *OrganizationsService) doRequest(
+	ctx context.Context,
+	method string,
+	urlStr string,
+	body interface{},
+) (*organizationsResponseBody, *Response, error) {
+	u, err := s.path.Parse(urlStr)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	reqBody := &Organization{
-		Name:      name,
-		SubDomain: subDomain,
-	}
-
-	req, err := s.client.NewRequestWithContext(ctx, "POST", u.Path, reqBody)
+	req, err := s.client.NewRequestWithContext(ctx, method, u.String(), body)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	var body organizationsResponseBody
-	resp, err := s.client.Do(req, &body)
-	if err != nil {
-		return nil, resp, err
-	}
+	var respBody organizationsResponseBody
+	resp, err := s.client.Do(req, &respBody)
 
-	return body.Organization, resp, nil
+	return &respBody, resp, err
 }
