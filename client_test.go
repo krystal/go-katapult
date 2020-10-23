@@ -196,7 +196,7 @@ func TestClient_Do(t *testing.T) {
 		{
 			name:       "response is an error",
 			err:        fixtureInvalidAPITokenErr,
-			errResp:    fixtureInvalidAPITokenStruct,
+			errResp:    fixtureInvalidAPITokenResponseError,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("invalid_api_token_error"),
 		},

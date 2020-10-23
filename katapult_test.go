@@ -24,7 +24,7 @@ type testResponseBody struct {
 var (
 	fixtureInvalidAPITokenErr = "invalid_api_token: The API token provided " +
 		"was not valid (it may not exist or have expired)"
-	fixtureInvalidAPITokenStruct = &ResponseError{
+	fixtureInvalidAPITokenResponseError = &ResponseError{
 		Code: "invalid_api_token",
 		Description: "The API token provided was not valid " +
 			"(it may not exist or have expired)",

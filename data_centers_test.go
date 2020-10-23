@@ -47,7 +47,7 @@ func TestDataCentersService_List(t *testing.T) {
 		{
 			name:       "invalid API token response",
 			err:        fixtureInvalidAPITokenErr,
-			errResp:    fixtureInvalidAPITokenStruct,
+			errResp:    fixtureInvalidAPITokenResponseError,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("invalid_api_token_error"),
 		},
