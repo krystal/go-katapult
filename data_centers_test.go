@@ -67,7 +67,9 @@ func TestDataCentersService_List(t *testing.T) {
 				},
 			)
 
-			dcs, resp, err := c.DataCenters.List(context.Background())
+			got, resp, err := c.DataCenters.List(context.Background())
+
+			assert.Equal(t, tt.respStatus, resp.StatusCode)
 
 			if tt.err == "" {
 				assert.NoError(t, err)
@@ -76,7 +78,7 @@ func TestDataCentersService_List(t *testing.T) {
 			}
 
 			if tt.dcs != nil {
-				assert.Equal(t, tt.dcs, dcs)
+				assert.Equal(t, tt.dcs, got)
 			}
 
 			if tt.errResp != nil {
@@ -141,7 +143,9 @@ func TestDataCentersService_Get(t *testing.T) {
 				},
 			)
 
-			dc, resp, err := c.DataCenters.Get(context.Background(), tt.id)
+			got, resp, err := c.DataCenters.Get(context.Background(), tt.id)
+
+			assert.Equal(t, tt.respStatus, resp.StatusCode)
 
 			if tt.err == "" {
 				assert.NoError(t, err)
@@ -150,7 +154,7 @@ func TestDataCentersService_Get(t *testing.T) {
 			}
 
 			if tt.expected != nil {
-				assert.Equal(t, tt.expected, dc)
+				assert.Equal(t, tt.expected, got)
 			}
 
 			if tt.errResp != nil {

@@ -101,9 +101,11 @@ func TestNetworksService_List(t *testing.T) {
 				},
 			)
 
-			nets, vnets, resp, err := c.Networks.List(
+			got1, got2, resp, err := c.Networks.List(
 				context.Background(), tt.orgID,
 			)
+
+			assert.Equal(t, tt.respStatus, resp.StatusCode)
 
 			if tt.err == "" {
 				assert.NoError(t, err)
@@ -112,11 +114,11 @@ func TestNetworksService_List(t *testing.T) {
 			}
 
 			if tt.nets != nil {
-				assert.Equal(t, tt.nets, nets)
+				assert.Equal(t, tt.nets, got1)
 			}
 
 			if tt.vnets != nil {
-				assert.Equal(t, tt.vnets, vnets)
+				assert.Equal(t, tt.vnets, got2)
 			}
 
 			if tt.errResp != nil {

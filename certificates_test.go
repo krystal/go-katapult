@@ -153,6 +153,8 @@ func TestCertificatesService_List(t *testing.T) {
 				context.Background(), tt.org, tt.opts,
 			)
 
+			assert.Equal(t, tt.respStatus, resp.StatusCode)
+
 			if tt.err == "" {
 				assert.NoError(t, err)
 			} else {
@@ -272,7 +274,9 @@ func TestCertificatesService_Get(t *testing.T) {
 				},
 			)
 
-			org, resp, err := c.Certificates.Get(context.Background(), tt.id)
+			got, resp, err := c.Certificates.Get(context.Background(), tt.id)
+
+			assert.Equal(t, tt.respStatus, resp.StatusCode)
 
 			if tt.err == "" {
 				assert.NoError(t, err)
@@ -281,7 +285,7 @@ func TestCertificatesService_Get(t *testing.T) {
 			}
 
 			if tt.expected != nil {
-				assert.Equal(t, tt.expected, org)
+				assert.Equal(t, tt.expected, got)
 			}
 
 			if tt.errResp != nil {

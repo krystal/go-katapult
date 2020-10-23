@@ -88,7 +88,9 @@ func TestOrganizationsService_List(t *testing.T) {
 				},
 			)
 
-			orgs, resp, err := c.Organizations.List(context.Background())
+			got, resp, err := c.Organizations.List(context.Background())
+
+			assert.Equal(t, tt.respStatus, resp.StatusCode)
 
 			if tt.err == "" {
 				assert.NoError(t, err)
@@ -97,7 +99,7 @@ func TestOrganizationsService_List(t *testing.T) {
 			}
 
 			if tt.orgs != nil {
-				assert.Equal(t, tt.orgs, orgs)
+				assert.Equal(t, tt.orgs, got)
 			}
 
 			if tt.errResp != nil {
@@ -199,7 +201,9 @@ func TestOrganizationsService_Get(t *testing.T) {
 				},
 			)
 
-			org, resp, err := c.Organizations.Get(context.Background(), tt.id)
+			got, resp, err := c.Organizations.Get(context.Background(), tt.id)
+
+			assert.Equal(t, tt.respStatus, resp.StatusCode)
 
 			if tt.err == "" {
 				assert.NoError(t, err)
@@ -208,7 +212,7 @@ func TestOrganizationsService_Get(t *testing.T) {
 			}
 
 			if tt.expected != nil {
-				assert.Equal(t, tt.expected, org)
+				assert.Equal(t, tt.expected, got)
 			}
 
 			if tt.errResp != nil {
@@ -368,10 +372,12 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 				},
 			)
 
-			org, resp, err := c.Organizations.CreateManaged(
+			got, resp, err := c.Organizations.CreateManaged(
 				context.Background(),
 				tt.parentOrg, tt.orgName, tt.orgSubDomain,
 			)
+
+			assert.Equal(t, tt.respStatus, resp.StatusCode)
 
 			if tt.err == "" {
 				assert.NoError(t, err)
@@ -380,7 +386,7 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 			}
 
 			if tt.expected != nil {
-				assert.Equal(t, tt.expected, org)
+				assert.Equal(t, tt.expected, got)
 			}
 
 			if tt.errResp != nil {
