@@ -24,7 +24,7 @@ func TestVirtualMachinePackagesService_List(t *testing.T) {
 			MemoryInGB:    1,
 			StorageInGB:   10,
 			Privacy:       "private",
-			Icon: &Icon{
+			Icon: &Attachment{
 				URL: "https://my.katapult.io/attachment/" +
 					"aa9e51fc-ca56-4a4a-aeba-2f57ffcc9886/cat.jpg",
 			},
@@ -38,7 +38,7 @@ func TestVirtualMachinePackagesService_List(t *testing.T) {
 			MemoryInGB:    2,
 			StorageInGB:   10,
 			Privacy:       "public",
-			Icon: &Icon{
+			Icon: &Attachment{
 				URL: "https://my.katapult.io/attachment/" +
 					"4d014ee8-dae3-4574-a180-e5711fc85f9a/fox.png",
 			},
@@ -52,7 +52,7 @@ func TestVirtualMachinePackagesService_List(t *testing.T) {
 			MemoryInGB:    3,
 			StorageInGB:   20,
 			Privacy:       "public",
-			Icon: &Icon{
+			Icon: &Attachment{
 				URL: "https://my.katapult.io/attachment/" +
 					"23eabfd1-f8a9-4312-80c1-37bc3e563754/lion.png",
 			},
@@ -176,7 +176,7 @@ func TestVirtualMachinePackagesService_Get(t *testing.T) {
 		MemoryInGB:    2,
 		StorageInGB:   10,
 		Privacy:       "public",
-		Icon: &Icon{
+		Icon: &Attachment{
 			URL: "https://my.katapult.io/attachment/" +
 				"4d014ee8-dae3-4574-a180-e5711fc85f9a/fox.png",
 			FileName: "fox.png",

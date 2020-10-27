@@ -23,15 +23,15 @@ func NewVirtualMachinePackagesService(
 }
 
 type VirtualMachinePackage struct {
-	ID            string `json:"id,omitempty"`
-	Name          string `json:"name,omitempty"`
-	Permalink     string `json:"permalink,omitempty"`
-	CPUCores      int    `json:"cpu_cores,omitempty"`
-	IPv4Addresses int    `json:"ipv4_addresses,omitempty"`
-	MemoryInGB    int    `json:"memory_in_gb,omitempty"`
-	StorageInGB   int    `json:"storage_in_gb,omitempty"`
-	Privacy       string `json:"privacy,omitempty"`
-	Icon          *Icon  `json:"icon,omitempty"`
+	ID            string      `json:"id,omitempty"`
+	Name          string      `json:"name,omitempty"`
+	Permalink     string      `json:"permalink,omitempty"`
+	CPUCores      int         `json:"cpu_cores,omitempty"`
+	IPv4Addresses int         `json:"ipv4_addresses,omitempty"`
+	MemoryInGB    int         `json:"memory_in_gb,omitempty"`
+	StorageInGB   int         `json:"storage_in_gb,omitempty"`
+	Privacy       string      `json:"privacy,omitempty"`
+	Icon          *Attachment `json:"icon,omitempty"`
 }
 
 type virtualMachinePackagesResponseBody struct {
