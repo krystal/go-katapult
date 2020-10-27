@@ -29,11 +29,12 @@ type Client struct {
 	BaseURL   *url.URL
 	UserAgent string
 
-	Certificates  *CertificatesService
-	DNSZones      *DNSZonesService
-	DataCenters   *DataCentersService
-	Networks      *NetworksService
-	Organizations *OrganizationsService
+	Certificates           *CertificatesService
+	DNSZones               *DNSZonesService
+	DataCenters            *DataCentersService
+	Networks               *NetworksService
+	Organizations          *OrganizationsService
+	VirtualMachinePackages *VirtualMachinePackagesService
 }
 
 func NewClient(httpClient HTTPClient) *Client {
@@ -56,6 +57,7 @@ func NewClient(httpClient HTTPClient) *Client {
 	c.DataCenters = NewDataCentersService(&c.common)
 	c.Networks = NewNetworksService(&c.common)
 	c.Organizations = NewOrganizationsService(&c.common)
+	c.VirtualMachinePackages = NewVirtualMachinePackagesService(&c.common)
 
 	return c
 }

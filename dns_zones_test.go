@@ -31,14 +31,48 @@ var (
 			"API. These are managed exclusively by Katapult.",
 		Detail: json.RawMessage(`{}`),
 	}
+
+	// Correlates to fixtures/dns_zone_get.json
+	fixtureDNSZoneGet = &DNSZone{
+		ID:                 "dnszone_k75eFc4UBOgeE5Zy",
+		Name:               "test1.example.com",
+		TTL:                3600,
+		Verified:           true,
+		InfrastructureZone: true,
+	}
 )
 
 func TestDNSZonesService_List(t *testing.T) {
+	// Correlates to fixtures/dns_zones_list*.json
+	dnsZonesList := []*DNSZone{
+		{
+			ID:                 "dnszone_k75eFc4UBOgeE5Zy",
+			Name:               "test1.example.com",
+			TTL:                3600,
+			Verified:           true,
+			InfrastructureZone: true,
+		},
+		{
+			ID:                 "dnszone_lwz66kyviwCQyqQc",
+			Name:               "test-2.example.com",
+			TTL:                3600,
+			Verified:           true,
+			InfrastructureZone: false,
+		},
+		{
+			ID:                 "dnszone_qr9KPhSwkGNh7IMb",
+			Name:               "test-3.example.com",
+			TTL:                3600,
+			Verified:           true,
+			InfrastructureZone: false,
+		},
+	}
+
 	tests := []struct {
 		name       string
 		orgID      string
 		opts       *ListOptions
-		certs      []*DNSZone
+		expected   []*DNSZone
 		pagination *Pagination
 		err        string
 		errResp    *ResponseError
@@ -46,31 +80,9 @@ func TestDNSZonesService_List(t *testing.T) {
 		respBody   []byte
 	}{
 		{
-			name:  "fetch list of dns_zones",
-			orgID: "org_O648YDMEYeLmqdmn",
-			certs: []*DNSZone{
-				{
-					ID:                 "dnszone_k75eFc4UBOgeE5Zy",
-					Name:               "test1.example.com",
-					TTL:                3600,
-					Verified:           true,
-					InfrastructureZone: true,
-				},
-				{
-					ID:                 "dnszone_lwz66kyviwCQyqQc",
-					Name:               "test-2.example.com",
-					TTL:                3600,
-					Verified:           true,
-					InfrastructureZone: false,
-				},
-				{
-					ID:                 "dnszone_qr9KPhSwkGNh7IMb",
-					Name:               "test-3.example.com",
-					TTL:                3600,
-					Verified:           true,
-					InfrastructureZone: false,
-				},
-			},
+			name:     "fetch list of dns_zones",
+			orgID:    "org_O648YDMEYeLmqdmn",
+			expected: dnsZonesList,
 			pagination: &Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
@@ -82,25 +94,10 @@ func TestDNSZonesService_List(t *testing.T) {
 			respBody:   fixture("dns_zones_list"),
 		},
 		{
-			name:  "fetch page 1 of dns_zones list",
-			orgID: "org_O648YDMEYeLmqdmn",
-			opts:  &ListOptions{Page: 1, PerPage: 2},
-			certs: []*DNSZone{
-				{
-					ID:                 "dnszone_k75eFc4UBOgeE5Zy",
-					Name:               "test1.example.com",
-					TTL:                3600,
-					Verified:           true,
-					InfrastructureZone: true,
-				},
-				{
-					ID:                 "dnszone_lwz66kyviwCQyqQc",
-					Name:               "test-2.example.com",
-					TTL:                3600,
-					Verified:           true,
-					InfrastructureZone: false,
-				},
-			},
+			name:     "fetch page 1 of dns_zones list",
+			orgID:    "org_O648YDMEYeLmqdmn",
+			opts:     &ListOptions{Page: 1, PerPage: 2},
+			expected: dnsZonesList[0:2],
 			pagination: &Pagination{
 				CurrentPage: 1,
 				TotalPages:  2,
@@ -112,18 +109,10 @@ func TestDNSZonesService_List(t *testing.T) {
 			respBody:   fixture("dns_zones_list_page_1"),
 		},
 		{
-			name:  "fetch page 2 of dns_zones list",
-			orgID: "org_O648YDMEYeLmqdmn",
-			opts:  &ListOptions{Page: 2, PerPage: 2},
-			certs: []*DNSZone{
-				{
-					ID:                 "dnszone_qr9KPhSwkGNh7IMb",
-					Name:               "test-3.example.com",
-					TTL:                3600,
-					Verified:           true,
-					InfrastructureZone: false,
-				},
-			},
+			name:     "fetch page 2 of dns_zones list",
+			orgID:    "org_O648YDMEYeLmqdmn",
+			opts:     &ListOptions{Page: 2, PerPage: 2},
+			expected: dnsZonesList[2:],
 			pagination: &Pagination{
 				CurrentPage: 2,
 				TotalPages:  2,
@@ -200,8 +189,8 @@ func TestDNSZonesService_List(t *testing.T) {
 				assert.EqualError(t, err, tt.err)
 			}
 
-			if tt.certs != nil {
-				assert.Equal(t, tt.certs, got)
+			if tt.expected != nil {
+				assert.Equal(t, tt.expected, got)
 			}
 
 			if tt.pagination != nil {
@@ -226,15 +215,9 @@ func TestDNSZonesService_Get(t *testing.T) {
 		respBody   []byte
 	}{
 		{
-			name: "specific DNSZone",
-			id:   "dnszone_k75eFc4UBOgeE5Zy",
-			expected: &DNSZone{
-				ID:                 "dnszone_k75eFc4UBOgeE5Zy",
-				Name:               "test1.example.com",
-				TTL:                3600,
-				Verified:           true,
-				InfrastructureZone: true,
-			},
+			name:       "specific DNSZone",
+			id:         "dnszone_k75eFc4UBOgeE5Zy",
+			expected:   fixtureDNSZoneGet,
 			respStatus: http.StatusOK,
 			respBody:   fixture("dns_zone_get"),
 		},
@@ -442,15 +425,9 @@ func TestDNSZonesService_Delete(t *testing.T) {
 		respBody   []byte
 	}{
 		{
-			name: "specific DNSZone",
-			id:   "dnszone_k75eFc4UBOgeE5Zy",
-			expected: &DNSZone{
-				ID:                 "dnszone_k75eFc4UBOgeE5Zy",
-				Name:               "test1.example.com",
-				TTL:                3600,
-				Verified:           true,
-				InfrastructureZone: true,
-			},
+			name:       "specific DNSZone",
+			id:         "dnszone_k75eFc4UBOgeE5Zy",
+			expected:   fixtureDNSZoneGet,
 			respStatus: http.StatusOK,
 			respBody:   fixture("dns_zone_get"),
 		},
@@ -605,15 +582,9 @@ func TestDNSZonesService_Verify(t *testing.T) {
 		respBody   []byte
 	}{
 		{
-			name: "specific DNSZone",
-			id:   "dnszone_k75eFc4UBOgeE5Zy",
-			expected: &DNSZone{
-				ID:                 "dnszone_k75eFc4UBOgeE5Zy",
-				Name:               "test1.example.com",
-				TTL:                3600,
-				Verified:           true,
-				InfrastructureZone: true,
-			},
+			name:       "specific DNSZone",
+			id:         "dnszone_k75eFc4UBOgeE5Zy",
+			expected:   fixtureDNSZoneGet,
 			respStatus: http.StatusOK,
 			respBody:   fixture("dns_zone_get"),
 		},

@@ -65,10 +65,7 @@ func (s *DNSZonesService) List(
 	orgID string,
 	opts *ListOptions,
 ) ([]*DNSZone, *Response, error) {
-	u, err := s.path.Parse(fmt.Sprintf("organizations/%s/dns/zones", orgID))
-	if err != nil {
-		return nil, nil, err
-	}
+	u := &url.URL{Path: fmt.Sprintf("organizations/%s/dns/zones", orgID)}
 
 	qs, err := query.Values(opts)
 	if err != nil {

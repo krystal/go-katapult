@@ -49,9 +49,8 @@ func (s CertificatesService) List(
 	orgID string,
 	opts *ListOptions,
 ) ([]*Certificate, *Response, error) {
-	u, err := s.path.Parse(fmt.Sprintf("organizations/%s/certificates", orgID))
-	if err != nil {
-		return nil, nil, err
+	u := &url.URL{
+		Path: fmt.Sprintf("organizations/%s/certificates", orgID),
 	}
 
 	qs, err := query.Values(opts)

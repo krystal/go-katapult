@@ -34,6 +34,26 @@ var (
 )
 
 func TestOrganizationsService_List(t *testing.T) {
+	// Correlates to fixtures/organizations_list.json
+	organizationsList := []*Organization{
+		{
+			ID:        "org_O648YDMEYeLmqdmn",
+			Name:      "ACME Inc.",
+			SubDomain: "acme",
+			Personal:  false,
+			CreatedAt: timestampPtr(1589052170),
+			Suspended: false,
+		},
+		{
+			ID:        "org_c0CU62PqQgkON2rZ",
+			Name:      "Lex Corp.",
+			SubDomain: "lex-corp",
+			Personal:  true,
+			CreatedAt: timestampPtr(1542225631),
+			Suspended: false,
+		},
+	}
+
 	tests := []struct {
 		name       string
 		orgs       []*Organization
@@ -43,25 +63,8 @@ func TestOrganizationsService_List(t *testing.T) {
 		respBody   []byte
 	}{
 		{
-			name: "fetch list of data centers",
-			orgs: []*Organization{
-				{
-					ID:        "org_O648YDMEYeLmqdmn",
-					Name:      "ACME Inc.",
-					SubDomain: "acme",
-					Personal:  false,
-					CreatedAt: timestampPtr(1589052170),
-					Suspended: false,
-				},
-				{
-					ID:        "org_c0CU62PqQgkON2rZ",
-					Name:      "Lex Corp.",
-					SubDomain: "lex-corp",
-					Personal:  true,
-					CreatedAt: timestampPtr(1542225631),
-					Suspended: false,
-				},
-			},
+			name:       "fetch list of data centers",
+			orgs:       organizationsList,
 			respStatus: http.StatusOK,
 			respBody:   fixture("organizations_list"),
 		},
@@ -110,6 +113,52 @@ func TestOrganizationsService_List(t *testing.T) {
 }
 
 func TestOrganizationsService_Get(t *testing.T) {
+	// Correlates to fixtures/organization_get.json
+	organizationGet := &Organization{
+		ID:                   "org_O648YDMEYeLmqdmn",
+		Name:                 "ACME Inc.",
+		SubDomain:            "acme",
+		InfrastructureDomain: "acme.test.kpult.com",
+		Personal:             false,
+		CreatedAt:            timestampPtr(1589052170),
+		Suspended:            false,
+		Managed:              false,
+		BillingName:          "ACME Inc",
+		Address1:             "273  Elk Avenue",
+		Address2:             "Clarklake",
+		Address3:             "",
+		Address4:             "",
+		Postcode:             "49234",
+		VatNumber:            "GB123456789",
+		Currency: &Currency{
+			ID:      "cur_8UFhhlYAcRLf3ua6",
+			Name:    "United States Dollars",
+			IsoCode: "USD",
+			Symbol:  "$",
+		},
+		Country: &Country{
+			ID:       "ctry_V5UmyvGWYlC1pPPg",
+			Name:     "United States of America",
+			ISOCode2: "US",
+			ISOCode3: "USA",
+			TimeZone: "America/NewYork",
+			EU:       false,
+		},
+		CountryState: &CountryState{
+			ID:   "ctct_E62qc88s24FD3XIR",
+			Name: "Michigan",
+			Code: "MI",
+			Country: &Country{
+				ID:       "ctry_V5UmyvGWYlC1pPPg",
+				Name:     "United States of America",
+				ISOCode2: "US",
+				ISOCode3: "USA",
+				TimeZone: "America/NewYork",
+				EU:       false,
+			},
+		},
+	}
+
 	tests := []struct {
 		name       string
 		id         string
@@ -120,52 +169,9 @@ func TestOrganizationsService_Get(t *testing.T) {
 		respBody   []byte
 	}{
 		{
-			name: "specific Organization",
-			id:   "org_O648YDMEYeLmqdmn",
-			expected: &Organization{
-				ID:                   "org_O648YDMEYeLmqdmn",
-				Name:                 "ACME Inc.",
-				SubDomain:            "acme",
-				InfrastructureDomain: "acme.test.kpult.com",
-				Personal:             false,
-				CreatedAt:            timestampPtr(1589052170),
-				Suspended:            false,
-				Managed:              false,
-				BillingName:          "ACME Inc",
-				Address1:             "273  Elk Avenue",
-				Address2:             "Clarklake",
-				Address3:             "",
-				Address4:             "",
-				Postcode:             "49234",
-				VatNumber:            "GB123456789",
-				Currency: &Currency{
-					ID:      "cur_8UFhhlYAcRLf3ua6",
-					Name:    "United States Dollars",
-					IsoCode: "USD",
-					Symbol:  "$",
-				},
-				Country: &Country{
-					ID:       "ctry_V5UmyvGWYlC1pPPg",
-					Name:     "United States of America",
-					ISOCode2: "US",
-					ISOCode3: "USA",
-					TimeZone: "America/NewYork",
-					EU:       false,
-				},
-				CountryState: &CountryState{
-					ID:   "ctct_E62qc88s24FD3XIR",
-					Name: "Michigan",
-					Code: "MI",
-					Country: &Country{
-						ID:       "ctry_V5UmyvGWYlC1pPPg",
-						Name:     "United States of America",
-						ISOCode2: "US",
-						ISOCode3: "USA",
-						TimeZone: "America/NewYork",
-						EU:       false,
-					},
-				},
-			},
+			name:       "specific Organization",
+			id:         "org_O648YDMEYeLmqdmn",
+			expected:   organizationGet,
 			respStatus: http.StatusOK,
 			respBody:   fixture("organization_get"),
 		},
@@ -223,78 +229,88 @@ func TestOrganizationsService_Get(t *testing.T) {
 }
 
 func TestOrganizationsService_CreateManaged(t *testing.T) {
+	// Correlates to fixture/organization_managed.json
+	organizationManaged := &Organization{
+		ID:                   "org_TZQHTxMg1G8COlfu",
+		Name:                 "NERV Corp.",
+		SubDomain:            "nerv",
+		InfrastructureDomain: "nerv.test.kpult.com",
+		Personal:             false,
+		CreatedAt:            timestampPtr(1603211871),
+		Suspended:            false,
+		Managed:              true,
+		BillingName:          "ACME Inc",
+		Address1:             "273  Elk Avenue",
+		Address2:             "Clarklake",
+		Address3:             "",
+		Address4:             "",
+		Postcode:             "49234",
+		VatNumber:            "GB123456789",
+		Currency: &Currency{
+			ID:      "cur_8UFhhlYAcRLf3ua6",
+			Name:    "United States Dollars",
+			IsoCode: "USD",
+			Symbol:  "$",
+		},
+		Country: &Country{
+			ID:       "ctry_V5UmyvGWYlC1pPPg",
+			Name:     "United States of America",
+			ISOCode2: "US",
+			ISOCode3: "USA",
+			TimeZone: "America/NewYork",
+			EU:       false,
+		},
+		CountryState: &CountryState{
+			ID:   "ctct_E62qc88s24FD3XIR",
+			Name: "Michigan",
+			Code: "MI",
+			Country: &Country{
+				ID:       "ctry_V5UmyvGWYlC1pPPg",
+				Name:     "United States of America",
+				ISOCode2: "US",
+				ISOCode3: "USA",
+				TimeZone: "America/NewYork",
+				EU:       false,
+			},
+		},
+	}
+
+	type args struct {
+		parentID  string
+		name      string
+		subDomain string
+	}
 	type reqBody struct {
 		Name      string `json:"name"`
 		SubDomain string `json:"sub_domain"`
 	}
 	tests := []struct {
-		name         string
-		parentOrg    string
-		orgName      string
-		orgSubDomain string
-		expected     *Organization
-		err          string
-		errResp      *ResponseError
-		respStatus   int
-		respBody     []byte
+		name       string
+		args       args
+		expected   *Organization
+		err        string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
 	}{
 		{
-			name:         "create a managed organization",
-			parentOrg:    "org_O648YDMEYeLmqdmn",
-			orgName:      "NERV Corp.",
-			orgSubDomain: "nerv",
-			expected: &Organization{
-				ID:                   "org_TZQHTxMg1G8COlfu",
-				Name:                 "NERV Corp.",
-				SubDomain:            "nerv",
-				InfrastructureDomain: "nerv.test.kpult.com",
-				Personal:             false,
-				CreatedAt:            timestampPtr(1603211871),
-				Suspended:            false,
-				Managed:              true,
-				BillingName:          "ACME Inc",
-				Address1:             "273  Elk Avenue",
-				Address2:             "Clarklake",
-				Address3:             "",
-				Address4:             "",
-				Postcode:             "49234",
-				VatNumber:            "GB123456789",
-				Currency: &Currency{
-					ID:      "cur_8UFhhlYAcRLf3ua6",
-					Name:    "United States Dollars",
-					IsoCode: "USD",
-					Symbol:  "$",
-				},
-				Country: &Country{
-					ID:       "ctry_V5UmyvGWYlC1pPPg",
-					Name:     "United States of America",
-					ISOCode2: "US",
-					ISOCode3: "USA",
-					TimeZone: "America/NewYork",
-					EU:       false,
-				},
-				CountryState: &CountryState{
-					ID:   "ctct_E62qc88s24FD3XIR",
-					Name: "Michigan",
-					Code: "MI",
-					Country: &Country{
-						ID:       "ctry_V5UmyvGWYlC1pPPg",
-						Name:     "United States of America",
-						ISOCode2: "US",
-						ISOCode3: "USA",
-						TimeZone: "America/NewYork",
-						EU:       false,
-					},
-				},
+			name: "create a managed organization",
+			args: args{
+				parentID:  "org_O648YDMEYeLmqdmn",
+				name:      "NERV Corp.",
+				subDomain: "nerv",
 			},
+			expected:   organizationManaged,
 			respStatus: http.StatusCreated,
 			respBody:   fixture("organization_managed"),
 		},
 		{
-			name:         "managed org limit reached",
-			parentOrg:    "org_O648YDMEYeLmqdmn",
-			orgName:      "NERV Corp.",
-			orgSubDomain: "nerv",
+			name: "managed org limit reached",
+			args: args{
+				parentID:  "org_O648YDMEYeLmqdmn",
+				name:      "NERV Corp.",
+				subDomain: "nerv",
+			},
 			err: "organization_limit_reached: The maxmium number of " +
 				"organizations that can be created has been reached",
 			errResp: &ResponseError{
@@ -307,30 +323,36 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 			respBody:   fixture("organization_limit_reached_error"),
 		},
 		{
-			name:         "non-existent Organization",
-			parentOrg:    "org_nopewhatbye",
-			orgName:      "NERV Corp.",
-			orgSubDomain: "nerv",
-			err:          fixtureOrganizationNotFoundErr,
-			errResp:      fixtureOrganizationNotFoundResponseError,
-			respStatus:   http.StatusNotFound,
-			respBody:     fixture("organization_not_found_error"),
+			name: "non-existent Organization",
+			args: args{
+				parentID:  "org_nopewhatbye",
+				name:      "NERV Corp.",
+				subDomain: "nerv",
+			},
+			err:        fixtureOrganizationNotFoundErr,
+			errResp:    fixtureOrganizationNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("organization_not_found_error"),
 		},
 		{
-			name:         "suspended Organization",
-			parentOrg:    "org_O648YDMEYeLmqdmn",
-			orgName:      "NERV Corp.",
-			orgSubDomain: "nerv",
-			err:          fixtureOrganizationSuspendedErr,
-			errResp:      fixtureOrganizationSuspendedResponseError,
-			respStatus:   http.StatusForbidden,
-			respBody:     fixture("organization_suspended_error"),
+			name: "suspended Organization",
+			args: args{
+				parentID:  "org_O648YDMEYeLmqdmn",
+				name:      "NERV Corp.",
+				subDomain: "nerv",
+			},
+			err:        fixtureOrganizationSuspendedErr,
+			errResp:    fixtureOrganizationSuspendedResponseError,
+			respStatus: http.StatusForbidden,
+			respBody:   fixture("organization_suspended_error"),
 		},
 		{
-			name:         "validation error for new org details",
-			parentOrg:    "org_O648YDMEYeLmqdmn",
-			orgName:      "NERV Corp.",
-			orgSubDomain: "acme",
+			name: "validation error for new org details",
+			args: args{
+				parentID:  "org_O648YDMEYeLmqdmn",
+				name:      "NERV Corp.",
+				subDomain: "acme",
+			},
 			err: "validation_error: A validation error occurred with the " +
 				"object that was being created/updated/deleted",
 			errResp: &ResponseError{
@@ -354,7 +376,9 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 			defer teardown()
 
 			mux.HandleFunc(
-				fmt.Sprintf("/core/v1/organizations/%s/managed", tt.parentOrg),
+				fmt.Sprintf("/core/v1/organizations/%s/managed",
+					tt.args.parentID,
+				),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "POST", r.Method)
 					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
@@ -363,8 +387,8 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 					err := strictUmarshal(r.Body, body)
 					require.NoError(t, err)
 					assert.Equal(t, &reqBody{
-						Name:      tt.orgName,
-						SubDomain: tt.orgSubDomain,
+						Name:      tt.args.name,
+						SubDomain: tt.args.subDomain,
 					}, body)
 
 					w.WriteHeader(tt.respStatus)
@@ -374,7 +398,7 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 
 			got, resp, err := c.Organizations.CreateManaged(
 				context.Background(),
-				tt.parentOrg, tt.orgName, tt.orgSubDomain,
+				tt.args.parentID, tt.args.name, tt.args.subDomain,
 			)
 
 			assert.Equal(t, tt.respStatus, resp.StatusCode)
