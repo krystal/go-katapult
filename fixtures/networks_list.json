@@ -21,7 +21,7 @@
   ],
   "virtual_networks": [
     {
-      "id": "netw_1erVCx7A5Y09WknB",
+      "id": "vnet_1erVCx7A5Y09WknB",
       "name": "Make-Believe Network",
       "data_center": {
         "id": "loc_25d48761871e4bf",

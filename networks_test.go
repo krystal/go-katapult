@@ -10,6 +10,41 @@ import (
 )
 
 func TestNetworksService_List(t *testing.T) {
+	// Correlates to fixtures/networks_list.json
+	networksList := []*Network{
+		{
+			ID:   "netw_zDW7KYAeqqfRfVag",
+			Name: "Public Network",
+			DataCenter: &DataCenter{
+				ID:        "loc_25d48761871e4bf",
+				Name:      "Shirebury",
+				Permalink: "shirebury",
+			},
+		},
+		{
+			ID:   "netw_t7Rbyvr6ahqpDohR",
+			Name: "Private Network",
+			DataCenter: &DataCenter{
+				ID:        "loc_25d48761871e4bf",
+				Name:      "Shirebury",
+				Permalink: "shirebury",
+			},
+		},
+	}
+
+	// Correlates to fixtures/networks_list.json
+	virtualNetworksList := []*VirtualNetwork{
+		{
+			ID:   "vnet_1erVCx7A5Y09WknB",
+			Name: "Make-Believe Network",
+			DataCenter: &DataCenter{
+				ID:        "loc_25d48761871e4bf",
+				Name:      "Shirebury",
+				Permalink: "shirebury",
+			},
+		},
+	}
+
 	tests := []struct {
 		name       string
 		orgID      string
@@ -21,39 +56,10 @@ func TestNetworksService_List(t *testing.T) {
 		respBody   []byte
 	}{
 		{
-			name:  "fetch list of networks",
-			orgID: "org_O648YDMEYeLmqdmn",
-			nets: []*Network{
-				{
-					ID:   "netw_zDW7KYAeqqfRfVag",
-					Name: "Public Network",
-					DataCenter: &DataCenter{
-						ID:        "loc_25d48761871e4bf",
-						Name:      "Shirebury",
-						Permalink: "shirebury",
-					},
-				},
-				{
-					ID:   "netw_t7Rbyvr6ahqpDohR",
-					Name: "Private Network",
-					DataCenter: &DataCenter{
-						ID:        "loc_25d48761871e4bf",
-						Name:      "Shirebury",
-						Permalink: "shirebury",
-					},
-				},
-			},
-			vnets: []*VirtualNetwork{
-				{
-					ID:   "netw_1erVCx7A5Y09WknB",
-					Name: "Make-Believe Network",
-					DataCenter: &DataCenter{
-						ID:        "loc_25d48761871e4bf",
-						Name:      "Shirebury",
-						Permalink: "shirebury",
-					},
-				},
-			},
+			name:       "fetch list of networks",
+			orgID:      "org_O648YDMEYeLmqdmn",
+			nets:       networksList,
+			vnets:      virtualNetworksList,
 			respStatus: http.StatusOK,
 			respBody:   fixture("networks_list"),
 		},

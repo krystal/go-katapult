@@ -11,36 +11,39 @@ import (
 )
 
 func TestDataCentersService_List(t *testing.T) {
+	// Correlates to fixtures/data_centers_list.json
+	dataCentersList := []*DataCenter{
+		{
+			ID:        "loc_25d48761871e4bf",
+			Name:      "Shirebury",
+			Permalink: "shirebury",
+			Country: &Country{
+				ID:   "ctry_2f2dc89a5956437",
+				Name: "United Kingdom",
+			},
+		},
+		{
+			ID:        "loc_a2417980b9874c0",
+			Name:      "New Town",
+			Permalink: "newtown",
+			Country: &Country{
+				ID:   "ctry_9a989e68e0ad866",
+				Name: "USA",
+			},
+		},
+	}
+
 	tests := []struct {
 		name       string
-		dcs        []*DataCenter
+		expected   []*DataCenter
 		err        string
 		errResp    *ResponseError
 		respStatus int
 		respBody   []byte
 	}{
 		{
-			name: "fetch list of data centers",
-			dcs: []*DataCenter{
-				{
-					ID:        "loc_25d48761871e4bf",
-					Name:      "Shirebury",
-					Permalink: "shirebury",
-					Country: &Country{
-						ID:   "ctry_2f2dc89a5956437",
-						Name: "United Kingdom",
-					},
-				},
-				{
-					ID:        "loc_a2417980b9874c0",
-					Name:      "New Town",
-					Permalink: "newtown",
-					Country: &Country{
-						ID:   "ctry_9a989e68e0ad866",
-						Name: "USA",
-					},
-				},
-			},
+			name:       "fetch list of data centers",
+			expected:   dataCentersList,
 			respStatus: http.StatusOK,
 			respBody:   fixture("data_centers_list"),
 		},
@@ -77,8 +80,8 @@ func TestDataCentersService_List(t *testing.T) {
 				assert.EqualError(t, err, tt.err)
 			}
 
-			if tt.dcs != nil {
-				assert.Equal(t, tt.dcs, got)
+			if tt.expected != nil {
+				assert.Equal(t, tt.expected, got)
 			}
 
 			if tt.errResp != nil {
@@ -89,6 +92,17 @@ func TestDataCentersService_List(t *testing.T) {
 }
 
 func TestDataCentersService_Get(t *testing.T) {
+	// Correlates to fixtures/data_center_get.json
+	dataCenterGet := &DataCenter{
+		ID:        "loc_a2417980b9874c0",
+		Name:      "New Town",
+		Permalink: "newtown",
+		Country: &Country{
+			ID:   "ctry_9a989e68e0ad866",
+			Name: "USA",
+		},
+	}
+
 	tests := []struct {
 		name       string
 		id         string
@@ -99,17 +113,9 @@ func TestDataCentersService_Get(t *testing.T) {
 		respBody   []byte
 	}{
 		{
-			name: "specific Data Center",
-			id:   "loc_a2417980b9874c0",
-			expected: &DataCenter{
-				ID:        "loc_a2417980b9874c0",
-				Name:      "New Town",
-				Permalink: "newtown",
-				Country: &Country{
-					ID:   "ctry_9a989e68e0ad866",
-					Name: "USA",
-				},
-			},
+			name:       "specific Data Center",
+			id:         "loc_a2417980b9874c0",
+			expected:   dataCenterGet,
 			respStatus: http.StatusOK,
 			respBody:   fixture("data_center_get"),
 		},
