@@ -16,10 +16,6 @@ type Response struct {
 	Error      *ResponseError
 }
 
-func (r *Response) Paginated() bool {
-	return r.Pagination.TotalPages > 0
-}
-
 type Pagination struct {
 	CurrentPage int  `json:"current_page,omitempty"`
 	TotalPages  int  `json:"total_pages,omitempty"`

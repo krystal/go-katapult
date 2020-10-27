@@ -1,30 +1,127 @@
 package katapult
 
 import (
-	"bytes"
-	"context"
+	"encoding/json"
 	"errors"
+	"fmt"
+	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
+	"net/http/httptest"
 	"net/url"
-	"strings"
+	"os"
 	"testing"
 	"time"
 
+	"github.com/augurysys/timestamp"
+	"github.com/krystal/go-katapult/internal/codec"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
-const (
-	testDefaultBaseURL = "https://api.katapult.io/"
-	testUserAgent      = "go-katapult"
+var (
+	fixtureInvalidAPITokenErr = "invalid_api_token: The API token provided " +
+		"was not valid (it may not exist or have expired)"
+	fixtureInvalidAPITokenResponseError = &ResponseError{
+		Code: "invalid_api_token",
+		Description: "The API token provided was not valid " +
+			"(it may not exist or have expired)",
+		Detail: json.RawMessage(`{}`),
+	}
+
+	fixturePermissionDeniedErr = "permission_denied: The authenticated " +
+		"identity is not permitted to perform this action"
+	fixturePermissionDeniedResponseError = &ResponseError{
+		Code: "permission_denied",
+		Description: "The authenticated identity is not permitted to perform " +
+			"this action",
+		//nolint:lll
+		Detail: json.RawMessage(`{
+      "details": "Additional information regarding the reason why permission was denied"
+    }`),
+	}
+
+	fixtureValidationErrorErr = "validation_error: A validation error " +
+		"occurred with the object that was being created/updated/deleted"
+	fixtureValidationErrorResponseError = &ResponseError{
+		Code: "validation_error",
+		Description: "A validation error occurred with the object that was " +
+			"being created/updated/deleted",
+		Detail: json.RawMessage(`{
+      "errors": [
+        "Failed reticulating 3-dimensional splines",
+        "Failed preparing captive simulators"
+      ]
+    }`,
+		),
+	}
 )
+
+func timestampPtr(unixtime int64) *timestamp.Timestamp {
+	ts := timestamp.Timestamp(time.Unix(unixtime, 0).UTC())
+
+	return &ts
+}
+
+func strictUmarshal(r io.Reader, v interface{}) error {
+	d := json.NewDecoder(r)
+	d.DisallowUnknownFields()
+
+	return d.Decode(v)
+}
+
+func fixture(name string) []byte {
+	file := fmt.Sprintf("fixtures/%s.json", name)
+	c, err := ioutil.ReadFile(file)
+	if err != nil {
+		panic(err)
+	}
+
+	return c
+}
+
+// prepareTestClient creates a test HTTP server for mock API responses, and
+// creates a Katapult client configured to talk to the mock server.
+func prepareTestClient() (
+	client *Client,
+	mux *http.ServeMux,
+	serverURL string,
+	teardown func(),
+) {
+	mux = http.NewServeMux()
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(
+			os.Stderr,
+			"FAIL: Request for unhandled request in test server received:",
+		)
+		fmt.Fprintln(os.Stderr)
+		fmt.Fprintln(os.Stderr, "\t"+r.URL.String())
+		w.WriteHeader(http.StatusNotImplemented)
+		fmt.Fprint(w, "")
+	})
+
+	server := httptest.NewServer(mux)
+	url, err := url.Parse(server.URL)
+	if err != nil {
+		log.Fatalf("test failed, invalid URL: %s", err.Error())
+	}
+
+	client = NewClient(nil)
+	client.SetBaseURL(url)
+
+	return client, mux, url.String(), server.Close
+}
 
 type customTestHTTPClient struct{}
 
 func (s *customTestHTTPClient) Do(*http.Request) (*http.Response, error) {
 	return nil, errors.New("nope")
 }
+
+var (
+	testDefaultBaseURL   = &url.URL{Scheme: "https", Host: "api.katapult.io"}
+	testDefaultUserAgent = "go-katapult"
+)
 
 func TestNewClient(t *testing.T) {
 	tests := []struct {
@@ -49,222 +146,132 @@ func TestNewClient(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			c := NewClient(tt.httpClient)
 
-			assert.Equal(t, testDefaultBaseURL, c.BaseURL.String())
-			assert.Equal(t, testUserAgent, c.UserAgent)
-			assert.IsType(t, new(JSONCodec), c.codec)
+			assert.Equal(t, testDefaultBaseURL, c.apiClient.BaseURL)
+			assert.Equal(t, testDefaultUserAgent, c.apiClient.UserAgent)
+			assert.IsType(t, new(codec.JSON), c.apiClient.codec)
 
 			if tt.httpClient == nil {
-				assert.Implements(t, new(HTTPClient), c.client)
+				assert.Implements(t, new(HTTPClient), c.apiClient.httpClient)
 			} else {
-				assert.Equal(t, tt.httpClient, c.client)
+				assert.Equal(t, tt.httpClient, c.apiClient.httpClient)
 			}
 		})
 	}
 }
 
-func TestClient_NewRequestWithContext(t *testing.T) {
+func TestClient_BaseURL(t *testing.T) {
 	tests := []struct {
-		name         string
-		ctx          context.Context
-		method       string
-		baseURL      string
-		urlStr       string
-		body         interface{}
-		expectedBody string
-		err          string
+		name string
+		url  *url.URL
 	}{
+		{name: "default base URL"},
 		{
-			name: "request without body",
-			ctx: context.WithValue(
-				context.Background(), testCtxKey(0), "bar",
-			),
-			method: "GET",
-			urlStr: "v1/data_centers",
-		},
-		{
-			name: "request with body",
-			ctx: context.WithValue(
-				context.Background(), testCtxKey(2), "bye",
-			),
-			method: "PATCH",
-			urlStr: "v1/file_storage_volumes/fsv_SOIPKzqLkyPan28",
-			body: struct {
-				Name string `json:"name"`
-			}{Name: "Other Vol"},
-			expectedBody: `{"name":"Other Vol"}`,
-		},
-		{
-			name: "Base URL without trailing slash",
-			ctx: context.WithValue(
-				context.Background(), testCtxKey(3), "world",
-			),
-			baseURL: "https://api.katapult.io/core",
-			err: `client BaseURL must have a trailing slash, but ` +
-				`"https://api.katapult.io/core" does not`,
+			name: "custom base URL",
+			url:  &url.URL{Scheme: "http", Host: "127.0.0.1:3000"},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c, _, testBaseURL, teardown := setup()
-			defer teardown()
+			c := NewClient(nil)
 
-			var baseURL *url.URL
-			var err error
-			if tt.baseURL != "" {
-				baseURL, err = url.Parse(tt.baseURL)
-				require.NoError(t, err)
-				c.BaseURL = baseURL
-			} else {
-				baseURL, err = url.Parse(testBaseURL)
-				require.NoError(t, err)
+			if tt.url != nil {
+				c.apiClient.BaseURL = tt.url
 			}
 
-			got, err := c.NewRequestWithContext(
-				tt.ctx, tt.method, tt.urlStr, tt.body,
-			)
+			got := c.BaseURL()
 
-			if tt.err != "" {
-				assert.EqualError(t, err, tt.err)
+			if tt.url != nil {
+				assert.Equal(t, tt.url, got)
 			} else {
-				expectedURL, _ := baseURL.Parse(tt.urlStr)
-
-				assert.NoError(t, err)
-				assert.Equal(t, tt.ctx, got.Context())
-				assert.Equal(t, tt.method, got.Method)
-				assert.Equal(t, expectedURL.String(), got.URL.String())
-
-				if tt.body != nil {
-					body, err := ioutil.ReadAll(got.Body)
-					assert.NoError(t, err)
-					assert.Equal(t,
-						tt.expectedBody,
-						string(bytes.TrimSpace(body)),
-					)
-				}
+				assert.Equal(t, testDefaultBaseURL, got)
 			}
 		})
 	}
 }
 
-func TestClient_Do(t *testing.T) {
+func TestClient_SetBaseURL(t *testing.T) {
 	tests := []struct {
-		name       string
-		ctx        *context.Context
-		reqBody    string
-		v          interface{}
-		expected   interface{}
-		err        string
-		errResp    *ResponseError
-		respStatus int
-		respBody   []byte
-		respDelay  time.Duration
+		name string
+		url  *url.URL
 	}{
 		{
-			name: "body is decoded into v when it is a struct with " +
-				"JSON tags",
-			v:          &testResponseBody{},
-			expected:   &testResponseBody{ID: "foo", Name: "bar"},
-			respStatus: http.StatusOK,
-			respBody:   []byte(`{"id":"foo","name":"bar"}`),
+			name: "custom base URL",
+			url:  &url.URL{Scheme: "http", Host: "127.0.0.1:3000"},
 		},
 		{
-			name:       "body is copied to v when it is a io.Writer",
-			v:          &strings.Builder{},
-			expected:   `{"id":"foo"}`,
-			respStatus: http.StatusOK,
-			respBody:   []byte(`{"id":"foo"}`),
-		},
-		{
-			name:       "request body is submitted to the remote server",
-			reqBody:    `hello world`,
-			respStatus: http.StatusOK,
-			respBody:   []byte(`hi`),
-		},
-		{
-			name:       "response body is ignored when response is HTTP 204",
-			v:          &strings.Builder{},
-			expected:   "",
-			respBody:   []byte(`hi`),
-			respStatus: http.StatusNoContent,
-		},
-		{
-			name:       "when request times out",
-			err:        "context deadline exceeded",
-			respStatus: http.StatusOK,
-			respDelay:  10,
-		},
-		{
-			name:       "response is an error",
-			err:        fixtureInvalidAPITokenErr,
-			errResp:    fixtureInvalidAPITokenResponseError,
-			respStatus: http.StatusForbidden,
-			respBody:   fixture("invalid_api_token_error"),
+			name: "nil",
+			url:  nil,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c, mux, _, teardown := setup()
-			defer teardown()
+			c := NewClient(nil)
 
-			method := "GET"
-			ctx := context.Background()
+			c.SetBaseURL(tt.url)
 
-			if tt.reqBody != "" {
-				method = "POST"
-			}
-			if tt.ctx != nil {
-				ctx = *tt.ctx
-			}
-			if tt.respDelay != 0 {
-				var cancel context.CancelFunc
-				ctx, cancel = context.WithTimeout(
-					context.Background(),
-					(tt.respDelay/2)*time.Millisecond,
-				)
-				defer cancel()
-			}
-
-			mux.HandleFunc("/bar",
-				func(w http.ResponseWriter, r *http.Request) {
-					assert.Equal(t, method, r.Method)
-
-					receivedReqBody, _ := ioutil.ReadAll(r.Body)
-					assert.Equal(t, tt.reqBody, string(receivedReqBody))
-
-					if tt.respDelay != 0 {
-						time.Sleep(tt.respDelay * time.Millisecond)
-					}
-
-					w.WriteHeader(tt.respStatus)
-					_, _ = w.Write(tt.respBody)
-				},
-			)
-
-			req, err := http.NewRequestWithContext(
-				ctx,
-				method,
-				c.BaseURL.String()+"bar",
-				strings.NewReader(tt.reqBody),
-			)
-			require.NoError(t, err)
-
-			got, err := c.Do(req, tt.v)
-
-			if tt.errResp != nil {
-				assert.Equal(t, tt.errResp, got.Error)
-			}
-
-			if tt.err != "" {
-				assert.EqualError(t, err, tt.err)
+			if tt.url != nil {
+				assert.Equal(t, tt.url, c.apiClient.BaseURL)
 			} else {
-				assert.Equal(t, tt.respStatus, got.StatusCode)
+				assert.Equal(t, testDefaultBaseURL, c.apiClient.BaseURL)
+			}
+		})
+	}
+}
 
-				switch v := tt.v.(type) {
-				case *strings.Builder:
-					assert.Equal(t, tt.expected, v.String())
-				default:
-					assert.Equal(t, tt.expected, tt.v)
-				}
+func TestClient_UserAgent(t *testing.T) {
+	tests := []struct {
+		name  string
+		agent string
+	}{
+		{name: "default user agent"},
+		{
+			name:  "custom user agent",
+			agent: "katapult-cli",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := NewClient(nil)
+
+			if tt.agent != "" {
+				c.apiClient.UserAgent = tt.agent
+			}
+
+			got := c.UserAgent()
+
+			if tt.agent != "" {
+				assert.Equal(t, tt.agent, got)
+			} else {
+				assert.Equal(t, testDefaultUserAgent, got)
+			}
+		})
+	}
+}
+
+func TestClient_SetUserAgent(t *testing.T) {
+	tests := []struct {
+		name  string
+		agent string
+	}{
+		{
+			name:  "custom user agent",
+			agent: "katapult-cli",
+		},
+		{
+			name:  "empty user agent",
+			agent: "",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := NewClient(nil)
+
+			c.SetUserAgent(tt.agent)
+
+			if tt.agent != "" {
+				assert.Equal(t, tt.agent, c.apiClient.UserAgent)
+			} else {
+				assert.Equal(t, testDefaultUserAgent, c.apiClient.UserAgent)
 			}
 		})
 	}

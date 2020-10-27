@@ -2,21 +2,20 @@ package katapult
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/url"
-
-	"github.com/google/go-querystring/query"
 )
 
 type DNSZonesService struct {
-	*service
-	path *url.URL
+	client   *apiClient
+	basePath *url.URL
 }
 
-func NewDNSZonesService(s *service) *DNSZonesService {
+func newDNSZonesService(c *apiClient) *DNSZonesService {
 	return &DNSZonesService{
-		service: s,
-		path:    &url.URL{Path: "/core/v1/"},
+		client:   c,
+		basePath: &url.URL{Path: "/core/v1/"},
 	}
 }
 
@@ -65,15 +64,12 @@ func (s *DNSZonesService) List(
 	orgID string,
 	opts *ListOptions,
 ) ([]*DNSZone, *Response, error) {
-	u := &url.URL{Path: fmt.Sprintf("organizations/%s/dns/zones", orgID)}
-
-	qs, err := query.Values(opts)
-	if err != nil {
-		return nil, nil, err
+	u := &url.URL{
+		Path:     fmt.Sprintf("organizations/%s/dns/zones", orgID),
+		RawQuery: opts.Values().Encode(),
 	}
-	u.RawQuery = qs.Encode()
 
-	body, resp, err := s.doRequest(ctx, "GET", u.String(), nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 	resp.Pagination = body.Pagination
 
 	return body.DNSZones, resp, err
@@ -83,7 +79,7 @@ func (s *DNSZonesService) Get(
 	ctx context.Context,
 	id string,
 ) (*DNSZone, *Response, error) {
-	u := fmt.Sprintf("dns/zones/%s", id)
+	u := &url.URL{Path: fmt.Sprintf("dns/zones/%s", id)}
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 
 	return body.DNSZone, resp, err
@@ -94,7 +90,11 @@ func (s *DNSZonesService) Create(
 	orgID string,
 	zone *DNSZoneArguments,
 ) (*DNSZone, *Response, error) {
-	u := fmt.Sprintf("organizations/%s/dns/zones", orgID)
+	if zone == nil {
+		return nil, nil, errors.New("nil zone arguments")
+	}
+
+	u := &url.URL{Path: fmt.Sprintf("organizations/%s/dns/zones", orgID)}
 	reqBody := &createDNSZoneRequest{
 		Details: &DNSZoneDetails{
 			Name: zone.Name,
@@ -112,7 +112,7 @@ func (s *DNSZonesService) Delete(
 	ctx context.Context,
 	id string,
 ) (*DNSZone, *Response, error) {
-	u := fmt.Sprintf("dns/zones/%s", id)
+	u := &url.URL{Path: fmt.Sprintf("dns/zones/%s", id)}
 	body, resp, err := s.doRequest(ctx, "DELETE", u, nil)
 
 	return body.DNSZone, resp, err
@@ -122,7 +122,7 @@ func (s *DNSZonesService) VerificationDetails(
 	ctx context.Context,
 	id string,
 ) (*DNSZoneVerificationDetails, *Response, error) {
-	u := fmt.Sprintf("dns/zones/%s/verification_details", id)
+	u := &url.URL{Path: fmt.Sprintf("dns/zones/%s/verification_details", id)}
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 
 	return body.VerificationDetails, resp, err
@@ -132,7 +132,7 @@ func (s *DNSZonesService) Verify(
 	ctx context.Context,
 	id string,
 ) (*DNSZone, *Response, error) {
-	u := fmt.Sprintf("dns/zones/%s/verify", id)
+	u := &url.URL{Path: fmt.Sprintf("dns/zones/%s/verify", id)}
 	body, resp, err := s.doRequest(ctx, "POST", u, nil)
 
 	return body.DNSZone, resp, err
@@ -143,7 +143,7 @@ func (s *DNSZonesService) UpdateTTL(
 	id string,
 	ttl int,
 ) (*DNSZone, *Response, error) {
-	u := fmt.Sprintf("dns/zones/%s/update_ttl", id)
+	u := &url.URL{Path: fmt.Sprintf("dns/zones/%s/update_ttl", id)}
 	reqBody := &updateDNSZoneTTLRequest{TTL: ttl}
 	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
 
@@ -153,21 +153,17 @@ func (s *DNSZonesService) UpdateTTL(
 func (s *DNSZonesService) doRequest(
 	ctx context.Context,
 	method string,
-	urlStr string,
+	u *url.URL,
 	body interface{},
 ) (*dnsZoneResponseBody, *Response, error) {
-	u, err := s.path.Parse(urlStr)
-	if err != nil {
-		return nil, nil, err
+	u = s.basePath.ResolveReference(u)
+	respBody := &dnsZoneResponseBody{}
+	resp := &Response{}
+
+	req, err := s.client.NewRequestWithContext(ctx, method, u, body)
+	if err == nil {
+		resp, err = s.client.Do(req, respBody)
 	}
 
-	req, err := s.client.NewRequestWithContext(ctx, method, u.String(), body)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var respBody dnsZoneResponseBody
-	resp, err := s.client.Do(req, &respBody)
-
-	return &respBody, resp, err
+	return respBody, resp, err
 }

@@ -9,14 +9,14 @@ import (
 )
 
 type OrganizationsService struct {
-	*service
-	path *url.URL
+	client   *apiClient
+	basePath *url.URL
 }
 
-func NewOrganizationsService(s *service) *OrganizationsService {
+func newOrganizationsService(c *apiClient) *OrganizationsService {
 	return &OrganizationsService{
-		service: s,
-		path:    &url.URL{Path: "/core/v1/"},
+		client:   c,
+		basePath: &url.URL{Path: "/core/v1/"},
 	}
 }
 
@@ -49,7 +49,7 @@ type organizationsResponseBody struct {
 func (s *OrganizationsService) List(
 	ctx context.Context,
 ) ([]*Organization, *Response, error) {
-	u := "organizations"
+	u := &url.URL{Path: "organizations"}
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 
 	return body.Organizations, resp, err
@@ -59,7 +59,7 @@ func (s *OrganizationsService) Get(
 	ctx context.Context,
 	id string,
 ) (*Organization, *Response, error) {
-	u := fmt.Sprintf("organizations/%s", id)
+	u := &url.URL{Path: fmt.Sprintf("organizations/%s", id)}
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 
 	return body.Organization, resp, err
@@ -71,7 +71,7 @@ func (s *OrganizationsService) CreateManaged(
 	name string,
 	subDomain string,
 ) (*Organization, *Response, error) {
-	u := fmt.Sprintf("organizations/%s/managed", parentID)
+	u := &url.URL{Path: fmt.Sprintf("organizations/%s/managed", parentID)}
 	reqBody := &Organization{Name: name, SubDomain: subDomain}
 	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
 
@@ -81,21 +81,17 @@ func (s *OrganizationsService) CreateManaged(
 func (s *OrganizationsService) doRequest(
 	ctx context.Context,
 	method string,
-	urlStr string,
+	u *url.URL,
 	body interface{},
 ) (*organizationsResponseBody, *Response, error) {
-	u, err := s.path.Parse(urlStr)
-	if err != nil {
-		return nil, nil, err
+	u = s.basePath.ResolveReference(u)
+	respBody := &organizationsResponseBody{}
+	resp := &Response{}
+
+	req, err := s.client.NewRequestWithContext(ctx, method, u, body)
+	if err == nil {
+		resp, err = s.client.Do(req, respBody)
 	}
 
-	req, err := s.client.NewRequestWithContext(ctx, method, u.String(), body)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var respBody organizationsResponseBody
-	resp, err := s.client.Do(req, &respBody)
-
-	return &respBody, resp, err
+	return respBody, resp, err
 }

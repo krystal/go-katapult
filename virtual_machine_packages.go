@@ -4,21 +4,19 @@ import (
 	"context"
 	"fmt"
 	"net/url"
-
-	"github.com/google/go-querystring/query"
 )
 
 type VirtualMachinePackagesService struct {
-	*service
-	path *url.URL
+	client   *apiClient
+	basePath *url.URL
 }
 
-func NewVirtualMachinePackagesService(
-	s *service,
+func newVirtualMachinePackagesService(
+	c *apiClient,
 ) *VirtualMachinePackagesService {
 	return &VirtualMachinePackagesService{
-		service: s,
-		path:    &url.URL{Path: "/core/v1/"},
+		client:   c,
+		basePath: &url.URL{Path: "/core/v1/"},
 	}
 }
 
@@ -44,15 +42,12 @@ func (s *VirtualMachinePackagesService) List(
 	ctx context.Context,
 	opts *ListOptions,
 ) ([]*VirtualMachinePackage, *Response, error) {
-	u := &url.URL{Path: "virtual_machine_packages"}
-
-	qs, err := query.Values(opts)
-	if err != nil {
-		return nil, nil, err
+	u := &url.URL{
+		Path:     "virtual_machine_packages",
+		RawQuery: opts.Values().Encode(),
 	}
-	u.RawQuery = qs.Encode()
 
-	body, resp, err := s.doRequest(ctx, "GET", u.String(), nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 	resp.Pagination = body.Pagination
 
 	return body.VirtualMachinePackages, resp, err
@@ -62,7 +57,7 @@ func (s *VirtualMachinePackagesService) Get(
 	ctx context.Context,
 	id string,
 ) (*VirtualMachinePackage, *Response, error) {
-	u := fmt.Sprintf("virtual_machine_packages/%s", id)
+	u := &url.URL{Path: fmt.Sprintf("virtual_machine_packages/%s", id)}
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 
 	return body.VirtualMachinePackage, resp, err
@@ -71,21 +66,17 @@ func (s *VirtualMachinePackagesService) Get(
 func (s *VirtualMachinePackagesService) doRequest(
 	ctx context.Context,
 	method string,
-	urlStr string,
+	u *url.URL,
 	body interface{},
 ) (*virtualMachinePackagesResponseBody, *Response, error) {
-	u, err := s.path.Parse(urlStr)
-	if err != nil {
-		return nil, nil, err
+	u = s.basePath.ResolveReference(u)
+	respBody := &virtualMachinePackagesResponseBody{}
+	resp := &Response{}
+
+	req, err := s.client.NewRequestWithContext(ctx, method, u, body)
+	if err == nil {
+		resp, err = s.client.Do(req, respBody)
 	}
 
-	req, err := s.client.NewRequestWithContext(ctx, method, u.String(), body)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var respBody virtualMachinePackagesResponseBody
-	resp, err := s.client.Do(req, &respBody)
-
-	return &respBody, resp, err
+	return respBody, resp, err
 }
