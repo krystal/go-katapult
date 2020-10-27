@@ -1,0 +1,37 @@
+{
+  "pagination": {
+    "current_page": 1,
+    "total_pages": 2,
+    "total": 3,
+    "per_page": 2,
+    "large_set": false
+  },
+  "virtual_machine_packages": [
+    {
+      "id": "vmpkg_XdNPhGXvyt1dnDts",
+      "name": "X-Small",
+      "permalink": "xsmall",
+      "cpu_cores": 1,
+      "ipv4_addresses": 1,
+      "memory_in_gb": 1,
+      "storage_in_gb": 10,
+      "privacy": "private",
+      "icon": {
+        "url": "https://my.katapult.io/attachment/aa9e51fc-ca56-4a4a-aeba-2f57ffcc9886/cat.jpg"
+      }
+    },
+    {
+      "id": "vmpkg_YlqvfsKqZJODtvjG",
+      "name": "Small",
+      "permalink": "small",
+      "cpu_cores": 2,
+      "ipv4_addresses": 1,
+      "memory_in_gb": 2,
+      "storage_in_gb": 10,
+      "privacy": "public",
+      "icon": {
+        "url": "https://my.katapult.io/attachment/4d014ee8-dae3-4574-a180-e5711fc85f9a/fox.png"
+      }
+    }
+  ]
+}
