@@ -3,20 +3,12 @@
     {
       "id": "loc_25d48761871e4bf",
       "name": "Shirebury",
-      "permalink": "shirebury",
-      "country": {
-        "id": "ctry_2f2dc89a5956437",
-        "name": "United Kingdom"
-      }
+      "permalink": "shirebury"
     },
     {
       "id": "loc_a2417980b9874c0",
       "name": "New Town",
-      "permalink": "newtown",
-      "country": {
-        "id": "ctry_9a989e68e0ad866",
-        "name": "USA"
-      }
+      "permalink": "newtown"
     }
   ]
 }

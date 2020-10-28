@@ -32,11 +32,9 @@ var (
 
 	// Correlates to fixtures/dns_zone_get.json
 	fixtureDNSZone = &DNSZone{
-		ID:                 "dnszone_k75eFc4UBOgeE5Zy",
-		Name:               "test1.example.com",
-		TTL:                3600,
-		Verified:           true,
-		InfrastructureZone: true,
+		ID:   "dnszone_k75eFc4UBOgeE5Zy",
+		Name: "test1.example.com",
+		TTL:  3600,
 	}
 )
 
@@ -194,25 +192,19 @@ func TestDNSZonesService_List(t *testing.T) {
 	// Correlates to fixtures/dns_zones_list*.json
 	dnsZonesList := []*DNSZone{
 		{
-			ID:                 "dnszone_k75eFc4UBOgeE5Zy",
-			Name:               "test1.example.com",
-			TTL:                3600,
-			Verified:           true,
-			InfrastructureZone: true,
+			ID:   "dnszone_k75eFc4UBOgeE5Zy",
+			Name: "test1.example.com",
+			TTL:  3600,
 		},
 		{
-			ID:                 "dnszone_lwz66kyviwCQyqQc",
-			Name:               "test-2.example.com",
-			TTL:                3600,
-			Verified:           true,
-			InfrastructureZone: false,
+			ID:   "dnszone_lwz66kyviwCQyqQc",
+			Name: "test-2.example.com",
+			TTL:  3600,
 		},
 		{
-			ID:                 "dnszone_qr9KPhSwkGNh7IMb",
-			Name:               "test-3.example.com",
-			TTL:                3600,
-			Verified:           true,
-			InfrastructureZone: false,
+			ID:   "dnszone_qr9KPhSwkGNh7IMb",
+			Name: "test-3.example.com",
+			TTL:  3600,
 		},
 	}
 
@@ -504,11 +496,9 @@ func TestDNSZonesService_Create(t *testing.T) {
 				},
 			},
 			expected: &DNSZone{
-				ID:                 "dnszone_yqflWVIdu5vnirLq",
-				Name:               "test-1.com",
-				TTL:                1800,
-				Verified:           false,
-				InfrastructureZone: true,
+				ID:   "dnszone_yqflWVIdu5vnirLq",
+				Name: "test-1.com",
+				TTL:  1800,
 			},
 			respStatus: http.StatusCreated,
 			respBody:   fixture("dns_zone_create"),
@@ -1004,11 +994,9 @@ func TestDNSZonesService_UpdateTTL(t *testing.T) {
 				ttl: 1842,
 			},
 			expected: &DNSZone{
-				ID:                 "dnszone_lwz66kyviwCQyqQc",
-				Name:               "test-2.example.com",
-				TTL:                1842,
-				Verified:           true,
-				InfrastructureZone: false,
+				ID:   "dnszone_lwz66kyviwCQyqQc",
+				Name: "test-2.example.com",
+				TTL:  1842,
 			},
 			respStatus: http.StatusCreated,
 			respBody:   fixture("dns_zone_update_ttl"),

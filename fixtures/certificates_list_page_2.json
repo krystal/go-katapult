@@ -10,10 +10,7 @@
     {
       "id": "cert_BJz8pI5zjmABRsE0",
       "name": "test-3.example.com",
-      "issuer": "self_signed",
-      "state": "issued",
-      "expires_at": 1667472488,
-      "last_issued_at": 1602326866
+      "issuer": "self_signed"
     }
   ]
 }

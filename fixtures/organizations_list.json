@@ -3,18 +3,12 @@
     {
       "id": "org_O648YDMEYeLmqdmn",
       "name": "ACME Inc.",
-      "sub_domain": "acme",
-      "personal": false,
-      "created_at": 1589052170,
-      "suspended": false
+      "sub_domain": "acme"
     },
     {
       "id": "org_c0CU62PqQgkON2rZ",
       "name": "Lex Corp.",
-      "sub_domain": "lex-corp",
-      "personal": true,
-      "created_at": 1542225631,
-      "suspended": false
+      "sub_domain": "lex-corp"
     }
   ]
 }

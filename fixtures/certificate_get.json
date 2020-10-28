@@ -2,17 +2,6 @@
   "certificate": {
     "id": "cert_Xr8jREhulOP3UJoM",
     "name": "test-1.example.com",
-    "additional_names": ["test1.domain.com"],
-    "issuer": "self_signed",
-    "state": "issued",
-    "created_at": 1611139536,
-    "expires_at": 1611139536,
-    "last_issued_at": 1603190706,
-    "issue_error": null,
-    "authorization_method": null,
-    "certificate_api_url": "https://certificates.katapult.io/cert_Xr8jREhulOP3UJoM/l1XAqAqcuhERLEna4UPvwLJWAj7EtLUYFu67iEgU",
-    "certificate": "-----BEGIN CERTIFICATE-----\nYllvaVFUdjJmaVFnN2Z6VndzYWk4dm53RDI4M0hWV3ByeE1NRHN4VDdqOHVCWm56Y3E2UzZVWk1u\nVTExZlQwakpld0g4aWtBM1VUdHExU0FxeDhMVUtQREhncUFkQUNPOVVtVkZ5SG9Dd2JKZUNTelUy\nTmtveGYxRk45OG1VS0I=\n-----END CERTIFICATE-----\n",
-    "chain": "-----BEGIN CERTIFICATE-----\nbEtZYTNHTTF0OFBzSEs0bjhvWlNKejdLMjF3enBDdjdEQVhtNDlXajExTDBDeHlPSzZMNGpSb2Fi\nMkI5YUhNS0xaTHhDZmFJUXVHUTIxZjFsZkRvWjlEaU16TUE0RnhJelVqR0pFMjZ0dmU5ZmdhbUQ4\nY2hmZ3ZXdm11YmFyUXQ=\n-----END CERTIFICATE-----\n",
-    "private_key": "-----BEGIN RSA PRIVATE KEY-----\nN2c2dUQ3NVM5NUhYZzNOQUZzUUdmMkc5cnR2ejI0U1BxYW9Wd3M4STFnNGxJRlJUSjFGMzRWV2FY\ncDFDSmd2RlVyVFU5TDROZHhnQ1VzWFdKV1FqMXJEQzBuZzB3SVpSQ3gxcTRnYmlFdEl1YWJLSUxt\nZjNYTHRSVkxlTkZRbmY=\n-----END RSA PRIVATE KEY-----\n"
+    "additional_names": ["test1.domain.com"]
   }
 }

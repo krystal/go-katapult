@@ -2,10 +2,6 @@
   "data_center": {
     "id": "loc_a2417980b9874c0",
     "name": "New Town",
-    "permalink": "newtown",
-    "country": {
-      "id": "ctry_9a989e68e0ad866",
-      "name": "USA"
-    }
+    "permalink": "newtown"
   }
 }
