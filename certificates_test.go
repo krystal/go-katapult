@@ -10,6 +10,67 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestCertificate_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *Certificate
+	}{
+		{
+			name: "empty",
+			obj:  &Certificate{},
+		},
+		{
+			name: "full",
+			obj: &Certificate{
+				ID:                  "id",
+				Name:                "name",
+				AdditionalNames:     []string{"a name"},
+				Issuer:              "iss",
+				State:               "state",
+				CreatedAt:           timestampPtr(123),
+				ExpiresAt:           timestampPtr(456),
+				LastIssuedAt:        timestampPtr(789),
+				IssueError:          "isserr",
+				AuthorizationMethod: "meth",
+				CertificateAPIURL:   "certurl",
+				Certificate:         "cert",
+				Chain:               "chain",
+				PrivateKey:          "key",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func Test_certificatesResponseBody_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *certificatesResponseBody
+	}{
+		{
+			name: "empty",
+			obj:  &certificatesResponseBody{},
+		},
+		{
+			name: "full",
+			obj: &certificatesResponseBody{
+				Pagination:   &Pagination{CurrentPage: 42},
+				Certificate:  &Certificate{ID: "id1"},
+				Certificates: []*Certificate{{ID: "id2"}},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
 func TestCertificatesService_List(t *testing.T) {
 	// Correlates to fixtures/certificates_list*.json
 	certificateList := []*Certificate{

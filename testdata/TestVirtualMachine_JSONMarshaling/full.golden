@@ -1,0 +1,1 @@
+{"id":"id","name":"name","hostname":"hostname","fqdn":"Fqdn","created_at":934834834,"initial_root_password":"initial_root_password","state":"state","zone":{"id":"id0"},"organization":{"id":"id1"},"group":{"id":"id2"},"package":{"id":"id3"},"attached_iso":{"id":"id4"},"tags":[{"id":"id5"}],"ip_addresses":[{"id":"id6"}]}

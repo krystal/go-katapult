@@ -33,6 +33,70 @@ var (
 	}
 )
 
+func TestOrganization_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *Organization
+	}{
+		{
+			name: "empty",
+			obj:  &Organization{},
+		},
+		{
+			name: "full",
+			obj: &Organization{
+				ID:                   "Id",
+				Name:                 "name",
+				SubDomain:            "sub_domain",
+				InfrastructureDomain: "infrastructure_domain",
+				Personal:             true,
+				CreatedAt:            timestampPtr(934933),
+				Suspended:            true,
+				Managed:              true,
+				BillingName:          "billing_name",
+				Address1:             "address1",
+				Address2:             "address2",
+				Address3:             "address3",
+				Address4:             "address4",
+				Postcode:             "postcode",
+				VatNumber:            "vat_number",
+				Currency:             &Currency{ID: "id0"},
+				Country:              &Country{ID: "id1"},
+				CountryState:         &CountryState{ID: "id2"},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func Test_organizationsResponseBody_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *organizationsResponseBody
+	}{
+		{
+			name: "empty",
+			obj:  &organizationsResponseBody{},
+		},
+		{
+			name: "full",
+			obj: &organizationsResponseBody{
+				Organization:  &Organization{ID: "id1"},
+				Organizations: []*Organization{{ID: "id2"}},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
 func TestOrganizationsService_List(t *testing.T) {
 	// Correlates to fixtures/organizations_list.json
 	organizationsList := []*Organization{
