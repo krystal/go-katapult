@@ -55,6 +55,17 @@ var (
     }`,
 		),
 	}
+
+	fixtureObjectInTrashErr = "object_in_trash: The object found is in the " +
+		"trash and therefore cannot be manipulated through the API. It " +
+		"should be restored in order to run this operation."
+	fixtureObjectInTrashResponseError = &ResponseError{
+		Code: "object_in_trash",
+		Description: "The object found is in the trash and therefore cannot " +
+			"be manipulated through the API. It should be restored in order " +
+			"to run this operation.",
+		Detail: json.RawMessage(`{}`),
+	}
 )
 
 func timestampPtr(unixtime int64) *timestamp.Timestamp {

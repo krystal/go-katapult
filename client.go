@@ -26,6 +26,7 @@ type Client struct {
 	Networks               *NetworksService
 	Organizations          *OrganizationsService
 	VirtualMachinePackages *VirtualMachinePackagesService
+	VirtualMachines        *VirtualMachinesService
 }
 
 func NewClient(httpClient HTTPClient) *Client {
@@ -50,6 +51,7 @@ func NewClient(httpClient HTTPClient) *Client {
 		Networks:               newNetworksService(c),
 		Organizations:          newOrganizationsService(c),
 		VirtualMachinePackages: newVirtualMachinePackagesService(c),
+		VirtualMachines:        newVirtualMachinesService(c),
 	}
 }
 

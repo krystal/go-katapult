@@ -1,0 +1,86 @@
+{
+  "pagination": {
+    "current_page": 1,
+    "total_pages": 1,
+    "total": 3,
+    "per_page": 30,
+    "large_set": false
+  },
+  "virtual_machines": [
+    {
+      "id": "vm_t8yomYsG4bccKw5D",
+      "name": "bitter-beautiful-mango",
+      "hostname": "bitter-beautiful-mango",
+      "fqdn": "bitter-beautiful-mango.test.kpult.com",
+      "created_at": 1579883611,
+      "zone": {
+        "id": "zone_FZ7ZpVppByTepLqf",
+        "name": "Main Zone",
+        "permalink": "main",
+        "data_center": {
+          "id": "loc_25d48761871e4bf",
+          "name": "Shirebury",
+          "permalink": "shirebury"
+        }
+      },
+      "package": {
+        "name": "Small"
+      },
+      "ip_addresses": [
+        {
+          "address": "31.228.217.44"
+        }
+      ]
+    },
+    {
+      "id": "vm_h7bzdXXHa0GvJYMc",
+      "name": "popular-shapely-tank",
+      "hostname": "popular-shapely-tank",
+      "fqdn": "popular-shapely-tank.test.kpult.com",
+      "created_at": 1568651782,
+      "zone": {
+        "id": "zone_FZ7ZpVppByTepLqf",
+        "name": "Main Zone",
+        "permalink": "main",
+        "data_center": {
+          "id": "loc_25d48761871e4bf",
+          "name": "Shirebury",
+          "permalink": "shirebury"
+        }
+      },
+      "package": {
+        "name": "Medium"
+      },
+      "ip_addresses": [
+        {
+          "address": "188.56.184.51"
+        }
+      ]
+    },
+    {
+      "id": "vm_1kpkjQeMEI43tztr",
+      "name": "popular-blue-kumquat",
+      "hostname": "popular-blue-kumquat",
+      "fqdn": "popular-blue-kumquat.test.kpult.com",
+      "created_at": 1563381453,
+      "zone": {
+        "id": "zone_FZ7ZpVppByTepLqf",
+        "name": "Main Zone",
+        "permalink": "main",
+        "data_center": {
+          "id": "loc_25d48761871e4bf",
+          "name": "Shirebury",
+          "permalink": "shirebury"
+        }
+      },
+      "package": {
+        "name": "Small"
+      },
+      "ip_addresses": [
+        {
+          "address": "106.127.29.51"
+        }
+      ]
+    }
+  ]
+}

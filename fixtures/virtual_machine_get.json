@@ -1,0 +1,77 @@
+{
+  "virtual_machine": {
+    "id": "vm_t8yomYsG4bccKw5D",
+    "name": "bitter-beautiful-mango",
+    "hostname": "bitter-beautiful-mango",
+    "fqdn": "bitter-beautiful-mango.test.kpult.com",
+    "created_at": 1579883611,
+    "initial_root_password": "w7OrYGqImpwoNZOM",
+    "state": "started",
+    "zone": {
+      "id": "zone_FZ7ZpVppByTepLqf",
+      "name": "Main Zone",
+      "permalink": "main",
+      "data_center": {
+        "id": "loc_25d48761871e4bf",
+        "name": "Shirebury",
+        "permalink": "shirebury",
+        "country": {
+          "id": "ctry_2f2dc89a5956437",
+          "name": "United Kingdom",
+          "iso_code2": "GB",
+          "iso_code3": "GBR",
+          "time_zone": "Europe/London",
+          "eu": true
+        }
+      }
+    },
+    "organization": {
+      "id": "org_BVxE1c44NazNmoOb",
+      "name": "Sherlock & Co.",
+      "sub_domain": "sherlock"
+    },
+    "group": {
+      "id": "vmgrp_CQZ3NlZq37aMKaDU",
+      "name": "misc",
+      "segregate": false,
+      "created_at": 1558199798
+    },
+    "package": {
+      "id": "vmpkg_YlqvfsKqZJODtvjG",
+      "name": "Small"
+    },
+    "attached_iso": {
+      "id": "iso_AkqXHtTlQXwSwQJ9",
+      "name": "Ubuntu 20.04",
+      "operating_system": {
+        "id": "os_D1Z90eOlbCSqGCU4",
+        "name": "Ubuntu",
+        "badge": {
+          "url": "https://my.katapult.io/attachment/87ef444a-43e0-440e-9205-4285e7cccc3b/ubuntu.png",
+          "file_name": "ubuntu.png",
+          "file_type": "image/png",
+          "file_size": 4924,
+          "digest": "0964db5f-bf6f-430e-bd77-85078d16b85a",
+          "token": "f0b3faf5-313d-43f6-87e0-7f142c757466"
+        }
+      }
+    },
+    "tags": [
+      {
+        "id": "tag_dpkrkYssrXDryOhn",
+        "name": "web",
+        "color": "light_brown",
+        "created_at": 1596993883
+      }
+    ],
+    "ip_addresses": [
+      {
+        "id": "ip_K4t3ya3Werh6zPCd",
+        "address": "210.103.10.205",
+        "reverse_dns": "210-103-10-205.infra.katapult.dev",
+        "vip": false,
+        "address_with_mask": "210.103.10.205/26"
+      }
+    ]
+  }
+}
