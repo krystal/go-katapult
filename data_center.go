@@ -6,18 +6,6 @@ import (
 	"net/url"
 )
 
-type DataCentersService struct {
-	client   *apiClient
-	basePath *url.URL
-}
-
-func newDataCentersService(c *apiClient) *DataCentersService {
-	return &DataCentersService{
-		client:   c,
-		basePath: &url.URL{Path: "/core/v1/"},
-	}
-}
-
 type DataCenter struct {
 	ID        string   `json:"id,omitempty"`
 	Name      string   `json:"name,omitempty"`
@@ -30,7 +18,19 @@ type dataCentersResponseBody struct {
 	DataCenters []*DataCenter `json:"data_centers,omitempty"`
 }
 
-func (s *DataCentersService) List(
+type DataCentersResource struct {
+	client   *apiClient
+	basePath *url.URL
+}
+
+func newDataCentersResource(c *apiClient) *DataCentersResource {
+	return &DataCentersResource{
+		client:   c,
+		basePath: &url.URL{Path: "/core/v1/"},
+	}
+}
+
+func (s *DataCentersResource) List(
 	ctx context.Context,
 ) ([]*DataCenter, *Response, error) {
 	u := &url.URL{Path: "data_centers"}
@@ -39,7 +39,7 @@ func (s *DataCentersService) List(
 	return body.DataCenters, resp, err
 }
 
-func (s *DataCentersService) Get(
+func (s *DataCentersResource) Get(
 	ctx context.Context,
 	id string,
 ) (*DataCenter, *Response, error) {
@@ -49,7 +49,7 @@ func (s *DataCentersService) Get(
 	return body.DataCenter, resp, err
 }
 
-func (s *DataCentersService) doRequest(
+func (s *DataCentersResource) doRequest(
 	ctx context.Context,
 	method string,
 	u *url.URL,

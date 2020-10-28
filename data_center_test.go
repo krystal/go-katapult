@@ -62,7 +62,7 @@ func Test_dataCentersResponseBody_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestDataCentersService_List(t *testing.T) {
+func TestDataCentersResource_List(t *testing.T) {
 	type args struct {
 		ctx context.Context
 	}
@@ -151,7 +151,7 @@ func TestDataCentersService_List(t *testing.T) {
 	}
 }
 
-func TestDataCentersService_Get(t *testing.T) {
+func TestDataCentersResource_Get(t *testing.T) {
 	// Correlates to fixtures/data_center_get.json
 	dataCenter := &DataCenter{
 		ID:        "loc_a2417980b9874c0",

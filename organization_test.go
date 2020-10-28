@@ -97,7 +97,7 @@ func Test_organizationsResponseBody_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestOrganizationsService_List(t *testing.T) {
+func TestOrganizationsResource_List(t *testing.T) {
 	type args struct {
 		ctx context.Context
 	}
@@ -185,7 +185,7 @@ func TestOrganizationsService_List(t *testing.T) {
 	}
 }
 
-func TestOrganizationsService_Get(t *testing.T) {
+func TestOrganizationsResource_Get(t *testing.T) {
 	type args struct {
 		ctx context.Context
 		id  string
@@ -282,7 +282,7 @@ func TestOrganizationsService_Get(t *testing.T) {
 	}
 }
 
-func TestOrganizationsService_CreateManaged(t *testing.T) {
+func TestOrganizationsResource_CreateManaged(t *testing.T) {
 	type args struct {
 		ctx       context.Context
 		parentID  string

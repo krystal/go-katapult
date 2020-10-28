@@ -72,109 +72,6 @@ func TestVirtualMachineGroup_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestISO_JSONMarshaling(t *testing.T) {
-	tests := []struct {
-		name string
-		obj  *ISO
-	}{
-		{
-			name: "empty",
-			obj:  &ISO{},
-		},
-		{
-			name: "full",
-			obj: &ISO{
-				ID:              "id1",
-				Name:            "name",
-				OperatingSystem: &OperatingSystem{ID: "id2"},
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			testJSONMarshaling(t, tt.obj)
-		})
-	}
-}
-
-func TestOperatingSystem_JSONMarshaling(t *testing.T) {
-	tests := []struct {
-		name string
-		obj  *OperatingSystem
-	}{
-		{
-			name: "empty",
-			obj:  &OperatingSystem{},
-		},
-		{
-			name: "full",
-			obj: &OperatingSystem{
-				ID:    "id1",
-				Name:  "name",
-				Badge: &Attachment{URL: "url2"},
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			testJSONMarshaling(t, tt.obj)
-		})
-	}
-}
-
-func TestTag_JSONMarshaling(t *testing.T) {
-	tests := []struct {
-		name string
-		obj  *Tag
-	}{
-		{
-			name: "empty",
-			obj:  &Tag{},
-		},
-		{
-			name: "full",
-			obj: &Tag{
-				ID:        "id1",
-				Name:      "name",
-				Color:     "color",
-				CreatedAt: timestampPtr(3043009),
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			testJSONMarshaling(t, tt.obj)
-		})
-	}
-}
-
-func TestIPAddress_JSONMarshaling(t *testing.T) {
-	tests := []struct {
-		name string
-		obj  *IPAddress
-	}{
-		{
-			name: "empty",
-			obj:  &IPAddress{},
-		},
-		{
-			name: "full",
-			obj: &IPAddress{
-				ID:              "id1",
-				Address:         "address",
-				ReverseDNS:      "reverse_dns",
-				VIP:             true,
-				AddressWithMask: "address_with_mask",
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			testJSONMarshaling(t, tt.obj)
-		})
-	}
-}
-
 func Test_virtualMachinesResponseBody_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string
@@ -200,7 +97,7 @@ func Test_virtualMachinesResponseBody_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestVirtualMachinesService_List(t *testing.T) {
+func TestVirtualMachinesResource_List(t *testing.T) {
 	// Correlates to fixtures/virtual_machines_list*.json
 	virtualMachinesList := []*VirtualMachine{
 		{
@@ -380,7 +277,7 @@ func TestVirtualMachinesService_List(t *testing.T) {
 	}
 }
 
-func TestVirtualMachinesService_Get(t *testing.T) {
+func TestVirtualMachinesResource_Get(t *testing.T) {
 	type args struct {
 		ctx context.Context
 		id  string

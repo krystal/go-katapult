@@ -6,20 +6,6 @@ import (
 	"net/url"
 )
 
-type VirtualMachinePackagesService struct {
-	client   *apiClient
-	basePath *url.URL
-}
-
-func newVirtualMachinePackagesService(
-	c *apiClient,
-) *VirtualMachinePackagesService {
-	return &VirtualMachinePackagesService{
-		client:   c,
-		basePath: &url.URL{Path: "/core/v1/"},
-	}
-}
-
 type VirtualMachinePackage struct {
 	ID            string      `json:"id,omitempty"`
 	Name          string      `json:"name,omitempty"`
@@ -38,7 +24,21 @@ type virtualMachinePackagesResponseBody struct {
 	VirtualMachinePackages []*VirtualMachinePackage `json:"virtual_machine_packages,omitempty"`
 }
 
-func (s *VirtualMachinePackagesService) List(
+type VirtualMachinePackagesResource struct {
+	client   *apiClient
+	basePath *url.URL
+}
+
+func newVirtualMachinePackagesResource(
+	c *apiClient,
+) *VirtualMachinePackagesResource {
+	return &VirtualMachinePackagesResource{
+		client:   c,
+		basePath: &url.URL{Path: "/core/v1/"},
+	}
+}
+
+func (s *VirtualMachinePackagesResource) List(
 	ctx context.Context,
 	opts *ListOptions,
 ) ([]*VirtualMachinePackage, *Response, error) {
@@ -53,7 +53,7 @@ func (s *VirtualMachinePackagesService) List(
 	return body.VirtualMachinePackages, resp, err
 }
 
-func (s *VirtualMachinePackagesService) Get(
+func (s *VirtualMachinePackagesResource) Get(
 	ctx context.Context,
 	id string,
 ) (*VirtualMachinePackage, *Response, error) {
@@ -63,7 +63,7 @@ func (s *VirtualMachinePackagesService) Get(
 	return body.VirtualMachinePackage, resp, err
 }
 
-func (s *VirtualMachinePackagesService) doRequest(
+func (s *VirtualMachinePackagesResource) doRequest(
 	ctx context.Context,
 	method string,
 	u *url.URL,

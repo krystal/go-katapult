@@ -6,18 +6,6 @@ import (
 	"net/url"
 )
 
-type NetworksService struct {
-	client   *apiClient
-	basePath *url.URL
-}
-
-func newNetworksService(c *apiClient) *NetworksService {
-	return &NetworksService{
-		client:   c,
-		basePath: &url.URL{Path: "/core/v1/"},
-	}
-}
-
 type Network struct {
 	ID         string      `json:"id,omitempty"`
 	Name       string      `json:"name,omitempty"`
@@ -35,7 +23,19 @@ type networksResponseBody struct {
 	VirtualNetworks []*VirtualNetwork `json:"virtual_networks,omitempty"`
 }
 
-func (s *NetworksService) List(
+type NetworksResource struct {
+	client   *apiClient
+	basePath *url.URL
+}
+
+func newNetworksResource(c *apiClient) *NetworksResource {
+	return &NetworksResource{
+		client:   c,
+		basePath: &url.URL{Path: "/core/v1/"},
+	}
+}
+
+func (s *NetworksResource) List(
 	ctx context.Context,
 	orgID string,
 ) ([]*Network, []*VirtualNetwork, *Response, error) {
@@ -48,7 +48,7 @@ func (s *NetworksService) List(
 	return body.Networks, body.VirtualNetworks, resp, err
 }
 
-func (s *NetworksService) doRequest(
+func (s *NetworksResource) doRequest(
 	ctx context.Context,
 	method string,
 	u *url.URL,

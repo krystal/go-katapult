@@ -7,18 +7,6 @@ import (
 	"net/url"
 )
 
-type DNSZonesService struct {
-	client   *apiClient
-	basePath *url.URL
-}
-
-func newDNSZonesService(c *apiClient) *DNSZonesService {
-	return &DNSZonesService{
-		client:   c,
-		basePath: &url.URL{Path: "/core/v1/"},
-	}
-}
-
 type DNSZone struct {
 	ID                 string `json:"id,omitempty"`
 	Name               string `json:"name,omitempty"`
@@ -59,7 +47,19 @@ type dnsZoneResponseBody struct {
 	VerificationDetails *DNSZoneVerificationDetails `json:"details,omitempty"`
 }
 
-func (s *DNSZonesService) List(
+type DNSZonesResource struct {
+	client   *apiClient
+	basePath *url.URL
+}
+
+func newDNSZonesResource(c *apiClient) *DNSZonesResource {
+	return &DNSZonesResource{
+		client:   c,
+		basePath: &url.URL{Path: "/core/v1/"},
+	}
+}
+
+func (s *DNSZonesResource) List(
 	ctx context.Context,
 	orgID string,
 	opts *ListOptions,
@@ -75,7 +75,7 @@ func (s *DNSZonesService) List(
 	return body.DNSZones, resp, err
 }
 
-func (s *DNSZonesService) Get(
+func (s *DNSZonesResource) Get(
 	ctx context.Context,
 	id string,
 ) (*DNSZone, *Response, error) {
@@ -85,7 +85,7 @@ func (s *DNSZonesService) Get(
 	return body.DNSZone, resp, err
 }
 
-func (s *DNSZonesService) Create(
+func (s *DNSZonesResource) Create(
 	ctx context.Context,
 	orgID string,
 	zone *DNSZoneArguments,
@@ -108,7 +108,7 @@ func (s *DNSZonesService) Create(
 	return body.DNSZone, resp, err
 }
 
-func (s *DNSZonesService) Delete(
+func (s *DNSZonesResource) Delete(
 	ctx context.Context,
 	id string,
 ) (*DNSZone, *Response, error) {
@@ -118,7 +118,7 @@ func (s *DNSZonesService) Delete(
 	return body.DNSZone, resp, err
 }
 
-func (s *DNSZonesService) VerificationDetails(
+func (s *DNSZonesResource) VerificationDetails(
 	ctx context.Context,
 	id string,
 ) (*DNSZoneVerificationDetails, *Response, error) {
@@ -128,7 +128,7 @@ func (s *DNSZonesService) VerificationDetails(
 	return body.VerificationDetails, resp, err
 }
 
-func (s *DNSZonesService) Verify(
+func (s *DNSZonesResource) Verify(
 	ctx context.Context,
 	id string,
 ) (*DNSZone, *Response, error) {
@@ -138,7 +138,7 @@ func (s *DNSZonesService) Verify(
 	return body.DNSZone, resp, err
 }
 
-func (s *DNSZonesService) UpdateTTL(
+func (s *DNSZonesResource) UpdateTTL(
 	ctx context.Context,
 	id string,
 	ttl int,
@@ -150,7 +150,7 @@ func (s *DNSZonesService) UpdateTTL(
 	return body.DNSZone, resp, err
 }
 
-func (s *DNSZonesService) doRequest(
+func (s *DNSZonesResource) doRequest(
 	ctx context.Context,
 	method string,
 	u *url.URL,

@@ -8,18 +8,6 @@ import (
 	"github.com/augurysys/timestamp"
 )
 
-type CertificatesService struct {
-	client   *apiClient
-	basePath *url.URL
-}
-
-func newCertificatesService(c *apiClient) *CertificatesService {
-	return &CertificatesService{
-		client:   c,
-		basePath: &url.URL{Path: "/core/v1/"},
-	}
-}
-
 type Certificate struct {
 	ID                  string               `json:"id,omitempty"`
 	Name                string               `json:"name,omitempty"`
@@ -43,7 +31,19 @@ type certificatesResponseBody struct {
 	Certificates []*Certificate `json:"certificates,omitempty"`
 }
 
-func (s CertificatesService) List(
+type CertificatesResource struct {
+	client   *apiClient
+	basePath *url.URL
+}
+
+func newCertificatesResource(c *apiClient) *CertificatesResource {
+	return &CertificatesResource{
+		client:   c,
+		basePath: &url.URL{Path: "/core/v1/"},
+	}
+}
+
+func (s CertificatesResource) List(
 	ctx context.Context,
 	orgID string,
 	opts *ListOptions,
@@ -59,7 +59,7 @@ func (s CertificatesService) List(
 	return body.Certificates, resp, err
 }
 
-func (s CertificatesService) Get(
+func (s CertificatesResource) Get(
 	ctx context.Context,
 	id string,
 ) (*Certificate, *Response, error) {
@@ -69,7 +69,7 @@ func (s CertificatesService) Get(
 	return body.Certificate, resp, err
 }
 
-func (s *CertificatesService) doRequest(
+func (s *CertificatesResource) doRequest(
 	ctx context.Context,
 	method string,
 	u *url.URL,

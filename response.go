@@ -5,15 +5,15 @@ import (
 	"net/http"
 )
 
-func newResponse(r *http.Response) *Response {
-	return &Response{Response: r}
-}
-
 type Response struct {
 	*http.Response
 
 	Pagination *Pagination
 	Error      *ResponseError
+}
+
+func newResponse(r *http.Response) *Response {
+	return &Response{Response: r}
 }
 
 type Pagination struct {
