@@ -2,32 +2,17 @@
   "networks": [
     {
       "id": "netw_zDW7KYAeqqfRfVag",
-      "name": "Public Network",
-      "data_center": {
-        "id": "loc_25d48761871e4bf",
-        "name": "Shirebury",
-        "permalink": "shirebury"
-      }
+      "name": "Public Network"
     },
     {
       "id": "netw_t7Rbyvr6ahqpDohR",
-      "name": "Private Network",
-      "data_center": {
-        "id": "loc_25d48761871e4bf",
-        "name": "Shirebury",
-        "permalink": "shirebury"
-      }
+      "name": "Private Network"
     }
   ],
   "virtual_networks": [
     {
       "id": "vnet_1erVCx7A5Y09WknB",
-      "name": "Make-Believe Network",
-      "data_center": {
-        "id": "loc_25d48761871e4bf",
-        "name": "Shirebury",
-        "permalink": "shirebury"
-      }
+      "name": "Make-Believe Network"
     }
   ]
 }

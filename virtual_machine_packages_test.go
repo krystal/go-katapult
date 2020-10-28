@@ -70,46 +70,19 @@ func TestVirtualMachinePackagesService_List(t *testing.T) {
 	// Correlates to fixtures/virtual_machine_packages_list*.json
 	packageList := []*VirtualMachinePackage{
 		{
-			ID:            "vmpkg_XdNPhGXvyt1dnDts",
-			Name:          "X-Small",
-			Permalink:     "xsmall",
-			CPUCores:      1,
-			IPv4Addresses: 1,
-			MemoryInGB:    1,
-			StorageInGB:   10,
-			Privacy:       "private",
-			Icon: &Attachment{
-				URL: "https://my.katapult.io/attachment/" +
-					"aa9e51fc-ca56-4a4a-aeba-2f57ffcc9886/cat.jpg",
-			},
+			ID:        "vmpkg_XdNPhGXvyt1dnDts",
+			Name:      "X-Small",
+			Permalink: "xsmall",
 		},
 		{
-			ID:            "vmpkg_YlqvfsKqZJODtvjG",
-			Name:          "Small",
-			Permalink:     "small",
-			CPUCores:      2,
-			IPv4Addresses: 1,
-			MemoryInGB:    2,
-			StorageInGB:   10,
-			Privacy:       "public",
-			Icon: &Attachment{
-				URL: "https://my.katapult.io/attachment/" +
-					"4d014ee8-dae3-4574-a180-e5711fc85f9a/fox.png",
-			},
+			ID:        "vmpkg_YlqvfsKqZJODtvjG",
+			Name:      "Small",
+			Permalink: "small",
 		},
 		{
-			ID:            "vmpkg_y7NqMMa9TYx0g1Si",
-			Name:          "Medium",
-			Permalink:     "medium",
-			CPUCores:      4,
-			IPv4Addresses: 1,
-			MemoryInGB:    3,
-			StorageInGB:   20,
-			Privacy:       "public",
-			Icon: &Attachment{
-				URL: "https://my.katapult.io/attachment/" +
-					"23eabfd1-f8a9-4312-80c1-37bc3e563754/lion.png",
-			},
+			ID:        "vmpkg_y7NqMMa9TYx0g1Si",
+			Name:      "Medium",
+			Permalink: "medium",
 		},
 	}
 
@@ -243,27 +216,6 @@ func TestVirtualMachinePackagesService_List(t *testing.T) {
 }
 
 func TestVirtualMachinePackagesService_Get(t *testing.T) {
-	// Correlates to fixtures/virtual_machine_package_get.json
-	virtualMachinePackage := &VirtualMachinePackage{
-		ID:            "vmpkg_YlqvfsKqZJODtvjG",
-		Name:          "Small",
-		Permalink:     "small",
-		CPUCores:      2,
-		IPv4Addresses: 1,
-		MemoryInGB:    2,
-		StorageInGB:   10,
-		Privacy:       "public",
-		Icon: &Attachment{
-			URL: "https://my.katapult.io/attachment/" +
-				"4d014ee8-dae3-4574-a180-e5711fc85f9a/fox.png",
-			FileName: "fox.png",
-			FileType: "image/png",
-			FileSize: 4868,
-			Digest:   "0f19d773-1166-441b-b146-f25713d20188",
-			Token:    "8da34c2a-f444-44b3-b2e5-290daa055a92",
-		},
-	}
-
 	type args struct {
 		ctx context.Context
 		id  string
@@ -283,7 +235,11 @@ func TestVirtualMachinePackagesService_Get(t *testing.T) {
 				ctx: context.Background(),
 				id:  "vmpkg_YlqvfsKqZJODtvjG",
 			},
-			expected:   virtualMachinePackage,
+			expected: &VirtualMachinePackage{
+				ID:        "vmpkg_YlqvfsKqZJODtvjG",
+				Name:      "Small",
+				Permalink: "small",
+			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("virtual_machine_package_get"),
 		},

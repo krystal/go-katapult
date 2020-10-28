@@ -63,28 +63,6 @@ func Test_dataCentersResponseBody_JSONMarshaling(t *testing.T) {
 }
 
 func TestDataCentersService_List(t *testing.T) {
-	// Correlates to fixtures/data_centers_list.json
-	dataCentersList := []*DataCenter{
-		{
-			ID:        "loc_25d48761871e4bf",
-			Name:      "Shirebury",
-			Permalink: "shirebury",
-			Country: &Country{
-				ID:   "ctry_2f2dc89a5956437",
-				Name: "United Kingdom",
-			},
-		},
-		{
-			ID:        "loc_a2417980b9874c0",
-			Name:      "New Town",
-			Permalink: "newtown",
-			Country: &Country{
-				ID:   "ctry_9a989e68e0ad866",
-				Name: "USA",
-			},
-		},
-	}
-
 	type args struct {
 		ctx context.Context
 	}
@@ -102,7 +80,18 @@ func TestDataCentersService_List(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 			},
-			expected:   dataCentersList,
+			expected: []*DataCenter{
+				{
+					ID:        "loc_25d48761871e4bf",
+					Name:      "Shirebury",
+					Permalink: "shirebury",
+				},
+				{
+					ID:        "loc_a2417980b9874c0",
+					Name:      "New Town",
+					Permalink: "newtown",
+				},
+			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("data_centers_list"),
 		},
@@ -168,10 +157,6 @@ func TestDataCentersService_Get(t *testing.T) {
 		ID:        "loc_a2417980b9874c0",
 		Name:      "New Town",
 		Permalink: "newtown",
-		Country: &Country{
-			ID:   "ctry_9a989e68e0ad866",
-			Name: "USA",
-		},
 	}
 
 	type args struct {

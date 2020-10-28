@@ -75,28 +75,19 @@ func TestCertificatesService_List(t *testing.T) {
 	// Correlates to fixtures/certificates_list*.json
 	certificateList := []*Certificate{
 		{
-			ID:           "cert_Xr8jREhulOP3UJoM",
-			Name:         "test1.example.com",
-			Issuer:       "lets_encrypt",
-			State:        "issued",
-			ExpiresAt:    timestampPtr(1611139536),
-			LastIssuedAt: timestampPtr(1603190706),
+			ID:     "cert_Xr8jREhulOP3UJoM",
+			Name:   "test1.example.com",
+			Issuer: "lets_encrypt",
 		},
 		{
-			ID:           "cert_HJxL4lqK5o7Qy3mM",
-			Name:         "test-2.example.com",
-			Issuer:       "custom",
-			State:        "issued",
-			ExpiresAt:    timestampPtr(1610016353),
-			LastIssuedAt: timestampPtr(1602067569),
+			ID:     "cert_HJxL4lqK5o7Qy3mM",
+			Name:   "test-2.example.com",
+			Issuer: "custom",
 		},
 		{
-			ID:           "cert_BJz8pI5zjmABRsE0",
-			Name:         "test-3.example.com",
-			Issuer:       "self_signed",
-			State:        "issued",
-			ExpiresAt:    timestampPtr(1667472488),
-			LastIssuedAt: timestampPtr(1602326866),
+			ID:     "cert_BJz8pI5zjmABRsE0",
+			Name:   "test-3.example.com",
+			Issuer: "self_signed",
 		},
 	}
 
@@ -261,44 +252,6 @@ func TestCertificatesService_List(t *testing.T) {
 }
 
 func TestCertificatesService_Get(t *testing.T) {
-	// Correlates to fixtures/certificate_get.json
-	certificate := &Certificate{
-		ID:                  "cert_Xr8jREhulOP3UJoM",
-		Name:                "test-1.example.com",
-		AdditionalNames:     []string{"test1.domain.com"},
-		Issuer:              "self_signed",
-		State:               "issued",
-		CreatedAt:           timestampPtr(1611139536),
-		ExpiresAt:           timestampPtr(1611139536),
-		LastIssuedAt:        timestampPtr(1603190706),
-		IssueError:          "",
-		AuthorizationMethod: "",
-		CertificateAPIURL: "https://certificates.katapult.io/" +
-			"cert_Xr8jREhulOP3UJoM/" +
-			"l1XAqAqcuhERLEna4UPvwLJWAj7EtLUYFu67iEgU",
-		Certificate: "-----BEGIN CERTIFICATE-----\n" +
-			"YllvaVFUdjJmaVFnN2Z6VndzYWk4dm53RDI4M0h" +
-			"WV3ByeE1NRHN4VDdqOHVCWm56Y3E2UzZVWk1u\n" +
-			"VTExZlQwakpld0g4aWtBM1VUdHExU0FxeDhMVUt" +
-			"QREhncUFkQUNPOVVtVkZ5SG9Dd2JKZUNTelUy\n" +
-			"TmtveGYxRk45OG1VS0I=\n" +
-			"-----END CERTIFICATE-----\n",
-		Chain: "-----BEGIN CERTIFICATE-----\n" +
-			"bEtZYTNHTTF0OFBzSEs0bjhvWlNKejdLMjF3enB" +
-			"DdjdEQVhtNDlXajExTDBDeHlPSzZMNGpSb2Fi\n" +
-			"MkI5YUhNS0xaTHhDZmFJUXVHUTIxZjFsZkRvWjl" +
-			"EaU16TUE0RnhJelVqR0pFMjZ0dmU5ZmdhbUQ4\n" +
-			"Y2hmZ3ZXdm11YmFyUXQ=\n" +
-			"-----END CERTIFICATE-----\n",
-		PrivateKey: "-----BEGIN RSA PRIVATE KEY-----\n" +
-			"N2c2dUQ3NVM5NUhYZzNOQUZzUUdmMkc5cnR2ejI" +
-			"0U1BxYW9Wd3M4STFnNGxJRlJUSjFGMzRWV2FY\n" +
-			"cDFDSmd2RlVyVFU5TDROZHhnQ1VzWFdKV1FqMXJ" +
-			"EQzBuZzB3SVpSQ3gxcTRnYmlFdEl1YWJLSUxt\n" +
-			"ZjNYTHRSVkxlTkZRbmY=\n" +
-			"-----END RSA PRIVATE KEY-----\n",
-	}
-
 	type args struct {
 		ctx context.Context
 		id  string
@@ -319,7 +272,11 @@ func TestCertificatesService_Get(t *testing.T) {
 				ctx: context.Background(),
 				id:  "cert_Xr8jREhulOP3UJoM",
 			},
-			expected:   certificate,
+			expected: &Certificate{
+				ID:              "cert_Xr8jREhulOP3UJoM",
+				Name:            "test-1.example.com",
+				AdditionalNames: []string{"test1.domain.com"},
+			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("certificate_get"),
 		},

@@ -10,15 +10,7 @@
     {
       "id": "vmpkg_y7NqMMa9TYx0g1Si",
       "name": "Medium",
-      "permalink": "medium",
-      "cpu_cores": 4,
-      "ipv4_addresses": 1,
-      "memory_in_gb": 3,
-      "storage_in_gb": 20,
-      "privacy": "public",
-      "icon": {
-        "url": "https://my.katapult.io/attachment/23eabfd1-f8a9-4312-80c1-37bc3e563754/lion.png"
-      }
+      "permalink": "medium"
     }
   ]
 }

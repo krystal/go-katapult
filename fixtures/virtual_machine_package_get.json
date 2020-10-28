@@ -2,19 +2,6 @@
   "virtual_machine_package": {
     "id": "vmpkg_YlqvfsKqZJODtvjG",
     "name": "Small",
-    "permalink": "small",
-    "cpu_cores": 2,
-    "ipv4_addresses": 1,
-    "memory_in_gb": 2,
-    "storage_in_gb": 10,
-    "privacy": "public",
-    "icon": {
-      "url": "https://my.katapult.io/attachment/4d014ee8-dae3-4574-a180-e5711fc85f9a/fox.png",
-      "file_name": "fox.png",
-      "file_type": "image/png",
-      "file_size": 4868,
-      "digest": "0f19d773-1166-441b-b146-f25713d20188",
-      "token": "8da34c2a-f444-44b3-b2e5-290daa055a92"
-    }
+    "permalink": "small"
   }
 }

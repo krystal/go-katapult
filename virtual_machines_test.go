@@ -202,46 +202,21 @@ func Test_virtualMachinesResponseBody_JSONMarshaling(t *testing.T) {
 
 func TestVirtualMachinesService_List(t *testing.T) {
 	// Correlates to fixtures/virtual_machines_list*.json
-	zone := &Zone{
-		ID:        "zone_FZ7ZpVppByTepLqf",
-		Name:      "Main Zone",
-		Permalink: "main",
-		DataCenter: &DataCenter{
-			ID:        "loc_25d48761871e4bf",
-			Name:      "Shirebury",
-			Permalink: "shirebury",
-		},
-	}
 	virtualMachinesList := []*VirtualMachine{
 		{
-			ID:          "vm_t8yomYsG4bccKw5D",
-			Name:        "bitter-beautiful-mango",
-			Hostname:    "bitter-beautiful-mango",
-			FQDN:        "bitter-beautiful-mango.test.kpult.com",
-			CreatedAt:   timestampPtr(1579883611),
-			Zone:        zone,
-			Package:     &VirtualMachinePackage{Name: "Small"},
-			IPAddresses: []*IPAddress{{Address: "31.228.217.44"}},
+			ID:       "vm_t8yomYsG4bccKw5D",
+			Name:     "bitter-beautiful-mango",
+			Hostname: "bitter-beautiful-mango",
 		},
 		{
-			ID:          "vm_h7bzdXXHa0GvJYMc",
-			Name:        "popular-shapely-tank",
-			Hostname:    "popular-shapely-tank",
-			FQDN:        "popular-shapely-tank.test.kpult.com",
-			CreatedAt:   timestampPtr(1568651782),
-			Zone:        zone,
-			Package:     &VirtualMachinePackage{Name: "Medium"},
-			IPAddresses: []*IPAddress{{Address: "188.56.184.51"}},
+			ID:       "vm_h7bzdXXHa0GvJYMc",
+			Name:     "popular-shapely-tank",
+			Hostname: "popular-shapely-tank",
 		},
 		{
-			ID:          "vm_1kpkjQeMEI43tztr",
-			Name:        "popular-blue-kumquat",
-			Hostname:    "popular-blue-kumquat",
-			FQDN:        "popular-blue-kumquat.test.kpult.com",
-			CreatedAt:   timestampPtr(1563381453),
-			Zone:        zone,
-			Package:     &VirtualMachinePackage{Name: "Small"},
-			IPAddresses: []*IPAddress{{Address: "106.127.29.51"}},
+			ID:       "vm_1kpkjQeMEI43tztr",
+			Name:     "popular-blue-kumquat",
+			Hostname: "popular-blue-kumquat",
 		},
 	}
 
@@ -406,85 +381,6 @@ func TestVirtualMachinesService_List(t *testing.T) {
 }
 
 func TestVirtualMachinesService_Get(t *testing.T) {
-	// Correlates to fixtures/virtual_machine_get.json
-	zone := &Zone{
-		ID:        "zone_FZ7ZpVppByTepLqf",
-		Name:      "Main Zone",
-		Permalink: "main",
-		DataCenter: &DataCenter{
-			ID:        "loc_25d48761871e4bf",
-			Name:      "Shirebury",
-			Permalink: "shirebury",
-			Country: &Country{
-				ID:       "ctry_2f2dc89a5956437",
-				Name:     "United Kingdom",
-				ISOCode2: "GB",
-				ISOCode3: "GBR",
-				TimeZone: "Europe/London",
-				EU:       true,
-			},
-		},
-	}
-	virtualMachine := &VirtualMachine{
-		ID:                  "vm_t8yomYsG4bccKw5D",
-		Name:                "bitter-beautiful-mango",
-		Hostname:            "bitter-beautiful-mango",
-		FQDN:                "bitter-beautiful-mango.test.kpult.com",
-		CreatedAt:           timestampPtr(1579883611),
-		InitialRootPassword: "w7OrYGqImpwoNZOM",
-		State:               "started",
-		Zone:                zone,
-		Organization: &Organization{
-			ID:        "org_BVxE1c44NazNmoOb",
-			Name:      "Sherlock & Co.",
-			SubDomain: "sherlock",
-		},
-		Group: &VirtualMachineGroup{
-			ID:        "vmgrp_CQZ3NlZq37aMKaDU",
-			Name:      "misc",
-			Segregate: false,
-			CreatedAt: timestampPtr(1558199798),
-		},
-		Package: &VirtualMachinePackage{
-			ID:   "vmpkg_YlqvfsKqZJODtvjG",
-			Name: "Small",
-		},
-		AttachedISO: &ISO{
-			ID:   "iso_AkqXHtTlQXwSwQJ9",
-			Name: "Ubuntu 20.04",
-			OperatingSystem: &OperatingSystem{
-				ID:   "os_D1Z90eOlbCSqGCU4",
-				Name: "Ubuntu",
-				Badge: &Attachment{
-					URL: "https://my.katapult.io/attachment/" +
-						"87ef444a-43e0-440e-9205-4285e7cccc3b/ubuntu.png",
-					FileName: "ubuntu.png",
-					FileType: "image/png",
-					FileSize: 4924,
-					Digest:   "0964db5f-bf6f-430e-bd77-85078d16b85a",
-					Token:    "f0b3faf5-313d-43f6-87e0-7f142c757466",
-				},
-			},
-		},
-		Tags: []*Tag{
-			{
-				ID:        "tag_dpkrkYssrXDryOhn",
-				Name:      "web",
-				Color:     "light_brown",
-				CreatedAt: timestampPtr(1596993883),
-			},
-		},
-		IPAddresses: []*IPAddress{
-			{
-				ID:              "ip_K4t3ya3Werh6zPCd",
-				Address:         "210.103.10.205",
-				ReverseDNS:      "210-103-10-205.infra.katapult.dev",
-				VIP:             false,
-				AddressWithMask: "210.103.10.205/26",
-			},
-		},
-	}
-
 	type args struct {
 		ctx context.Context
 		id  string
@@ -504,7 +400,11 @@ func TestVirtualMachinesService_Get(t *testing.T) {
 				ctx: context.Background(),
 				id:  "vm_t8yomYsG4bccKw5D",
 			},
-			expected:   virtualMachine,
+			expected: &VirtualMachine{
+				ID:       "vm_t8yomYsG4bccKw5D",
+				Name:     "bitter-beautiful-mango",
+				Hostname: "bitter-beautiful-mango",
+			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("virtual_machine_get"),
 		},

@@ -2,8 +2,6 @@
   "dns_zone": {
     "id": "dnszone_yqflWVIdu5vnirLq",
     "name": "test-1.com",
-    "ttl": 1800,
-    "verified": false,
-    "infrastructure_zone": true
+    "ttl": 1800
   }
 }

@@ -10,16 +10,12 @@
     {
       "id": "dnszone_k75eFc4UBOgeE5Zy",
       "name": "test1.example.com",
-      "ttl": 3600,
-      "verified": true,
-      "infrastructure_zone": true
+      "ttl": 3600
     },
     {
       "id": "dnszone_lwz66kyviwCQyqQc",
       "name": "test-2.example.com",
-      "ttl": 3600,
-      "verified": true,
-      "infrastructure_zone": false
+      "ttl": 3600
     }
   ]
 }
