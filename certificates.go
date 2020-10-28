@@ -6,18 +6,17 @@ import (
 	"net/url"
 
 	"github.com/augurysys/timestamp"
-	"github.com/google/go-querystring/query"
 )
 
 type CertificatesService struct {
-	*service
-	path *url.URL
+	client   *apiClient
+	basePath *url.URL
 }
 
-func NewCertificatesService(s *service) *CertificatesService {
+func newCertificatesService(c *apiClient) *CertificatesService {
 	return &CertificatesService{
-		service: s,
-		path:    &url.URL{Path: "/core/v1/"},
+		client:   c,
+		basePath: &url.URL{Path: "/core/v1/"},
 	}
 }
 
@@ -50,16 +49,11 @@ func (s CertificatesService) List(
 	opts *ListOptions,
 ) ([]*Certificate, *Response, error) {
 	u := &url.URL{
-		Path: fmt.Sprintf("organizations/%s/certificates", orgID),
+		Path:     fmt.Sprintf("organizations/%s/certificates", orgID),
+		RawQuery: opts.Values().Encode(),
 	}
 
-	qs, err := query.Values(opts)
-	if err != nil {
-		return nil, nil, err
-	}
-	u.RawQuery = qs.Encode()
-
-	body, resp, err := s.doRequest(ctx, "GET", u.String(), nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 	resp.Pagination = body.Pagination
 
 	return body.Certificates, resp, err
@@ -69,7 +63,7 @@ func (s CertificatesService) Get(
 	ctx context.Context,
 	id string,
 ) (*Certificate, *Response, error) {
-	u := fmt.Sprintf("certificates/%s", id)
+	u := &url.URL{Path: fmt.Sprintf("certificates/%s", id)}
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 
 	return body.Certificate, resp, err
@@ -78,21 +72,17 @@ func (s CertificatesService) Get(
 func (s *CertificatesService) doRequest(
 	ctx context.Context,
 	method string,
-	urlStr string,
+	u *url.URL,
 	body interface{},
 ) (*certificatesResponseBody, *Response, error) {
-	u, err := s.path.Parse(urlStr)
-	if err != nil {
-		return nil, nil, err
+	u = s.basePath.ResolveReference(u)
+	respBody := &certificatesResponseBody{}
+	resp := &Response{}
+
+	req, err := s.client.NewRequestWithContext(ctx, method, u, body)
+	if err == nil {
+		resp, err = s.client.Do(req, respBody)
 	}
 
-	req, err := s.client.NewRequestWithContext(ctx, method, u.String(), body)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var respBody certificatesResponseBody
-	resp, err := s.client.Do(req, &respBody)
-
-	return &respBody, resp, err
+	return respBody, resp, err
 }

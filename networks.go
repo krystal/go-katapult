@@ -7,14 +7,14 @@ import (
 )
 
 type NetworksService struct {
-	*service
-	path *url.URL
+	client   *apiClient
+	basePath *url.URL
 }
 
-func NewNetworksService(s *service) *NetworksService {
+func newNetworksService(c *apiClient) *NetworksService {
 	return &NetworksService{
-		service: s,
-		path:    &url.URL{Path: "/core/v1/"},
+		client:   c,
+		basePath: &url.URL{Path: "/core/v1/"},
 	}
 }
 
@@ -39,7 +39,10 @@ func (s *NetworksService) List(
 	ctx context.Context,
 	orgID string,
 ) ([]*Network, []*VirtualNetwork, *Response, error) {
-	u := fmt.Sprintf("organizations/%s/available_networks", orgID)
+	u := &url.URL{
+		Path: fmt.Sprintf("organizations/%s/available_networks", orgID),
+	}
+
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 
 	return body.Networks, body.VirtualNetworks, resp, err
@@ -48,21 +51,17 @@ func (s *NetworksService) List(
 func (s *NetworksService) doRequest(
 	ctx context.Context,
 	method string,
-	urlStr string,
+	u *url.URL,
 	body interface{},
 ) (*networksResponseBody, *Response, error) {
-	u, err := s.path.Parse(urlStr)
-	if err != nil {
-		return nil, nil, err
+	u = s.basePath.ResolveReference(u)
+	respBody := &networksResponseBody{}
+	resp := &Response{}
+
+	req, err := s.client.NewRequestWithContext(ctx, method, u, body)
+	if err == nil {
+		resp, err = s.client.Do(req, respBody)
 	}
 
-	req, err := s.client.NewRequestWithContext(ctx, method, u.String(), body)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var respBody networksResponseBody
-	resp, err := s.client.Do(req, &respBody)
-
-	return &respBody, resp, err
+	return respBody, resp, err
 }

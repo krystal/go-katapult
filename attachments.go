@@ -8,5 +8,3 @@ type Attachment struct {
 	Digest   string `json:"digest,omitempty"`
 	Token    string `json:"token,omitempty"`
 }
-
-type Icon Attachment

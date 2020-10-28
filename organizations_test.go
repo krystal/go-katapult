@@ -54,31 +54,47 @@ func TestOrganizationsService_List(t *testing.T) {
 		},
 	}
 
+	type args struct {
+		ctx context.Context
+	}
 	tests := []struct {
 		name       string
+		args       args
 		orgs       []*Organization
-		err        string
+		errStr     string
 		errResp    *ResponseError
 		respStatus int
 		respBody   []byte
 	}{
 		{
-			name:       "fetch list of data centers",
+			name: "fetch list of organizations",
+			args: args{
+				ctx: context.Background()},
 			orgs:       organizationsList,
 			respStatus: http.StatusOK,
 			respBody:   fixture("organizations_list"),
 		},
 		{
-			name:       "invalid API token response",
-			err:        fixtureInvalidAPITokenErr,
+			name: "invalid API token response",
+			args: args{
+				ctx: context.Background(),
+			},
+			errStr:     fixtureInvalidAPITokenErr,
 			errResp:    fixtureInvalidAPITokenResponseError,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("invalid_api_token_error"),
 		},
+		{
+			name: "nil context",
+			args: args{
+				ctx: nil,
+			},
+			errStr: "net/http: nil Context",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c, mux, _, teardown := setup()
+			c, mux, _, teardown := prepareTestClient()
 			defer teardown()
 
 			mux.HandleFunc("/core/v1/organizations",
@@ -91,14 +107,16 @@ func TestOrganizationsService_List(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.Organizations.List(context.Background())
+			got, resp, err := c.Organizations.List(tt.args.ctx)
 
-			assert.Equal(t, tt.respStatus, resp.StatusCode)
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
 
-			if tt.err == "" {
+			if tt.errStr == "" {
 				assert.NoError(t, err)
 			} else {
-				assert.EqualError(t, err, tt.err)
+				assert.EqualError(t, err, tt.errStr)
 			}
 
 			if tt.orgs != nil {
@@ -114,7 +132,7 @@ func TestOrganizationsService_List(t *testing.T) {
 
 func TestOrganizationsService_Get(t *testing.T) {
 	// Correlates to fixtures/organization_get.json
-	organizationGet := &Organization{
+	organization := &Organization{
 		ID:                   "org_O648YDMEYeLmqdmn",
 		Name:                 "ACME Inc.",
 		SubDomain:            "acme",
@@ -133,7 +151,7 @@ func TestOrganizationsService_Get(t *testing.T) {
 		Currency: &Currency{
 			ID:      "cur_8UFhhlYAcRLf3ua6",
 			Name:    "United States Dollars",
-			IsoCode: "USD",
+			ISOCode: "USD",
 			Symbol:  "$",
 		},
 		Country: &Country{
@@ -159,45 +177,66 @@ func TestOrganizationsService_Get(t *testing.T) {
 		},
 	}
 
+	type args struct {
+		ctx context.Context
+		id  string
+	}
 	tests := []struct {
 		name       string
-		id         string
+		args       args
 		expected   *Organization
-		err        string
+		errStr     string
 		errResp    *ResponseError
 		respStatus int
 		respBody   []byte
 	}{
 		{
-			name:       "specific Organization",
-			id:         "org_O648YDMEYeLmqdmn",
-			expected:   organizationGet,
+			name: "organization",
+			args: args{
+				ctx: context.Background(),
+				id:  "org_O648YDMEYeLmqdmn",
+			},
+			expected:   organization,
 			respStatus: http.StatusOK,
 			respBody:   fixture("organization_get"),
 		},
 		{
-			name:       "non-existent Organization",
-			id:         "org_nopethisbegone",
-			err:        fixtureOrganizationNotFoundErr,
+			name: "non-existent organization",
+			args: args{
+				ctx: context.Background(),
+				id:  "org_nopethisbegone",
+			},
+			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
 		{
-			name:       "suspended Organization",
-			id:         "acme",
-			err:        fixtureOrganizationSuspendedErr,
+			name: "suspended organization",
+			args: args{
+				ctx: context.Background(),
+				id:  "org_O648YDMEYeLmqdmn",
+			},
+			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
+		{
+			name: "nil context",
+			args: args{
+				ctx: nil,
+				id:  "org_O648YDMEYeLmqdmn",
+			},
+			errStr: "net/http: nil Context",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c, mux, _, teardown := setup()
+			c, mux, _, teardown := prepareTestClient()
 			defer teardown()
 
-			mux.HandleFunc(fmt.Sprintf("/core/v1/organizations/%s", tt.id),
+			mux.HandleFunc(fmt.Sprintf("/core/v1/organizations/%s", tt.args.id),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
@@ -207,14 +246,16 @@ func TestOrganizationsService_Get(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.Organizations.Get(context.Background(), tt.id)
+			got, resp, err := c.Organizations.Get(tt.args.ctx, tt.args.id)
 
-			assert.Equal(t, tt.respStatus, resp.StatusCode)
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
 
-			if tt.err == "" {
+			if tt.errStr == "" {
 				assert.NoError(t, err)
 			} else {
-				assert.EqualError(t, err, tt.err)
+				assert.EqualError(t, err, tt.errStr)
 			}
 
 			if tt.expected != nil {
@@ -249,7 +290,7 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 		Currency: &Currency{
 			ID:      "cur_8UFhhlYAcRLf3ua6",
 			Name:    "United States Dollars",
-			IsoCode: "USD",
+			ISOCode: "USD",
 			Symbol:  "$",
 		},
 		Country: &Country{
@@ -276,6 +317,7 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 	}
 
 	type args struct {
+		ctx       context.Context
 		parentID  string
 		name      string
 		subDomain string
@@ -288,14 +330,15 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 		name       string
 		args       args
 		expected   *Organization
-		err        string
+		errStr     string
 		errResp    *ResponseError
 		respStatus int
 		respBody   []byte
 	}{
 		{
-			name: "create a managed organization",
+			name: "organization",
 			args: args{
+				ctx:       context.Background(),
 				parentID:  "org_O648YDMEYeLmqdmn",
 				name:      "NERV Corp.",
 				subDomain: "nerv",
@@ -307,11 +350,12 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 		{
 			name: "managed org limit reached",
 			args: args{
+				ctx:       context.Background(),
 				parentID:  "org_O648YDMEYeLmqdmn",
 				name:      "NERV Corp.",
 				subDomain: "nerv",
 			},
-			err: "organization_limit_reached: The maxmium number of " +
+			errStr: "organization_limit_reached: The maxmium number of " +
 				"organizations that can be created has been reached",
 			errResp: &ResponseError{
 				Code: "organization_limit_reached",
@@ -323,25 +367,27 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 			respBody:   fixture("organization_limit_reached_error"),
 		},
 		{
-			name: "non-existent Organization",
+			name: "non-existent organization",
 			args: args{
+				ctx:       context.Background(),
 				parentID:  "org_nopewhatbye",
 				name:      "NERV Corp.",
 				subDomain: "nerv",
 			},
-			err:        fixtureOrganizationNotFoundErr,
+			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
 		{
-			name: "suspended Organization",
+			name: "suspended organization",
 			args: args{
+				ctx:       context.Background(),
 				parentID:  "org_O648YDMEYeLmqdmn",
 				name:      "NERV Corp.",
 				subDomain: "nerv",
 			},
-			err:        fixtureOrganizationSuspendedErr,
+			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
@@ -349,11 +395,12 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 		{
 			name: "validation error for new org details",
 			args: args{
+				ctx:       context.Background(),
 				parentID:  "org_O648YDMEYeLmqdmn",
 				name:      "NERV Corp.",
 				subDomain: "acme",
 			},
-			err: "validation_error: A validation error occurred with the " +
+			errStr: "validation_error: A validation error occurred with the " +
 				"object that was being created/updated/deleted",
 			errResp: &ResponseError{
 				Code: "validation_error",
@@ -369,10 +416,20 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 				"organization_validation_error_sub_domain_taken",
 			),
 		},
+		{
+			name: "nil context",
+			args: args{
+				ctx:       nil,
+				parentID:  "org_O648YDMEYeLmqdmn",
+				name:      "NERV Corp.",
+				subDomain: "acme",
+			},
+			errStr: "net/http: nil Context",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c, mux, _, teardown := setup()
+			c, mux, _, teardown := prepareTestClient()
 			defer teardown()
 
 			mux.HandleFunc(
@@ -397,16 +454,17 @@ func TestOrganizationsService_CreateManaged(t *testing.T) {
 			)
 
 			got, resp, err := c.Organizations.CreateManaged(
-				context.Background(),
-				tt.args.parentID, tt.args.name, tt.args.subDomain,
+				tt.args.ctx, tt.args.parentID, tt.args.name, tt.args.subDomain,
 			)
 
-			assert.Equal(t, tt.respStatus, resp.StatusCode)
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
 
-			if tt.err == "" {
+			if tt.errStr == "" {
 				assert.NoError(t, err)
 			} else {
-				assert.EqualError(t, err, tt.err)
+				assert.EqualError(t, err, tt.errStr)
 			}
 
 			if tt.expected != nil {

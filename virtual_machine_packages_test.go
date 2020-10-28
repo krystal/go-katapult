@@ -7,9 +7,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/google/go-querystring/query"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestVirtualMachinePackagesService_List(t *testing.T) {
@@ -24,7 +22,7 @@ func TestVirtualMachinePackagesService_List(t *testing.T) {
 			MemoryInGB:    1,
 			StorageInGB:   10,
 			Privacy:       "private",
-			Icon: &Icon{
+			Icon: &Attachment{
 				URL: "https://my.katapult.io/attachment/" +
 					"aa9e51fc-ca56-4a4a-aeba-2f57ffcc9886/cat.jpg",
 			},
@@ -38,7 +36,7 @@ func TestVirtualMachinePackagesService_List(t *testing.T) {
 			MemoryInGB:    2,
 			StorageInGB:   10,
 			Privacy:       "public",
-			Icon: &Icon{
+			Icon: &Attachment{
 				URL: "https://my.katapult.io/attachment/" +
 					"4d014ee8-dae3-4574-a180-e5711fc85f9a/fox.png",
 			},
@@ -52,25 +50,32 @@ func TestVirtualMachinePackagesService_List(t *testing.T) {
 			MemoryInGB:    3,
 			StorageInGB:   20,
 			Privacy:       "public",
-			Icon: &Icon{
+			Icon: &Attachment{
 				URL: "https://my.katapult.io/attachment/" +
 					"23eabfd1-f8a9-4312-80c1-37bc3e563754/lion.png",
 			},
 		},
 	}
 
+	type args struct {
+		ctx  context.Context
+		opts *ListOptions
+	}
 	tests := []struct {
 		name       string
-		opts       *ListOptions
+		args       args
 		expected   []*VirtualMachinePackage
 		pagination *Pagination
-		err        string
+		errStr     string
 		errResp    *ResponseError
 		respStatus int
 		respBody   []byte
 	}{
 		{
-			name:     "fetch list of virtual machine packages",
+			name: "virtual machine packages",
+			args: args{
+				ctx: context.Background(),
+			},
 			expected: packageList,
 			pagination: &Pagination{
 				CurrentPage: 1,
@@ -83,8 +88,11 @@ func TestVirtualMachinePackagesService_List(t *testing.T) {
 			respBody:   fixture("virtual_machine_packages_list"),
 		},
 		{
-			name:     "fetch list of virtual machine packages",
-			opts:     &ListOptions{Page: 1, PerPage: 2},
+			name: "page 1 of virtual machine packages",
+			args: args{
+				ctx:  context.Background(),
+				opts: &ListOptions{Page: 1, PerPage: 2},
+			},
 			expected: packageList[0:2],
 			pagination: &Pagination{
 				CurrentPage: 1,
@@ -97,8 +105,11 @@ func TestVirtualMachinePackagesService_List(t *testing.T) {
 			respBody:   fixture("virtual_machine_packages_list_page_1"),
 		},
 		{
-			name:     "fetch page 2 of virtual machine packages list",
-			opts:     &ListOptions{Page: 2, PerPage: 2},
+			name: "page 2 of virtual machine packages",
+			args: args{
+				ctx:  context.Background(),
+				opts: &ListOptions{Page: 2, PerPage: 2},
+			},
 			expected: packageList[2:],
 			pagination: &Pagination{
 				CurrentPage: 2,
@@ -111,26 +122,34 @@ func TestVirtualMachinePackagesService_List(t *testing.T) {
 			respBody:   fixture("virtual_machine_packages_list_page_2"),
 		},
 		{
-			name:       "invalid API token response",
-			err:        fixtureInvalidAPITokenErr,
+			name: "invalid API token response",
+			args: args{
+				ctx: context.Background(),
+			},
+			errStr:     fixtureInvalidAPITokenErr,
 			errResp:    fixtureInvalidAPITokenResponseError,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("invalid_api_token_error"),
 		},
+		{
+			name: "nil context",
+			args: args{
+				ctx: nil,
+			},
+			errStr: "net/http: nil Context",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c, mux, _, teardown := setup()
+			c, mux, _, teardown := prepareTestClient()
 			defer teardown()
 
 			mux.HandleFunc("/core/v1/virtual_machine_packages",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
-					if tt.opts != nil {
-						qs, err := query.Values(tt.opts)
-						require.NoError(t, err)
-						assert.Equal(t, qs, r.URL.Query())
+					if tt.args.opts != nil {
+						assert.Equal(t, *tt.args.opts.Values(), r.URL.Query())
 					}
 
 					w.WriteHeader(tt.respStatus)
@@ -139,15 +158,17 @@ func TestVirtualMachinePackagesService_List(t *testing.T) {
 			)
 
 			got, resp, err := c.VirtualMachinePackages.List(
-				context.Background(), tt.opts,
+				tt.args.ctx, tt.args.opts,
 			)
 
-			assert.Equal(t, tt.respStatus, resp.StatusCode)
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
 
-			if tt.err == "" {
+			if tt.errStr == "" {
 				assert.NoError(t, err)
 			} else {
-				assert.EqualError(t, err, tt.err)
+				assert.EqualError(t, err, tt.errStr)
 			}
 
 			if tt.expected != nil {
@@ -167,7 +188,7 @@ func TestVirtualMachinePackagesService_List(t *testing.T) {
 
 func TestVirtualMachinePackagesService_Get(t *testing.T) {
 	// Correlates to fixtures/virtual_machine_package_get.json
-	packageGet := &VirtualMachinePackage{
+	virtualMachinePackage := &VirtualMachinePackage{
 		ID:            "vmpkg_YlqvfsKqZJODtvjG",
 		Name:          "Small",
 		Permalink:     "small",
@@ -176,7 +197,7 @@ func TestVirtualMachinePackagesService_Get(t *testing.T) {
 		MemoryInGB:    2,
 		StorageInGB:   10,
 		Privacy:       "public",
-		Icon: &Icon{
+		Icon: &Attachment{
 			URL: "https://my.katapult.io/attachment/" +
 				"4d014ee8-dae3-4574-a180-e5711fc85f9a/fox.png",
 			FileName: "fox.png",
@@ -187,26 +208,36 @@ func TestVirtualMachinePackagesService_Get(t *testing.T) {
 		},
 	}
 
+	type args struct {
+		ctx context.Context
+		id  string
+	}
 	tests := []struct {
 		name       string
-		id         string
+		args       args
 		expected   *VirtualMachinePackage
-		err        string
+		errStr     string
 		errResp    *ResponseError
 		respStatus int
 		respBody   []byte
 	}{
 		{
-			name:       "get a virtual machine package",
-			id:         "vmpkg_YlqvfsKqZJODtvjG",
-			expected:   packageGet,
+			name: "virtual machine package",
+			args: args{
+				ctx: context.Background(),
+				id:  "vmpkg_YlqvfsKqZJODtvjG",
+			},
+			expected:   virtualMachinePackage,
 			respStatus: http.StatusOK,
 			respBody:   fixture("virtual_machine_package_get"),
 		},
 		{
-			name: "non-existent virtual machine package package",
-			id:   "vmpkg_nopethisbegone",
-			err: "package_not_found: No package was found matching " +
+			name: "non-existent virtual machine package",
+			args: args{
+				ctx: context.Background(),
+				id:  "vmpkg_nopethisbegone",
+			},
+			errStr: "package_not_found: No package was found matching " +
 				"any of the criteria provided in the arguments",
 			errResp: &ResponseError{
 				Code: "package_not_found",
@@ -217,14 +248,22 @@ func TestVirtualMachinePackagesService_Get(t *testing.T) {
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("package_not_found_error"),
 		},
+		{
+			name: "nil context",
+			args: args{
+				ctx: nil,
+				id:  "vmpkg_nopethisbegone",
+			},
+			errStr: "net/http: nil Context",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c, mux, _, teardown := setup()
+			c, mux, _, teardown := prepareTestClient()
 			defer teardown()
 
 			mux.HandleFunc(
-				fmt.Sprintf("/core/v1/virtual_machine_packages/%s", tt.id),
+				fmt.Sprintf("/core/v1/virtual_machine_packages/%s", tt.args.id),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
@@ -235,15 +274,17 @@ func TestVirtualMachinePackagesService_Get(t *testing.T) {
 			)
 
 			got, resp, err := c.VirtualMachinePackages.Get(
-				context.Background(), tt.id,
+				tt.args.ctx, tt.args.id,
 			)
 
-			assert.Equal(t, tt.respStatus, resp.StatusCode)
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
 
-			if tt.err == "" {
+			if tt.errStr == "" {
 				assert.NoError(t, err)
 			} else {
-				assert.EqualError(t, err, tt.err)
+				assert.EqualError(t, err, tt.errStr)
 			}
 
 			if tt.expected != nil {

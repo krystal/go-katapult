@@ -1,4 +1,4 @@
-package katapult
+package codec
 
 import (
 	"io"

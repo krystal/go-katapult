@@ -7,14 +7,14 @@ import (
 )
 
 type DataCentersService struct {
-	*service
-	path *url.URL
+	client   *apiClient
+	basePath *url.URL
 }
 
-func NewDataCentersService(s *service) *DataCentersService {
+func newDataCentersService(c *apiClient) *DataCentersService {
 	return &DataCentersService{
-		service: s,
-		path:    &url.URL{Path: "/core/v1/"},
+		client:   c,
+		basePath: &url.URL{Path: "/core/v1/"},
 	}
 }
 
@@ -33,7 +33,7 @@ type dataCentersResponseBody struct {
 func (s *DataCentersService) List(
 	ctx context.Context,
 ) ([]*DataCenter, *Response, error) {
-	u := "data_centers"
+	u := &url.URL{Path: "data_centers"}
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 
 	return body.DataCenters, resp, err
@@ -43,7 +43,7 @@ func (s *DataCentersService) Get(
 	ctx context.Context,
 	id string,
 ) (*DataCenter, *Response, error) {
-	u := fmt.Sprintf("data_centers/%s", id)
+	u := &url.URL{Path: fmt.Sprintf("data_centers/%s", id)}
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 
 	return body.DataCenter, resp, err
@@ -52,21 +52,17 @@ func (s *DataCentersService) Get(
 func (s *DataCentersService) doRequest(
 	ctx context.Context,
 	method string,
-	urlStr string,
+	u *url.URL,
 	body interface{},
 ) (*dataCentersResponseBody, *Response, error) {
-	u, err := s.path.Parse(urlStr)
-	if err != nil {
-		return nil, nil, err
+	u = s.basePath.ResolveReference(u)
+	respBody := &dataCentersResponseBody{}
+	resp := &Response{}
+
+	req, err := s.client.NewRequestWithContext(ctx, method, u, body)
+	if err == nil {
+		resp, err = s.client.Do(req, respBody)
 	}
 
-	req, err := s.client.NewRequestWithContext(ctx, method, u.String(), body)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var respBody dataCentersResponseBody
-	resp, err := s.client.Do(req, &respBody)
-
-	return &respBody, resp, err
+	return respBody, resp, err
 }

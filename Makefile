@@ -1,18 +1,30 @@
-GOPATH ?= $(HOME)/go
 SOURCES := $(shell find . -name "*.go" -or -name "go.mod" -or -name "go.sum" \
 	-or -name "Makefile")
 
-TOOLSDIR := tools
-export GOBIN := $(CURDIR)/$(TOOLSDIR)
-export PATH := $(GOBIN):$(PATH)
-export GO111MODULE=on
-
-GOBIN_SRC := github.com/myitcv/gobin
-GOBIN_BIN := $(GOBIN)/gobin
-
+# Verbose output
 ifdef VERBOSE
 V = -v
 endif
+
+#
+# Environment
+#
+
+BINDIR := bin
+TOOLDIR := $(BINDIR)/tools
+
+# Global environment variables for all targets
+SHELL ?= /bin/bash
+SHELL := env \
+	GO111MODULE=on \
+	GOBIN=$(CURDIR)/$(TOOLDIR) \
+	CGO_ENABLED=1 \
+	PATH=$(CURDIR)/$(BINDIR):$(CURDIR)/$(TOOLDIR):$(PATH) \
+	$(SHELL)
+
+#
+# Defaults
+#
 
 # Default target
 .DEFAULT_GOAL := test
@@ -21,20 +33,26 @@ endif
 # Tools
 #
 
-define tool # 1: binary-name, 2: go-src-path
-TOOLS += $(GOBIN)/$(1)
+TOOLS += $(TOOLDIR)/gobin
+gobin: $(TOOLDIR)/gobin
+$(TOOLDIR)/gobin:
+	GO111MODULE=off go get -u github.com/myitcv/gobin
 
-$(GOBIN)/$(1): $(GOBIN_BIN)
-	$(GOBIN_BIN) "$(2)"
+# external tool
+define tool # 1: binary-name, 2: go-import-path
+TOOLS += $(TOOLDIR)/$(1)
+
+.PHONY: $(1)
+$(1): $(TOOLDIR)/$(1)
+
+$(TOOLDIR)/$(1): $(TOOLDIR)/gobin Makefile
+	gobin $(V) "$(2)"
 endef
 
-$(GOBIN_BIN): %:
-	GO111MODULE=off go get -u $(GOBIN_SRC)
-
-$(eval $(call tool,golangci-lint,github.com/golangci/golangci-lint/cmd/golangci-lint@v1.31.0))
+$(eval $(call tool,golangci-lint,github.com/golangci/golangci-lint/cmd/golangci-lint@v1.31))
 
 .PHONY: tools
-tools: $(GOBIN_BIN) $(TOOLS)
+tools: $(TOOLS)
 
 #
 # Development
@@ -42,7 +60,7 @@ tools: $(GOBIN_BIN) $(TOOLS)
 
 .PHONY: clean
 clean:
-	rm -rf $(GOBIN)
+	rm -rf $(TOOLS)
 	rm -f ./coverage.out ./go.mod.tidy-check ./go.sum.tidy-check
 
 .PHONY: test
@@ -54,9 +72,8 @@ test-deps:
 	go test all
 
 .PHONY: lint
-lint: $(TOOLS)
-	$(info Running Go linters)
-	GOGC=off $(GOBIN)/golangci-lint $(V) run
+lint: golangci-lint
+	GOGC=off golangci-lint $(V) run
 
 #
 # Coverage
