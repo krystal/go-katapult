@@ -1,0 +1,1 @@
+{"id":"id","name":"name","additional_names":["a name"],"issuer":"iss","state":"state","created_at":123,"expires_at":456,"last_issued_at":789,"issue_error":"isserr","authorization_method":"meth","certificate_api_url":"certurl","certificate":"cert","chain":"chain","private_key":"key"}

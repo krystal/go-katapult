@@ -67,6 +67,10 @@ clean:
 test:
 	go test $(V) -count=1 -race ./...
 
+.PHONY: test-update
+test-update-golden:
+	go test $(V) -update-golden -count=1 -race ./...
+
 .PHONY: test-deps
 test-deps:
 	go test all

@@ -9,6 +9,80 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestNetwork_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *Network
+	}{
+		{
+			name: "empty",
+			obj:  &Network{},
+		},
+		{
+			name: "full",
+			obj: &Network{
+				ID:         "id1",
+				Name:       "name",
+				DataCenter: &DataCenter{ID: "id2"},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func TestVirtualNetwork_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *VirtualNetwork
+	}{
+		{
+			name: "empty",
+			obj:  &VirtualNetwork{},
+		},
+		{
+			name: "full",
+			obj: &VirtualNetwork{
+				ID:         "id1",
+				Name:       "name",
+				DataCenter: &DataCenter{ID: "id2"},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func Test_networksResponseBody_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *networksResponseBody
+	}{
+		{
+			name: "empty",
+			obj:  &networksResponseBody{},
+		},
+		{
+			name: "full",
+			obj: &networksResponseBody{
+				Networks:        []*Network{{ID: "id1"}},
+				VirtualNetworks: []*VirtualNetwork{{ID: "id2"}},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
 func TestNetworksService_List(t *testing.T) {
 	// Correlates to fixtures/networks_list.json
 	networksList := []*Network{

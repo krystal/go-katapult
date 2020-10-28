@@ -10,6 +10,62 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestVirtualMachinePackage_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *VirtualMachinePackage
+	}{
+		{
+			name: "empty",
+			obj:  &VirtualMachinePackage{},
+		},
+		{
+			name: "full",
+			obj: &VirtualMachinePackage{
+				ID:            "id",
+				Name:          "name",
+				Permalink:     "permalink",
+				CPUCores:      504684,
+				IPv4Addresses: 322134,
+				MemoryInGB:    953603,
+				StorageInGB:   853121,
+				Privacy:       "priv",
+				Icon:          &Attachment{URL: "url"},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func Test_virtualMachinePackagesResponseBody_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *virtualMachinePackagesResponseBody
+	}{
+		{
+			name: "empty",
+			obj:  &virtualMachinePackagesResponseBody{},
+		},
+		{
+			name: "full",
+			obj: &virtualMachinePackagesResponseBody{
+				Pagination:             &Pagination{CurrentPage: 392},
+				VirtualMachinePackage:  &VirtualMachinePackage{ID: "id1"},
+				VirtualMachinePackages: []*VirtualMachinePackage{{ID: "id2"}},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
 func TestVirtualMachinePackagesService_List(t *testing.T) {
 	// Correlates to fixtures/virtual_machine_packages_list*.json
 	packageList := []*VirtualMachinePackage{

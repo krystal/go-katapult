@@ -1,8 +1,10 @@
 package katapult
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
+	"flag"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -11,15 +13,20 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"os"
+	"path/filepath"
+	"reflect"
 	"testing"
 	"time"
 
 	"github.com/augurysys/timestamp"
 	"github.com/krystal/go-katapult/internal/codec"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 var (
+	updateGoldenFlag = flag.Bool("update-golden", false, "update .golden files")
+
 	fixtureInvalidAPITokenErr = "invalid_api_token: The API token provided " +
 		"was not valid (it may not exist or have expired)"
 	fixtureInvalidAPITokenResponseError = &ResponseError{
@@ -68,6 +75,35 @@ var (
 	}
 )
 
+func goldenFile(t *testing.T) string {
+	return filepath.Join("testdata", filepath.FromSlash(t.Name())+".golden")
+}
+
+func getGolden(t *testing.T) []byte {
+	gp := goldenFile(t)
+	g, err := ioutil.ReadFile(gp)
+	if err != nil {
+		t.Fatalf("failed reading .golden: %s", err)
+	}
+
+	return g
+}
+
+func updateGolden(t *testing.T, got []byte) {
+	gp := goldenFile(t)
+	dir := filepath.Dir(gp)
+
+	t.Logf("updating .golden file: %s", gp)
+
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		t.Fatalf("failed to update .golden directory: %s", err)
+	}
+
+	if err := ioutil.WriteFile(gp, got, 0644); err != nil { //nolint:gosec
+		t.Fatalf("failed to update .golden file: %s", err)
+	}
+}
+
 func timestampPtr(unixtime int64) *timestamp.Timestamp {
 	ts := timestamp.Timestamp(time.Unix(unixtime, 0).UTC())
 
@@ -89,6 +125,29 @@ func fixture(name string) []byte {
 	}
 
 	return c
+}
+
+func testJSONMarshaling(t *testing.T, v interface{}) {
+	c := &codec.JSON{}
+
+	buf := &bytes.Buffer{}
+	err := c.Encode(v, buf)
+	require.NoError(t, err, "encoding failed")
+
+	if *updateGoldenFlag {
+		updateGolden(t, buf.Bytes())
+	}
+
+	g := getGolden(t)
+
+	assert.NoError(t, err)
+	assert.Equal(t, buf.Bytes(), g,
+		"encoding does not match golden")
+
+	got := reflect.New(reflect.TypeOf(v).Elem()).Interface()
+	err = c.Decode(bytes.NewBuffer(g), got)
+	require.NoError(t, err, "decoding golden failed")
+	assert.Equal(t, v, got)
 }
 
 // prepareTestClient creates a test HTTP server for mock API responses, and

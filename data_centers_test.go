@@ -10,6 +10,58 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestDataCenter_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *DataCenter
+	}{
+		{
+			name: "empty",
+			obj:  &DataCenter{},
+		},
+		{
+			name: "full",
+			obj: &DataCenter{
+				ID:        "id",
+				Name:      "name",
+				Permalink: "permalink",
+				Country: &Country{
+					ID: "id2",
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func Test_dataCentersResponseBody_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *dataCentersResponseBody
+	}{
+		{
+			name: "empty",
+			obj:  &dataCentersResponseBody{},
+		},
+		{
+			name: "full",
+			obj: &dataCentersResponseBody{
+				DataCenter:  &DataCenter{ID: "id1"},
+				DataCenters: []*DataCenter{{ID: "id2"}},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
 func TestDataCentersService_List(t *testing.T) {
 	// Correlates to fixtures/data_centers_list.json
 	dataCentersList := []*DataCenter{

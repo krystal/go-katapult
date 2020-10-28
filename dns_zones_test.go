@@ -40,6 +40,156 @@ var (
 	}
 )
 
+func TestDNSZone_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *DNSZone
+	}{
+		{
+			name: "empty",
+			obj:  &DNSZone{},
+		},
+		{
+			name: "full",
+			obj: &DNSZone{
+				ID:                 "id",
+				Name:               "name",
+				TTL:                343,
+				Verified:           true,
+				InfrastructureZone: true,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func TestDNSZoneVerificationDetails_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *DNSZoneVerificationDetails
+	}{
+		{
+			name: "empty",
+			obj:  &DNSZoneVerificationDetails{},
+		},
+		{
+			name: "full",
+			obj: &DNSZoneVerificationDetails{
+				Nameservers: []string{"foo", "bar"},
+				TXTRecord:   "txt",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func TestDNSZoneDetails_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *DNSZoneDetails
+	}{
+		{
+			name: "empty",
+			obj:  &DNSZoneDetails{},
+		},
+		{
+			name: "full",
+			obj: &DNSZoneDetails{
+				Name: "name",
+				TTL:  493,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func Test_createDNSZoneRequest_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *createDNSZoneRequest
+	}{
+		{
+			name: "empty",
+			obj:  &createDNSZoneRequest{},
+		},
+		{
+			name: "full",
+			obj: &createDNSZoneRequest{
+				Details:         &DNSZoneDetails{Name: "name"},
+				SkipVerfication: true,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func Test_updateDNSZoneTTLRequest_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *updateDNSZoneTTLRequest
+	}{
+		{
+			name: "empty",
+			obj:  &updateDNSZoneTTLRequest{},
+		},
+		{
+			name: "full",
+			obj: &updateDNSZoneTTLRequest{
+				TTL: 8384,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func Test_dnsZoneResponseBody_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *dnsZoneResponseBody
+	}{
+		{
+			name: "empty",
+			obj:  &dnsZoneResponseBody{},
+		},
+		{
+			name: "full",
+			obj: &dnsZoneResponseBody{
+				Pagination: &Pagination{CurrentPage: 934},
+				DNSZones:   []*DNSZone{{ID: "id1"}},
+				DNSZone:    &DNSZone{ID: "id2"},
+				VerificationDetails: &DNSZoneVerificationDetails{
+					TXTRecord: "txt",
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
 func TestDNSZonesService_List(t *testing.T) {
 	// Correlates to fixtures/dns_zones_list*.json
 	dnsZonesList := []*DNSZone{
