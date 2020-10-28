@@ -83,7 +83,7 @@ func Test_networksResponseBody_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestNetworksService_List(t *testing.T) {
+func TestNetworksResource_List(t *testing.T) {
 	type args struct {
 		ctx   context.Context
 		orgID string

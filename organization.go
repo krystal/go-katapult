@@ -8,18 +8,6 @@ import (
 	"github.com/augurysys/timestamp"
 )
 
-type OrganizationsService struct {
-	client   *apiClient
-	basePath *url.URL
-}
-
-func newOrganizationsService(c *apiClient) *OrganizationsService {
-	return &OrganizationsService{
-		client:   c,
-		basePath: &url.URL{Path: "/core/v1/"},
-	}
-}
-
 type Organization struct {
 	ID                   string               `json:"id,omitempty"`
 	Name                 string               `json:"name,omitempty"`
@@ -46,7 +34,19 @@ type organizationsResponseBody struct {
 	Organizations []*Organization `json:"organizations,omitempty"`
 }
 
-func (s *OrganizationsService) List(
+type OrganizationsResource struct {
+	client   *apiClient
+	basePath *url.URL
+}
+
+func newOrganizationsResource(c *apiClient) *OrganizationsResource {
+	return &OrganizationsResource{
+		client:   c,
+		basePath: &url.URL{Path: "/core/v1/"},
+	}
+}
+
+func (s *OrganizationsResource) List(
 	ctx context.Context,
 ) ([]*Organization, *Response, error) {
 	u := &url.URL{Path: "organizations"}
@@ -55,7 +55,7 @@ func (s *OrganizationsService) List(
 	return body.Organizations, resp, err
 }
 
-func (s *OrganizationsService) Get(
+func (s *OrganizationsResource) Get(
 	ctx context.Context,
 	id string,
 ) (*Organization, *Response, error) {
@@ -65,7 +65,7 @@ func (s *OrganizationsService) Get(
 	return body.Organization, resp, err
 }
 
-func (s *OrganizationsService) CreateManaged(
+func (s *OrganizationsResource) CreateManaged(
 	ctx context.Context,
 	parentID string,
 	name string,
@@ -78,7 +78,7 @@ func (s *OrganizationsService) CreateManaged(
 	return body.Organization, resp, err
 }
 
-func (s *OrganizationsService) doRequest(
+func (s *OrganizationsResource) doRequest(
 	ctx context.Context,
 	method string,
 	u *url.URL,

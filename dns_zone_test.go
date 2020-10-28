@@ -89,6 +89,31 @@ func TestDNSZoneVerificationDetails_JSONMarshaling(t *testing.T) {
 	}
 }
 
+func TestDNSZoneArguments_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *DNSZoneArguments
+	}{
+		{
+			name: "empty",
+			obj:  &DNSZoneArguments{},
+		},
+		{
+			name: "full",
+			obj: &DNSZoneArguments{
+				Name:            "name",
+				TTL:             493,
+				SkipVerfication: true,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
 func TestDNSZoneDetails_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string
@@ -188,7 +213,7 @@ func Test_dnsZoneResponseBody_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestDNSZonesService_List(t *testing.T) {
+func TestDNSZonesResource_List(t *testing.T) {
 	// Correlates to fixtures/dns_zones_list*.json
 	dnsZonesList := []*DNSZone{
 		{
@@ -379,7 +404,7 @@ func TestDNSZonesService_List(t *testing.T) {
 	}
 }
 
-func TestDNSZonesService_Get(t *testing.T) {
+func TestDNSZonesResource_Get(t *testing.T) {
 	type args struct {
 		ctx context.Context
 		id  string
@@ -461,7 +486,7 @@ func TestDNSZonesService_Get(t *testing.T) {
 	}
 }
 
-func TestDNSZonesService_Create(t *testing.T) {
+func TestDNSZonesResource_Create(t *testing.T) {
 	type reqBodyDetails struct {
 		Name string `json:"name"`
 		TTL  int    `json:"ttl,omitempty"`
@@ -658,7 +683,7 @@ func TestDNSZonesService_Create(t *testing.T) {
 	}
 }
 
-func TestDNSZonesService_Delete(t *testing.T) {
+func TestDNSZonesResource_Delete(t *testing.T) {
 	type args struct {
 		ctx context.Context
 		id  string
@@ -740,7 +765,7 @@ func TestDNSZonesService_Delete(t *testing.T) {
 	}
 }
 
-func TestDNSZonesService_VerificationDetails(t *testing.T) {
+func TestDNSZonesResource_VerificationDetails(t *testing.T) {
 	type args struct {
 		ctx context.Context
 		id  string
@@ -861,7 +886,7 @@ func TestDNSZonesService_VerificationDetails(t *testing.T) {
 	}
 }
 
-func TestDNSZonesService_Verify(t *testing.T) {
+func TestDNSZonesResource_Verify(t *testing.T) {
 	type args struct {
 		ctx context.Context
 		id  string
@@ -968,7 +993,7 @@ func TestDNSZonesService_Verify(t *testing.T) {
 	}
 }
 
-func TestDNSZonesService_UpdateTTL(t *testing.T) {
+func TestDNSZonesResource_UpdateTTL(t *testing.T) {
 	type reqBody struct {
 		TTL int `json:"ttl"`
 	}

@@ -8,20 +8,6 @@ import (
 	"github.com/augurysys/timestamp"
 )
 
-type VirtualMachinesService struct {
-	client   *apiClient
-	basePath *url.URL
-}
-
-func newVirtualMachinesService(
-	c *apiClient,
-) *VirtualMachinesService {
-	return &VirtualMachinesService{
-		client:   c,
-		basePath: &url.URL{Path: "/core/v1/"},
-	}
-}
-
 type VirtualMachine struct {
 	ID                  string                 `json:"id,omitempty"`
 	Name                string                 `json:"name,omitempty"`
@@ -46,40 +32,27 @@ type VirtualMachineGroup struct {
 	CreatedAt *timestamp.Timestamp `json:"created_at,omitempty"`
 }
 
-type ISO struct {
-	ID              string           `json:"id,omitempty"`
-	Name            string           `json:"name,omitempty"`
-	OperatingSystem *OperatingSystem `json:"operating_system,omitempty"`
-}
-
-type OperatingSystem struct {
-	ID    string      `json:"id,omitempty"`
-	Name  string      `json:"name,omitempty"`
-	Badge *Attachment `json:"badge,omitempty"`
-}
-
-type Tag struct {
-	ID        string               `json:"id,omitempty"`
-	Name      string               `json:"name,omitempty"`
-	Color     string               `json:"color,omitempty"`
-	CreatedAt *timestamp.Timestamp `json:"created_at,omitempty"`
-}
-
-type IPAddress struct {
-	ID              string `json:"id,omitempty"`
-	Address         string `json:"address,omitempty"`
-	ReverseDNS      string `json:"reverse_dns,omitempty"`
-	VIP             bool   `json:"vip,omitempty"`
-	AddressWithMask string `json:"address_with_mask,omitempty"`
-}
-
 type virtualMachinesResponseBody struct {
 	Pagination      *Pagination       `json:"pagination,omitempty"`
 	VirtualMachine  *VirtualMachine   `json:"virtual_machine,omitempty"`
 	VirtualMachines []*VirtualMachine `json:"virtual_machines,omitempty"`
 }
 
-func (s VirtualMachinesService) List(
+type VirtualMachinesResource struct {
+	client   *apiClient
+	basePath *url.URL
+}
+
+func newVirtualMachinesResource(
+	c *apiClient,
+) *VirtualMachinesResource {
+	return &VirtualMachinesResource{
+		client:   c,
+		basePath: &url.URL{Path: "/core/v1/"},
+	}
+}
+
+func (s VirtualMachinesResource) List(
 	ctx context.Context,
 	orgID string,
 	opts *ListOptions,
@@ -95,7 +68,7 @@ func (s VirtualMachinesService) List(
 	return body.VirtualMachines, resp, err
 }
 
-func (s VirtualMachinesService) Get(
+func (s VirtualMachinesResource) Get(
 	ctx context.Context,
 	id string,
 ) (*VirtualMachine, *Response, error) {
@@ -105,7 +78,7 @@ func (s VirtualMachinesService) Get(
 	return body.VirtualMachine, resp, err
 }
 
-func (s *VirtualMachinesService) doRequest(
+func (s *VirtualMachinesResource) doRequest(
 	ctx context.Context,
 	method string,
 	u *url.URL,
