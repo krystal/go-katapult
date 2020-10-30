@@ -65,6 +65,18 @@ func (s *OrganizationsResource) Get(
 	return body.Organization, resp, err
 }
 
+func (s *OrganizationsResource) GetBySubDomain(
+	ctx context.Context,
+	subDomain string,
+) (*Organization, *Response, error) {
+	qs := url.Values{"organization[sub_domain]": []string{subDomain}}
+	u := &url.URL{Path: "organizations/_", RawQuery: qs.Encode()}
+
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+
+	return body.Organization, resp, err
+}
+
 func (s *OrganizationsResource) CreateManaged(
 	ctx context.Context,
 	parentID string,

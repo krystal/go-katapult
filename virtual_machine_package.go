@@ -63,6 +63,18 @@ func (s *VirtualMachinePackagesResource) Get(
 	return body.VirtualMachinePackage, resp, err
 }
 
+func (s *VirtualMachinePackagesResource) GetByPermalink(
+	ctx context.Context,
+	permalink string,
+) (*VirtualMachinePackage, *Response, error) {
+	qs := url.Values{"virtual_machine_package[permalink]": []string{permalink}}
+	u := &url.URL{Path: "virtual_machine_packages/_", RawQuery: qs.Encode()}
+
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+
+	return body.VirtualMachinePackage, resp, err
+}
+
 func (s *VirtualMachinePackagesResource) doRequest(
 	ctx context.Context,
 	method string,

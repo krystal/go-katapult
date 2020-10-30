@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -419,7 +420,7 @@ func TestDNSZonesResource_Get(t *testing.T) {
 		respBody   []byte
 	}{
 		{
-			name: "specific DNSZone",
+			name: "DNS zone",
 			args: args{
 				ctx: context.Background(),
 				id:  "dnszone_k75eFc4UBOgeE5Zy",
@@ -429,7 +430,7 @@ func TestDNSZonesResource_Get(t *testing.T) {
 			respBody:   fixture("dns_zone_get"),
 		},
 		{
-			name: "non-existent DNSZone",
+			name: "non-existent DNS zone",
 			args: args{
 				ctx: context.Background(),
 				id:  "dnszone_k75eFc4UBOgeE5Zy",
@@ -486,6 +487,91 @@ func TestDNSZonesResource_Get(t *testing.T) {
 	}
 }
 
+func TestDNSZonesResource_GetByName(t *testing.T) {
+	type args struct {
+		ctx  context.Context
+		name string
+	}
+	tests := []struct {
+		name       string
+		args       args
+		expected   *DNSZone
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "DNS zone",
+			args: args{
+				ctx:  context.Background(),
+				name: "test1.example.com",
+			},
+			expected:   fixtureDNSZone,
+			respStatus: http.StatusOK,
+			respBody:   fixture("dns_zone_get"),
+		},
+		{
+			name: "non-existent DNS zone",
+			args: args{
+				ctx:  context.Background(),
+				name: "test1.examplezzz.com",
+			},
+			errStr:     fixtureDNSZoneNotFoundErr,
+			errResp:    fixtureDNSZoneNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("dns_zone_not_found_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx:  nil,
+				name: "test1.example.com",
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			mux.HandleFunc("/core/v1/dns/zones/_",
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "GET", r.Method)
+					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+
+					qs := url.Values{"dns_zone[name]": []string{tt.args.name}}
+					assert.Equal(t, qs, r.URL.Query())
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.DNSZones.GetByName(tt.args.ctx, tt.args.name)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.expected != nil {
+				assert.Equal(t, tt.expected, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
 func TestDNSZonesResource_Create(t *testing.T) {
 	type reqBodyDetails struct {
 		Name string `json:"name"`
@@ -511,7 +597,7 @@ func TestDNSZonesResource_Create(t *testing.T) {
 		respBody   []byte
 	}{
 		{
-			name: "create a DNS Zone",
+			name: "create a DNS zone",
 			args: args{
 				ctx:   context.Background(),
 				orgID: "org_O648YDMEYeLmqdmn",
@@ -698,7 +784,7 @@ func TestDNSZonesResource_Delete(t *testing.T) {
 		respBody   []byte
 	}{
 		{
-			name: "specific DNSZone",
+			name: "DNS zone",
 			args: args{
 				ctx: context.Background(),
 				id:  "dnszone_k75eFc4UBOgeE5Zy",
@@ -708,7 +794,7 @@ func TestDNSZonesResource_Delete(t *testing.T) {
 			respBody:   fixture("dns_zone_get"),
 		},
 		{
-			name: "non-existent DNSZone",
+			name: "non-existent DNS zone",
 			args: args{
 				ctx: context.Background(),
 				id:  "dnszone_k75eFc4UBOgeE5Zy",
@@ -793,7 +879,7 @@ func TestDNSZonesResource_VerificationDetails(t *testing.T) {
 			respBody:   fixture("dns_zone_verification_details"),
 		},
 		{
-			name: "non-existent DNSZone",
+			name: "non-existent DNS zone",
 			args: args{
 				ctx: context.Background(),
 				id:  "dnszone_k75eFc4UBOgeE5Zy",
@@ -821,7 +907,7 @@ func TestDNSZonesResource_VerificationDetails(t *testing.T) {
 			respBody:   fixture("dns_zone_already_verified_error"),
 		},
 		{
-			name: "infrastructure DNS Zone cannot be edited",
+			name: "infrastructure DNS zone cannot be edited",
 			args: args{
 				ctx: context.Background(),
 				id:  "dnszone_k75eFc4UBOgeE5Zy",
@@ -901,7 +987,7 @@ func TestDNSZonesResource_Verify(t *testing.T) {
 		respBody   []byte
 	}{
 		{
-			name: "specific DNSZone",
+			name: "DNS zone",
 			args: args{
 				ctx: context.Background(),
 				id:  "dnszone_k75eFc4UBOgeE5Zy",
@@ -911,7 +997,7 @@ func TestDNSZonesResource_Verify(t *testing.T) {
 			respBody:   fixture("dns_zone_get"),
 		},
 		{
-			name: "non-existent DNSZone",
+			name: "non-existent DNS zone",
 			args: args{
 				ctx: context.Background(),
 				id:  "dnszone_k75eFc4UBOgeE5Zy",
@@ -922,7 +1008,7 @@ func TestDNSZonesResource_Verify(t *testing.T) {
 			respBody:   fixture("dns_zone_not_found_error"),
 		},
 		{
-			name: "infrastructure DNS Zone cannot be edited",
+			name: "infrastructure DNS zone cannot be edited",
 			args: args{
 				ctx: context.Background(),
 				id:  "dnszone_k75eFc4UBOgeE5Zy",
