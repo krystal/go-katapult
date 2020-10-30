@@ -49,6 +49,7 @@ $(TOOLDIR)/$(1): $(TOOLDIR)/gobin Makefile
 	gobin $(V) "$(2)"
 endef
 
+$(eval $(call tool,gofumports,mvdan.cc/gofumpt/gofumports))
 $(eval $(call tool,golangci-lint,github.com/golangci/golangci-lint/cmd/golangci-lint@v1.31))
 
 .PHONY: tools
@@ -78,6 +79,10 @@ test-deps:
 .PHONY: lint
 lint: golangci-lint
 	GOGC=off golangci-lint $(V) run
+
+.PHONY: format
+format: gofumports
+	gofumports -w .
 
 #
 # Coverage

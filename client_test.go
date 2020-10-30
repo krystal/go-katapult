@@ -95,11 +95,11 @@ func updateGolden(t *testing.T, got []byte) {
 
 	t.Logf("updating .golden file: %s", gp)
 
-	if err := os.MkdirAll(dir, 0755); err != nil {
+	if err := os.MkdirAll(dir, 0o755); err != nil {
 		t.Fatalf("failed to update .golden directory: %s", err)
 	}
 
-	if err := ioutil.WriteFile(gp, got, 0644); err != nil { //nolint:gosec
+	if err := ioutil.WriteFile(gp, got, 0o644); err != nil { //nolint:gosec
 		t.Fatalf("failed to update .golden file: %s", err)
 	}
 }

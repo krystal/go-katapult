@@ -114,7 +114,8 @@ func TestOrganizationsResource_List(t *testing.T) {
 		{
 			name: "fetch list of organizations",
 			args: args{
-				ctx: context.Background()},
+				ctx: context.Background(),
+			},
 			orgs: []*Organization{
 				{
 					ID:        "org_O648YDMEYeLmqdmn",
