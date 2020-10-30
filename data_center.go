@@ -49,6 +49,18 @@ func (s *DataCentersResource) Get(
 	return body.DataCenter, resp, err
 }
 
+func (s *DataCentersResource) GetByPermalink(
+	ctx context.Context,
+	permalink string,
+) (*DataCenter, *Response, error) {
+	qs := url.Values{"data_center[permalink]": []string{permalink}}
+	u := &url.URL{Path: "data_centers/_", RawQuery: qs.Encode()}
+
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+
+	return body.DataCenter, resp, err
+}
+
 func (s *DataCentersResource) doRequest(
 	ctx context.Context,
 	method string,

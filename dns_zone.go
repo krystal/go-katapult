@@ -85,6 +85,18 @@ func (s *DNSZonesResource) Get(
 	return body.DNSZone, resp, err
 }
 
+func (s *DNSZonesResource) GetByName(
+	ctx context.Context,
+	name string,
+) (*DNSZone, *Response, error) {
+	qs := url.Values{"dns_zone[name]": []string{name}}
+	u := &url.URL{Path: "dns/zones/_", RawQuery: qs.Encode()}
+
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+
+	return body.DNSZone, resp, err
+}
+
 func (s *DNSZonesResource) Create(
 	ctx context.Context,
 	orgID string,

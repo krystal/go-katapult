@@ -78,6 +78,18 @@ func (s VirtualMachinesResource) Get(
 	return body.VirtualMachine, resp, err
 }
 
+func (s VirtualMachinesResource) GetByFQDN(
+	ctx context.Context,
+	fqdn string,
+) (*VirtualMachine, *Response, error) {
+	qs := url.Values{"virtual_machine[fqdn]": []string{fqdn}}
+	u := &url.URL{Path: "virtual_machines/_", RawQuery: qs.Encode()}
+
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+
+	return body.VirtualMachine, resp, err
+}
+
 func (s *VirtualMachinesResource) doRequest(
 	ctx context.Context,
 	method string,

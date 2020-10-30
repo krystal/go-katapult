@@ -55,6 +55,8 @@ linters:
     - whitespace
 
 issues:
+  include:
+  # - EXC0002 # disable excluding of issues about comments from golint
   exclude:
     - Using the variable on range scope `tt` in function literal
     - Using the variable on range scope `tc` in function literal

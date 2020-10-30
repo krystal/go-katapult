@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -113,7 +114,8 @@ func TestOrganizationsResource_List(t *testing.T) {
 		{
 			name: "fetch list of organizations",
 			args: args{
-				ctx: context.Background()},
+				ctx: context.Background(),
+			},
 			orgs: []*Organization{
 				{
 					ID:        "org_O648YDMEYeLmqdmn",
@@ -260,6 +262,110 @@ func TestOrganizationsResource_Get(t *testing.T) {
 			)
 
 			got, resp, err := c.Organizations.Get(tt.args.ctx, tt.args.id)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.expected != nil {
+				assert.Equal(t, tt.expected, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestOrganizationsResource_GetBySubDomain(t *testing.T) {
+	type args struct {
+		ctx       context.Context
+		subDomain string
+	}
+	tests := []struct {
+		name       string
+		args       args
+		expected   *Organization
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "organization",
+			args: args{
+				ctx:       context.Background(),
+				subDomain: "acme",
+			},
+			expected: &Organization{
+				ID:        "org_O648YDMEYeLmqdmn",
+				Name:      "ACME Inc.",
+				SubDomain: "acme",
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("organization_get"),
+		},
+		{
+			name: "non-existent organization",
+			args: args{
+				ctx:       context.Background(),
+				subDomain: "not-here",
+			},
+			errStr:     fixtureOrganizationNotFoundErr,
+			errResp:    fixtureOrganizationNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("organization_not_found_error"),
+		},
+		{
+			name: "suspended organization",
+			args: args{
+				ctx:       context.Background(),
+				subDomain: "acme",
+			},
+			errStr:     fixtureOrganizationSuspendedErr,
+			errResp:    fixtureOrganizationSuspendedResponseError,
+			respStatus: http.StatusForbidden,
+			respBody:   fixture("organization_suspended_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx:       nil,
+				subDomain: "acme",
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			mux.HandleFunc("/core/v1/organizations/_",
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "GET", r.Method)
+					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+
+					qs := url.Values{
+						"organization[sub_domain]": []string{tt.args.subDomain},
+					}
+					assert.Equal(t, qs, r.URL.Query())
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.Organizations.GetBySubDomain(
+				tt.args.ctx, tt.args.subDomain,
+			)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
