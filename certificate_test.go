@@ -284,7 +284,7 @@ func TestCertificatesClient_Get(t *testing.T) {
 			name: "non-existent certificate",
 			args: args{
 				ctx: context.Background(),
-				id:  "org_nopethisbegone",
+				id:  "lb_nopethisbegone",
 			},
 			errStr: "certificate_not_found: No certificate was found " +
 				"matching any of the criteria provided in the arguments",
