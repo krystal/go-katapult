@@ -34,19 +34,19 @@ type organizationsResponseBody struct {
 	Organizations []*Organization `json:"organizations,omitempty"`
 }
 
-type OrganizationsResource struct {
+type OrganizationsClient struct {
 	client   *apiClient
 	basePath *url.URL
 }
 
-func newOrganizationsResource(c *apiClient) *OrganizationsResource {
-	return &OrganizationsResource{
+func newOrganizationsClient(c *apiClient) *OrganizationsClient {
+	return &OrganizationsClient{
 		client:   c,
 		basePath: &url.URL{Path: "/core/v1/"},
 	}
 }
 
-func (s *OrganizationsResource) List(
+func (s *OrganizationsClient) List(
 	ctx context.Context,
 ) ([]*Organization, *Response, error) {
 	u := &url.URL{Path: "organizations"}
@@ -55,7 +55,7 @@ func (s *OrganizationsResource) List(
 	return body.Organizations, resp, err
 }
 
-func (s *OrganizationsResource) Get(
+func (s *OrganizationsClient) Get(
 	ctx context.Context,
 	id string,
 ) (*Organization, *Response, error) {
@@ -65,7 +65,7 @@ func (s *OrganizationsResource) Get(
 	return body.Organization, resp, err
 }
 
-func (s *OrganizationsResource) GetBySubDomain(
+func (s *OrganizationsClient) GetBySubDomain(
 	ctx context.Context,
 	subDomain string,
 ) (*Organization, *Response, error) {
@@ -77,7 +77,7 @@ func (s *OrganizationsResource) GetBySubDomain(
 	return body.Organization, resp, err
 }
 
-func (s *OrganizationsResource) CreateManaged(
+func (s *OrganizationsClient) CreateManaged(
 	ctx context.Context,
 	parentID string,
 	name string,
@@ -90,7 +90,7 @@ func (s *OrganizationsResource) CreateManaged(
 	return body.Organization, resp, err
 }
 
-func (s *OrganizationsResource) doRequest(
+func (s *OrganizationsClient) doRequest(
 	ctx context.Context,
 	method string,
 	u *url.URL,

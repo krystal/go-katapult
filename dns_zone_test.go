@@ -214,7 +214,7 @@ func Test_dnsZoneResponseBody_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestDNSZonesResource_List(t *testing.T) {
+func TestDNSZonesClient_List(t *testing.T) {
 	// Correlates to fixtures/dns_zones_list*.json
 	dnsZonesList := []*DNSZone{
 		{
@@ -405,7 +405,7 @@ func TestDNSZonesResource_List(t *testing.T) {
 	}
 }
 
-func TestDNSZonesResource_Get(t *testing.T) {
+func TestDNSZonesClient_Get(t *testing.T) {
 	type args struct {
 		ctx context.Context
 		id  string
@@ -487,7 +487,7 @@ func TestDNSZonesResource_Get(t *testing.T) {
 	}
 }
 
-func TestDNSZonesResource_GetByName(t *testing.T) {
+func TestDNSZonesClient_GetByName(t *testing.T) {
 	type args struct {
 		ctx  context.Context
 		name string
@@ -572,7 +572,7 @@ func TestDNSZonesResource_GetByName(t *testing.T) {
 	}
 }
 
-func TestDNSZonesResource_Create(t *testing.T) {
+func TestDNSZonesClient_Create(t *testing.T) {
 	type reqBodyDetails struct {
 		Name string `json:"name"`
 		TTL  int    `json:"ttl,omitempty"`
@@ -769,7 +769,7 @@ func TestDNSZonesResource_Create(t *testing.T) {
 	}
 }
 
-func TestDNSZonesResource_Delete(t *testing.T) {
+func TestDNSZonesClient_Delete(t *testing.T) {
 	type args struct {
 		ctx context.Context
 		id  string
@@ -851,7 +851,7 @@ func TestDNSZonesResource_Delete(t *testing.T) {
 	}
 }
 
-func TestDNSZonesResource_VerificationDetails(t *testing.T) {
+func TestDNSZonesClient_VerificationDetails(t *testing.T) {
 	type args struct {
 		ctx context.Context
 		id  string
@@ -972,7 +972,7 @@ func TestDNSZonesResource_VerificationDetails(t *testing.T) {
 	}
 }
 
-func TestDNSZonesResource_Verify(t *testing.T) {
+func TestDNSZonesClient_Verify(t *testing.T) {
 	type args struct {
 		ctx context.Context
 		id  string
@@ -1079,7 +1079,7 @@ func TestDNSZonesResource_Verify(t *testing.T) {
 	}
 }
 
-func TestDNSZonesResource_UpdateTTL(t *testing.T) {
+func TestDNSZonesClient_UpdateTTL(t *testing.T) {
 	type reqBody struct {
 		TTL int `json:"ttl"`
 	}

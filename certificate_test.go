@@ -71,7 +71,7 @@ func Test_certificatesResponseBody_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestCertificatesResource_List(t *testing.T) {
+func TestCertificatesClient_List(t *testing.T) {
 	// Correlates to fixtures/certificates_list*.json
 	certificateList := []*Certificate{
 		{
@@ -251,7 +251,7 @@ func TestCertificatesResource_List(t *testing.T) {
 	}
 }
 
-func TestCertificatesResource_Get(t *testing.T) {
+func TestCertificatesClient_Get(t *testing.T) {
 	type args struct {
 		ctx context.Context
 		id  string

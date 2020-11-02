@@ -23,19 +23,19 @@ type networksResponseBody struct {
 	VirtualNetworks []*VirtualNetwork `json:"virtual_networks,omitempty"`
 }
 
-type NetworksResource struct {
+type NetworksClient struct {
 	client   *apiClient
 	basePath *url.URL
 }
 
-func newNetworksResource(c *apiClient) *NetworksResource {
-	return &NetworksResource{
+func newNetworksClient(c *apiClient) *NetworksClient {
+	return &NetworksClient{
 		client:   c,
 		basePath: &url.URL{Path: "/core/v1/"},
 	}
 }
 
-func (s *NetworksResource) List(
+func (s *NetworksClient) List(
 	ctx context.Context,
 	orgID string,
 ) ([]*Network, []*VirtualNetwork, *Response, error) {
@@ -48,7 +48,7 @@ func (s *NetworksResource) List(
 	return body.Networks, body.VirtualNetworks, resp, err
 }
 
-func (s *NetworksResource) doRequest(
+func (s *NetworksClient) doRequest(
 	ctx context.Context,
 	method string,
 	u *url.URL,

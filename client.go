@@ -20,13 +20,13 @@ type HTTPClient interface {
 type Client struct {
 	apiClient *apiClient
 
-	Certificates           *CertificatesResource
-	DNSZones               *DNSZonesResource
-	DataCenters            *DataCentersResource
-	Networks               *NetworksResource
-	Organizations          *OrganizationsResource
-	VirtualMachinePackages *VirtualMachinePackagesResource
-	VirtualMachines        *VirtualMachinesResource
+	Certificates           *CertificatesClient
+	DNSZones               *DNSZonesClient
+	DataCenters            *DataCentersClient
+	Networks               *NetworksClient
+	Organizations          *OrganizationsClient
+	VirtualMachinePackages *VirtualMachinePackagesClient
+	VirtualMachines        *VirtualMachinesClient
 }
 
 func NewClient(httpClient HTTPClient) *Client {
@@ -45,13 +45,13 @@ func NewClient(httpClient HTTPClient) *Client {
 
 	return &Client{
 		apiClient:              c,
-		Certificates:           newCertificatesResource(c),
-		DNSZones:               newDNSZonesResource(c),
-		DataCenters:            newDataCentersResource(c),
-		Networks:               newNetworksResource(c),
-		Organizations:          newOrganizationsResource(c),
-		VirtualMachinePackages: newVirtualMachinePackagesResource(c),
-		VirtualMachines:        newVirtualMachinesResource(c),
+		Certificates:           newCertificatesClient(c),
+		DNSZones:               newDNSZonesClient(c),
+		DataCenters:            newDataCentersClient(c),
+		Networks:               newNetworksClient(c),
+		Organizations:          newOrganizationsClient(c),
+		VirtualMachinePackages: newVirtualMachinePackagesClient(c),
+		VirtualMachines:        newVirtualMachinesClient(c),
 	}
 }
 

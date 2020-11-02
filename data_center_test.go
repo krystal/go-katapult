@@ -63,7 +63,7 @@ func Test_dataCentersResponseBody_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestDataCentersResource_List(t *testing.T) {
+func TestDataCentersClient_List(t *testing.T) {
 	type args struct {
 		ctx context.Context
 	}
@@ -152,7 +152,7 @@ func TestDataCentersResource_List(t *testing.T) {
 	}
 }
 
-func TestDataCentersResource_Get(t *testing.T) {
+func TestDataCentersClient_Get(t *testing.T) {
 	// Correlates to fixtures/data_center_get.json
 	dataCenter := &DataCenter{
 		ID:        "loc_a2417980b9874c0",
@@ -247,7 +247,7 @@ func TestDataCentersResource_Get(t *testing.T) {
 	}
 }
 
-func TestDataCentersResource_GetByPermalink(t *testing.T) {
+func TestDataCentersClient_GetByPermalink(t *testing.T) {
 	// Correlates to fixtures/data_center_get.json
 	dataCenter := &DataCenter{
 		ID:        "loc_a2417980b9874c0",
