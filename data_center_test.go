@@ -11,6 +11,17 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var (
+	fixtureDataCenterNotFoundErr = "data_center_not_found: No data centers " +
+		"was found matching any of the criteria provided in the arguments"
+	fixtureDataCenterNotFoundResponseError = &ResponseError{
+		Code: "data_center_not_found",
+		Description: "No data centers was found matching any of the " +
+			"criteria provided in the arguments",
+		Detail: json.RawMessage(`{}`),
+	}
+)
+
 func TestDataCenter_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string
@@ -189,14 +200,8 @@ func TestDataCentersClient_Get(t *testing.T) {
 				ctx: context.Background(),
 				id:  "loc_nopethisbegone",
 			},
-			errStr: "data_center_not_found: No data centers was found " +
-				"matching any of the criteria provided in the arguments",
-			errResp: &ResponseError{
-				Code: "data_center_not_found",
-				Description: "No data centers was found matching any of the " +
-					"criteria provided in the arguments",
-				Detail: json.RawMessage(`{}`),
-			},
+			errStr:     fixtureDataCenterNotFoundErr,
+			errResp:    fixtureDataCenterNotFoundResponseError,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("data_center_not_found_error"),
 		},
@@ -284,14 +289,8 @@ func TestDataCentersClient_GetByPermalink(t *testing.T) {
 				ctx:       context.Background(),
 				permalink: "not-here",
 			},
-			errStr: "data_center_not_found: No data centers was found " +
-				"matching any of the criteria provided in the arguments",
-			errResp: &ResponseError{
-				Code: "data_center_not_found",
-				Description: "No data centers was found matching any of the " +
-					"criteria provided in the arguments",
-				Detail: json.RawMessage(`{}`),
-			},
+			errStr:     fixtureDataCenterNotFoundErr,
+			errResp:    fixtureDataCenterNotFoundResponseError,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("data_center_not_found_error"),
 		},

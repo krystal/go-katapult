@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "load_balancer_not_found",
+    "description": "No load balancer was found matching any of the criteria provided in the arguments",
+    "detail": {}
+  }
+}

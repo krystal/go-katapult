@@ -1,0 +1,7 @@
+{
+  "load_balancer": {
+    "id": "lb_PuoZUW18K5bXEAVE",
+    "name": "api-test",
+    "resource_type": "virtual_machines"
+  }
+}

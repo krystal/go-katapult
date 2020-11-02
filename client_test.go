@@ -127,11 +127,19 @@ func fixture(name string) []byte {
 	return c
 }
 
-func testJSONMarshaling(t *testing.T, v interface{}) {
+func testJSONMarshaling(t *testing.T, input interface{}) {
+	testCustomJSONMarshaling(t, input, nil)
+}
+
+func testCustomJSONMarshaling(
+	t *testing.T,
+	input interface{},
+	decoded interface{},
+) {
 	c := &codec.JSON{}
 
 	buf := &bytes.Buffer{}
-	err := c.Encode(v, buf)
+	err := c.Encode(input, buf)
 	require.NoError(t, err, "encoding failed")
 
 	if *updateGoldenFlag {
@@ -139,15 +147,22 @@ func testJSONMarshaling(t *testing.T, v interface{}) {
 	}
 
 	g := getGolden(t)
-
-	assert.NoError(t, err)
-	assert.Equal(t, buf.Bytes(), g,
+	assert.Equal(t, string(g), buf.String(),
 		"encoding does not match golden")
 
-	got := reflect.New(reflect.TypeOf(v).Elem()).Interface()
-	err = c.Decode(bytes.NewBuffer(g), got)
-	require.NoError(t, err, "decoding golden failed")
-	assert.Equal(t, v, got)
+	if decoded != nil {
+		got := reflect.New(reflect.TypeOf(decoded).Elem()).Interface()
+		err = c.Decode(bytes.NewBuffer(g), got)
+		require.NoError(t, err, "decoding golden failed")
+		assert.Equal(t, decoded, got,
+			"decoding from golden does not match expected object")
+	} else {
+		got := reflect.New(reflect.TypeOf(input).Elem()).Interface()
+		err = c.Decode(bytes.NewBuffer(g), got)
+		require.NoError(t, err, "decoding golden failed")
+		assert.Equal(t, input, got,
+			"decoding from golden does not match expected object")
+	}
 }
 
 // prepareTestClient creates a test HTTP server for mock API responses, and
