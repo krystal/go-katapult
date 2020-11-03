@@ -31,19 +31,19 @@ type certificatesResponseBody struct {
 	Certificates []*Certificate `json:"certificates,omitempty"`
 }
 
-type CertificatesResource struct {
+type CertificatesClient struct {
 	client   *apiClient
 	basePath *url.URL
 }
 
-func newCertificatesResource(c *apiClient) *CertificatesResource {
-	return &CertificatesResource{
+func newCertificatesClient(c *apiClient) *CertificatesClient {
+	return &CertificatesClient{
 		client:   c,
 		basePath: &url.URL{Path: "/core/v1/"},
 	}
 }
 
-func (s CertificatesResource) List(
+func (s CertificatesClient) List(
 	ctx context.Context,
 	orgID string,
 	opts *ListOptions,
@@ -59,7 +59,7 @@ func (s CertificatesResource) List(
 	return body.Certificates, resp, err
 }
 
-func (s CertificatesResource) Get(
+func (s CertificatesClient) Get(
 	ctx context.Context,
 	id string,
 ) (*Certificate, *Response, error) {
@@ -69,7 +69,7 @@ func (s CertificatesResource) Get(
 	return body.Certificate, resp, err
 }
 
-func (s *CertificatesResource) doRequest(
+func (s *CertificatesClient) doRequest(
 	ctx context.Context,
 	method string,
 	u *url.URL,

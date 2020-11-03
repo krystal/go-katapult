@@ -67,7 +67,7 @@ func Test_virtualMachinePackagesResponseBody_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestVirtualMachinePackagesResource_List(t *testing.T) {
+func TestVirtualMachinePackagesClient_List(t *testing.T) {
 	// Correlates to fixtures/virtual_machine_packages_list*.json
 	packageList := []*VirtualMachinePackage{
 		{
@@ -216,7 +216,7 @@ func TestVirtualMachinePackagesResource_List(t *testing.T) {
 	}
 }
 
-func TestVirtualMachinePackagesResource_Get(t *testing.T) {
+func TestVirtualMachinePackagesClient_Get(t *testing.T) {
 	type args struct {
 		ctx context.Context
 		id  string
@@ -311,7 +311,7 @@ func TestVirtualMachinePackagesResource_Get(t *testing.T) {
 	}
 }
 
-func TestVirtualMachinePackagesResource_GetByPermalink(t *testing.T) {
+func TestVirtualMachinePackagesClient_GetByPermalink(t *testing.T) {
 	type args struct {
 		ctx       context.Context
 		permalink string

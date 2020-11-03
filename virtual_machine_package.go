@@ -24,21 +24,21 @@ type virtualMachinePackagesResponseBody struct {
 	VirtualMachinePackages []*VirtualMachinePackage `json:"virtual_machine_packages,omitempty"`
 }
 
-type VirtualMachinePackagesResource struct {
+type VirtualMachinePackagesClient struct {
 	client   *apiClient
 	basePath *url.URL
 }
 
-func newVirtualMachinePackagesResource(
+func newVirtualMachinePackagesClient(
 	c *apiClient,
-) *VirtualMachinePackagesResource {
-	return &VirtualMachinePackagesResource{
+) *VirtualMachinePackagesClient {
+	return &VirtualMachinePackagesClient{
 		client:   c,
 		basePath: &url.URL{Path: "/core/v1/"},
 	}
 }
 
-func (s *VirtualMachinePackagesResource) List(
+func (s *VirtualMachinePackagesClient) List(
 	ctx context.Context,
 	opts *ListOptions,
 ) ([]*VirtualMachinePackage, *Response, error) {
@@ -53,7 +53,7 @@ func (s *VirtualMachinePackagesResource) List(
 	return body.VirtualMachinePackages, resp, err
 }
 
-func (s *VirtualMachinePackagesResource) Get(
+func (s *VirtualMachinePackagesClient) Get(
 	ctx context.Context,
 	id string,
 ) (*VirtualMachinePackage, *Response, error) {
@@ -63,7 +63,7 @@ func (s *VirtualMachinePackagesResource) Get(
 	return body.VirtualMachinePackage, resp, err
 }
 
-func (s *VirtualMachinePackagesResource) GetByPermalink(
+func (s *VirtualMachinePackagesClient) GetByPermalink(
 	ctx context.Context,
 	permalink string,
 ) (*VirtualMachinePackage, *Response, error) {
@@ -75,7 +75,7 @@ func (s *VirtualMachinePackagesResource) GetByPermalink(
 	return body.VirtualMachinePackage, resp, err
 }
 
-func (s *VirtualMachinePackagesResource) doRequest(
+func (s *VirtualMachinePackagesClient) doRequest(
 	ctx context.Context,
 	method string,
 	u *url.URL,

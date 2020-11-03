@@ -38,21 +38,21 @@ type virtualMachinesResponseBody struct {
 	VirtualMachines []*VirtualMachine `json:"virtual_machines,omitempty"`
 }
 
-type VirtualMachinesResource struct {
+type VirtualMachinesClient struct {
 	client   *apiClient
 	basePath *url.URL
 }
 
-func newVirtualMachinesResource(
+func newVirtualMachinesClient(
 	c *apiClient,
-) *VirtualMachinesResource {
-	return &VirtualMachinesResource{
+) *VirtualMachinesClient {
+	return &VirtualMachinesClient{
 		client:   c,
 		basePath: &url.URL{Path: "/core/v1/"},
 	}
 }
 
-func (s VirtualMachinesResource) List(
+func (s VirtualMachinesClient) List(
 	ctx context.Context,
 	orgID string,
 	opts *ListOptions,
@@ -68,7 +68,7 @@ func (s VirtualMachinesResource) List(
 	return body.VirtualMachines, resp, err
 }
 
-func (s VirtualMachinesResource) Get(
+func (s VirtualMachinesClient) Get(
 	ctx context.Context,
 	id string,
 ) (*VirtualMachine, *Response, error) {
@@ -78,7 +78,7 @@ func (s VirtualMachinesResource) Get(
 	return body.VirtualMachine, resp, err
 }
 
-func (s VirtualMachinesResource) GetByFQDN(
+func (s VirtualMachinesClient) GetByFQDN(
 	ctx context.Context,
 	fqdn string,
 ) (*VirtualMachine, *Response, error) {
@@ -90,7 +90,7 @@ func (s VirtualMachinesResource) GetByFQDN(
 	return body.VirtualMachine, resp, err
 }
 
-func (s *VirtualMachinesResource) doRequest(
+func (s *VirtualMachinesClient) doRequest(
 	ctx context.Context,
 	method string,
 	u *url.URL,

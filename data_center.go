@@ -18,19 +18,19 @@ type dataCentersResponseBody struct {
 	DataCenters []*DataCenter `json:"data_centers,omitempty"`
 }
 
-type DataCentersResource struct {
+type DataCentersClient struct {
 	client   *apiClient
 	basePath *url.URL
 }
 
-func newDataCentersResource(c *apiClient) *DataCentersResource {
-	return &DataCentersResource{
+func newDataCentersClient(c *apiClient) *DataCentersClient {
+	return &DataCentersClient{
 		client:   c,
 		basePath: &url.URL{Path: "/core/v1/"},
 	}
 }
 
-func (s *DataCentersResource) List(
+func (s *DataCentersClient) List(
 	ctx context.Context,
 ) ([]*DataCenter, *Response, error) {
 	u := &url.URL{Path: "data_centers"}
@@ -39,7 +39,7 @@ func (s *DataCentersResource) List(
 	return body.DataCenters, resp, err
 }
 
-func (s *DataCentersResource) Get(
+func (s *DataCentersClient) Get(
 	ctx context.Context,
 	id string,
 ) (*DataCenter, *Response, error) {
@@ -49,7 +49,7 @@ func (s *DataCentersResource) Get(
 	return body.DataCenter, resp, err
 }
 
-func (s *DataCentersResource) GetByPermalink(
+func (s *DataCentersClient) GetByPermalink(
 	ctx context.Context,
 	permalink string,
 ) (*DataCenter, *Response, error) {
@@ -61,7 +61,7 @@ func (s *DataCentersResource) GetByPermalink(
 	return body.DataCenter, resp, err
 }
 
-func (s *DataCentersResource) doRequest(
+func (s *DataCentersClient) doRequest(
 	ctx context.Context,
 	method string,
 	u *url.URL,

@@ -98,7 +98,7 @@ func Test_virtualMachinesResponseBody_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestVirtualMachinesResource_List(t *testing.T) {
+func TestVirtualMachinesClient_List(t *testing.T) {
 	// Correlates to fixtures/virtual_machines_list*.json
 	virtualMachinesList := []*VirtualMachine{
 		{
@@ -278,7 +278,7 @@ func TestVirtualMachinesResource_List(t *testing.T) {
 	}
 }
 
-func TestVirtualMachinesResource_Get(t *testing.T) {
+func TestVirtualMachinesClient_Get(t *testing.T) {
 	type args struct {
 		ctx context.Context
 		id  string
@@ -382,7 +382,7 @@ func TestVirtualMachinesResource_Get(t *testing.T) {
 	}
 }
 
-func TestVirtualMachinesResource_GetByFQDN(t *testing.T) {
+func TestVirtualMachinesClient_GetByFQDN(t *testing.T) {
 	type args struct {
 		ctx  context.Context
 		fqdn string
