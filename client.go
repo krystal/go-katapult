@@ -23,6 +23,7 @@ type Client struct {
 	Certificates           *CertificatesClient
 	DNSZones               *DNSZonesClient
 	DataCenters            *DataCentersClient
+	LoadBalancers          *LoadBalancersClient
 	Networks               *NetworksClient
 	Organizations          *OrganizationsClient
 	VirtualMachinePackages *VirtualMachinePackagesClient
@@ -48,6 +49,7 @@ func NewClient(httpClient HTTPClient) *Client {
 		Certificates:           newCertificatesClient(c),
 		DNSZones:               newDNSZonesClient(c),
 		DataCenters:            newDataCentersClient(c),
+		LoadBalancers:          newLoadBalancersClient(c),
 		Networks:               newNetworksClient(c),
 		Organizations:          newOrganizationsClient(c),
 		VirtualMachinePackages: newVirtualMachinePackagesClient(c),
