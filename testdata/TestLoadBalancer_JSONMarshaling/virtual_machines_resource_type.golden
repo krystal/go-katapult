@@ -1,1 +1,1 @@
-{"resource_type":"virtual_machines","resource":[{"type":"VirtualMachine","object":{"id":"id2"}},{"type":"VirtualMachine","object":{"id":"id3"}}]}
+{"resource_type":"virtual_machines","resources":[{"type":"VirtualMachine","value":{"id":"id2"}},{"type":"VirtualMachine","value":{"id":"id3"}}]}
