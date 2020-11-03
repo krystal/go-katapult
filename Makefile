@@ -51,6 +51,7 @@ endef
 
 $(eval $(call tool,gofumports,mvdan.cc/gofumpt/gofumports))
 $(eval $(call tool,golangci-lint,github.com/golangci/golangci-lint/cmd/golangci-lint@v1.31))
+$(eval $(call tool,golds,go101.org/golds@v0.1))
 
 .PHONY: tools
 tools: $(TOOLS)
@@ -137,3 +138,13 @@ check-tidy:
 	-rm -f go.mod go.sum
 	-mv go.mod.tidy-check go.mod
 	-mv go.sum.tidy-check go.sum
+
+#
+# Documentation
+#
+
+# Serve docs
+.PHONY: docs
+docs: golds
+	$(info Serving go docs)
+	@golds -emphasize-wdpkgs ./...
