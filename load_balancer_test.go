@@ -85,8 +85,8 @@ func Test_loadBalancerResource_JSONMarshaling(t *testing.T) {
 		{
 			name: "full",
 			obj: &loadBalancerResource{
-				Type:   "VirtualMachine",
-				Object: &loadBalancerResourceObject{ID: "id4"},
+				Type:  "VirtualMachine",
+				Value: &loadBalancerResourceValue{ID: "id4"},
 			},
 		},
 	}
@@ -97,18 +97,18 @@ func Test_loadBalancerResource_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func Test_loadBalancerResourceObject_JSONMarshaling(t *testing.T) {
+func Test_loadBalancerResourceValue_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string
-		obj  *loadBalancerResourceObject
+		obj  *loadBalancerResourceValue
 	}{
 		{
 			name: "empty",
-			obj:  &loadBalancerResourceObject{},
+			obj:  &loadBalancerResourceValue{},
 		},
 		{
 			name: "full",
-			obj: &loadBalancerResourceObject{
+			obj: &loadBalancerResourceValue{
 				ID:   "id4",
 				Name: "helper",
 			},

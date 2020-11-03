@@ -26,14 +26,14 @@ func (s *LoadBalancer) MarshalJSON() ([]byte, error) {
 
 	for _, id := range s.ResourceIDs {
 		resources = append(resources, &loadBalancerResource{
-			Type:   s.ResourceType.objectType(),
-			Object: &loadBalancerResourceObject{ID: id},
+			Type:  s.ResourceType.objectType(),
+			Value: &loadBalancerResourceValue{ID: id},
 		})
 	}
 
 	return json.Marshal(&struct {
 		*alias
-		Resources []*loadBalancerResource `json:"resource,omitempty"`
+		Resources []*loadBalancerResource `json:"resources,omitempty"`
 	}{
 		alias:     (*alias)(s),
 		Resources: resources,
@@ -44,7 +44,7 @@ func (s *LoadBalancer) UnmarshalJSON(b []byte) error {
 	type alias LoadBalancer
 	aux := &struct {
 		*alias
-		Resources []*loadBalancerResource `json:"resource,omitempty"`
+		Resources []*loadBalancerResource `json:"resources,omitempty"`
 	}{
 		alias: (*alias)(s),
 	}
@@ -54,18 +54,20 @@ func (s *LoadBalancer) UnmarshalJSON(b []byte) error {
 	}
 
 	for _, r := range aux.Resources {
-		s.ResourceIDs = append(s.ResourceIDs, r.Object.ID)
+		if r.Value != nil {
+			s.ResourceIDs = append(s.ResourceIDs, r.Value.ID)
+		}
 	}
 
 	return nil
 }
 
 type loadBalancerResource struct {
-	Type   string                      `json:"type,omitempty"`
-	Object *loadBalancerResourceObject `json:"object,omitempty"`
+	Type  string                     `json:"type,omitempty"`
+	Value *loadBalancerResourceValue `json:"value,omitempty"`
 }
 
-type loadBalancerResourceObject struct {
+type loadBalancerResourceValue struct {
 	ID   string `json:"id,omitempty"`
 	Name string `json:"name,omitempty"`
 }

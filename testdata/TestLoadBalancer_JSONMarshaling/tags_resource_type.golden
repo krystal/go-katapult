@@ -1,1 +1,1 @@
-{"resource_type":"tags","resource":[{"type":"Tag","object":{"id":"id2"}},{"type":"Tag","object":{"id":"id3"}}]}
+{"resource_type":"tags","resources":[{"type":"Tag","value":{"id":"id2"}},{"type":"Tag","value":{"id":"id3"}}]}
