@@ -61,16 +61,23 @@ tools: $(TOOLS)
 
 .PHONY: clean
 clean:
-	rm -rf $(TOOLS)
+	rm -f $(TOOLS)
 	rm -f ./coverage.out ./go.mod.tidy-check ./go.sum.tidy-check
+
+.PHONY: clean-golden
+clean-golden:
+	rm -f $(shell find testdata -name "*.golden")
 
 .PHONY: test
 test:
 	go test $(V) -count=1 -race ./...
 
-.PHONY: test-update
+.PHONY: test-update-golden
 test-update-golden:
 	go test $(V) -update-golden -count=1 -race ./...
+
+.PHONY: regen-golden
+regen-golden: clean-golden test-update-golden
 
 .PHONY: test-deps
 test-deps:
