@@ -13,7 +13,7 @@ type LoadBalancer struct {
 	Name                  string       `json:"name,omitempty"`
 	ResourceType          ResourceType `json:"resource_type,omitempty"`
 	ResourceIDs           []string     `json:"-"`
-	IPAddress             []*IPAddress `json:"ip_address,omitempty"`
+	IPAddress             *IPAddress   `json:"ip_address,omitempty"`
 	HTTPSRedirect         bool         `json:"https_redirect,omitempty"`
 	BackendCertificate    string       `json:"backend_certificate,omitempty"`
 	BackendCertificateKey string       `json:"backend_certificate_key,omitempty"`

@@ -34,13 +34,11 @@ func TestLoadBalancer_JSONMarshaling(t *testing.T) {
 		{
 			name: "full",
 			obj: &LoadBalancer{
-				ID:           "id",
-				Name:         "name",
-				ResourceType: VirtualMachinesResourceType,
-				ResourceIDs:  []string{"id2", "id3"},
-				IPAddress: []*IPAddress{
-					{Address: "134.11.14.137"},
-				},
+				ID:                    "id",
+				Name:                  "name",
+				ResourceType:          VirtualMachinesResourceType,
+				ResourceIDs:           []string{"id2", "id3"},
+				IPAddress:             &IPAddress{Address: "134.11.14.137"},
 				HTTPSRedirect:         true,
 				BackendCertificate:    "--BEGIN CERT--\n--END CERT--",
 				BackendCertificateKey: "--BEGIN KEY--\n--END KEY--",
