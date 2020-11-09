@@ -239,7 +239,9 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 				),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
 					if tt.args.opts != nil {
 						assert.Equal(t, *tt.args.opts.Values(), r.URL.Query())
 					}
@@ -352,7 +354,8 @@ func TestVirtualMachinesClient_Get(t *testing.T) {
 				fmt.Sprintf("/core/v1/virtual_machines/%s", tt.args.id),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -456,7 +459,8 @@ func TestVirtualMachinesClient_GetByFQDN(t *testing.T) {
 				"/core/v1/virtual_machines/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
 
 					qs := url.Values{
 						"virtual_machine[fqdn]": []string{tt.args.fqdn},

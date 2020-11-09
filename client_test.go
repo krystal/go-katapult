@@ -165,7 +165,28 @@ func testCustomJSONMarshaling(
 	}
 }
 
-var testUserAgent = "go-katapult/test"
+func assertFieldSpec(t *testing.T, r *http.Request, spec string) {
+	assert.Equal(t, spec, r.Header.Get("X-Field-Spec"))
+}
+
+func assertEmptyFieldSpec(t *testing.T, r *http.Request) {
+	assertFieldSpec(t, r, "")
+}
+
+func assertCustomAuthorization(t *testing.T, r *http.Request, apiKey string) {
+	assert.Equal(t,
+		fmt.Sprintf("Bearer %s", apiKey), r.Header.Get("Authorization"),
+	)
+}
+
+func assertAuthorization(t *testing.T, r *http.Request) {
+	assertCustomAuthorization(t, r, testAPIKey)
+}
+
+var (
+	testAPIKey    = "9d7831d8-03f1-4b4c-a1c3-97272ddefe6a"
+	testUserAgent = "go-katapult/test"
+)
 
 // prepareTestClient creates a test HTTP server for mock API responses, and
 // creates a Katapult client configured to talk to the mock server.
@@ -195,6 +216,7 @@ func prepareTestClient() (
 
 	client, err = NewClient(&Config{
 		BaseURL:   url,
+		APIKey:    testAPIKey,
 		UserAgent: testUserAgent,
 	})
 	if err != nil {
@@ -230,6 +252,22 @@ func TestNewClient(t *testing.T) {
 			name: "empty config",
 			args: args{
 				config: &Config{},
+			},
+		},
+		{
+			name: "config with APIKey",
+			args: args{
+				config: &Config{
+					APIKey: "016e5c2d-6c21-41e5-a08c-c0a87724fd51",
+				},
+			},
+		},
+		{
+			name: "config with APIKey",
+			args: args{
+				config: &Config{
+					APIKey: "016e5c2d-6c21-41e5-a08c-c0a87724fd51",
+				},
 			},
 		},
 		{
@@ -311,6 +349,12 @@ func TestNewClient(t *testing.T) {
 			} else {
 				assert.IsType(t, new(codec.JSON), c.apiClient.codec)
 
+				if tt.args.config != nil && tt.args.config.APIKey != "" {
+					assert.Equal(t, tt.args.config.APIKey, c.apiClient.APIKey)
+				} else {
+					assert.Equal(t, "", c.apiClient.APIKey)
+				}
+
 				if tt.args.config != nil && tt.args.config.UserAgent != "" {
 					assert.Equal(t,
 						tt.args.config.UserAgent, c.apiClient.UserAgent,
@@ -347,6 +391,71 @@ func TestNewClient(t *testing.T) {
 						c.apiClient.httpClient.Transport,
 					)
 				}
+			}
+		})
+	}
+}
+
+func TestClient_APIKey(t *testing.T) {
+	tests := []struct {
+		name   string
+		apiKey string
+	}{
+		{
+			name:   "non-empty",
+			apiKey: "ad8311d3-0e8d-464d-9d1d-c4b12440ebbd",
+		},
+		{
+			name:   "empty",
+			apiKey: "",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, err := NewClient(nil)
+			require.NoError(t, err)
+
+			c.apiClient.APIKey = tt.apiKey
+
+			got := c.APIKey()
+
+			assert.Equal(t, tt.apiKey, got)
+		})
+	}
+}
+
+func TestClient_SetAPIKey(t *testing.T) {
+	type args struct {
+		apiKey string
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{
+			name: "non-empty",
+			args: args{
+				apiKey: "0d297da8-5235-4348-87a0-887be660390b",
+			},
+		},
+		{
+			name: "empty",
+			args: args{
+				apiKey: "",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, err := NewClient(nil)
+			require.NoError(t, err)
+
+			c.SetAPIKey(tt.args.apiKey)
+
+			if tt.args.apiKey != "" {
+				assert.Equal(t, tt.args.apiKey, c.apiClient.APIKey)
+			} else {
+				assert.Equal(t, "", c.apiClient.APIKey)
 			}
 		})
 	}

@@ -17,6 +17,7 @@ const (
 var ErrClient = fmt.Errorf("%wclient", Err)
 
 type Config struct {
+	APIKey     string
 	UserAgent  string
 	HTTPClient *http.Client
 
@@ -69,6 +70,10 @@ func NewClient(config *Config) (*Client, error) {
 
 func (c *Client) configure(config *Config) error {
 	if config != nil {
+		if config.APIKey != "" {
+			c.SetAPIKey(config.APIKey)
+		}
+
 		if config.UserAgent != "" {
 			c.SetUserAgent(config.UserAgent)
 		}
@@ -90,6 +95,14 @@ func (c *Client) configure(config *Config) error {
 	}
 
 	return nil
+}
+
+func (c *Client) APIKey() string {
+	return c.apiClient.APIKey
+}
+
+func (c *Client) SetAPIKey(apiKey string) {
+	c.apiClient.APIKey = apiKey
 }
 
 func (c *Client) UserAgent() string {

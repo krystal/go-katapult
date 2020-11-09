@@ -42,6 +42,10 @@ func (c *apiClient) NewRequestWithContext(
 		return nil, err
 	}
 
+	if c.APIKey != "" {
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.APIKey))
+	}
+
 	req.Header.Set("User-Agent", c.UserAgent)
 	req.Header.Set("Accept", c.codec.Accept())
 

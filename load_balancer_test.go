@@ -366,7 +366,9 @@ func TestLoadBalancersClient_List(t *testing.T) {
 				),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
 					if tt.args.opts != nil {
 						assert.Equal(t, *tt.args.opts.Values(), r.URL.Query())
 					}
@@ -463,7 +465,8 @@ func TestLoadBalancersClient_Get(t *testing.T) {
 				fmt.Sprintf("/core/v1/load_balancers/%s", tt.args.id),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -674,7 +677,8 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 				),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "POST", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
 
 					expectedReqArgs := &reqBodyArguments{
 						Name:         tt.args.lbArgs.Name,
@@ -886,7 +890,8 @@ func TestLoadBalancersClient_Update(t *testing.T) {
 					fmt.Sprintf("/core/v1/load_balancers/%s", tt.args.lb.ID),
 					func(w http.ResponseWriter, r *http.Request) {
 						assert.Equal(t, "PATCH", r.Method)
-						assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+						assertEmptyFieldSpec(t, r)
+						assertAuthorization(t, r)
 
 						expectedReqArgs := &reqBodyArguments{
 							Name:         tt.args.lb.Name,
@@ -999,7 +1004,8 @@ func TestLoadBalancersClient_Delete(t *testing.T) {
 				fmt.Sprintf("/core/v1/load_balancers/%s", tt.args.id),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "DELETE", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)

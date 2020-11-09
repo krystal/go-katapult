@@ -177,7 +177,8 @@ func TestNetworksClient_List(t *testing.T) {
 				),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)

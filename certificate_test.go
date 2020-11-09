@@ -212,7 +212,8 @@ func TestCertificatesClient_List(t *testing.T) {
 				),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
 					if tt.args.opts != nil {
 						assert.Equal(t, *tt.args.opts.Values(), r.URL.Query())
 					}
@@ -314,7 +315,8 @@ func TestCertificatesClient_Get(t *testing.T) {
 			mux.HandleFunc(fmt.Sprintf("/core/v1/certificates/%s", tt.args.id),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
