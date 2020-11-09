@@ -133,7 +133,8 @@ func TestDataCentersClient_List(t *testing.T) {
 			mux.HandleFunc("/core/v1/data_centers",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -222,7 +223,8 @@ func TestDataCentersClient_Get(t *testing.T) {
 			mux.HandleFunc(fmt.Sprintf("/core/v1/data_centers/%s", tt.args.id),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -311,7 +313,8 @@ func TestDataCentersClient_GetByPermalink(t *testing.T) {
 			mux.HandleFunc("/core/v1/data_centers/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
 
 					qs := url.Values{
 						"data_center[permalink]": []string{tt.args.permalink},

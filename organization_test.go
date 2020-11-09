@@ -157,7 +157,8 @@ func TestOrganizationsClient_List(t *testing.T) {
 			mux.HandleFunc("/core/v1/organizations",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -254,7 +255,8 @@ func TestOrganizationsClient_Get(t *testing.T) {
 			mux.HandleFunc(fmt.Sprintf("/core/v1/organizations/%s", tt.args.id),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -351,7 +353,8 @@ func TestOrganizationsClient_GetBySubDomain(t *testing.T) {
 			mux.HandleFunc("/core/v1/organizations/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
 
 					qs := url.Values{
 						"organization[sub_domain]": []string{tt.args.subDomain},
@@ -515,7 +518,8 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 				),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "POST", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
 
 					body := &reqBody{}
 					err := strictUmarshal(r.Body, body)

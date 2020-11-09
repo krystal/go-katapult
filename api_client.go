@@ -13,11 +13,12 @@ import (
 )
 
 type apiClient struct {
-	httpClient HTTPClient
+	httpClient *http.Client
 	codec      codec.Codec
 
-	BaseURL   *url.URL
+	APIKey    string
 	UserAgent string
+	BaseURL   *url.URL
 }
 
 func (c *apiClient) NewRequestWithContext(
@@ -39,6 +40,10 @@ func (c *apiClient) NewRequestWithContext(
 	req, err := http.NewRequestWithContext(ctx, method, u.String(), buf)
 	if err != nil {
 		return nil, err
+	}
+
+	if c.APIKey != "" {
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.APIKey))
 	}
 
 	req.Header.Set("User-Agent", c.UserAgent)

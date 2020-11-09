@@ -177,7 +177,9 @@ func TestVirtualMachinePackagesClient_List(t *testing.T) {
 			mux.HandleFunc("/core/v1/virtual_machine_packages",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
 					if tt.args.opts != nil {
 						assert.Equal(t, *tt.args.opts.Values(), r.URL.Query())
 					}
@@ -279,7 +281,8 @@ func TestVirtualMachinePackagesClient_Get(t *testing.T) {
 				fmt.Sprintf("/core/v1/virtual_machine_packages/%s", tt.args.id),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -374,7 +377,8 @@ func TestVirtualMachinePackagesClient_GetByPermalink(t *testing.T) {
 				"/core/v1/virtual_machine_packages/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
 
 					qs := url.Values{
 						"virtual_machine_package[permalink]": []string{

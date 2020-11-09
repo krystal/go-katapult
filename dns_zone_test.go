@@ -366,7 +366,9 @@ func TestDNSZonesClient_List(t *testing.T) {
 				),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
 					if tt.args.opts != nil {
 						assert.Equal(t, *tt.args.opts.Values(), r.URL.Query())
 					}
@@ -457,7 +459,8 @@ func TestDNSZonesClient_Get(t *testing.T) {
 			mux.HandleFunc(fmt.Sprintf("/core/v1/dns/zones/%s", tt.args.id),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -539,7 +542,8 @@ func TestDNSZonesClient_GetByName(t *testing.T) {
 			mux.HandleFunc("/core/v1/dns/zones/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
 
 					qs := url.Values{"dns_zone[name]": []string{tt.args.name}}
 					assert.Equal(t, qs, r.URL.Query())
@@ -726,7 +730,8 @@ func TestDNSZonesClient_Create(t *testing.T) {
 				),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "POST", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
 
 					body := &reqBody{}
 					err := strictUmarshal(r.Body, body)
@@ -821,7 +826,8 @@ func TestDNSZonesClient_Delete(t *testing.T) {
 			mux.HandleFunc(fmt.Sprintf("/core/v1/dns/zones/%s", tt.args.id),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "DELETE", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -940,7 +946,8 @@ func TestDNSZonesClient_VerificationDetails(t *testing.T) {
 				),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -1049,7 +1056,8 @@ func TestDNSZonesClient_Verify(t *testing.T) {
 				fmt.Sprintf("/core/v1/dns/zones/%s/verify", tt.args.id),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "POST", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -1165,7 +1173,8 @@ func TestDNSZonesClient_UpdateTTL(t *testing.T) {
 				fmt.Sprintf("/core/v1/dns/zones/%s/update_ttl", tt.args.id),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "POST", r.Method)
-					assert.Equal(t, "", r.Header.Get("X-Field-Spec"))
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
 
 					body := &reqBody{}
 					err := strictUmarshal(r.Body, body)

@@ -165,6 +165,29 @@ func testCustomJSONMarshaling(
 	}
 }
 
+func assertFieldSpec(t *testing.T, r *http.Request, spec string) {
+	assert.Equal(t, spec, r.Header.Get("X-Field-Spec"))
+}
+
+func assertEmptyFieldSpec(t *testing.T, r *http.Request) {
+	assertFieldSpec(t, r, "")
+}
+
+func assertCustomAuthorization(t *testing.T, r *http.Request, apiKey string) {
+	assert.Equal(t,
+		fmt.Sprintf("Bearer %s", apiKey), r.Header.Get("Authorization"),
+	)
+}
+
+func assertAuthorization(t *testing.T, r *http.Request) {
+	assertCustomAuthorization(t, r, testAPIKey)
+}
+
+var (
+	testAPIKey    = "9d7831d8-03f1-4b4c-a1c3-97272ddefe6a"
+	testUserAgent = "go-katapult/test"
+)
+
 // prepareTestClient creates a test HTTP server for mock API responses, and
 // creates a Katapult client configured to talk to the mock server.
 func prepareTestClient() (
@@ -191,113 +214,248 @@ func prepareTestClient() (
 		log.Fatalf("test failed, invalid URL: %s", err.Error())
 	}
 
-	client = NewClient(nil)
-	client.SetBaseURL(url)
+	client, err = NewClient(&Config{
+		BaseURL:   url,
+		APIKey:    testAPIKey,
+		UserAgent: testUserAgent,
+	})
+	if err != nil {
+		log.Fatalf("test client setup failure: %s", err)
+	}
 
 	return client, mux, url.String(), server.Close
-}
-
-type customTestHTTPClient struct{}
-
-func (s *customTestHTTPClient) Do(*http.Request) (*http.Response, error) {
-	return nil, errors.New("nope")
 }
 
 var (
 	testDefaultBaseURL   = &url.URL{Scheme: "https", Host: "api.katapult.io"}
 	testDefaultUserAgent = "go-katapult"
+	testDefaultTimeout   = time.Second * 60
 )
 
 func TestNewClient(t *testing.T) {
+	type args struct {
+		config *Config
+	}
 	tests := []struct {
-		name       string
-		httpClient HTTPClient
+		name   string
+		args   args
+		errStr string
+		errIs  []error
 	}{
 		{
-			name:       "not given a http.Client",
-			httpClient: nil,
+			name: "nil config",
+			args: args{
+				config: nil,
+			},
 		},
 		{
-			name:       "given a http.Client",
-			httpClient: &http.Client{},
+			name: "empty config",
+			args: args{
+				config: &Config{},
+			},
 		},
 		{
-			name:       "given a custom HTTPClient",
-			httpClient: &customTestHTTPClient{},
+			name: "config with APIKey",
+			args: args{
+				config: &Config{
+					APIKey: "016e5c2d-6c21-41e5-a08c-c0a87724fd51",
+				},
+			},
+		},
+		{
+			name: "config with APIKey",
+			args: args{
+				config: &Config{
+					APIKey: "016e5c2d-6c21-41e5-a08c-c0a87724fd51",
+				},
+			},
+		},
+		{
+			name: "config with UserAgent",
+			args: args{
+				config: &Config{
+					UserAgent: "Terraform/0.13.5 terraform-provider-katapult",
+				},
+			},
+		},
+		{
+			name: "config with BaseURL",
+			args: args{
+				config: &Config{
+					BaseURL: &url.URL{Scheme: "http", Host: "localhost:3001"},
+				},
+			},
+		},
+		{
+			name: "config with BaseURL where Scheme is empty",
+			args: args{
+				config: &Config{
+					BaseURL: &url.URL{Host: "localhost:3001"},
+				},
+			},
+			errStr: "client: base URL scheme is empty",
+			errIs:  []error{Err, ErrClient},
+		},
+		{
+			name: "config with BaseURL where Host is empty",
+			args: args{
+				config: &Config{
+					BaseURL: &url.URL{Scheme: "http"},
+				},
+			},
+			errStr: "client: base URL host is empty",
+			errIs:  []error{Err, ErrClient},
+		},
+		{
+			name: "config with HTTPClient",
+			args: args{
+				config: &Config{
+					HTTPClient: &http.Client{Timeout: time.Second * 13},
+				},
+			},
+		},
+		{
+			name: "config with HTTPTransport",
+			args: args{
+				config: &Config{
+					Transport: &http.Transport{MaxIdleConns: 42},
+				},
+			},
+		},
+		{
+			name: "config with HTTPClient and HTTPTransport",
+			args: args{
+				config: &Config{
+					HTTPClient: &http.Client{Timeout: time.Second * 13},
+					Transport:  &http.Transport{MaxIdleConns: 42},
+				},
+			},
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := NewClient(tt.httpClient)
+			c, err := NewClient(tt.args.config)
 
-			assert.Equal(t, testDefaultBaseURL, c.apiClient.BaseURL)
-			assert.Equal(t, testDefaultUserAgent, c.apiClient.UserAgent)
-			assert.IsType(t, new(codec.JSON), c.apiClient.codec)
+			if tt.errStr != "" || len(tt.errIs) > 0 {
+				assert.Nil(t, c)
 
-			if tt.httpClient == nil {
-				assert.Implements(t, new(HTTPClient), c.apiClient.httpClient)
+				if tt.errStr != "" {
+					assert.EqualError(t, err, tt.errStr)
+				}
+				for _, e := range tt.errIs {
+					assert.True(t, errors.Is(err, e))
+				}
 			} else {
-				assert.Equal(t, tt.httpClient, c.apiClient.httpClient)
+				assert.IsType(t, new(codec.JSON), c.apiClient.codec)
+
+				if tt.args.config != nil && tt.args.config.APIKey != "" {
+					assert.Equal(t, tt.args.config.APIKey, c.apiClient.APIKey)
+				} else {
+					assert.Equal(t, "", c.apiClient.APIKey)
+				}
+
+				if tt.args.config != nil && tt.args.config.UserAgent != "" {
+					assert.Equal(t,
+						tt.args.config.UserAgent, c.apiClient.UserAgent,
+					)
+				} else {
+					assert.Equal(t, testDefaultUserAgent, c.apiClient.UserAgent)
+				}
+
+				if tt.args.config != nil && tt.args.config.BaseURL != nil {
+					assert.Equal(t, tt.args.config.BaseURL, c.apiClient.BaseURL)
+				} else {
+					assert.Equal(t, testDefaultBaseURL, c.apiClient.BaseURL)
+				}
+
+				if tt.args.config != nil && tt.args.config.HTTPClient != nil {
+					assert.Equal(t,
+						tt.args.config.HTTPClient, c.apiClient.httpClient,
+					)
+					assert.Equal(t,
+						tt.args.config.HTTPClient.Timeout,
+						c.apiClient.httpClient.Timeout,
+					)
+				} else {
+					assert.IsType(t, new(http.Client), c.apiClient.httpClient)
+					assert.Equal(t,
+						testDefaultTimeout, c.apiClient.httpClient.Timeout,
+					)
+				}
+
+				if tt.args.config != nil &&
+					tt.args.config.Transport != nil {
+					assert.Equal(t,
+						tt.args.config.Transport,
+						c.apiClient.httpClient.Transport,
+					)
+				}
 			}
 		})
 	}
 }
 
-func TestClient_BaseURL(t *testing.T) {
+func TestClient_APIKey(t *testing.T) {
 	tests := []struct {
-		name string
-		url  *url.URL
+		name   string
+		apiKey string
 	}{
-		{name: "default base URL"},
 		{
-			name: "custom base URL",
-			url:  &url.URL{Scheme: "http", Host: "127.0.0.1:3000"},
+			name:   "non-empty",
+			apiKey: "ad8311d3-0e8d-464d-9d1d-c4b12440ebbd",
+		},
+		{
+			name:   "empty",
+			apiKey: "",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := NewClient(nil)
+			c, err := NewClient(nil)
+			require.NoError(t, err)
 
-			if tt.url != nil {
-				c.apiClient.BaseURL = tt.url
-			}
+			c.apiClient.APIKey = tt.apiKey
 
-			got := c.BaseURL()
+			got := c.APIKey()
 
-			if tt.url != nil {
-				assert.Equal(t, tt.url, got)
-			} else {
-				assert.Equal(t, testDefaultBaseURL, got)
-			}
+			assert.Equal(t, tt.apiKey, got)
 		})
 	}
 }
 
-func TestClient_SetBaseURL(t *testing.T) {
+func TestClient_SetAPIKey(t *testing.T) {
+	type args struct {
+		apiKey string
+	}
 	tests := []struct {
 		name string
-		url  *url.URL
+		args args
 	}{
 		{
-			name: "custom base URL",
-			url:  &url.URL{Scheme: "http", Host: "127.0.0.1:3000"},
+			name: "non-empty",
+			args: args{
+				apiKey: "0d297da8-5235-4348-87a0-887be660390b",
+			},
 		},
 		{
-			name: "nil",
-			url:  nil,
+			name: "empty",
+			args: args{
+				apiKey: "",
+			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := NewClient(nil)
+			c, err := NewClient(nil)
+			require.NoError(t, err)
 
-			c.SetBaseURL(tt.url)
+			c.SetAPIKey(tt.args.apiKey)
 
-			if tt.url != nil {
-				assert.Equal(t, tt.url, c.apiClient.BaseURL)
+			if tt.args.apiKey != "" {
+				assert.Equal(t, tt.args.apiKey, c.apiClient.APIKey)
 			} else {
-				assert.Equal(t, testDefaultBaseURL, c.apiClient.BaseURL)
+				assert.Equal(t, "", c.apiClient.APIKey)
 			}
 		})
 	}
@@ -308,7 +466,9 @@ func TestClient_UserAgent(t *testing.T) {
 		name  string
 		agent string
 	}{
-		{name: "default user agent"},
+		{
+			name: "default user agent",
+		},
 		{
 			name:  "custom user agent",
 			agent: "katapult-cli",
@@ -316,7 +476,8 @@ func TestClient_UserAgent(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := NewClient(nil)
+			c, err := NewClient(nil)
+			require.NoError(t, err)
 
 			if tt.agent != "" {
 				c.apiClient.UserAgent = tt.agent
@@ -334,29 +495,313 @@ func TestClient_UserAgent(t *testing.T) {
 }
 
 func TestClient_SetUserAgent(t *testing.T) {
-	tests := []struct {
-		name  string
+	type args struct {
 		agent string
+	}
+	tests := []struct {
+		name string
+		args args
 	}{
 		{
-			name:  "custom user agent",
-			agent: "katapult-cli",
+			name: "non-empty",
+			args: args{
+				agent: "katapult-cli",
+			},
 		},
 		{
-			name:  "empty user agent",
-			agent: "",
+			name: "empty",
+			args: args{
+				agent: "",
+			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := NewClient(nil)
+			c, err := NewClient(nil)
+			require.NoError(t, err)
 
-			c.SetUserAgent(tt.agent)
+			c.SetUserAgent(tt.args.agent)
 
-			if tt.agent != "" {
-				assert.Equal(t, tt.agent, c.apiClient.UserAgent)
+			assert.Equal(t, tt.args.agent, c.apiClient.UserAgent)
+		})
+	}
+}
+
+func TestClient_BaseURL(t *testing.T) {
+	tests := []struct {
+		name string
+		url  *url.URL
+	}{
+		{
+			name: "default",
+			url:  nil,
+		},
+		{
+			name: "custom",
+			url:  &url.URL{Scheme: "http", Host: "127.0.0.1:3000"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, err := NewClient(nil)
+			require.NoError(t, err)
+
+			if tt.url != nil {
+				c.apiClient.BaseURL = tt.url
+			}
+
+			got := c.BaseURL()
+
+			if tt.url != nil {
+				assert.Equal(t, tt.url, got)
 			} else {
-				assert.Equal(t, testDefaultUserAgent, c.apiClient.UserAgent)
+				assert.Equal(t, testDefaultBaseURL, got)
+			}
+		})
+	}
+}
+
+func TestClient_SetBaseURL(t *testing.T) {
+	type args struct {
+		url *url.URL
+	}
+	tests := []struct {
+		name   string
+		args   args
+		errStr string
+		errIs  []error
+	}{
+		{
+			name: "non-empty",
+			args: args{
+				url: &url.URL{Scheme: "http", Host: "127.0.0.1:3000"},
+			},
+		},
+		{
+			name: "empty scheme",
+			args: args{
+				url: &url.URL{Host: "127.0.0.1:3000"},
+			},
+			errStr: "client: base URL scheme is empty",
+			errIs:  []error{Err, ErrClient},
+		},
+		{
+			name: "empty host",
+			args: args{
+				url: &url.URL{Scheme: "http"},
+			},
+			errStr: "client: base URL host is empty",
+			errIs:  []error{Err, ErrClient},
+		},
+		{
+			name: "nil",
+			args: args{
+				url: nil,
+			},
+			errStr: "client: base URL cannot be nil",
+			errIs:  []error{Err, ErrClient},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, err := NewClient(nil)
+			require.NoError(t, err)
+
+			err = c.SetBaseURL(tt.args.url)
+
+			if tt.errStr != "" || len(tt.errIs) > 0 {
+				assert.Equal(t, testDefaultBaseURL, c.apiClient.BaseURL)
+
+				if tt.errStr != "" {
+					assert.EqualError(t, err, tt.errStr)
+				}
+				for _, e := range tt.errIs {
+					assert.True(t, errors.Is(err, e))
+				}
+			} else {
+				if tt.args.url != nil {
+					assert.Equal(t, tt.args.url, c.apiClient.BaseURL)
+				} else {
+					assert.Equal(t, testDefaultBaseURL, c.apiClient.BaseURL)
+				}
+			}
+		})
+	}
+}
+
+func TestClient_HTTPClient(t *testing.T) {
+	tests := []struct {
+		name       string
+		httpClient *http.Client
+	}{
+		{
+			name: "default",
+		},
+		{
+			name:       "custom",
+			httpClient: &http.Client{Timeout: time.Second * 93},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, err := NewClient(nil)
+			require.NoError(t, err)
+
+			if tt.httpClient != nil {
+				c.apiClient.httpClient = tt.httpClient
+			}
+
+			got := c.HTTPClient()
+
+			if tt.httpClient != nil {
+				assert.Equal(t, tt.httpClient, got)
+			} else {
+				assert.IsType(t, new(http.Client), got)
+				assert.Equal(t, testDefaultTimeout, got.Timeout)
+			}
+		})
+	}
+}
+
+func TestClient_SetHTTPClient(t *testing.T) {
+	type args struct {
+		httpClient *http.Client
+	}
+	tests := []struct {
+		name   string
+		args   args
+		errStr string
+		errIs  []error
+	}{
+		{
+			name: "custom",
+			args: args{
+				httpClient: &http.Client{Timeout: time.Second * 83},
+			},
+		},
+		{
+			name: "nil",
+			args: args{
+				httpClient: nil,
+			},
+			errStr: "client: http client cannot be nil",
+			errIs:  []error{Err, ErrClient},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, err := NewClient(nil)
+			require.NoError(t, err)
+
+			original := c.apiClient.httpClient
+			err = c.SetHTTPClient(tt.args.httpClient)
+
+			if tt.errStr != "" || len(tt.errIs) > 0 {
+				assert.Equal(t, original, c.apiClient.httpClient)
+
+				if tt.errStr != "" {
+					assert.EqualError(t, err, tt.errStr)
+				}
+				for _, e := range tt.errIs {
+					assert.True(t, errors.Is(err, e))
+				}
+			} else {
+				assert.Equal(t, tt.args.httpClient, c.apiClient.httpClient)
+			}
+		})
+	}
+}
+
+func TestClient_Transport(t *testing.T) {
+	tests := []struct {
+		name          string
+		httpClient    *http.Client
+		httpTransport http.RoundTripper
+		expected      http.RoundTripper
+	}{
+		{
+			name:          "default",
+			httpClient:    &http.Client{},
+			httpTransport: nil,
+			expected:      nil,
+		},
+		{
+			name:          "custom",
+			httpClient:    &http.Client{},
+			httpTransport: &http.Transport{MaxConnsPerHost: 949},
+			expected:      &http.Transport{MaxConnsPerHost: 949},
+		},
+		{
+			name:          "nil http client",
+			httpClient:    nil,
+			httpTransport: &http.Transport{MaxConnsPerHost: 949},
+			expected:      nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, err := NewClient(nil)
+			require.NoError(t, err)
+
+			c.apiClient.httpClient = tt.httpClient
+
+			if tt.httpTransport != nil && c.apiClient.httpClient != nil {
+				c.apiClient.httpClient.Transport = tt.httpTransport
+			}
+
+			got := c.Transport()
+
+			assert.Equal(t, tt.expected, got)
+		})
+	}
+}
+
+func TestClient_SetTransport(t *testing.T) {
+	type args struct {
+		httpTransport http.RoundTripper
+	}
+	tests := []struct {
+		name   string
+		args   args
+		errStr string
+		errIs  []error
+	}{
+		{
+			name: "custom",
+			args: args{
+				httpTransport: &http.Transport{MaxIdleConnsPerHost: 9438},
+			},
+		},
+		{
+			name: "nil",
+			args: args{
+				httpTransport: nil,
+			},
+			errStr: "client: http transport cannot be nil",
+			errIs:  []error{Err, ErrClient},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, err := NewClient(nil)
+			require.NoError(t, err)
+
+			original := c.apiClient.httpClient.Transport
+			err = c.SetTransport(tt.args.httpTransport)
+
+			if tt.errStr != "" || len(tt.errIs) > 0 {
+				assert.Equal(t, original, c.apiClient.httpClient.Transport)
+
+				if tt.errStr != "" {
+					assert.EqualError(t, err, tt.errStr)
+				}
+				for _, e := range tt.errIs {
+					assert.True(t, errors.Is(err, e))
+				}
+			} else {
+				assert.Equal(t,
+					tt.args.httpTransport, c.apiClient.httpClient.Transport,
+				)
 			}
 		})
 	}
