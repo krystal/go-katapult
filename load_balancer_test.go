@@ -73,6 +73,17 @@ func TestLoadBalancer_JSONMarshaling(t *testing.T) {
 	}
 }
 
+func TestLoadBalancer_UnmarshalJSON_Invalid(t *testing.T) {
+	lb := &LoadBalancer{}
+	raw := []byte(`{"id":"lb_foo","name":}`)
+
+	err := lb.UnmarshalJSON(raw)
+
+	assert.EqualError(t,
+		err, "invalid character '}' looking for beginning of value",
+	)
+}
+
 func Test_loadBalancerResource_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string
