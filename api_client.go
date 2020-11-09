@@ -13,11 +13,12 @@ import (
 )
 
 type apiClient struct {
-	httpClient HTTPClient
+	httpClient *http.Client
 	codec      codec.Codec
 
-	BaseURL   *url.URL
+	APIKey    string
 	UserAgent string
+	BaseURL   *url.URL
 }
 
 func (c *apiClient) NewRequestWithContext(
