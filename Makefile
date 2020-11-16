@@ -60,6 +60,9 @@ tools: $(TOOLS)
 # Development
 #
 
+TEST ?= $$(go list ./... | grep -v 'vendor')
+BENCH ?= .
+
 .PHONY: clean
 clean:
 	rm -f $(TOOLS)
@@ -71,11 +74,11 @@ clean-golden:
 
 .PHONY: test
 test:
-	go test $(V) -count=1 -race ./...
+	go test $(V) -count=1 -race $(TESTARGS) $(TEST)
 
 .PHONY: test-update-golden
 test-update-golden:
-	go test $(V) -update-golden -count=1 -race ./...
+	go test $(V) -update-golden -count=1 -race $(TESTARGS) $(TEST)
 
 .PHONY: regen-golden
 regen-golden: clean-golden test-update-golden
@@ -91,6 +94,10 @@ lint: golangci-lint
 .PHONY: format
 format: gofumports
 	gofumports -w .
+
+.PHONY: bench
+bench:
+	go test $(V) -count=1 -bench=$(BENCH) $(TESTARGS) $(TEST)
 
 #
 # Coverage
