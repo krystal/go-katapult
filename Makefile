@@ -70,7 +70,7 @@ clean:
 
 .PHONY: clean-golden
 clean-golden:
-	rm -f $(shell find testdata -name "*.golden")
+	rm -f $(shell find * -path '*/testdata/*' -name "*.golden")
 
 .PHONY: test
 test:
@@ -78,7 +78,7 @@ test:
 
 .PHONY: test-update-golden
 test-update-golden:
-	go test $(V) -update-golden -count=1 -race $(TESTARGS) $(TEST)
+	@$(MAKE) test UPDATE_GOLDEN=1
 
 .PHONY: regen-golden
 regen-golden: clean-golden test-update-golden

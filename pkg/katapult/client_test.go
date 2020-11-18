@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"flag"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -25,7 +24,7 @@ import (
 )
 
 var (
-	updateGoldenFlag = flag.Bool("update-golden", false, "update .golden files")
+	doUpdateGolden = os.Getenv("UPDATE_GOLDEN") == "1"
 
 	fixtureInvalidAPITokenErr = "invalid_api_token: The API token provided " +
 		"was not valid (it may not exist or have expired)"
@@ -142,7 +141,7 @@ func testCustomJSONMarshaling(
 	err := c.Encode(input, buf)
 	require.NoError(t, err, "encoding failed")
 
-	if *updateGoldenFlag {
+	if doUpdateGolden {
 		updateGolden(t, buf.Bytes())
 	}
 
