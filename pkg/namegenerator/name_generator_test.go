@@ -81,39 +81,34 @@ func BenchmarkNameGenerator_RandomHostname(b *testing.B) {
 	}
 }
 
-func BenchmarkNameGenerator_RandomName(b *testing.B) {
-	type args struct {
-		prefixes []string
-	}
-	tests := []struct {
-		name string
-		args args
-	}{
-		{
-			name: "no prefixes",
-			args: args{},
-		},
-		{
-			name: "one prefix",
-			args: args{prefixes: []string{"prod"}},
-		},
-		{
-			name: "two prefixes",
-			args: args{prefixes: []string{"tf", "test"}},
-		},
-		{
-			name: "three prefixes",
-			args: args{prefixes: []string{"tf", "test", "acc"}},
-		},
-	}
+func BenchmarkNameGenerator_RandomName_NoPrefix(b *testing.B) {
+	g := New(DefaultAdjectives, DefaultNouns)
 
-	for _, tt := range tests {
-		b.Run(tt.name, func(b *testing.B) {
-			g := New(DefaultAdjectives, DefaultNouns)
+	for n := 0; n < b.N; n++ {
+		g.RandomName()
+	}
+}
 
-			for n := 0; n < b.N; n++ {
-				g.RandomName(tt.args.prefixes...)
-			}
-		})
+func BenchmarkNameGenerator_RandomName_OnePrefix(b *testing.B) {
+	g := New(DefaultAdjectives, DefaultNouns)
+
+	for n := 0; n < b.N; n++ {
+		g.RandomName("tf")
+	}
+}
+
+func BenchmarkNameGenerator_RandomName_TwoPrefixes(b *testing.B) {
+	g := New(DefaultAdjectives, DefaultNouns)
+
+	for n := 0; n < b.N; n++ {
+		g.RandomName("tf", "test")
+	}
+}
+
+func BenchmarkNameGenerator_RandomName_ThreePrefixes(b *testing.B) {
+	g := New(DefaultAdjectives, DefaultNouns)
+
+	for n := 0; n < b.N; n++ {
+		g.RandomName("tf", "test", "acc")
 	}
 }
