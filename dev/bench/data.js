@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1605703260102,
+  "lastUpdate": 1605705057598,
   "repoUrl": "https://github.com/krystal/go-katapult",
   "entries": {
     "Benchmark": [
@@ -138,6 +138,60 @@ window.BENCHMARK_DATA = {
             "value": 2692,
             "unit": "ns/op",
             "extra": "450775 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "contact@jimeh.me",
+            "name": "Jim Myhrberg",
+            "username": "jimeh"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a031a49ab0aa61bbdd1c82c1c23c1c917d9f3ea5",
+          "message": "Merge pull request #30 from krystal/fix-benchmark-report-config\n\nci(benchmarks): prevent regular benchmark check from running on master",
+          "timestamp": "2020-11-18T13:10:20Z",
+          "tree_id": "eb208659958ba71bceebf114fac89294cef8bc1e",
+          "url": "https://github.com/krystal/go-katapult/commit/a031a49ab0aa61bbdd1c82c1c23c1c917d9f3ea5"
+        },
+        "date": 1605705056611,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkNameGenerator_RandomHostname",
+            "value": 3515,
+            "unit": "ns/op",
+            "extra": "307243 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_NoPrefix",
+            "value": 2533,
+            "unit": "ns/op",
+            "extra": "494961 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_OnePrefix",
+            "value": 2554,
+            "unit": "ns/op",
+            "extra": "489944 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_TwoPrefixes",
+            "value": 2595,
+            "unit": "ns/op",
+            "extra": "467319 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_ThreePrefixes",
+            "value": 2641,
+            "unit": "ns/op",
+            "extra": "467384 times\n2 procs"
           }
         ]
       }
