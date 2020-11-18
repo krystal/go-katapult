@@ -1,0 +1,16 @@
+{
+  "pagination": {
+    "current_page": 2,
+    "total_pages": 2,
+    "total": 3,
+    "per_page": 2,
+    "large_set": false
+  },
+  "disk_templates": [
+    {
+      "id": "dtpl_ytP13XD5DE1RdSL9",
+      "name": "Ubuntu 18.04 Server",
+      "description": "A clean installation of Ubuntu 18.04 server"
+    }
+  ]
+}

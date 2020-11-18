@@ -1,0 +1,26 @@
+{
+  "pagination": {
+    "current_page": 1,
+    "total_pages": 1,
+    "total": 3,
+    "per_page": 30,
+    "large_set": false
+  },
+  "disk_templates": [
+    {
+      "id": "dtpl_YCTIgR4rE2fSgbW0",
+      "name": "CentOS 8.0",
+      "description": null
+    },
+    {
+      "id": "dtpl_KXGG3fOWbJqvZvoq",
+      "name": "Debian 10",
+      "description": null
+    },
+    {
+      "id": "dtpl_ytP13XD5DE1RdSL9",
+      "name": "Ubuntu 18.04 Server",
+      "description": "A clean installation of Ubuntu 18.04 server"
+    }
+  ]
+}

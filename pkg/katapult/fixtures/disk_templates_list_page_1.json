@@ -1,0 +1,21 @@
+{
+  "pagination": {
+    "current_page": 1,
+    "total_pages": 2,
+    "total": 3,
+    "per_page": 2,
+    "large_set": false
+  },
+  "disk_templates": [
+    {
+      "id": "dtpl_YCTIgR4rE2fSgbW0",
+      "name": "CentOS 8.0",
+      "description": null
+    },
+    {
+      "id": "dtpl_KXGG3fOWbJqvZvoq",
+      "name": "Debian 10",
+      "description": null
+    }
+  ]
+}
