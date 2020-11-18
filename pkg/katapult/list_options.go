@@ -1,8 +1,8 @@
 package katapult
 
 import (
-	"fmt"
 	"net/url"
+	"strconv"
 )
 
 type ListOptions struct {
@@ -11,17 +11,19 @@ type ListOptions struct {
 }
 
 func (s *ListOptions) Values() *url.Values {
-	u := &url.Values{}
+	values := &url.Values{}
 
-	if s != nil {
-		if s.Page != 0 {
-			u.Set("page", fmt.Sprint(s.Page))
-		}
-
-		if s.PerPage != 0 {
-			u.Set("per_page", fmt.Sprint(s.PerPage))
-		}
+	if s == nil {
+		return values
 	}
 
-	return u
+	if s.Page != 0 {
+		values.Set("page", strconv.Itoa(s.Page))
+	}
+
+	if s.PerPage != 0 {
+		values.Set("per_page", strconv.Itoa(s.PerPage))
+	}
+
+	return values
 }
