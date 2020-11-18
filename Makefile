@@ -95,6 +95,7 @@ lint: golangci-lint
 format: gofumports
 	gofumports -w .
 
+.SILENT: bench
 .PHONY: bench
 bench:
 	go test $(V) -count=1 -bench=$(BENCH) $(TESTARGS) $(TEST)

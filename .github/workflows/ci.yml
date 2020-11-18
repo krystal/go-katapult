@@ -32,6 +32,27 @@ jobs:
       - name: Check if mods are tidy
         run: make check-tidy
 
+  benchmark:
+    name: Benchmarks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.15
+      - name: Run benchmarks
+        run: make bench | tee output.txt
+      - name: Announce benchmark result
+        uses: rhysd/github-action-benchmark@v1
+        with:
+          tool: "go"
+          output-file-path: output.txt
+          fail-on-alert: true
+          comment-on-alert: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          comment-always: true
+          auto-push: false
+
   cov:
     name: Coverage
     runs-on: ubuntu-latest
@@ -76,3 +97,22 @@ jobs:
         run: make test
         env:
           VERBOSE: "true"
+
+  benchmark-store:
+    name: Store benchmarks
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.15
+      - name: Run benchmarks
+        run: make bench | tee output.txt
+      - name: Store benchmark result
+        uses: rhysd/github-action-benchmark@v1
+        with:
+          tool: "go"
+          output-file-path: output.txt
+          github-token: ${{ secrets.GH_PUSH_TOKEN }}
+          auto-push: true
