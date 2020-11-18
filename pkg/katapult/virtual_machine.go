@@ -34,6 +34,7 @@ type VirtualMachineGroup struct {
 
 type virtualMachinesResponseBody struct {
 	Pagination      *Pagination       `json:"pagination,omitempty"`
+	TrashObject     *TrashObject      `json:"trash_object,omitempty"`
 	VirtualMachine  *VirtualMachine   `json:"virtual_machine,omitempty"`
 	VirtualMachines []*VirtualMachine `json:"virtual_machines,omitempty"`
 }
@@ -88,6 +89,16 @@ func (s VirtualMachinesClient) GetByFQDN(
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 
 	return body.VirtualMachine, resp, err
+}
+
+func (s *VirtualMachinesClient) Delete(
+	ctx context.Context,
+	id string,
+) (*TrashObject, *Response, error) {
+	u := &url.URL{Path: fmt.Sprintf("virtual_machines/%s", id)}
+	body, resp, err := s.doRequest(ctx, "DELETE", u, nil)
+
+	return body.TrashObject, resp, err
 }
 
 func (s *VirtualMachinesClient) doRequest(

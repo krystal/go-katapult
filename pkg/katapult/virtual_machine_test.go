@@ -11,6 +11,18 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var (
+	fixtureVirtualMachineNotFoundErr = "virtual_machine_not_found: No " +
+		"virtual machine was found matching any of the criteria provided in " +
+		"the arguments"
+	fixtureVirtualMachineNotFoundResponseError = &ResponseError{
+		Code: "virtual_machine_not_found",
+		Description: "No virtual machine was found matching any of the " +
+			"criteria provided in the arguments",
+		Detail: json.RawMessage(`{}`),
+	}
+)
+
 func TestVirtualMachine_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string
@@ -475,6 +487,104 @@ func TestVirtualMachinesClient_GetByFQDN(t *testing.T) {
 			got, resp, err := c.VirtualMachines.GetByFQDN(
 				tt.args.ctx, tt.args.fqdn,
 			)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.expected != nil {
+				assert.Equal(t, tt.expected, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestVirtualMachinesClient_Delete(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		id  string
+	}
+	tests := []struct {
+		name       string
+		args       args
+		expected   *TrashObject
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "virtual machine",
+			args: args{
+				ctx: context.Background(),
+				id:  "vm_t8yomYsG4bccKw5D",
+			},
+			expected: &TrashObject{
+				ID:        "trsh_AmjmS73QadkAZqoE",
+				KeepUntil: timestampPtr(1599672014),
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machine_delete"),
+		},
+		{
+			name: "non-existent virtual machine",
+			args: args{
+				ctx: context.Background(),
+				id:  "vm_t8yomYsG4bccKw5D",
+			},
+			errStr:     fixtureVirtualMachineNotFoundErr,
+			errResp:    fixtureVirtualMachineNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("virtual_machine_not_found_error"),
+		},
+		{
+			name: "permission_denied",
+			args: args{
+				ctx: context.Background(),
+				id:  "vm_t8yomYsG4bccKw5D",
+			},
+			errStr:     fixturePermissionDeniedErr,
+			errResp:    fixturePermissionDeniedResponseError,
+			respStatus: http.StatusForbidden,
+			respBody:   fixture("permission_denied_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx: nil,
+				id:  "vm_t8yomYsG4bccKw5D",
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			mux.HandleFunc(
+				fmt.Sprintf("/core/v1/virtual_machines/%s", tt.args.id),
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "DELETE", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.VirtualMachines.Delete(tt.args.ctx, tt.args.id)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
