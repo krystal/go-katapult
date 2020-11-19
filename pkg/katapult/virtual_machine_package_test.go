@@ -11,6 +11,17 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var (
+	fixturePackageNotFoundErr = "package_not_found: No package was found " +
+		"matching any of the criteria provided in the arguments"
+	fixturePackageNotFoundResponseError = &ResponseError{
+		Code: "package_not_found",
+		Description: "No package was found matching any of the criteria " +
+			"provided in the arguments",
+		Detail: json.RawMessage(`{}`),
+	}
+)
+
 func TestVirtualMachinePackage_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string
@@ -320,14 +331,8 @@ func TestVirtualMachinePackagesClient_Get(t *testing.T) {
 				ctx: context.Background(),
 				id:  "vmpkg_nopethisbegone",
 			},
-			errStr: "package_not_found: No package was found matching " +
-				"any of the criteria provided in the arguments",
-			errResp: &ResponseError{
-				Code: "package_not_found",
-				Description: "No package was found matching any of the " +
-					"criteria provided in the arguments",
-				Detail: json.RawMessage(`{}`),
-			},
+			errStr:     fixturePackageNotFoundErr,
+			errResp:    fixturePackageNotFoundResponseError,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("package_not_found_error"),
 		},

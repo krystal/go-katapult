@@ -1,9 +1,21 @@
 package katapult
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+)
+
+var (
+	fixtureZoneNotFoundErr = "zone_not_found: No zone was found matching " +
+		"any of the criteria provided in the arguments"
+	fixtureZoneNotFoundResponseError = &ResponseError{
+		Code: "zone_not_found",
+		Description: "No zone was found matching any of the criteria " +
+			"provided in the arguments",
+		Detail: json.RawMessage(`{}`),
+	}
 )
 
 func TestZone_JSONMarshaling(t *testing.T) {

@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "build_not_found",
+    "description": "No build was found matching any of the criteria provided in the arguments",
+    "detail": {}
+  }
+}

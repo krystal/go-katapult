@@ -39,6 +39,11 @@ type DiskTemplateVersion struct {
 	SizeInGB int    `json:"size_in_gb,omitempty"`
 }
 
+type DiskTemplateOption struct {
+	Key   string `json:"key,omitempty"`
+	Value string `json:"value,omitempty"`
+}
+
 type DiskTemplateListOptions struct {
 	IncludeUniversal bool
 	Page             int

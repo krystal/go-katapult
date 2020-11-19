@@ -2,12 +2,25 @@ package katapult
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/url"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+)
+
+var (
+	fixtureDiskTemplateNotFoundErr = "disk_template_not_found: No disk " +
+		"template was found matching any of the criteria provided in the " +
+		"arguments"
+	fixtureDiskTemplateNotFoundResponseError = &ResponseError{
+		Code: "disk_template_not_found",
+		Description: "No disk template was found matching any of the " +
+			"criteria provided in the arguments",
+		Detail: json.RawMessage(`{}`),
+	}
 )
 
 func TestDiskTemplate_JSONMarshaling(t *testing.T) {
@@ -117,6 +130,30 @@ func TestDiskTemplateVersion_JSONMarshaling(t *testing.T) {
 				Number:   398,
 				Stable:   true,
 				SizeInGB: 434,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func TestDiskTemplateOption_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *DiskTemplateOption
+	}{
+		{
+			name: "empty",
+			obj:  &DiskTemplateOption{},
+		},
+		{
+			name: "full",
+			obj: &DiskTemplateOption{
+				Key:   "hello",
+				Value: "world",
 			},
 		},
 	}

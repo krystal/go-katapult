@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "disk_template_not_found",
+    "description": "No disk template was found matching any of the criteria provided in the arguments",
+    "detail": {}
+  }
+}
