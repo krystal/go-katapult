@@ -51,7 +51,6 @@ jobs:
           fail-on-alert: true
           comment-on-alert: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          comment-always: true
           auto-push: false
 
   cov:
