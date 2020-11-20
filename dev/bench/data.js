@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1605720757447,
+  "lastUpdate": 1605877120093,
   "repoUrl": "https://github.com/krystal/go-katapult",
   "entries": {
     "Benchmark": [
@@ -354,6 +354,60 @@ window.BENCHMARK_DATA = {
             "value": 3002,
             "unit": "ns/op",
             "extra": "400268 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "contact@jimeh.me",
+            "name": "Jim Myhrberg",
+            "username": "jimeh"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e763a8f87417efa1fc6f82237957657bc86cb8db",
+          "message": "Merge pull request #34 from krystal/fix-check-tidy-make-target\n\ntest(deps): fix check-tidy make target",
+          "timestamp": "2020-11-20T12:57:59Z",
+          "tree_id": "c36a33f9e61fbf876cc9e810e5909bc14d7df7f2",
+          "url": "https://github.com/krystal/go-katapult/commit/e763a8f87417efa1fc6f82237957657bc86cb8db"
+        },
+        "date": 1605877116921,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkNameGenerator_RandomHostname",
+            "value": 3948,
+            "unit": "ns/op",
+            "extra": "283837 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_NoPrefix",
+            "value": 2910,
+            "unit": "ns/op",
+            "extra": "414800 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_OnePrefix",
+            "value": 2707,
+            "unit": "ns/op",
+            "extra": "407655 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_TwoPrefixes",
+            "value": 2933,
+            "unit": "ns/op",
+            "extra": "469182 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_ThreePrefixes",
+            "value": 2962,
+            "unit": "ns/op",
+            "extra": "390150 times\n2 procs"
           }
         ]
       }
