@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1605877616874,
+  "lastUpdate": 1605899807832,
   "repoUrl": "https://github.com/krystal/go-katapult",
   "entries": {
     "Benchmark": [
@@ -462,6 +462,60 @@ window.BENCHMARK_DATA = {
             "value": 3315,
             "unit": "ns/op",
             "extra": "361474 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "contact@jimeh.me",
+            "name": "Jim Myhrberg",
+            "username": "jimeh"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bc25981318552117efce0e3a447593cb967a88f4",
+          "message": "Merge pull request #36 from krystal/add-virtual-machine-build\n\nfeat(virtual_machines): add VirtualMachineBuilds resource",
+          "timestamp": "2020-11-20T19:15:56Z",
+          "tree_id": "2fe9d896b4a057d23c119f102c88ea4a1f7cd428",
+          "url": "https://github.com/krystal/go-katapult/commit/bc25981318552117efce0e3a447593cb967a88f4"
+        },
+        "date": 1605899806662,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkNameGenerator_RandomHostname",
+            "value": 4304,
+            "unit": "ns/op",
+            "extra": "249354 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_NoPrefix",
+            "value": 3189,
+            "unit": "ns/op",
+            "extra": "382636 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_OnePrefix",
+            "value": 3134,
+            "unit": "ns/op",
+            "extra": "382946 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_TwoPrefixes",
+            "value": 3130,
+            "unit": "ns/op",
+            "extra": "385444 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_ThreePrefixes",
+            "value": 3191,
+            "unit": "ns/op",
+            "extra": "370185 times\n2 procs"
           }
         ]
       }
