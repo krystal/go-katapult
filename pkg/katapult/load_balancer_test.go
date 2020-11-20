@@ -197,10 +197,26 @@ func TestLoadBalancerArguments_JSONMarshaling(t *testing.T) {
 		{
 			name: "strips down data center to just ID",
 			obj: &LoadBalancerArguments{
-				DataCenter: &DataCenter{ID: "id4", Name: "woodland"},
+				DataCenter: &DataCenter{
+					ID:        "id4",
+					Name:      "Woodland",
+					Permalink: "woodland",
+				},
 			},
 			decoded: &LoadBalancerArguments{
 				DataCenter: &DataCenter{ID: "id4"},
+			},
+		},
+		{
+			name: "strips down data center to just Permalink if no ID",
+			obj: &LoadBalancerArguments{
+				DataCenter: &DataCenter{
+					Name:      "Woodland",
+					Permalink: "woodland",
+				},
+			},
+			decoded: &LoadBalancerArguments{
+				DataCenter: &DataCenter{Permalink: "woodland"},
 			},
 		},
 	}

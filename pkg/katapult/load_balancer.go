@@ -90,9 +90,7 @@ func (s *LoadBalancerArguments) MarshalJSON() ([]byte, error) {
 	type alias LoadBalancerArguments
 	args := alias(*s)
 
-	if args.DataCenter != nil {
-		args.DataCenter = &DataCenter{ID: s.DataCenter.ID}
-	}
+	args.DataCenter = s.DataCenter.LookupReference()
 
 	return json.Marshal(&args)
 }

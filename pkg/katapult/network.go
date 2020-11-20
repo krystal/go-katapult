@@ -9,7 +9,24 @@ import (
 type Network struct {
 	ID         string      `json:"id,omitempty"`
 	Name       string      `json:"name,omitempty"`
+	Permalink  string      `json:"permalink,omitempty"`
 	DataCenter *DataCenter `json:"data_center,omitempty"`
+}
+
+// LookupReference returns a new *Network stripped down to just ID or
+// Permalink fields, making it suitable for endpoints which require a reference
+// to a Network by ID or Permalink.
+func (s *Network) LookupReference() *Network {
+	if s == nil {
+		return nil
+	}
+
+	lr := &Network{ID: s.ID}
+	if lr.ID == "" {
+		lr.Permalink = s.Permalink
+	}
+
+	return lr
 }
 
 type VirtualNetwork struct {

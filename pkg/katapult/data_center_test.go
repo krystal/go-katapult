@@ -34,9 +34,9 @@ func TestDataCenter_JSONMarshaling(t *testing.T) {
 		{
 			name: "full",
 			obj: &DataCenter{
-				ID:        "id",
-				Name:      "name",
-				Permalink: "permalink",
+				ID:        "loc_25d48761871e4bf",
+				Name:      "Shirebury",
+				Permalink: "shirebury",
 				Country: &Country{
 					ID: "id2",
 				},
@@ -46,6 +46,65 @@ func TestDataCenter_JSONMarshaling(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func TestDataCenter_LookupReference(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *DataCenter
+		want *DataCenter
+	}{
+		{
+			name: "nil",
+			obj:  (*DataCenter)(nil),
+			want: nil,
+		},
+		{
+			name: "empty",
+			obj:  &DataCenter{},
+			want: &DataCenter{},
+		},
+		{
+			name: "full",
+			obj: &DataCenter{
+				ID:        "loc_25d48761871e4bf",
+				Name:      "Shirebury",
+				Permalink: "shirebury",
+				Country: &Country{
+					ID: "id2",
+				},
+			},
+			want: &DataCenter{ID: "loc_25d48761871e4bf"},
+		},
+		{
+			name: "no ID",
+			obj: &DataCenter{
+				Name:      "Shirebury",
+				Permalink: "shirebury",
+				Country: &Country{
+					ID: "id2",
+				},
+			},
+			want: &DataCenter{Permalink: "shirebury"},
+		},
+		{
+			name: "no ID or Permalink",
+			obj: &DataCenter{
+				Name: "Shirebury",
+				Country: &Country{
+					ID: "id2",
+				},
+			},
+			want: &DataCenter{},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.obj.LookupReference()
+
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

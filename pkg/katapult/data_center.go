@@ -13,6 +13,22 @@ type DataCenter struct {
 	Country   *Country `json:"country,omitempty"`
 }
 
+// LookupReference returns a new *DataCenter stripped down to just ID or
+// Permalink fields, making it suitable for endpoints which require a reference
+// to a Data Center by ID or Permalink.
+func (s *DataCenter) LookupReference() *DataCenter {
+	if s == nil {
+		return nil
+	}
+
+	lr := &DataCenter{ID: s.ID}
+	if lr.ID == "" {
+		lr.Permalink = s.Permalink
+	}
+
+	return lr
+}
+
 type dataCentersResponseBody struct {
 	DataCenter  *DataCenter   `json:"data_center,omitempty"`
 	DataCenters []*DataCenter `json:"data_centers,omitempty"`

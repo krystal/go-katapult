@@ -29,6 +29,22 @@ type Organization struct {
 	CountryState         *CountryState        `json:"country_state,omitempty"`
 }
 
+// LookupReference returns a new *Organization stripped down to just ID or
+// SubDomain fields, making it suitable for endpoints which require a reference
+// to a Organization by ID or SubDomain.
+func (s *Organization) LookupReference() *Organization {
+	if s == nil {
+		return nil
+	}
+
+	lr := &Organization{ID: s.ID}
+	if lr.ID == "" {
+		lr.SubDomain = s.SubDomain
+	}
+
+	return lr
+}
+
 type organizationsResponseBody struct {
 	Organization  *Organization   `json:"organization,omitempty"`
 	Organizations []*Organization `json:"organizations,omitempty"`

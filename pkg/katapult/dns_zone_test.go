@@ -51,8 +51,8 @@ func TestDNSZone_JSONMarshaling(t *testing.T) {
 		{
 			name: "full",
 			obj: &DNSZone{
-				ID:                 "id",
-				Name:               "name",
+				ID:                 "dnszone_k75eFc4UBOgeE5Zy",
+				Name:               "test1.example.com",
 				TTL:                343,
 				Verified:           true,
 				InfrastructureZone: true,
@@ -62,6 +62,62 @@ func TestDNSZone_JSONMarshaling(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func TestDNSZone_LookupReference(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *DNSZone
+		want *DNSZone
+	}{
+		{
+			name: "nil",
+			obj:  (*DNSZone)(nil),
+			want: nil,
+		},
+		{
+			name: "empty",
+			obj:  &DNSZone{},
+			want: &DNSZone{},
+		},
+		{
+			name: "full",
+			obj: &DNSZone{
+				ID:                 "dnszone_k75eFc4UBOgeE5Zy",
+				Name:               "test1.example.com",
+				TTL:                343,
+				Verified:           true,
+				InfrastructureZone: true,
+			},
+			want: &DNSZone{ID: "dnszone_k75eFc4UBOgeE5Zy"},
+		},
+		{
+			name: "no ID",
+			obj: &DNSZone{
+				Name:               "test1.example.com",
+				TTL:                343,
+				Verified:           true,
+				InfrastructureZone: true,
+			},
+			want: &DNSZone{Name: "test1.example.com"},
+		},
+		{
+			name: "no ID or Name",
+			obj: &DNSZone{
+				TTL:                343,
+				Verified:           true,
+				InfrastructureZone: true,
+			},
+			want: &DNSZone{},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.obj.LookupReference()
+
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

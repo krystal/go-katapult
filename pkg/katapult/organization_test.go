@@ -46,9 +46,9 @@ func TestOrganization_JSONMarshaling(t *testing.T) {
 		{
 			name: "full",
 			obj: &Organization{
-				ID:                   "Id",
-				Name:                 "name",
-				SubDomain:            "sub_domain",
+				ID:                   "org_O648YDMEYeLmqdmn",
+				Name:                 "ACME Inc.",
+				SubDomain:            "acme",
 				InfrastructureDomain: "infrastructure_domain",
 				Personal:             true,
 				CreatedAt:            timestampPtr(934933),
@@ -70,6 +70,101 @@ func TestOrganization_JSONMarshaling(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func TestOrganization_LookupReference(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *Organization
+		want *Organization
+	}{
+		{
+			name: "nil",
+			obj:  (*Organization)(nil),
+			want: nil,
+		},
+		{
+			name: "empty",
+			obj:  &Organization{},
+			want: &Organization{},
+		},
+		{
+			name: "full",
+			obj: &Organization{
+				ID:                   "org_O648YDMEYeLmqdmn",
+				Name:                 "ACME Inc.",
+				SubDomain:            "acme",
+				InfrastructureDomain: "infrastructure_domain",
+				Personal:             true,
+				CreatedAt:            timestampPtr(934933),
+				Suspended:            true,
+				Managed:              true,
+				BillingName:          "billing_name",
+				Address1:             "address1",
+				Address2:             "address2",
+				Address3:             "address3",
+				Address4:             "address4",
+				Postcode:             "postcode",
+				VatNumber:            "vat_number",
+				Currency:             &Currency{ID: "id0"},
+				Country:              &Country{ID: "id1"},
+				CountryState:         &CountryState{ID: "id2"},
+			},
+			want: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+		},
+		{
+			name: "no ID",
+			obj: &Organization{
+				Name:                 "ACME Inc.",
+				SubDomain:            "acme",
+				InfrastructureDomain: "infrastructure_domain",
+				Personal:             true,
+				CreatedAt:            timestampPtr(934933),
+				Suspended:            true,
+				Managed:              true,
+				BillingName:          "billing_name",
+				Address1:             "address1",
+				Address2:             "address2",
+				Address3:             "address3",
+				Address4:             "address4",
+				Postcode:             "postcode",
+				VatNumber:            "vat_number",
+				Currency:             &Currency{ID: "id0"},
+				Country:              &Country{ID: "id1"},
+				CountryState:         &CountryState{ID: "id2"},
+			},
+			want: &Organization{SubDomain: "acme"},
+		},
+		{
+			name: "no ID or SubDomain",
+			obj: &Organization{
+				Name:                 "ACME Inc.",
+				InfrastructureDomain: "infrastructure_domain",
+				Personal:             true,
+				CreatedAt:            timestampPtr(934933),
+				Suspended:            true,
+				Managed:              true,
+				BillingName:          "billing_name",
+				Address1:             "address1",
+				Address2:             "address2",
+				Address3:             "address3",
+				Address4:             "address4",
+				Postcode:             "postcode",
+				VatNumber:            "vat_number",
+				Currency:             &Currency{ID: "id0"},
+				Country:              &Country{ID: "id1"},
+				CountryState:         &CountryState{ID: "id2"},
+			},
+			want: &Organization{},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.obj.LookupReference()
+
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

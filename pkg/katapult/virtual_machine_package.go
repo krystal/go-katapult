@@ -18,6 +18,22 @@ type VirtualMachinePackage struct {
 	Icon          *Attachment `json:"icon,omitempty"`
 }
 
+// LookupReference returns a new *VirtualMachinePackage stripped down to just ID
+// or Permalink fields, making it suitable for endpoints which require a
+// reference to a Virtual Machine Package by ID or Permalink.
+func (s *VirtualMachinePackage) LookupReference() *VirtualMachinePackage {
+	if s == nil {
+		return nil
+	}
+
+	lr := &VirtualMachinePackage{ID: s.ID}
+	if lr.ID == "" {
+		lr.Permalink = s.Permalink
+	}
+
+	return lr
+}
+
 type virtualMachinePackagesResponseBody struct {
 	Pagination             *Pagination              `json:"pagination,omitempty"`
 	VirtualMachinePackage  *VirtualMachinePackage   `json:"virtual_machine_package,omitempty"`
