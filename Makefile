@@ -70,7 +70,8 @@ clean:
 
 .PHONY: clean-golden
 clean-golden:
-	rm -f $(shell find * -path '*/testdata/*' -name "*.golden")
+	rm -f $(shell find * -path '*/testdata/*' -name "*.golden" \
+		-exec echo "'{}'" \;)
 
 .PHONY: test
 test:

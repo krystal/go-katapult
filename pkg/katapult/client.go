@@ -37,6 +37,7 @@ type Client struct {
 	LoadBalancers          *LoadBalancersClient
 	Networks               *NetworksClient
 	Organizations          *OrganizationsClient
+	VirtualMachineBuilds   *VirtualMachineBuildsClient
 	VirtualMachinePackages *VirtualMachinePackagesClient
 	VirtualMachines        *VirtualMachinesClient
 }
@@ -58,6 +59,7 @@ func NewClient(config *Config) (*Client, error) {
 		LoadBalancers:          newLoadBalancersClient(ac),
 		Networks:               newNetworksClient(ac),
 		Organizations:          newOrganizationsClient(ac),
+		VirtualMachineBuilds:   newVirtualMachineBuildsClient(ac),
 		VirtualMachinePackages: newVirtualMachinePackagesClient(ac),
 		VirtualMachines:        newVirtualMachinesClient(ac),
 	}

@@ -11,6 +11,17 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var (
+	fixturePackageNotFoundErr = "package_not_found: No package was found " +
+		"matching any of the criteria provided in the arguments"
+	fixturePackageNotFoundResponseError = &ResponseError{
+		Code: "package_not_found",
+		Description: "No package was found matching any of the criteria " +
+			"provided in the arguments",
+		Detail: json.RawMessage(`{}`),
+	}
+)
+
 func TestVirtualMachinePackage_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string
@@ -23,9 +34,9 @@ func TestVirtualMachinePackage_JSONMarshaling(t *testing.T) {
 		{
 			name: "full",
 			obj: &VirtualMachinePackage{
-				ID:            "id",
-				Name:          "name",
-				Permalink:     "permalink",
+				ID:            "vmpkg_XdNPhGXvyt1dnDts",
+				Name:          "X-Small",
+				Permalink:     "xsmall",
 				CPUCores:      504684,
 				IPv4Addresses: 322134,
 				MemoryInGB:    953603,
@@ -38,6 +49,74 @@ func TestVirtualMachinePackage_JSONMarshaling(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func TestVirtualMachinePackage_LookupReference(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *VirtualMachinePackage
+		want *VirtualMachinePackage
+	}{
+		{
+			name: "nil",
+			obj:  (*VirtualMachinePackage)(nil),
+			want: nil,
+		},
+		{
+			name: "empty",
+			obj:  &VirtualMachinePackage{},
+			want: &VirtualMachinePackage{},
+		},
+		{
+			name: "full",
+			obj: &VirtualMachinePackage{
+				ID:            "vmpkg_XdNPhGXvyt1dnDts",
+				Name:          "X-Small",
+				Permalink:     "xsmall",
+				CPUCores:      504684,
+				IPv4Addresses: 322134,
+				MemoryInGB:    953603,
+				StorageInGB:   853121,
+				Privacy:       "priv",
+				Icon:          &Attachment{URL: "url"},
+			},
+			want: &VirtualMachinePackage{ID: "vmpkg_XdNPhGXvyt1dnDts"},
+		},
+		{
+			name: "no ID",
+			obj: &VirtualMachinePackage{
+				Name:          "X-Small",
+				Permalink:     "xsmall",
+				CPUCores:      504684,
+				IPv4Addresses: 322134,
+				MemoryInGB:    953603,
+				StorageInGB:   853121,
+				Privacy:       "priv",
+				Icon:          &Attachment{URL: "url"},
+			},
+			want: &VirtualMachinePackage{Permalink: "xsmall"},
+		},
+		{
+			name: "no ID or Permalink",
+			obj: &VirtualMachinePackage{
+				Name:          "X-Small",
+				CPUCores:      504684,
+				IPv4Addresses: 322134,
+				MemoryInGB:    953603,
+				StorageInGB:   853121,
+				Privacy:       "priv",
+				Icon:          &Attachment{URL: "url"},
+			},
+			want: &VirtualMachinePackage{},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.obj.LookupReference()
+
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -252,14 +331,8 @@ func TestVirtualMachinePackagesClient_Get(t *testing.T) {
 				ctx: context.Background(),
 				id:  "vmpkg_nopethisbegone",
 			},
-			errStr: "package_not_found: No package was found matching " +
-				"any of the criteria provided in the arguments",
-			errResp: &ResponseError{
-				Code: "package_not_found",
-				Description: "No package was found matching any of the " +
-					"criteria provided in the arguments",
-				Detail: json.RawMessage(`{}`),
-			},
+			errStr:     fixturePackageNotFoundErr,
+			errResp:    fixturePackageNotFoundResponseError,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("package_not_found_error"),
 		},

@@ -1,0 +1,12 @@
+{
+  "task": {
+    "id": "task_U6kSv4GupLON6U1b",
+    "name": "Build virtual machine",
+    "status": "pending"
+  },
+  "build": {
+    "id": "vmbuild_TEmhezUShNuAsyac",
+    "state": "pending"
+  },
+  "hostname": "elegant-jealous-lily"
+}

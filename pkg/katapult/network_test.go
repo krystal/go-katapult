@@ -21,8 +21,9 @@ func TestNetwork_JSONMarshaling(t *testing.T) {
 		{
 			name: "full",
 			obj: &Network{
-				ID:         "id1",
-				Name:       "name",
+				ID:         "netw_zDW7KYAeqqfRfVag",
+				Name:       "Public Network",
+				Permalink:  "public",
 				DataCenter: &DataCenter{ID: "id2"},
 			},
 		},
@@ -30,6 +31,59 @@ func TestNetwork_JSONMarshaling(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func TestNetwork_LookupReference(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *Network
+		want *Network
+	}{
+		{
+			name: "nil",
+			obj:  (*Network)(nil),
+			want: nil,
+		},
+		{
+			name: "empty",
+			obj:  &Network{},
+			want: &Network{},
+		},
+		{
+			name: "full",
+			obj: &Network{
+				ID:         "netw_zDW7KYAeqqfRfVag",
+				Name:       "Public Network",
+				Permalink:  "public",
+				DataCenter: &DataCenter{ID: "id2"},
+			},
+			want: &Network{ID: "netw_zDW7KYAeqqfRfVag"},
+		},
+		{
+			name: "no ID",
+			obj: &Network{
+				Name:       "Public Network",
+				Permalink:  "public",
+				DataCenter: &DataCenter{ID: "id2"},
+			},
+			want: &Network{Permalink: "public"},
+		},
+		{
+			name: "no ID or Permalink",
+			obj: &Network{
+				Name:       "Public Network",
+				DataCenter: &DataCenter{ID: "id2"},
+			},
+			want: &Network{},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.obj.LookupReference()
+
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

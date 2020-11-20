@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "zone_not_found",
+    "description": "No zone was found matching any of the criteria provided in the arguments",
+    "detail": {}
+  }
+}

@@ -2,12 +2,25 @@ package katapult
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/url"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+)
+
+var (
+	fixtureDiskTemplateNotFoundErr = "disk_template_not_found: No disk " +
+		"template was found matching any of the criteria provided in the " +
+		"arguments"
+	fixtureDiskTemplateNotFoundResponseError = &ResponseError{
+		Code: "disk_template_not_found",
+		Description: "No disk template was found matching any of the " +
+			"criteria provided in the arguments",
+		Detail: json.RawMessage(`{}`),
+	}
 )
 
 func TestDiskTemplate_JSONMarshaling(t *testing.T) {
@@ -22,10 +35,10 @@ func TestDiskTemplate_JSONMarshaling(t *testing.T) {
 		{
 			name: "full",
 			obj: &DiskTemplate{
-				ID:              "id1",
-				Name:            "name",
-				Description:     "desc",
-				Permalink:       "permalink",
+				ID:              "dtpl_ytP13XD5DE1RdSL9",
+				Name:            "Ubuntu 18.04 Server",
+				Description:     "A clean installation of Ubuntu 18.04 server",
+				Permalink:       "templates/ubuntu-18-04",
 				Universal:       true,
 				LatestVersion:   &DiskTemplateVersion{ID: "id2"},
 				OperatingSystem: &OperatingSystem{ID: "id3"},
@@ -35,6 +48,68 @@ func TestDiskTemplate_JSONMarshaling(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func TestDiskTemplate_LookupReference(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *DiskTemplate
+		want *DiskTemplate
+	}{
+		{
+			name: "nil",
+			obj:  (*DiskTemplate)(nil),
+			want: nil,
+		},
+		{
+			name: "empty",
+			obj:  &DiskTemplate{},
+			want: &DiskTemplate{},
+		},
+		{
+			name: "full",
+			obj: &DiskTemplate{
+				ID:              "dtpl_ytP13XD5DE1RdSL9",
+				Name:            "Ubuntu 18.04 Server",
+				Description:     "A clean installation of Ubuntu 18.04 server",
+				Permalink:       "templates/ubuntu-18-04",
+				Universal:       true,
+				LatestVersion:   &DiskTemplateVersion{ID: "id2"},
+				OperatingSystem: &OperatingSystem{ID: "id3"},
+			},
+			want: &DiskTemplate{ID: "dtpl_ytP13XD5DE1RdSL9"},
+		},
+		{
+			name: "no ID",
+			obj: &DiskTemplate{
+				Name:            "Ubuntu 18.04 Server",
+				Description:     "A clean installation of Ubuntu 18.04 server",
+				Permalink:       "templates/ubuntu-18-04",
+				Universal:       true,
+				LatestVersion:   &DiskTemplateVersion{ID: "id2"},
+				OperatingSystem: &OperatingSystem{ID: "id3"},
+			},
+			want: &DiskTemplate{Permalink: "templates/ubuntu-18-04"},
+		},
+		{
+			name: "no ID or Permalink",
+			obj: &DiskTemplate{
+				Name:            "Ubuntu 18.04 Server",
+				Description:     "A clean installation of Ubuntu 18.04 server",
+				Universal:       true,
+				LatestVersion:   &DiskTemplateVersion{ID: "id2"},
+				OperatingSystem: &OperatingSystem{ID: "id3"},
+			},
+			want: &DiskTemplate{},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.obj.LookupReference()
+
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -55,6 +130,30 @@ func TestDiskTemplateVersion_JSONMarshaling(t *testing.T) {
 				Number:   398,
 				Stable:   true,
 				SizeInGB: 434,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func TestDiskTemplateOption_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *DiskTemplateOption
+	}{
+		{
+			name: "empty",
+			obj:  &DiskTemplateOption{},
+		},
+		{
+			name: "full",
+			obj: &DiskTemplateOption{
+				Key:   "hello",
+				Value: "world",
 			},
 		},
 	}

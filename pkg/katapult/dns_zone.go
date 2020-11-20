@@ -15,6 +15,22 @@ type DNSZone struct {
 	InfrastructureZone bool   `json:"infrastructure_zone,omitempty"`
 }
 
+// LookupReference returns a new *DNSZone stripped down to just ID or Name
+// fields, making it suitable for endpoints which require a reference to a
+// DNSZone by ID or Name.
+func (s *DNSZone) LookupReference() *DNSZone {
+	if s == nil {
+		return nil
+	}
+
+	lr := &DNSZone{ID: s.ID}
+	if lr.ID == "" {
+		lr.Name = s.Name
+	}
+
+	return lr
+}
+
 type DNSZoneVerificationDetails struct {
 	Nameservers []string `json:"nameservers,omitempty"`
 	TXTRecord   string   `json:"txt_record,omitempty"`

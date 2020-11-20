@@ -16,11 +16,32 @@ type DiskTemplate struct {
 	OperatingSystem *OperatingSystem     `json:"operating_system,omitempty"`
 }
 
+// LookupReference returns a new *DiskTemplate stripped down to just ID or
+// Permalink fields, making it suitable for endpoints which require a reference
+// to a Disk Template by ID or Permalink.
+func (s *DiskTemplate) LookupReference() *DiskTemplate {
+	if s == nil {
+		return nil
+	}
+
+	lr := &DiskTemplate{ID: s.ID}
+	if lr.ID == "" {
+		lr.Permalink = s.Permalink
+	}
+
+	return lr
+}
+
 type DiskTemplateVersion struct {
 	ID       string `json:"id,omitempty"`
 	Number   int    `json:"number,omitempty"`
 	Stable   bool   `json:"stable,omitempty"`
 	SizeInGB int    `json:"size_in_gb,omitempty"`
+}
+
+type DiskTemplateOption struct {
+	Key   string `json:"key,omitempty"`
+	Value string `json:"value,omitempty"`
 }
 
 type DiskTemplateListOptions struct {
