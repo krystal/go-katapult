@@ -3,6 +3,7 @@ package katapult
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -10,6 +11,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/jimeh/undent"
 	"github.com/krystal/go-katapult/internal/codec"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -191,11 +193,45 @@ func Test_apiClient_Do(t *testing.T) {
 			respDelay:  10,
 		},
 		{
-			name:       "response is an error",
-			errStr:     fixtureInvalidAPITokenErr,
-			errResp:    fixtureInvalidAPITokenResponseError,
+			name: "response is an error without details",
+			errStr: "error_without_details: This is an error without " +
+				"details",
+			errResp: &ResponseError{
+				Code:        "error_without_details",
+				Description: "This is an error without details",
+				Detail:      json.RawMessage("{}"),
+			},
 			respStatus: http.StatusForbidden,
-			respBody:   fixture("invalid_api_token_error"),
+			respBody: undent.Bytes(`
+				{
+					"error": {
+						"code": "error_without_details",
+						"description": "This is an error without details",
+						"detail": {}
+					}
+				}`,
+			),
+		},
+		{
+			name: "response is an error with details",
+			errStr: "error_with_details: This is an error with " +
+				"details -- " +
+				"{\n  \"errors\": [\n    \"hello\",\n    \"world\"\n  ]\n}",
+			errResp: &ResponseError{
+				Code:        "error_with_details",
+				Description: "This is an error with details",
+				Detail:      json.RawMessage(`{"errors": ["hello","world"]}`),
+			},
+			respStatus: http.StatusForbidden,
+			respBody: undent.Bytes(`
+				{
+					"error": {
+						"code": "error_with_details",
+						"description": "This is an error with details",
+						"detail": {"errors": ["hello","world"]}
+					}
+				}`,
+			),
 		},
 		{
 			name:       "response is an error of invalid JSON",

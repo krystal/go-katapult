@@ -23,7 +23,11 @@ var (
 	}
 
 	fixtureInvalidXMLSpecErr = "invalid_spec_xml: The spec XML provided is " +
-		"invalid"
+		"invalid -- " + undent.String(`
+            {
+              "errors": "1:21: FATAL: EndTag: '</' not found"
+            }`,
+	)
 	fixtureInvalidXMLSpecResponseError = &ResponseError{
 		Code:        "invalid_spec_xml",
 		Description: "The spec XML provided is invalid",
