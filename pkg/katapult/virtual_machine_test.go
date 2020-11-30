@@ -35,13 +35,13 @@ func TestVirtualMachine_JSONMarshaling(t *testing.T) {
 		{
 			name: "full",
 			obj: &VirtualMachine{
-				ID:                  "id",
-				Name:                "name",
-				Hostname:            "hostname",
-				FQDN:                "Fqdn",
+				ID:                  "vm_VkTLr3gjUxGFtCkp",
+				Name:                "Anvil",
+				Hostname:            "anvil",
+				FQDN:                "anvil.amce.katapult.cloud",
 				CreatedAt:           timestampPtr(934834834),
-				InitialRootPassword: "initial_root_password",
-				State:               "state",
+				InitialRootPassword: "eZNHLt8gwtDJSSd59plNMh8S0BEGJZTe",
+				State:               "Westeros",
 				Zone:                &Zone{ID: "id0"},
 				Organization:        &Organization{ID: "id1"},
 				Group:               &VirtualMachineGroup{ID: "id2"},
@@ -55,6 +55,89 @@ func TestVirtualMachine_JSONMarshaling(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func TestVirtualMachine_LookupReference(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *VirtualMachine
+		want *VirtualMachine
+	}{
+		{
+			name: "nil",
+			obj:  (*VirtualMachine)(nil),
+			want: nil,
+		},
+		{
+			name: "empty",
+			obj:  &VirtualMachine{},
+			want: &VirtualMachine{},
+		},
+		{
+			name: "full",
+			obj: &VirtualMachine{
+				ID:                  "vm_VkTLr3gjUxGFtCkp",
+				Name:                "Anvil",
+				Hostname:            "anvil",
+				FQDN:                "anvil.amce.katapult.cloud",
+				CreatedAt:           timestampPtr(934834834),
+				InitialRootPassword: "eZNHLt8gwtDJSSd59plNMh8S0BEGJZTe",
+				State:               "Westeros",
+				Zone:                &Zone{ID: "id0"},
+				Organization:        &Organization{ID: "id1"},
+				Group:               &VirtualMachineGroup{ID: "id2"},
+				Package:             &VirtualMachinePackage{ID: "id3"},
+				AttachedISO:         &ISO{ID: "id4"},
+				Tags:                []*Tag{{ID: "id5"}},
+				IPAddresses:         []*IPAddress{{ID: "id6"}},
+			},
+			want: &VirtualMachine{ID: "vm_VkTLr3gjUxGFtCkp"},
+		},
+		{
+			name: "no ID",
+			obj: &VirtualMachine{
+				Name:                "Anvil",
+				Hostname:            "anvil",
+				FQDN:                "anvil.amce.katapult.cloud",
+				CreatedAt:           timestampPtr(934834834),
+				InitialRootPassword: "eZNHLt8gwtDJSSd59plNMh8S0BEGJZTe",
+				State:               "Westeros",
+				Zone:                &Zone{ID: "id0"},
+				Organization:        &Organization{ID: "id1"},
+				Group:               &VirtualMachineGroup{ID: "id2"},
+				Package:             &VirtualMachinePackage{ID: "id3"},
+				AttachedISO:         &ISO{ID: "id4"},
+				Tags:                []*Tag{{ID: "id5"}},
+				IPAddresses:         []*IPAddress{{ID: "id6"}},
+			},
+			want: &VirtualMachine{FQDN: "anvil.amce.katapult.cloud"},
+		},
+		{
+			name: "no ID or FQDN",
+			obj: &VirtualMachine{
+				Name:                "Anvil",
+				Hostname:            "anvil",
+				CreatedAt:           timestampPtr(934834834),
+				InitialRootPassword: "eZNHLt8gwtDJSSd59plNMh8S0BEGJZTe",
+				State:               "Westeros",
+				Zone:                &Zone{ID: "id0"},
+				Organization:        &Organization{ID: "id1"},
+				Group:               &VirtualMachineGroup{ID: "id2"},
+				Package:             &VirtualMachinePackage{ID: "id3"},
+				AttachedISO:         &ISO{ID: "id4"},
+				Tags:                []*Tag{{ID: "id5"}},
+				IPAddresses:         []*IPAddress{{ID: "id6"}},
+			},
+			want: &VirtualMachine{},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.obj.LookupReference()
+
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

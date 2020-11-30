@@ -25,6 +25,22 @@ type VirtualMachine struct {
 	IPAddresses         []*IPAddress           `json:"ip_addresses,omitempty"`
 }
 
+// LookupReference returns a new *VirtualMachine stripped down to just ID or
+// FQDN fields, making it suitable for endpoints which require a reference to a
+// Virtual Machine by ID or FQDN.
+func (s *VirtualMachine) LookupReference() *VirtualMachine {
+	if s == nil {
+		return nil
+	}
+
+	lr := &VirtualMachine{ID: s.ID}
+	if lr.ID == "" {
+		lr.FQDN = s.FQDN
+	}
+
+	return lr
+}
+
 type VirtualMachineGroup struct {
 	ID        string               `json:"id,omitempty"`
 	Name      string               `json:"name,omitempty"`
