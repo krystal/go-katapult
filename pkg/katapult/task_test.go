@@ -1,7 +1,20 @@
 package katapult
 
 import (
+	"encoding/json"
 	"testing"
+)
+
+var (
+	fixtureTaskQueueingErrorErr = "task_queueing_error: This error means " +
+		"that a background task that was needed to complete your request " +
+		"could not be queued"
+	fixtureTaskQueueingErrorResponseError = &ResponseError{
+		Code: "task_queueing_error",
+		Description: "This error means that a background task that was " +
+			"needed to complete your request could not be queued",
+		Detail: json.RawMessage(`{}`),
+	}
 )
 
 func TestTask_JSONMarshaling(t *testing.T) {
