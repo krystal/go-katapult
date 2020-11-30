@@ -50,9 +50,15 @@ type VirtualMachineGroup struct {
 
 type virtualMachinesResponseBody struct {
 	Pagination      *Pagination       `json:"pagination,omitempty"`
+	Task            *Task             `json:"task,omitempty"`
 	TrashObject     *TrashObject      `json:"trash_object,omitempty"`
 	VirtualMachine  *VirtualMachine   `json:"virtual_machine,omitempty"`
 	VirtualMachines []*VirtualMachine `json:"virtual_machines,omitempty"`
+}
+
+type virtualMachineChangePackageRequestBody struct {
+	VirtualMachine *VirtualMachine        `json:"virtual_machine,omitempty"`
+	Package        *VirtualMachinePackage `json:"virtual_machine_package,omitempty"`
 }
 
 type VirtualMachinesClient struct {
@@ -105,6 +111,21 @@ func (s VirtualMachinesClient) GetByFQDN(
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 
 	return body.VirtualMachine, resp, err
+}
+
+func (s *VirtualMachinesClient) ChangePackage(
+	ctx context.Context,
+	vm *VirtualMachine,
+	p *VirtualMachinePackage,
+) (*Task, *Response, error) {
+	u := &url.URL{Path: "virtual_machines/_/package"}
+	reqBody := &virtualMachineChangePackageRequestBody{
+		VirtualMachine: vm.LookupReference(),
+		Package:        p.LookupReference(),
+	}
+	body, resp, err := s.doRequest(ctx, "PUT", u, reqBody)
+
+	return body.Task, resp, err
 }
 
 func (s *VirtualMachinesClient) Delete(
