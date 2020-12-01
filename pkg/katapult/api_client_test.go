@@ -15,14 +15,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-type testCtxKey int
-
-type testResponseBody struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-}
-
 func Test_apiClient_NewRequestWithContext(t *testing.T) {
+	type testCtxKey int
 	type reqBody struct {
 		Name string `json:"name"`
 	}
@@ -145,6 +139,10 @@ func Test_apiClient_NewRequestWithContext(t *testing.T) {
 }
 
 func Test_apiClient_Do(t *testing.T) {
+	type respBody struct {
+		ID   string `json:"id"`
+		Name string `json:"name"`
+	}
 	tests := []struct {
 		name       string
 		ctx        *context.Context
@@ -159,8 +157,8 @@ func Test_apiClient_Do(t *testing.T) {
 	}{
 		{
 			name:       "struct body with JSON tags",
-			v:          &testResponseBody{},
-			expected:   &testResponseBody{ID: "foo", Name: "bar"},
+			v:          &respBody{},
+			expected:   &respBody{ID: "foo", Name: "bar"},
 			respStatus: http.StatusOK,
 			respBody:   []byte(`{"id":"foo","name":"bar"}`),
 		},
@@ -186,6 +184,8 @@ func Test_apiClient_Do(t *testing.T) {
 		},
 		{
 			name:       "request times out",
+			v:          &respBody{},
+			expected:   &Response{},
 			errStr:     "Get \"{{baseURL}}/bar\": context deadline exceeded",
 			respStatus: http.StatusOK,
 			respDelay:  10,
@@ -268,6 +268,9 @@ func Test_apiClient_Do(t *testing.T) {
 					tt.errStr, "{{baseURL}}", baseURL,
 				)
 				assert.EqualError(t, err, tt.errStr)
+				if tt.expected != nil {
+					assert.Equal(t, tt.expected, got)
+				}
 			} else {
 				assert.Equal(t, tt.respStatus, got.StatusCode)
 
