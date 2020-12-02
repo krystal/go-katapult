@@ -682,7 +682,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			defer teardown()
 
 			mux.HandleFunc(
-				"/core/v1/organizations/_/virtual_machines/builds",
+				"/core/v1/organizations/_/virtual_machines/build",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "POST", r.Method)
 					assertEmptyFieldSpec(t, r)

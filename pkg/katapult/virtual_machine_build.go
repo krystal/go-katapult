@@ -85,7 +85,7 @@ func (s *VirtualMachineBuildsClient) Create(
 	ctx context.Context,
 	args *VirtualMachineBuildArguments,
 ) (*VirtualMachineBuild, *Response, error) {
-	u := &url.URL{Path: "organizations/_/virtual_machines/builds"}
+	u := &url.URL{Path: "organizations/_/virtual_machines/build"}
 	body, resp, err := s.doRequest(ctx, "POST", u, args.forRequest())
 
 	build := body.VirtualMachineBuild
