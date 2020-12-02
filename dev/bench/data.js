@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1606842514446,
+  "lastUpdate": 1606936812333,
   "repoUrl": "https://github.com/krystal/go-katapult",
   "entries": {
     "Benchmark": [
@@ -624,6 +624,60 @@ window.BENCHMARK_DATA = {
             "value": 3405,
             "unit": "ns/op",
             "extra": "377288 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "contact@jimeh.me",
+            "name": "Jim Myhrberg",
+            "username": "jimeh"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "24a61e57fcee70bff32508b9a653f453fbd74acd",
+          "message": "Merge pull request #39 from krystal/fix-typo-in-vm-build-create-path\n\nfix(virtual_machine): use correct POST request path to create builds",
+          "timestamp": "2020-12-02T19:19:32Z",
+          "tree_id": "aa38f8725d47b94239d51bb5870f52dc4fb05663",
+          "url": "https://github.com/krystal/go-katapult/commit/24a61e57fcee70bff32508b9a653f453fbd74acd"
+        },
+        "date": 1606936811437,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkNameGenerator_RandomHostname",
+            "value": 4557,
+            "unit": "ns/op",
+            "extra": "265994 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_NoPrefix",
+            "value": 3264,
+            "unit": "ns/op",
+            "extra": "344926 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_OnePrefix",
+            "value": 3334,
+            "unit": "ns/op",
+            "extra": "368577 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_TwoPrefixes",
+            "value": 3400,
+            "unit": "ns/op",
+            "extra": "349512 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_ThreePrefixes",
+            "value": 3527,
+            "unit": "ns/op",
+            "extra": "355531 times\n2 procs"
           }
         ]
       }
