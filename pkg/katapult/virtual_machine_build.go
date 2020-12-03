@@ -9,12 +9,22 @@ import (
 )
 
 type VirtualMachineBuild struct {
-	ID             string               `json:"id,omitempty"`
-	SpecXML        string               `json:"spec_xml,omitempty"`
-	State          State                `json:"state,omitempty"`
-	VirtualMachine *VirtualMachine      `json:"virtual_machine,omitempty"`
-	CreatedAt      *timestamp.Timestamp `json:"created_at,omitempty"`
+	ID             string                   `json:"id,omitempty"`
+	SpecXML        string                   `json:"spec_xml,omitempty"`
+	State          VirtualMachineBuildState `json:"state,omitempty"`
+	VirtualMachine *VirtualMachine          `json:"virtual_machine,omitempty"`
+	CreatedAt      *timestamp.Timestamp     `json:"created_at,omitempty"`
 }
+
+type VirtualMachineBuildState string
+
+const (
+	VirtualMachineBuildDraft    VirtualMachineBuildState = "draft"
+	VirtualMachineBuildFailed   VirtualMachineBuildState = "failed"
+	VirtualMachineBuildPending  VirtualMachineBuildState = "pending"
+	VirtualMachineBuildComplete VirtualMachineBuildState = "complete"
+	VirtualMachineBuildBuilding VirtualMachineBuildState = "building"
+)
 
 type virtualMachineBuildsResponseBody struct {
 	Task                *Task                `json:"task,omitempty"`

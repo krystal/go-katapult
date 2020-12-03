@@ -142,6 +142,65 @@ func TestVirtualMachine_LookupReference(t *testing.T) {
 	}
 }
 
+func TestVirtualMachineStates(t *testing.T) {
+	tests := []struct {
+		name  string
+		enum  VirtualMachineState
+		value string
+	}{
+		{
+			name:  "VirtualMachineStopped",
+			enum:  VirtualMachineStopped,
+			value: "stopped",
+		},
+		{
+			name:  "VirtualMachineFailed",
+			enum:  VirtualMachineFailed,
+			value: "failed",
+		},
+		{
+			name:  "VirtualMachineStarted",
+			enum:  VirtualMachineStarted,
+			value: "started",
+		},
+		{
+			name:  "VirtualMachineStarting",
+			enum:  VirtualMachineStarting,
+			value: "starting",
+		},
+		{
+			name:  "VirtualMachineResetting",
+			enum:  VirtualMachineResetting,
+			value: "resetting",
+		},
+		{
+			name:  "VirtualMachineMigrating",
+			enum:  VirtualMachineMigrating,
+			value: "migrating",
+		},
+		{
+			name:  "VirtualMachineStopping",
+			enum:  VirtualMachineStopping,
+			value: "stopping",
+		},
+		{
+			name:  "VirtualMachineShuttingDown",
+			enum:  VirtualMachineShuttingDown,
+			value: "shutting_down",
+		},
+		{
+			name:  "VirtualMachineOrphaned",
+			enum:  VirtualMachineOrphaned,
+			value: "orphaned",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.value, string(tt.enum))
+		})
+	}
+}
+
 func TestVirtualMachineGroup_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string

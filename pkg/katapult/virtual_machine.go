@@ -15,7 +15,7 @@ type VirtualMachine struct {
 	FQDN                string                 `json:"fqdn,omitempty"`
 	CreatedAt           *timestamp.Timestamp   `json:"created_at,omitempty"`
 	InitialRootPassword string                 `json:"initial_root_password,omitempty"`
-	State               string                 `json:"state,omitempty"`
+	State               VirtualMachineState    `json:"state,omitempty"`
 	Zone                *Zone                  `json:"zone,omitempty"`
 	Organization        *Organization          `json:"organization,omitempty"`
 	Group               *VirtualMachineGroup   `json:"group,omitempty"`
@@ -40,6 +40,20 @@ func (s *VirtualMachine) LookupReference() *VirtualMachine {
 
 	return lr
 }
+
+type VirtualMachineState string
+
+const (
+	VirtualMachineStopped      VirtualMachineState = "stopped"
+	VirtualMachineFailed       VirtualMachineState = "failed"
+	VirtualMachineStarted      VirtualMachineState = "started"
+	VirtualMachineStarting     VirtualMachineState = "starting"
+	VirtualMachineResetting    VirtualMachineState = "resetting"
+	VirtualMachineMigrating    VirtualMachineState = "migrating"
+	VirtualMachineStopping     VirtualMachineState = "stopping"
+	VirtualMachineShuttingDown VirtualMachineState = "shutting_down"
+	VirtualMachineOrphaned     VirtualMachineState = "orphaned"
+)
 
 type VirtualMachineGroup struct {
 	ID        string               `json:"id,omitempty"`

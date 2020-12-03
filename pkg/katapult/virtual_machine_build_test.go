@@ -35,7 +35,7 @@ func TestVirtualMachineBuild_JSONMarshaling(t *testing.T) {
 			obj: &VirtualMachineBuild{
 				ID:             "id1",
 				SpecXML:        "<xml/>",
-				State:          DraftState,
+				State:          VirtualMachineBuildDraft,
 				VirtualMachine: &VirtualMachine{ID: "id2"},
 				CreatedAt:      timestampPtr(1600192008),
 			},
@@ -44,34 +44,73 @@ func TestVirtualMachineBuild_JSONMarshaling(t *testing.T) {
 			name: "Draft",
 			obj: &VirtualMachineBuild{
 				ID:    "id1",
-				State: DraftState,
+				State: VirtualMachineBuildDraft,
 			},
 		},
 		{
 			name: "failed",
 			obj: &VirtualMachineBuild{
 				ID:    "id1",
-				State: FailedState,
+				State: VirtualMachineBuildFailed,
 			},
 		},
 		{
 			name: "pending",
 			obj: &VirtualMachineBuild{
 				ID:    "id1",
-				State: PendingState,
+				State: VirtualMachineBuildPending,
 			},
 		},
 		{
 			name: "building",
 			obj: &VirtualMachineBuild{
 				ID:    "id1",
-				State: BuildingState,
+				State: VirtualMachineBuildBuilding,
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func TestVirtualMachineBuildStates(t *testing.T) {
+	tests := []struct {
+		name  string
+		enum  VirtualMachineBuildState
+		value string
+	}{
+		{
+			name:  "VirtualMachineBuildDraft",
+			enum:  VirtualMachineBuildDraft,
+			value: "draft",
+		},
+		{
+			name:  "VirtualMachineBuildFailed",
+			enum:  VirtualMachineBuildFailed,
+			value: "failed",
+		},
+		{
+			name:  "VirtualMachineBuildPending",
+			enum:  VirtualMachineBuildPending,
+			value: "pending",
+		},
+		{
+			name:  "VirtualMachineBuildComplete",
+			enum:  VirtualMachineBuildComplete,
+			value: "complete",
+		},
+		{
+			name:  "VirtualMachineBuildBuilding",
+			enum:  VirtualMachineBuildBuilding,
+			value: "building",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.value, string(tt.enum))
 		})
 	}
 }
@@ -311,7 +350,7 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 			expected: &VirtualMachineBuild{
 				ID:      "vmbuild_pbjJIqJ3MOMNsCr3",
 				SpecXML: "<?xml version=\"1.0\"?>\n",
-				State:   CompleteState,
+				State:   VirtualMachineBuildComplete,
 			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("virtual_machine_build_get"),
@@ -325,7 +364,7 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 			expected: &VirtualMachineBuild{
 				ID:      "vmbuild_pbjJIqJ3MOMNsCr3",
 				SpecXML: "<?xml version=\"1.0\"?>\n",
-				State:   CompleteState,
+				State:   VirtualMachineBuildComplete,
 			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("virtual_machine_build_get_alt"),
@@ -532,7 +571,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			expectedReqBody: fullReqBody,
 			expected: &VirtualMachineBuild{
 				ID:    "vmbuild_TEmhezUShNuAsyac",
-				State: PendingState,
+				State: VirtualMachineBuildPending,
 			},
 			respStatus: http.StatusCreated,
 			respBody:   fixture("virtual_machine_build_create"),
@@ -546,7 +585,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			expectedReqBody: noIDReqBody,
 			expected: &VirtualMachineBuild{
 				ID:    "vmbuild_TEmhezUShNuAsyac",
-				State: PendingState,
+				State: VirtualMachineBuildPending,
 			},
 			respStatus: http.StatusCreated,
 			respBody:   fixture("virtual_machine_build_create"),
