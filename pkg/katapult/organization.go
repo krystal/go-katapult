@@ -45,6 +45,17 @@ func (s *Organization) LookupReference() *Organization {
 	return lr
 }
 
+type OrganizationManagedArguments struct {
+	Name      string
+	SubDomain string
+}
+
+type organizationCreateManagedRequest struct {
+	Organization *Organization `json:"organization"`
+	Name         string        `json:"name"`
+	SubDomain    string        `json:"sub_domain"`
+}
+
 type organizationsResponseBody struct {
 	Organization  *Organization   `json:"organization,omitempty"`
 	Organizations []*Organization `json:"organizations,omitempty"`
@@ -95,12 +106,19 @@ func (s *OrganizationsClient) GetBySubDomain(
 
 func (s *OrganizationsClient) CreateManaged(
 	ctx context.Context,
-	parentID string,
-	name string,
-	subDomain string,
+	parent *Organization,
+	args *OrganizationManagedArguments,
 ) (*Organization, *Response, error) {
-	u := &url.URL{Path: fmt.Sprintf("organizations/%s/managed", parentID)}
-	reqBody := &Organization{Name: name, SubDomain: subDomain}
+	u := &url.URL{Path: "organizations/_/managed"}
+	reqBody := &organizationCreateManagedRequest{
+		Organization: parent.LookupReference(),
+	}
+
+	if args != nil {
+		reqBody.Name = args.Name
+		reqBody.SubDomain = args.SubDomain
+	}
+
 	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
 
 	return body.Organization, resp, err

@@ -99,7 +99,7 @@ func TestCertificatesClient_List(t *testing.T) {
 	tests := []struct {
 		name       string
 		args       args
-		expected   []*Certificate
+		want       []*Certificate
 		pagination *Pagination
 		errStr     string
 		errResp    *ResponseError
@@ -112,7 +112,7 @@ func TestCertificatesClient_List(t *testing.T) {
 				ctx:   context.Background(),
 				orgID: "org_O648YDMEYeLmqdmn",
 			},
-			expected: certificateList,
+			want: certificateList,
 			pagination: &Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
@@ -130,7 +130,7 @@ func TestCertificatesClient_List(t *testing.T) {
 				orgID: "org_O648YDMEYeLmqdmn",
 				opts:  &ListOptions{Page: 1, PerPage: 2},
 			},
-			expected: certificateList[0:2],
+			want: certificateList[0:2],
 			pagination: &Pagination{
 				CurrentPage: 1,
 				TotalPages:  2,
@@ -148,7 +148,7 @@ func TestCertificatesClient_List(t *testing.T) {
 				orgID: "org_O648YDMEYeLmqdmn",
 				opts:  &ListOptions{Page: 2, PerPage: 2},
 			},
-			expected: certificateList[2:],
+			want: certificateList[2:],
 			pagination: &Pagination{
 				CurrentPage: 2,
 				TotalPages:  2,
@@ -237,8 +237,8 @@ func TestCertificatesClient_List(t *testing.T) {
 				assert.EqualError(t, err, tt.errStr)
 			}
 
-			if tt.expected != nil {
-				assert.Equal(t, tt.expected, got)
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
 			}
 
 			if tt.pagination != nil {
@@ -261,7 +261,7 @@ func TestCertificatesClient_Get(t *testing.T) {
 		name       string
 		args       args
 		id         string
-		expected   *Certificate
+		want       *Certificate
 		errStr     string
 		errResp    *ResponseError
 		respStatus int
@@ -273,7 +273,7 @@ func TestCertificatesClient_Get(t *testing.T) {
 				ctx: context.Background(),
 				id:  "cert_Xr8jREhulOP3UJoM",
 			},
-			expected: &Certificate{
+			want: &Certificate{
 				ID:              "cert_Xr8jREhulOP3UJoM",
 				Name:            "test-1.example.com",
 				AdditionalNames: []string{"test1.domain.com"},
@@ -335,8 +335,8 @@ func TestCertificatesClient_Get(t *testing.T) {
 				assert.EqualError(t, err, tt.errStr)
 			}
 
-			if tt.expected != nil {
-				assert.Equal(t, tt.expected, got)
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
 			}
 
 			if tt.errResp != nil {

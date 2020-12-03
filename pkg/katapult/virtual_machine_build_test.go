@@ -141,18 +141,19 @@ func Test_virtualMachineBuildResponseBody_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestVirtualMachineBuildArguments_JSONMarshaling(t *testing.T) {
+func Test_virtualMachineBuildCreateRequest_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string
-		obj  *VirtualMachineBuildArguments
+		obj  *virtualMachineBuildCreateRequest
 	}{
 		{
 			name: "empty",
-			obj:  &VirtualMachineBuildArguments{},
+			obj:  &virtualMachineBuildCreateRequest{},
 		},
 		{
 			name: "full",
-			obj: &VirtualMachineBuildArguments{
+			obj: &virtualMachineBuildCreateRequest{
+				Hostname:     "foo.example.com",
 				Organization: &Organization{ID: "org_O648YDMEYeLmqdmn"},
 				Zone:         &Zone{ID: "zone_kY2sPRG24sJVRM2U"},
 				DataCenter:   &DataCenter{ID: "loc_25d48761871e4bf"},
@@ -163,165 +164,13 @@ func TestVirtualMachineBuildArguments_JSONMarshaling(t *testing.T) {
 				DiskTemplateOptions: []*DiskTemplateOption{
 					{Key: "foo", Value: "bar"},
 				},
-				Network:  &Network{ID: "netw_zDW7KYAeqqfRfVag"},
-				Hostname: "foo.example.com",
+				Network: &Network{ID: "netw_zDW7KYAeqqfRfVag"},
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			testJSONMarshaling(t, tt.obj)
-		})
-	}
-}
-
-func TestVirtualMachineBuildArguments_forRequest(t *testing.T) {
-	tests := []struct {
-		name     string
-		obj      *VirtualMachineBuildArguments
-		expected *VirtualMachineBuildArguments
-	}{
-		{
-			name:     "nil",
-			obj:      (*VirtualMachineBuildArguments)(nil),
-			expected: nil,
-		},
-		{
-			name: "full",
-			obj: &VirtualMachineBuildArguments{
-				Organization: &Organization{
-					ID:        "org_O648YDMEYeLmqdmn",
-					Name:      "ACME Inc.",
-					SubDomain: "acme",
-				},
-				Zone: &Zone{
-					ID:        "zone_kY2sPRG24sJVRM2U",
-					Name:      "North West",
-					Permalink: "north-west",
-				},
-				DataCenter: &DataCenter{
-					ID:        "loc_25d48761871e4bf",
-					Name:      "Woodland",
-					Permalink: "woodland",
-				},
-				Package: &VirtualMachinePackage{
-					ID:        "vmpkg_XdNPhGXvyt1dnDts",
-					Name:      "X-Small",
-					Permalink: "xsmall",
-				},
-				DiskTemplate: &DiskTemplate{
-					ID:        "dtpl_ytP13XD5DE1RdSL9",
-					Name:      "Ubuntu 18.04 Server",
-					Permalink: "templates/ubuntu-18-04",
-				},
-				DiskTemplateOptions: []*DiskTemplateOption{
-					{Key: "foo", Value: "bar"},
-				},
-				Network: &Network{
-					ID:        "netw_zDW7KYAeqqfRfVag",
-					Name:      "Public Network",
-					Permalink: "public",
-				},
-				Hostname: "foo.example.com",
-			},
-			expected: &VirtualMachineBuildArguments{
-				Organization: &Organization{
-					ID: "org_O648YDMEYeLmqdmn",
-				},
-				Zone: &Zone{
-					ID: "zone_kY2sPRG24sJVRM2U",
-				},
-				DataCenter: &DataCenter{
-					ID: "loc_25d48761871e4bf",
-				},
-				Package: &VirtualMachinePackage{
-					ID: "vmpkg_XdNPhGXvyt1dnDts",
-				},
-				DiskTemplate: &DiskTemplate{
-					ID: "dtpl_ytP13XD5DE1RdSL9",
-				},
-				DiskTemplateOptions: []*DiskTemplateOption{
-					{Key: "foo", Value: "bar"},
-				},
-				Network: &Network{
-					ID: "netw_zDW7KYAeqqfRfVag",
-				},
-				Hostname: "foo.example.com",
-			},
-		},
-		{
-			name: "virtual machine build (no IDs)",
-			obj: &VirtualMachineBuildArguments{
-				Organization: &Organization{
-					Name:      "ACME Inc.",
-					SubDomain: "acme",
-				},
-				Zone: &Zone{
-					Name:      "North West",
-					Permalink: "north-west",
-				},
-				DataCenter: &DataCenter{
-					Name:      "Woodland",
-					Permalink: "woodland",
-				},
-				Package: &VirtualMachinePackage{
-					Name:      "X-Small",
-					Permalink: "xsmall",
-				},
-				DiskTemplate: &DiskTemplate{
-					Name:      "Ubuntu 18.04 Server",
-					Permalink: "templates/ubuntu-18-04",
-				},
-				DiskTemplateOptions: []*DiskTemplateOption{
-					{Key: "foo", Value: "bar"},
-				},
-				Network: &Network{
-					Name:      "Public Network",
-					Permalink: "public",
-				},
-				Hostname: "foo.example.com",
-			},
-			expected: &VirtualMachineBuildArguments{
-				Organization: &Organization{
-					SubDomain: "acme",
-				},
-				Zone: &Zone{
-					Permalink: "north-west",
-				},
-				DataCenter: &DataCenter{
-					Permalink: "woodland",
-				},
-				Package: &VirtualMachinePackage{
-					Permalink: "xsmall",
-				},
-				DiskTemplate: &DiskTemplate{
-					Permalink: "templates/ubuntu-18-04",
-				},
-				DiskTemplateOptions: []*DiskTemplateOption{
-					{Key: "foo", Value: "bar"},
-				},
-				Network: &Network{
-					Permalink: "public",
-				},
-				Hostname: "foo.example.com",
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			var orgName string
-			if tt.obj != nil && tt.obj.Organization != nil {
-				orgName = tt.obj.Organization.Name
-			}
-
-			got := tt.obj.forRequest()
-
-			assert.Equal(t, tt.expected, got)
-
-			if orgName != "" {
-				assert.Equal(t, orgName, tt.obj.Organization.Name,
-					"original object was modified")
-			}
 		})
 	}
 }
@@ -335,7 +184,7 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 		name       string
 		args       args
 		id         string
-		expected   *VirtualMachineBuild
+		want       *VirtualMachineBuild
 		errStr     string
 		errResp    *ResponseError
 		respStatus int
@@ -347,7 +196,7 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 				ctx: context.Background(),
 				id:  "vmbuild_pbjJIqJ3MOMNsCr3",
 			},
-			expected: &VirtualMachineBuild{
+			want: &VirtualMachineBuild{
 				ID:      "vmbuild_pbjJIqJ3MOMNsCr3",
 				SpecXML: "<?xml version=\"1.0\"?>\n",
 				State:   VirtualMachineBuildComplete,
@@ -361,7 +210,7 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 				ctx: context.Background(),
 				id:  "vmbuild_pbjJIqJ3MOMNsCr3",
 			},
-			expected: &VirtualMachineBuild{
+			want: &VirtualMachineBuild{
 				ID:      "vmbuild_pbjJIqJ3MOMNsCr3",
 				SpecXML: "<?xml version=\"1.0\"?>\n",
 				State:   VirtualMachineBuildComplete,
@@ -420,8 +269,8 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 				assert.EqualError(t, err, tt.errStr)
 			}
 
-			if tt.expected != nil {
-				assert.Equal(t, tt.expected, got)
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
 			}
 
 			if tt.errResp != nil {
@@ -433,11 +282,6 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 
 func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 	fullArgs := &VirtualMachineBuildArguments{
-		Organization: &Organization{
-			ID:        "org_O648YDMEYeLmqdmn",
-			Name:      "ACME Inc.",
-			SubDomain: "acme",
-		},
 		Zone: &Zone{
 			ID:        "zone_kY2sPRG24sJVRM2U",
 			Name:      "North West",
@@ -468,108 +312,58 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 		},
 		Hostname: "foo.example.com",
 	}
-	fullReqBody := &VirtualMachineBuildArguments{
-		Organization: &Organization{
-			ID: "org_O648YDMEYeLmqdmn",
-		},
-		Zone: &Zone{
-			ID: "zone_kY2sPRG24sJVRM2U",
-		},
-		DataCenter: &DataCenter{
-			ID: "loc_25d48761871e4bf",
-		},
-		Package: &VirtualMachinePackage{
-			ID: "vmpkg_XdNPhGXvyt1dnDts",
-		},
-		DiskTemplate: &DiskTemplate{
-			ID: "dtpl_ytP13XD5DE1RdSL9",
-		},
-		DiskTemplateOptions: []*DiskTemplateOption{
-			{Key: "foo", Value: "bar"},
-		},
-		Network: &Network{
-			ID: "netw_zDW7KYAeqqfRfVag",
-		},
-		Hostname: "foo.example.com",
-	}
-
-	noIDArgs := &VirtualMachineBuildArguments{
-		Organization: &Organization{
-			Name:      "ACME Inc.",
-			SubDomain: "acme",
-		},
-		Zone: &Zone{
-			Name:      "North West",
-			Permalink: "north-west",
-		},
-		DataCenter: &DataCenter{
-			Name:      "Woodland",
-			Permalink: "woodland",
-		},
-		Package: &VirtualMachinePackage{
-			Name:      "X-Small",
-			Permalink: "xsmall",
-		},
-		DiskTemplate: &DiskTemplate{
-			Name:      "Ubuntu 18.04 Server",
-			Permalink: "templates/ubuntu-18-04",
-		},
-		DiskTemplateOptions: []*DiskTemplateOption{
-			{Key: "foo", Value: "bar"},
-		},
-		Network: &Network{
-			Name:      "Public Network",
-			Permalink: "public",
-		},
-		Hostname: "foo.example.com",
-	}
-	noIDReqBody := &VirtualMachineBuildArguments{
-		Organization: &Organization{
-			SubDomain: "acme",
-		},
-		Zone: &Zone{
-			Permalink: "north-west",
-		},
-		DataCenter: &DataCenter{
-			Permalink: "woodland",
-		},
-		Package: &VirtualMachinePackage{
-			Permalink: "xsmall",
-		},
-		DiskTemplate: &DiskTemplate{
-			Permalink: "templates/ubuntu-18-04",
-		},
-		DiskTemplateOptions: []*DiskTemplateOption{
-			{Key: "foo", Value: "bar"},
-		},
-		Network: &Network{
-			Permalink: "public",
-		},
-		Hostname: "foo.example.com",
-	}
 
 	type args struct {
 		ctx       context.Context
+		org       *Organization
 		buildArgs *VirtualMachineBuildArguments
 	}
 	tests := []struct {
-		name            string
-		args            args
-		expectedReqBody *VirtualMachineBuildArguments
-		expected        *VirtualMachineBuild
-		errStr          string
-		errResp         *ResponseError
-		respStatus      int
-		respBody        []byte
+		name       string
+		args       args
+		reqBody    *virtualMachineBuildCreateRequest
+		want       *VirtualMachineBuild
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
 	}{
 		{
 			name: "virtual machine build",
 			args: args{
-				ctx:       context.Background(),
+				ctx: context.Background(),
+				org: &Organization{
+					ID:        "org_O648YDMEYeLmqdmn",
+					Name:      "ACME Inc.",
+					SubDomain: "acme",
+				},
 				buildArgs: fullArgs,
 			},
-			expectedReqBody: fullReqBody,
-			expected: &VirtualMachineBuild{
+			reqBody: &virtualMachineBuildCreateRequest{
+				Organization: &Organization{
+					ID: "org_O648YDMEYeLmqdmn",
+				},
+				Zone: &Zone{
+					ID: "zone_kY2sPRG24sJVRM2U",
+				},
+				DataCenter: &DataCenter{
+					ID: "loc_25d48761871e4bf",
+				},
+				Package: &VirtualMachinePackage{
+					ID: "vmpkg_XdNPhGXvyt1dnDts",
+				},
+				DiskTemplate: &DiskTemplate{
+					ID: "dtpl_ytP13XD5DE1RdSL9",
+				},
+				DiskTemplateOptions: []*DiskTemplateOption{
+					{Key: "foo", Value: "bar"},
+				},
+				Network: &Network{
+					ID: "netw_zDW7KYAeqqfRfVag",
+				},
+				Hostname: "foo.example.com",
+			},
+			want: &VirtualMachineBuild{
 				ID:    "vmbuild_TEmhezUShNuAsyac",
 				State: VirtualMachineBuildPending,
 			},
@@ -579,11 +373,63 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 		{
 			name: "virtual machine build (no IDs)",
 			args: args{
-				ctx:       context.Background(),
-				buildArgs: noIDArgs,
+				ctx: context.Background(),
+				org: &Organization{
+					Name:      "ACME Inc.",
+					SubDomain: "acme",
+				},
+				buildArgs: &VirtualMachineBuildArguments{
+					Zone: &Zone{
+						Name:      "North West",
+						Permalink: "north-west",
+					},
+					DataCenter: &DataCenter{
+						Name:      "Woodland",
+						Permalink: "woodland",
+					},
+					Package: &VirtualMachinePackage{
+						Name:      "X-Small",
+						Permalink: "xsmall",
+					},
+					DiskTemplate: &DiskTemplate{
+						Name:      "Ubuntu 18.04 Server",
+						Permalink: "templates/ubuntu-18-04",
+					},
+					DiskTemplateOptions: []*DiskTemplateOption{
+						{Key: "foo", Value: "bar"},
+					},
+					Network: &Network{
+						Name:      "Public Network",
+						Permalink: "public",
+					},
+					Hostname: "foo.example.com",
+				},
 			},
-			expectedReqBody: noIDReqBody,
-			expected: &VirtualMachineBuild{
+			reqBody: &virtualMachineBuildCreateRequest{
+				Organization: &Organization{
+					SubDomain: "acme",
+				},
+				Zone: &Zone{
+					Permalink: "north-west",
+				},
+				DataCenter: &DataCenter{
+					Permalink: "woodland",
+				},
+				Package: &VirtualMachinePackage{
+					Permalink: "xsmall",
+				},
+				DiskTemplate: &DiskTemplate{
+					Permalink: "templates/ubuntu-18-04",
+				},
+				DiskTemplateOptions: []*DiskTemplateOption{
+					{Key: "foo", Value: "bar"},
+				},
+				Network: &Network{
+					Permalink: "public",
+				},
+				Hostname: "foo.example.com",
+			},
+			want: &VirtualMachineBuild{
 				ID:    "vmbuild_TEmhezUShNuAsyac",
 				State: VirtualMachineBuildPending,
 			},
@@ -594,6 +440,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			name: "invalid API token response",
 			args: args{
 				ctx:       context.Background(),
+				org:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
 				buildArgs: fullArgs,
 			},
 			errStr:     fixtureInvalidAPITokenErr,
@@ -605,6 +452,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			name: "non-existent organization",
 			args: args{
 				ctx:       context.Background(),
+				org:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
 				buildArgs: fullArgs,
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
@@ -616,6 +464,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			name: "suspended organization",
 			args: args{
 				ctx:       context.Background(),
+				org:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
 				buildArgs: fullArgs,
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
@@ -627,6 +476,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			name: "non-existent data center",
 			args: args{
 				ctx:       context.Background(),
+				org:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
 				buildArgs: fullArgs,
 			},
 			errStr:     fixtureDataCenterNotFoundErr,
@@ -638,6 +488,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			name: "non-existent virtual machine package",
 			args: args{
 				ctx:       context.Background(),
+				org:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
 				buildArgs: fullArgs,
 			},
 			errStr:     fixturePackageNotFoundErr,
@@ -649,6 +500,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			name: "non-existent disk template",
 			args: args{
 				ctx:       context.Background(),
+				org:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
 				buildArgs: fullArgs,
 			},
 			errStr:     fixtureDiskTemplateNotFoundErr,
@@ -660,6 +512,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			name: "non-existent zone",
 			args: args{
 				ctx:       context.Background(),
+				org:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
 				buildArgs: fullArgs,
 			},
 			errStr:     fixtureZoneNotFoundErr,
@@ -671,6 +524,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			name: "permission denied",
 			args: args{
 				ctx:       context.Background(),
+				org:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
 				buildArgs: fullArgs,
 			},
 			errStr:     fixturePermissionDeniedErr,
@@ -682,6 +536,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			name: "validation error",
 			args: args{
 				ctx:       context.Background(),
+				org:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
 				buildArgs: fullArgs,
 			},
 			errStr:     fixtureValidationErrorErr,
@@ -693,6 +548,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			name: "location_required error",
 			args: args{
 				ctx:       context.Background(),
+				org:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
 				buildArgs: fullArgs,
 			},
 			errStr: "location_required: A zone or a data_center argument " +
@@ -707,9 +563,22 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			respBody:   fixture("location_required_error"),
 		},
 		{
+			name: "nil organization",
+			args: args{
+				ctx:       context.Background(),
+				org:       nil,
+				buildArgs: fullArgs,
+			},
+			errStr:     fixtureOrganizationNotFoundErr,
+			errResp:    fixtureOrganizationNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("organization_not_found_error"),
+		},
+		{
 			name: "nil context",
 			args: args{
 				ctx:       nil,
+				org:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
 				buildArgs: fullArgs,
 			},
 			errStr: "net/http: nil Context",
@@ -727,11 +596,11 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
 
-					if tt.expectedReqBody != nil {
-						reqBody := &VirtualMachineBuildArguments{}
+					if tt.reqBody != nil {
+						reqBody := &virtualMachineBuildCreateRequest{}
 						err := strictUmarshal(r.Body, reqBody)
 						assert.NoError(t, err)
-						assert.Equal(t, tt.expectedReqBody, reqBody)
+						assert.Equal(t, tt.reqBody, reqBody)
 					}
 
 					w.WriteHeader(tt.respStatus)
@@ -740,7 +609,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			)
 
 			got, resp, err := c.VirtualMachineBuilds.Create(
-				tt.args.ctx, tt.args.buildArgs,
+				tt.args.ctx, tt.args.org, tt.args.buildArgs,
 			)
 
 			if tt.respStatus != 0 {
@@ -753,8 +622,8 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 				assert.EqualError(t, err, tt.errStr)
 			}
 
-			if tt.expected != nil {
-				assert.Equal(t, tt.expected, got)
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
 			}
 
 			if tt.errResp != nil {

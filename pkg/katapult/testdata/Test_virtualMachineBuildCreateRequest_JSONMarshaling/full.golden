@@ -1,0 +1,1 @@
+{"hostname":"foo.example.com","organization":{"id":"org_O648YDMEYeLmqdmn"},"zone":{"id":"zone_kY2sPRG24sJVRM2U"},"data_center":{"id":"loc_25d48761871e4bf"},"package":{"id":"vmpkg_XdNPhGXvyt1dnDts"},"disk_template":{"id":"dtpl_ytP13XD5DE1RdSL9"},"disk_template_options":[{"key":"foo","value":"bar"}],"network":{"id":"netw_zDW7KYAeqqfRfVag"}}

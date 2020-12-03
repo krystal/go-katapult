@@ -266,14 +266,14 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 	}
 
 	type args struct {
-		ctx   context.Context
-		orgID string
-		opts  *DiskTemplateListOptions
+		ctx  context.Context
+		org  *Organization
+		opts *DiskTemplateListOptions
 	}
 	tests := []struct {
 		name       string
 		args       args
-		expected   []*DiskTemplate
+		want       []*DiskTemplate
 		pagination *Pagination
 		errStr     string
 		errResp    *ResponseError
@@ -283,10 +283,10 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 		{
 			name: "disk templates",
 			args: args{
-				ctx:   context.Background(),
-				orgID: "org_O648YDMEYeLmqdmn",
+				ctx: context.Background(),
+				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
 			},
-			expected: certificateList,
+			want: certificateList,
 			pagination: &Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
@@ -300,11 +300,11 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 		{
 			name: "include universal",
 			args: args{
-				ctx:   context.Background(),
-				orgID: "org_O648YDMEYeLmqdmn",
-				opts:  &DiskTemplateListOptions{IncludeUniversal: true},
+				ctx:  context.Background(),
+				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				opts: &DiskTemplateListOptions{IncludeUniversal: true},
 			},
-			expected: certificateList,
+			want: certificateList,
 			pagination: &Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
@@ -318,11 +318,11 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 		{
 			name: "page 1 of disk templates",
 			args: args{
-				ctx:   context.Background(),
-				orgID: "org_O648YDMEYeLmqdmn",
-				opts:  &DiskTemplateListOptions{Page: 1, PerPage: 2},
+				ctx:  context.Background(),
+				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				opts: &DiskTemplateListOptions{Page: 1, PerPage: 2},
 			},
-			expected: certificateList[0:2],
+			want: certificateList[0:2],
 			pagination: &Pagination{
 				CurrentPage: 1,
 				TotalPages:  2,
@@ -336,11 +336,11 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 		{
 			name: "page 2 of disk templates",
 			args: args{
-				ctx:   context.Background(),
-				orgID: "org_O648YDMEYeLmqdmn",
-				opts:  &DiskTemplateListOptions{Page: 2, PerPage: 2},
+				ctx:  context.Background(),
+				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				opts: &DiskTemplateListOptions{Page: 2, PerPage: 2},
 			},
-			expected: certificateList[2:],
+			want: certificateList[2:],
 			pagination: &Pagination{
 				CurrentPage: 2,
 				TotalPages:  2,
@@ -354,8 +354,8 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 		{
 			name: "invalid API token response",
 			args: args{
-				ctx:   context.Background(),
-				orgID: "org_O648YDMEYeLmqdmn",
+				ctx: context.Background(),
+				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureInvalidAPITokenErr,
 			errResp:    fixtureInvalidAPITokenResponseError,
@@ -365,8 +365,8 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 		{
 			name: "non-existent organization",
 			args: args{
-				ctx:   context.Background(),
-				orgID: "org_O648YDMEYeLmqdmn",
+				ctx: context.Background(),
+				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
@@ -376,8 +376,8 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 		{
 			name: "suspended organization",
 			args: args{
-				ctx:   context.Background(),
-				orgID: "org_O648YDMEYeLmqdmn",
+				ctx: context.Background(),
+				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
@@ -385,10 +385,21 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 			respBody:   fixture("organization_suspended_error"),
 		},
 		{
+			name: "nil organization",
+			args: args{
+				ctx: context.Background(),
+				org: (*Organization)(nil),
+			},
+			errStr:     fixtureOrganizationNotFoundErr,
+			errResp:    fixtureOrganizationNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("organization_not_found_error"),
+		},
+		{
 			name: "nil context",
 			args: args{
-				ctx:   nil,
-				orgID: "org_O648YDMEYeLmqdmn",
+				ctx: nil,
+				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -398,9 +409,14 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 			c, mux, _, teardown := prepareTestClient()
 			defer teardown()
 
+			org := tt.args.org
+			if org == nil {
+				org = &Organization{ID: "_"}
+			}
+
 			mux.HandleFunc(
 				fmt.Sprintf(
-					"/core/v1/organizations/%s/disk_templates", tt.args.orgID,
+					"/core/v1/organizations/%s/disk_templates", org.ID,
 				),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
@@ -416,7 +432,7 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 			)
 
 			got, resp, err := c.DiskTemplates.List(
-				tt.args.ctx, tt.args.orgID, tt.args.opts,
+				tt.args.ctx, tt.args.org, tt.args.opts,
 			)
 
 			if tt.respStatus != 0 {
@@ -429,8 +445,8 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 				assert.EqualError(t, err, tt.errStr)
 			}
 
-			if tt.expected != nil {
-				assert.Equal(t, tt.expected, got)
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
 			}
 
 			if tt.pagination != nil {

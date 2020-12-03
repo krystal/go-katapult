@@ -140,7 +140,7 @@ func TestDataCentersClient_List(t *testing.T) {
 	tests := []struct {
 		name       string
 		args       args
-		expected   []*DataCenter
+		want       []*DataCenter
 		errStr     string
 		errResp    *ResponseError
 		respStatus int
@@ -151,7 +151,7 @@ func TestDataCentersClient_List(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 			},
-			expected: []*DataCenter{
+			want: []*DataCenter{
 				{
 					ID:        "loc_25d48761871e4bf",
 					Name:      "Shirebury",
@@ -212,8 +212,8 @@ func TestDataCentersClient_List(t *testing.T) {
 				assert.EqualError(t, err, tt.errStr)
 			}
 
-			if tt.expected != nil {
-				assert.Equal(t, tt.expected, got)
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
 			}
 
 			if tt.errResp != nil {
@@ -238,7 +238,7 @@ func TestDataCentersClient_Get(t *testing.T) {
 	tests := []struct {
 		name       string
 		args       args
-		expected   *DataCenter
+		want       *DataCenter
 		errStr     string
 		errResp    *ResponseError
 		respStatus int
@@ -250,7 +250,7 @@ func TestDataCentersClient_Get(t *testing.T) {
 				ctx: context.Background(),
 				id:  "loc_a2417980b9874c0",
 			},
-			expected:   dataCenter,
+			want:       dataCenter,
 			respStatus: http.StatusOK,
 			respBody:   fixture("data_center_get"),
 		},
@@ -302,8 +302,8 @@ func TestDataCentersClient_Get(t *testing.T) {
 				assert.EqualError(t, err, tt.errStr)
 			}
 
-			if tt.expected != nil {
-				assert.Equal(t, tt.expected, got)
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
 			}
 
 			if tt.errResp != nil {
@@ -328,7 +328,7 @@ func TestDataCentersClient_GetByPermalink(t *testing.T) {
 	tests := []struct {
 		name       string
 		args       args
-		expected   *DataCenter
+		want       *DataCenter
 		errStr     string
 		errResp    *ResponseError
 		respStatus int
@@ -340,7 +340,7 @@ func TestDataCentersClient_GetByPermalink(t *testing.T) {
 				ctx:       context.Background(),
 				permalink: "newtown",
 			},
-			expected:   dataCenter,
+			want:       dataCenter,
 			respStatus: http.StatusOK,
 			respBody:   fixture("data_center_get"),
 		},
@@ -399,8 +399,8 @@ func TestDataCentersClient_GetByPermalink(t *testing.T) {
 				assert.EqualError(t, err, tt.errStr)
 			}
 
-			if tt.expected != nil {
-				assert.Equal(t, tt.expected, got)
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
 			}
 
 			if tt.errResp != nil {

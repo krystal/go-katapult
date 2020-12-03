@@ -201,8 +201,8 @@ func prepareTestClient() (
 			os.Stderr,
 			"FAIL: Request for unhandled request in test server received:",
 		)
-		fmt.Fprintln(os.Stderr)
-		fmt.Fprintln(os.Stderr, "\t"+r.URL.String())
+		fmt.Fprintf(os.Stderr, "\t%s %s\n\n", r.Method, r.URL.String())
+
 		w.WriteHeader(http.StatusNotImplemented)
 		fmt.Fprint(w, "")
 	})
@@ -716,25 +716,25 @@ func TestClient_Transport(t *testing.T) {
 		name          string
 		httpClient    *http.Client
 		httpTransport http.RoundTripper
-		expected      http.RoundTripper
+		want          http.RoundTripper
 	}{
 		{
 			name:          "default",
 			httpClient:    &http.Client{},
 			httpTransport: nil,
-			expected:      nil,
+			want:          nil,
 		},
 		{
 			name:          "custom",
 			httpClient:    &http.Client{},
 			httpTransport: &http.Transport{MaxConnsPerHost: 949},
-			expected:      &http.Transport{MaxConnsPerHost: 949},
+			want:          &http.Transport{MaxConnsPerHost: 949},
 		},
 		{
 			name:          "nil http client",
 			httpClient:    nil,
 			httpTransport: &http.Transport{MaxConnsPerHost: 949},
-			expected:      nil,
+			want:          nil,
 		},
 	}
 	for _, tt := range tests {
@@ -750,7 +750,7 @@ func TestClient_Transport(t *testing.T) {
 
 			got := c.Transport()
 
-			assert.Equal(t, tt.expected, got)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

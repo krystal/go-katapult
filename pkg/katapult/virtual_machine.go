@@ -91,11 +91,15 @@ func newVirtualMachinesClient(
 
 func (s VirtualMachinesClient) List(
 	ctx context.Context,
-	orgID string,
+	org *Organization,
 	opts *ListOptions,
 ) ([]*VirtualMachine, *Response, error) {
+	if org == nil {
+		org = &Organization{ID: "_"}
+	}
+
 	u := &url.URL{
-		Path:     fmt.Sprintf("organizations/%s/virtual_machines", orgID),
+		Path:     fmt.Sprintf("organizations/%s/virtual_machines", org.ID),
 		RawQuery: opts.Values().Encode(),
 	}
 
@@ -130,12 +134,12 @@ func (s VirtualMachinesClient) GetByFQDN(
 func (s *VirtualMachinesClient) ChangePackage(
 	ctx context.Context,
 	vm *VirtualMachine,
-	p *VirtualMachinePackage,
+	pkg *VirtualMachinePackage,
 ) (*Task, *Response, error) {
 	u := &url.URL{Path: "virtual_machines/_/package"}
 	reqBody := &virtualMachineChangePackageRequestBody{
 		VirtualMachine: vm.LookupReference(),
-		Package:        p.LookupReference(),
+		Package:        pkg.LookupReference(),
 	}
 	body, resp, err := s.doRequest(ctx, "PUT", u, reqBody)
 
@@ -144,9 +148,13 @@ func (s *VirtualMachinesClient) ChangePackage(
 
 func (s *VirtualMachinesClient) Delete(
 	ctx context.Context,
-	id string,
+	vm *VirtualMachine,
 ) (*TrashObject, *Response, error) {
-	u := &url.URL{Path: fmt.Sprintf("virtual_machines/%s", id)}
+	if vm == nil {
+		vm = &VirtualMachine{ID: "_"}
+	}
+
+	u := &url.URL{Path: fmt.Sprintf("virtual_machines/%s", vm.ID)}
 	body, resp, err := s.doRequest(ctx, "DELETE", u, nil)
 
 	return body.TrashObject, resp, err

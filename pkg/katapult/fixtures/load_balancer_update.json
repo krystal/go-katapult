@@ -1,21 +1,21 @@
 {
   "load_balancer": {
     "id": "lb_7vClpn0rlUegGPDS",
-    "name": "web-1",
-    "resource_type": "virtual_machine_groups",
+    "name": "web-east-1",
+    "resource_type": "tags",
     "resources": [
       {
-        "type": "VirtualMachineGroup",
+        "type": "Tag",
         "value": {
-          "id": "grp1",
-          "name": "Group 1"
+          "id": "tag2",
+          "name": "Tag 2"
         }
       },
       {
-        "type": "VirtualMachineGroup",
+        "type": "Tag",
         "value": {
-          "id": "grp3",
-          "name": "Group 3"
+          "id": "tag4",
+          "name": "Tag 4"
         }
       }
     ]
