@@ -477,6 +477,144 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 
 func TestVirtualMachinesClient_Get(t *testing.T) {
 	type args struct {
+		ctx      context.Context
+		idOrFQDN string
+	}
+	tests := []struct {
+		name       string
+		args       args
+		reqPath    string
+		reqQuery   *url.Values
+		want       *VirtualMachine
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "by ID",
+			args: args{
+				ctx:      context.Background(),
+				idOrFQDN: "vm_t8yomYsG4bccKw5D",
+			},
+			reqPath: "virtual_machines/vm_t8yomYsG4bccKw5D",
+			want: &VirtualMachine{
+				ID:       "vm_t8yomYsG4bccKw5D",
+				Name:     "bitter-beautiful-mango",
+				Hostname: "bitter-beautiful-mango",
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machine_get"),
+		},
+		{
+			name: "by FQDN",
+			args: args{
+				ctx:      context.Background(),
+				idOrFQDN: "anvil.amce.katapult.cloud",
+			},
+			reqPath: "virtual_machines/_",
+			reqQuery: &url.Values{
+				"virtual_machine[fqdn]": []string{"anvil.amce.katapult.cloud"},
+			},
+
+			want: &VirtualMachine{
+				ID:       "vm_t8yomYsG4bccKw5D",
+				Name:     "bitter-beautiful-mango",
+				Hostname: "bitter-beautiful-mango",
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machine_get"),
+		},
+		{
+			name: "non-existent virtual machine",
+			args: args{
+				ctx:      context.Background(),
+				idOrFQDN: "vm_nopethisbegone",
+			},
+			errStr: "virtual_machine_not_found: No virtual machine was found " +
+				"matching any of the criteria provided in the arguments",
+			errResp: &ResponseError{
+				Code: "virtual_machine_not_found",
+				Description: "No virtual machine was found matching any of " +
+					"the criteria provided in the arguments",
+				Detail: json.RawMessage(`{}`),
+			},
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("virtual_machine_not_found_error"),
+		},
+		{
+			name: "virtual machine is in trash",
+			args: args{
+				ctx:      context.Background(),
+				idOrFQDN: "vm_t8yomYsG4bccKw5D",
+			},
+			errStr:     fixtureObjectInTrashErr,
+			errResp:    fixtureObjectInTrashResponseError,
+			respStatus: http.StatusNotAcceptable,
+			respBody:   fixture("object_in_trash_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx:      nil,
+				idOrFQDN: "vm_t8yomYsG4bccKw5D",
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			path := fmt.Sprintf("virtual_machines/%s", tt.args.idOrFQDN)
+			if tt.reqPath != "" {
+				path = tt.reqPath
+			}
+
+			mux.HandleFunc(
+				"/core/v1/"+path,
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "GET", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					if tt.reqQuery != nil {
+						assert.Equal(t, *tt.reqQuery, r.URL.Query())
+					}
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.VirtualMachines.Get(
+				tt.args.ctx, tt.args.idOrFQDN,
+			)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestVirtualMachinesClient_GetByID(t *testing.T) {
+	type args struct {
 		ctx context.Context
 		id  string
 	}
@@ -557,7 +695,7 @@ func TestVirtualMachinesClient_Get(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.VirtualMachines.Get(tt.args.ctx, tt.args.id)
+			got, resp, err := c.VirtualMachines.GetByID(tt.args.ctx, tt.args.id)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)

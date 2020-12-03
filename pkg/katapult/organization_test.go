@@ -309,6 +309,137 @@ func TestOrganizationsClient_List(t *testing.T) {
 
 func TestOrganizationsClient_Get(t *testing.T) {
 	type args struct {
+		ctx           context.Context
+		idOrSubDomain string
+	}
+	tests := []struct {
+		name       string
+		args       args
+		reqPath    string
+		reqQuery   *url.Values
+		want       *Organization
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "by ID",
+			args: args{
+				ctx:           context.Background(),
+				idOrSubDomain: "org_O648YDMEYeLmqdmn",
+			},
+			reqPath: "organizations/org_O648YDMEYeLmqdmn",
+			want: &Organization{
+				ID:        "org_O648YDMEYeLmqdmn",
+				Name:      "ACME Inc.",
+				SubDomain: "acme",
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("organization_get"),
+		},
+		{
+			name: "by SubDomain",
+			args: args{
+				ctx:           context.Background(),
+				idOrSubDomain: "acme",
+			},
+			reqPath: "organizations/_",
+			reqQuery: &url.Values{
+				"organization[sub_domain]": []string{"acme"},
+			},
+			want: &Organization{
+				ID:        "org_O648YDMEYeLmqdmn",
+				Name:      "ACME Inc.",
+				SubDomain: "acme",
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("organization_get"),
+		},
+		{
+			name: "non-existent organization",
+			args: args{
+				ctx:           context.Background(),
+				idOrSubDomain: "org_nopethisbegone",
+			},
+			errStr:     fixtureOrganizationNotFoundErr,
+			errResp:    fixtureOrganizationNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("organization_not_found_error"),
+		},
+		{
+			name: "suspended organization",
+			args: args{
+				ctx:           context.Background(),
+				idOrSubDomain: "org_O648YDMEYeLmqdmn",
+			},
+			errStr:     fixtureOrganizationSuspendedErr,
+			errResp:    fixtureOrganizationSuspendedResponseError,
+			respStatus: http.StatusForbidden,
+			respBody:   fixture("organization_suspended_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx:           nil,
+				idOrSubDomain: "org_O648YDMEYeLmqdmn",
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			path := fmt.Sprintf("organizations/%s", tt.args.idOrSubDomain)
+			if tt.reqPath != "" {
+				path = tt.reqPath
+			}
+
+			mux.HandleFunc(
+				"/core/v1/"+path,
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "GET", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					if tt.reqQuery != nil {
+						assert.Equal(t, *tt.reqQuery, r.URL.Query())
+					}
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.Organizations.Get(
+				tt.args.ctx, tt.args.idOrSubDomain,
+			)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestOrganizationsClient_GetByID(t *testing.T) {
+	type args struct {
 		ctx context.Context
 		id  string
 	}
@@ -382,7 +513,7 @@ func TestOrganizationsClient_Get(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.Organizations.Get(tt.args.ctx, tt.args.id)
+			got, resp, err := c.Organizations.GetByID(tt.args.ctx, tt.args.id)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)

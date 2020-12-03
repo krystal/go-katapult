@@ -1,12 +1,12 @@
 {
   "data_centers": [
     {
-      "id": "loc_25d48761871e4bf",
+      "id": "dc_25d48761871e4bf",
       "name": "Shirebury",
       "permalink": "shirebury"
     },
     {
-      "id": "loc_a2417980b9874c0",
+      "id": "dc_a2417980b9874c0",
       "name": "New Town",
       "permalink": "newtown"
     }

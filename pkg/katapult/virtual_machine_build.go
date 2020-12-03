@@ -72,6 +72,13 @@ func (s *VirtualMachineBuildsClient) Get(
 	ctx context.Context,
 	id string,
 ) (*VirtualMachineBuild, *Response, error) {
+	return s.GetByID(ctx, id)
+}
+
+func (s *VirtualMachineBuildsClient) GetByID(
+	ctx context.Context,
+	id string,
+) (*VirtualMachineBuild, *Response, error) {
 	u := &url.URL{Path: fmt.Sprintf("virtual_machines/builds/%s", id)}
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 

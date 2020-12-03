@@ -156,7 +156,7 @@ func Test_virtualMachineBuildCreateRequest_JSONMarshaling(t *testing.T) {
 				Hostname:     "foo.example.com",
 				Organization: &Organization{ID: "org_O648YDMEYeLmqdmn"},
 				Zone:         &Zone{ID: "zone_kY2sPRG24sJVRM2U"},
-				DataCenter:   &DataCenter{ID: "loc_25d48761871e4bf"},
+				DataCenter:   &DataCenter{ID: "dc_25d48761871e4bf"},
 				Package: &VirtualMachinePackage{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
@@ -280,6 +280,111 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 	}
 }
 
+func TestVirtualMachineBuildsClient_GetByID(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		id  string
+	}
+	tests := []struct {
+		name       string
+		args       args
+		id         string
+		want       *VirtualMachineBuild
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "virtual machine build",
+			args: args{
+				ctx: context.Background(),
+				id:  "vmbuild_pbjJIqJ3MOMNsCr3",
+			},
+			want: &VirtualMachineBuild{
+				ID:      "vmbuild_pbjJIqJ3MOMNsCr3",
+				SpecXML: "<?xml version=\"1.0\"?>\n",
+				State:   VirtualMachineBuildComplete,
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machine_build_get"),
+		},
+		{
+			name: "virtual machine build (alt response)",
+			args: args{
+				ctx: context.Background(),
+				id:  "vmbuild_pbjJIqJ3MOMNsCr3",
+			},
+			want: &VirtualMachineBuild{
+				ID:      "vmbuild_pbjJIqJ3MOMNsCr3",
+				SpecXML: "<?xml version=\"1.0\"?>\n",
+				State:   VirtualMachineBuildComplete,
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machine_build_get_alt"),
+		},
+		{
+			name: "non-existent virtual machine build",
+			args: args{
+				ctx: context.Background(),
+				id:  "vmbuild_nopethisbegone",
+			},
+			errStr:     fixtureBuildNotFoundErr,
+			errResp:    fixtureBuildNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("build_not_found_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx: nil,
+				id:  "vmbuild_pbjJIqJ3MOMNsCr3",
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			mux.HandleFunc(
+				fmt.Sprintf("/core/v1/virtual_machines/builds/%s", tt.args.id),
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "GET", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.VirtualMachineBuilds.GetByID(
+				tt.args.ctx, tt.args.id,
+			)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
 func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 	fullArgs := &VirtualMachineBuildArguments{
 		Zone: &Zone{
@@ -288,7 +393,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			Permalink: "north-west",
 		},
 		DataCenter: &DataCenter{
-			ID:        "loc_25d48761871e4bf",
+			ID:        "dc_25d48761871e4bf",
 			Name:      "Woodland",
 			Permalink: "woodland",
 		},
@@ -347,7 +452,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 					ID: "zone_kY2sPRG24sJVRM2U",
 				},
 				DataCenter: &DataCenter{
-					ID: "loc_25d48761871e4bf",
+					ID: "dc_25d48761871e4bf",
 				},
 				Package: &VirtualMachinePackage{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",

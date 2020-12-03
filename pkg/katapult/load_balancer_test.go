@@ -195,7 +195,7 @@ func TestLoadBalancerArguments_forRequest(t *testing.T) {
 				ResourceType: TagsResourceType,
 				ResourceIDs:  []string{"id1", "id2"},
 				DataCenter: &DataCenter{
-					ID:        "loc_25d48761871e4bf",
+					ID:        "dc_25d48761871e4bf",
 					Name:      "Woodland",
 					Permalink: "woodland",
 				},
@@ -204,7 +204,7 @@ func TestLoadBalancerArguments_forRequest(t *testing.T) {
 				Name:         "helper",
 				ResourceType: TagsResourceType,
 				ResourceIDs:  []string{"id1", "id2"},
-				DataCenter:   &DataCenter{ID: "loc_25d48761871e4bf"},
+				DataCenter:   &DataCenter{ID: "dc_25d48761871e4bf"},
 			},
 		},
 		{
@@ -671,6 +671,95 @@ func TestLoadBalancersClient_Get(t *testing.T) {
 	}
 }
 
+func TestLoadBalancersClient_GetByID(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		id  string
+	}
+	tests := []struct {
+		name       string
+		args       args
+		id         string
+		want       *LoadBalancer
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "load balancer",
+			args: args{
+				ctx: context.Background(),
+				id:  "lb_7vClpn0rlUegGPDS",
+			},
+			want: &LoadBalancer{
+				ID:           "lb_7vClpn0rlUegGPDS",
+				Name:         "web",
+				ResourceType: TagsResourceType,
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("load_balancer_get"),
+		},
+		{
+			name: "non-existent load balancer",
+			args: args{
+				ctx: context.Background(),
+				id:  "lb_nopethisbegone",
+			},
+			errStr:     fixtureLoadBalancerNotFoundErr,
+			errResp:    fixtureLoadBalancerNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("load_balancer_not_found_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx: nil,
+				id:  "lb_7vClpn0rlUegGPDS",
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			mux.HandleFunc(
+				fmt.Sprintf("/core/v1/load_balancers/%s", tt.args.id),
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "GET", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.LoadBalancers.GetByID(tt.args.ctx, tt.args.id)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
 func TestLoadBalancersClient_Create(t *testing.T) {
 	lbArgs := &LoadBalancerArguments{
 		Name:         "api-test",
@@ -936,7 +1025,7 @@ func TestLoadBalancersClient_Update(t *testing.T) {
 		ResourceType: VirtualMachineGroupsResourceType,
 		ResourceIDs:  []string{"grp1", "grp3"},
 		DataCenter: &DataCenter{
-			ID:   "loc_a2417980b9874c0",
+			ID:   "dc_a2417980b9874c0",
 			Name: "New Town",
 		},
 	}

@@ -4,9 +4,12 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"strings"
 
 	"github.com/augurysys/timestamp"
 )
+
+const virtualMachineIDPrefix = "vm_"
 
 type VirtualMachine struct {
 	ID                  string                 `json:"id,omitempty"`
@@ -109,7 +112,18 @@ func (s VirtualMachinesClient) List(
 	return body.VirtualMachines, resp, err
 }
 
-func (s VirtualMachinesClient) Get(
+func (s *VirtualMachinesClient) Get(
+	ctx context.Context,
+	idOrFQDN string,
+) (*VirtualMachine, *Response, error) {
+	if strings.HasPrefix(idOrFQDN, virtualMachineIDPrefix) {
+		return s.GetByID(ctx, idOrFQDN)
+	}
+
+	return s.GetByFQDN(ctx, idOrFQDN)
+}
+
+func (s VirtualMachinesClient) GetByID(
 	ctx context.Context,
 	id string,
 ) (*VirtualMachine, *Response, error) {

@@ -345,3 +345,97 @@ func TestCertificatesClient_Get(t *testing.T) {
 		})
 	}
 }
+
+func TestCertificatesClient_GetByID(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		id  string
+	}
+	tests := []struct {
+		name       string
+		args       args
+		id         string
+		want       *Certificate
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "certificate",
+			args: args{
+				ctx: context.Background(),
+				id:  "cert_Xr8jREhulOP3UJoM",
+			},
+			want: &Certificate{
+				ID:              "cert_Xr8jREhulOP3UJoM",
+				Name:            "test-1.example.com",
+				AdditionalNames: []string{"test1.domain.com"},
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("certificate_get"),
+		},
+		{
+			name: "non-existent certificate",
+			args: args{
+				ctx: context.Background(),
+				id:  "lb_nopethisbegone",
+			},
+			errStr: "certificate_not_found: No certificate was found " +
+				"matching any of the criteria provided in the arguments",
+			errResp: &ResponseError{
+				Code: "certificate_not_found",
+				Description: "No certificate was found matching any of the " +
+					"criteria provided in the arguments",
+				Detail: json.RawMessage(`{}`),
+			},
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("certificate_not_found_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx: nil,
+				id:  "cert_Xr8jREhulOP3UJoM",
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			mux.HandleFunc(fmt.Sprintf("/core/v1/certificates/%s", tt.args.id),
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "GET", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.Certificates.GetByID(tt.args.ctx, tt.args.id)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}

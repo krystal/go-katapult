@@ -483,6 +483,116 @@ func TestDNSZonesClient_List(t *testing.T) {
 
 func TestDNSZonesClient_Get(t *testing.T) {
 	type args struct {
+		ctx      context.Context
+		idOrName string
+	}
+	tests := []struct {
+		name       string
+		args       args
+		reqPath    string
+		reqQuery   *url.Values
+		want       *DNSZone
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "by ID",
+			args: args{
+				ctx:      context.Background(),
+				idOrName: "dnszone_k75eFc4UBOgeE5Zy",
+			},
+			reqPath:    "dns/zones/dnszone_k75eFc4UBOgeE5Zy",
+			want:       fixtureDNSZone,
+			respStatus: http.StatusOK,
+			respBody:   fixture("dns_zone_get"),
+		},
+		{
+			name: "by Name",
+			args: args{
+				ctx:      context.Background(),
+				idOrName: "test1.example.com",
+			},
+			reqPath: "dns/zones/_",
+			reqQuery: &url.Values{
+				"dns_zone[name]": []string{"test1.example.com"},
+			},
+			want:       fixtureDNSZone,
+			respStatus: http.StatusOK,
+			respBody:   fixture("dns_zone_get"),
+		},
+		{
+			name: "non-existent DNS zone",
+			args: args{
+				ctx:      context.Background(),
+				idOrName: "dnszone_k75eFc4UBOgeE5Zy",
+			},
+			errStr:     fixtureDNSZoneNotFoundErr,
+			errResp:    fixtureDNSZoneNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("dns_zone_not_found_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx:      nil,
+				idOrName: "dnszone_k75eFc4UBOgeE5Zy",
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			path := fmt.Sprintf("dns/zones/%s", tt.args.idOrName)
+			if tt.reqPath != "" {
+				path = tt.reqPath
+			}
+
+			mux.HandleFunc(
+				"/core/v1/"+path,
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "GET", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					if tt.reqQuery != nil {
+						assert.Equal(t, *tt.reqQuery, r.URL.Query())
+					}
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.DNSZones.Get(tt.args.ctx, tt.args.idOrName)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestDNSZonesClient_GetByID(t *testing.T) {
+	type args struct {
 		ctx context.Context
 		id  string
 	}
@@ -541,7 +651,7 @@ func TestDNSZonesClient_Get(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.DNSZones.Get(tt.args.ctx, tt.args.id)
+			got, resp, err := c.DNSZones.GetByID(tt.args.ctx, tt.args.id)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)

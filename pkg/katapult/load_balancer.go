@@ -154,6 +154,13 @@ func (s LoadBalancersClient) Get(
 	ctx context.Context,
 	id string,
 ) (*LoadBalancer, *Response, error) {
+	return s.GetByID(ctx, id)
+}
+
+func (s LoadBalancersClient) GetByID(
+	ctx context.Context,
+	id string,
+) (*LoadBalancer, *Response, error) {
 	u := &url.URL{Path: fmt.Sprintf("load_balancers/%s", id)}
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 

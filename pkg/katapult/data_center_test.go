@@ -34,7 +34,7 @@ func TestDataCenter_JSONMarshaling(t *testing.T) {
 		{
 			name: "full",
 			obj: &DataCenter{
-				ID:        "loc_25d48761871e4bf",
+				ID:        "dc_25d48761871e4bf",
 				Name:      "Shirebury",
 				Permalink: "shirebury",
 				Country: &Country{
@@ -69,14 +69,14 @@ func TestDataCenter_LookupReference(t *testing.T) {
 		{
 			name: "full",
 			obj: &DataCenter{
-				ID:        "loc_25d48761871e4bf",
+				ID:        "dc_25d48761871e4bf",
 				Name:      "Shirebury",
 				Permalink: "shirebury",
 				Country: &Country{
 					ID: "id2",
 				},
 			},
-			want: &DataCenter{ID: "loc_25d48761871e4bf"},
+			want: &DataCenter{ID: "dc_25d48761871e4bf"},
 		},
 		{
 			name: "no ID",
@@ -153,12 +153,12 @@ func TestDataCentersClient_List(t *testing.T) {
 			},
 			want: []*DataCenter{
 				{
-					ID:        "loc_25d48761871e4bf",
+					ID:        "dc_25d48761871e4bf",
 					Name:      "Shirebury",
 					Permalink: "shirebury",
 				},
 				{
-					ID:        "loc_a2417980b9874c0",
+					ID:        "dc_a2417980b9874c0",
 					Name:      "New Town",
 					Permalink: "newtown",
 				},
@@ -226,7 +226,137 @@ func TestDataCentersClient_List(t *testing.T) {
 func TestDataCentersClient_Get(t *testing.T) {
 	// Correlates to fixtures/data_center_get.json
 	dataCenter := &DataCenter{
-		ID:        "loc_a2417980b9874c0",
+		ID:        "dc_a2417980b9874c0",
+		Name:      "New Town",
+		Permalink: "newtown",
+	}
+
+	type args struct {
+		ctx           context.Context
+		idOrPermalink string
+	}
+	tests := []struct {
+		name       string
+		args       args
+		reqPath    string
+		reqQuery   *url.Values
+		want       *DataCenter
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "by ID",
+			args: args{
+				ctx:           context.Background(),
+				idOrPermalink: "dc_a2417980b9874c0",
+			},
+			reqPath:    "data_centers/dc_a2417980b9874c0",
+			want:       dataCenter,
+			respStatus: http.StatusOK,
+			respBody:   fixture("data_center_get"),
+		},
+		{
+			name: "by legacy ID",
+			args: args{
+				ctx:           context.Background(),
+				idOrPermalink: "loc_a2417980b9874c0",
+			},
+			reqPath:    "data_centers/loc_a2417980b9874c0",
+			want:       dataCenter,
+			respStatus: http.StatusOK,
+			respBody:   fixture("data_center_get"),
+		},
+		{
+			name: "by Permalink",
+			args: args{
+				ctx:           context.Background(),
+				idOrPermalink: "newtown",
+			},
+			reqPath: "data_centers/_",
+			reqQuery: &url.Values{
+				"data_center[permalink]": []string{"newtown"},
+			},
+			want:       dataCenter,
+			respStatus: http.StatusOK,
+			respBody:   fixture("data_center_get"),
+		},
+		{
+			name: "non-existent data center",
+			args: args{
+				ctx:           context.Background(),
+				idOrPermalink: "dc_nopethisbegone",
+			},
+			errStr:     fixtureDataCenterNotFoundErr,
+			errResp:    fixtureDataCenterNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("data_center_not_found_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx:           nil,
+				idOrPermalink: "dc_a2417980b9874c0",
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			path := fmt.Sprintf("data_centers/%s", tt.args.idOrPermalink)
+			if tt.reqPath != "" {
+				path = tt.reqPath
+			}
+
+			mux.HandleFunc(
+				"/core/v1/"+path,
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "GET", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					if tt.reqQuery != nil {
+						assert.Equal(t, *tt.reqQuery, r.URL.Query())
+					}
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.DataCenters.Get(
+				tt.args.ctx, tt.args.idOrPermalink,
+			)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestDataCentersClient_GetByID(t *testing.T) {
+	// Correlates to fixtures/data_center_get.json
+	dataCenter := &DataCenter{
+		ID:        "dc_a2417980b9874c0",
 		Name:      "New Town",
 		Permalink: "newtown",
 	}
@@ -248,7 +378,7 @@ func TestDataCentersClient_Get(t *testing.T) {
 			name: "data center",
 			args: args{
 				ctx: context.Background(),
-				id:  "loc_a2417980b9874c0",
+				id:  "dc_a2417980b9874c0",
 			},
 			want:       dataCenter,
 			respStatus: http.StatusOK,
@@ -258,7 +388,7 @@ func TestDataCentersClient_Get(t *testing.T) {
 			name: "non-existent data center",
 			args: args{
 				ctx: context.Background(),
-				id:  "loc_nopethisbegone",
+				id:  "dc_nopethisbegone",
 			},
 			errStr:     fixtureDataCenterNotFoundErr,
 			errResp:    fixtureDataCenterNotFoundResponseError,
@@ -269,7 +399,7 @@ func TestDataCentersClient_Get(t *testing.T) {
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				id:  "loc_a2417980b9874c0",
+				id:  "dc_a2417980b9874c0",
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -290,7 +420,7 @@ func TestDataCentersClient_Get(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.DataCenters.Get(tt.args.ctx, tt.args.id)
+			got, resp, err := c.DataCenters.GetByID(tt.args.ctx, tt.args.id)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -316,7 +446,7 @@ func TestDataCentersClient_Get(t *testing.T) {
 func TestDataCentersClient_GetByPermalink(t *testing.T) {
 	// Correlates to fixtures/data_center_get.json
 	dataCenter := &DataCenter{
-		ID:        "loc_a2417980b9874c0",
+		ID:        "dc_a2417980b9874c0",
 		Name:      "New Town",
 		Permalink: "newtown",
 	}

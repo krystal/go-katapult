@@ -4,7 +4,10 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"strings"
 )
+
+const dnsZoneIDPrefix = "dnszone_"
 
 type DNSZone struct {
 	ID                 string `json:"id,omitempty"`
@@ -101,6 +104,17 @@ func (s *DNSZonesClient) List(
 }
 
 func (s *DNSZonesClient) Get(
+	ctx context.Context,
+	idOrName string,
+) (*DNSZone, *Response, error) {
+	if strings.HasPrefix(idOrName, dnsZoneIDPrefix) {
+		return s.GetByID(ctx, idOrName)
+	}
+
+	return s.GetByName(ctx, idOrName)
+}
+
+func (s *DNSZonesClient) GetByID(
 	ctx context.Context,
 	id string,
 ) (*DNSZone, *Response, error) {

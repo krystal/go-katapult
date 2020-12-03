@@ -4,9 +4,12 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"strings"
 
 	"github.com/augurysys/timestamp"
 )
+
+const organizationIDPrefix = "org_"
 
 type Organization struct {
 	ID                   string               `json:"id,omitempty"`
@@ -83,6 +86,17 @@ func (s *OrganizationsClient) List(
 }
 
 func (s *OrganizationsClient) Get(
+	ctx context.Context,
+	idOrSubDomain string,
+) (*Organization, *Response, error) {
+	if strings.HasPrefix(idOrSubDomain, organizationIDPrefix) {
+		return s.GetByID(ctx, idOrSubDomain)
+	}
+
+	return s.GetBySubDomain(ctx, idOrSubDomain)
+}
+
+func (s *OrganizationsClient) GetByID(
 	ctx context.Context,
 	id string,
 ) (*Organization, *Response, error) {
