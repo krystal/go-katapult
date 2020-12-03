@@ -4,7 +4,10 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"strings"
 )
+
+const dataCenterIDPrefix = "dc_"
 
 type DataCenter struct {
 	ID        string   `json:"id,omitempty"`
@@ -56,6 +59,19 @@ func (s *DataCentersClient) List(
 }
 
 func (s *DataCentersClient) Get(
+	ctx context.Context,
+	idOrPermalink string,
+) (*DataCenter, *Response, error) {
+	// Check for both current "dc_" and legacy "loc_" ID prefixes.
+	if strings.HasPrefix(idOrPermalink, dataCenterIDPrefix) ||
+		strings.HasPrefix(idOrPermalink, "loc_") {
+		return s.GetByID(ctx, idOrPermalink)
+	}
+
+	return s.GetByPermalink(ctx, idOrPermalink)
+}
+
+func (s *DataCentersClient) GetByID(
 	ctx context.Context,
 	id string,
 ) (*DataCenter, *Response, error) {

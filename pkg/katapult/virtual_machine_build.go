@@ -9,21 +9,35 @@ import (
 )
 
 type VirtualMachineBuild struct {
-	ID             string               `json:"id,omitempty"`
-	SpecXML        string               `json:"spec_xml,omitempty"`
-	State          State                `json:"state,omitempty"`
-	VirtualMachine *VirtualMachine      `json:"virtual_machine,omitempty"`
-	CreatedAt      *timestamp.Timestamp `json:"created_at,omitempty"`
+	ID             string                   `json:"id,omitempty"`
+	SpecXML        string                   `json:"spec_xml,omitempty"`
+	State          VirtualMachineBuildState `json:"state,omitempty"`
+	VirtualMachine *VirtualMachine          `json:"virtual_machine,omitempty"`
+	CreatedAt      *timestamp.Timestamp     `json:"created_at,omitempty"`
 }
 
-type virtualMachineBuildsResponseBody struct {
-	Task                *Task                `json:"task,omitempty"`
-	Build               *VirtualMachineBuild `json:"build,omitempty"`
-	VirtualMachineBuild *VirtualMachineBuild `json:"virtual_machine_build,omitempty"`
-	Hostname            string               `json:"hostname,omitempty"`
-}
+type VirtualMachineBuildState string
+
+const (
+	VirtualMachineBuildDraft    VirtualMachineBuildState = "draft"
+	VirtualMachineBuildFailed   VirtualMachineBuildState = "failed"
+	VirtualMachineBuildPending  VirtualMachineBuildState = "pending"
+	VirtualMachineBuildComplete VirtualMachineBuildState = "complete"
+	VirtualMachineBuildBuilding VirtualMachineBuildState = "building"
+)
 
 type VirtualMachineBuildArguments struct {
+	Zone                *Zone
+	DataCenter          *DataCenter
+	Package             *VirtualMachinePackage
+	DiskTemplate        *DiskTemplate
+	DiskTemplateOptions []*DiskTemplateOption
+	Network             *Network
+	Hostname            string
+}
+
+type virtualMachineBuildCreateRequest struct {
+	Hostname            string                 `json:"hostname,omitempty"`
 	Organization        *Organization          `json:"organization,omitempty"`
 	Zone                *Zone                  `json:"zone,omitempty"`
 	DataCenter          *DataCenter            `json:"data_center,omitempty"`
@@ -31,25 +45,13 @@ type VirtualMachineBuildArguments struct {
 	DiskTemplate        *DiskTemplate          `json:"disk_template,omitempty"`
 	DiskTemplateOptions []*DiskTemplateOption  `json:"disk_template_options,omitempty"`
 	Network             *Network               `json:"network,omitempty"`
-	Hostname            string                 `json:"hostname,omitempty"`
 }
 
-func (
-	s *VirtualMachineBuildArguments,
-) forRequest() *VirtualMachineBuildArguments {
-	if s == nil {
-		return nil
-	}
-
-	args := *s
-	args.Organization = s.Organization.LookupReference()
-	args.Zone = s.Zone.LookupReference()
-	args.DataCenter = s.DataCenter.LookupReference()
-	args.Package = s.Package.LookupReference()
-	args.DiskTemplate = s.DiskTemplate.LookupReference()
-	args.Network = s.Network.LookupReference()
-
-	return &args
+type virtualMachineBuildsResponseBody struct {
+	Task                *Task                `json:"task,omitempty"`
+	Build               *VirtualMachineBuild `json:"build,omitempty"`
+	VirtualMachineBuild *VirtualMachineBuild `json:"virtual_machine_build,omitempty"`
+	Hostname            string               `json:"hostname,omitempty"`
 }
 
 type VirtualMachineBuildsClient struct {
@@ -70,6 +72,13 @@ func (s *VirtualMachineBuildsClient) Get(
 	ctx context.Context,
 	id string,
 ) (*VirtualMachineBuild, *Response, error) {
+	return s.GetByID(ctx, id)
+}
+
+func (s *VirtualMachineBuildsClient) GetByID(
+	ctx context.Context,
+	id string,
+) (*VirtualMachineBuild, *Response, error) {
 	u := &url.URL{Path: fmt.Sprintf("virtual_machines/builds/%s", id)}
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 
@@ -83,10 +92,22 @@ func (s *VirtualMachineBuildsClient) Get(
 
 func (s *VirtualMachineBuildsClient) Create(
 	ctx context.Context,
+	org *Organization,
 	args *VirtualMachineBuildArguments,
 ) (*VirtualMachineBuild, *Response, error) {
 	u := &url.URL{Path: "organizations/_/virtual_machines/build"}
-	body, resp, err := s.doRequest(ctx, "POST", u, args.forRequest())
+	reqBody := &virtualMachineBuildCreateRequest{
+		Hostname:            args.Hostname,
+		Organization:        org.LookupReference(),
+		Zone:                args.Zone.LookupReference(),
+		DataCenter:          args.DataCenter.LookupReference(),
+		Package:             args.Package.LookupReference(),
+		DiskTemplate:        args.DiskTemplate.LookupReference(),
+		DiskTemplateOptions: args.DiskTemplateOptions,
+		Network:             args.Network.LookupReference(),
+	}
+
+	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
 
 	build := body.VirtualMachineBuild
 	if build == nil {

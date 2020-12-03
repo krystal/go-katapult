@@ -54,10 +54,14 @@ func newNetworksClient(c *apiClient) *NetworksClient {
 
 func (s *NetworksClient) List(
 	ctx context.Context,
-	orgID string,
+	org *Organization,
 ) ([]*Network, []*VirtualNetwork, *Response, error) {
+	if org == nil {
+		org = &Organization{ID: "_"}
+	}
+
 	u := &url.URL{
-		Path: fmt.Sprintf("organizations/%s/available_networks", orgID),
+		Path: fmt.Sprintf("organizations/%s/available_networks", org.ID),
 	}
 
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)

@@ -37,36 +37,36 @@ func TestResourceTypes(t *testing.T) {
 
 func TestResourceType_objectType(t *testing.T) {
 	tests := []struct {
-		name     string
-		value    ResourceType
-		expected string
+		name  string
+		value ResourceType
+		want  string
 	}{
 		{
-			name:     "tags",
-			value:    ResourceType("tags"),
-			expected: "Tag",
+			name:  "tags",
+			value: ResourceType("tags"),
+			want:  "Tag",
 		},
 		{
-			name:     "virtual machine groups",
-			value:    ResourceType("virtual_machine_groups"),
-			expected: "VirtualMachineGroup",
+			name:  "virtual machine groups",
+			value: ResourceType("virtual_machine_groups"),
+			want:  "VirtualMachineGroup",
 		},
 		{
-			name:     "virtual machine groups",
-			value:    ResourceType("virtual_machines"),
-			expected: "VirtualMachine",
+			name:  "virtual machine groups",
+			value: ResourceType("virtual_machines"),
+			want:  "VirtualMachine",
 		},
 		{
-			name:     "unknown type",
-			value:    ResourceType("something_nope_what"),
-			expected: "",
+			name:  "unknown type",
+			value: ResourceType("something_nope_what"),
+			want:  "",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := tt.value.objectType()
 
-			assert.Equal(t, tt.expected, got)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

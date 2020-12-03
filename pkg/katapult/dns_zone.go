@@ -2,10 +2,12 @@ package katapult
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"net/url"
+	"strings"
 )
+
+const dnsZoneIDPrefix = "dnszone_"
 
 type DNSZone struct {
 	ID                 string `json:"id,omitempty"`
@@ -47,13 +49,19 @@ type DNSZoneDetails struct {
 	TTL  int    `json:"ttl,omitempty"`
 }
 
-type createDNSZoneRequest struct {
+type dnsZoneCreateRequest struct {
+	Organization    *Organization   `json:"organization"`
 	Details         *DNSZoneDetails `json:"details"`
 	SkipVerfication bool            `json:"skip_verification"`
 }
 
-type updateDNSZoneTTLRequest struct {
-	TTL int `json:"ttl"`
+type dnsZoneVerifyRequest struct {
+	DNSZone *DNSZone `json:"dns_zone"`
+}
+
+type dnsZoneUpdateTTLRequest struct {
+	DNSZone *DNSZone `json:"dns_zone"`
+	TTL     int      `json:"ttl"`
 }
 
 type dnsZoneResponseBody struct {
@@ -77,11 +85,15 @@ func newDNSZonesClient(c *apiClient) *DNSZonesClient {
 
 func (s *DNSZonesClient) List(
 	ctx context.Context,
-	orgID string,
+	org *Organization,
 	opts *ListOptions,
 ) ([]*DNSZone, *Response, error) {
+	if org == nil {
+		org = &Organization{ID: "_"}
+	}
+
 	u := &url.URL{
-		Path:     fmt.Sprintf("organizations/%s/dns/zones", orgID),
+		Path:     fmt.Sprintf("organizations/%s/dns/zones", org.ID),
 		RawQuery: opts.Values().Encode(),
 	}
 
@@ -92,6 +104,17 @@ func (s *DNSZonesClient) List(
 }
 
 func (s *DNSZonesClient) Get(
+	ctx context.Context,
+	idOrName string,
+) (*DNSZone, *Response, error) {
+	if strings.HasPrefix(idOrName, dnsZoneIDPrefix) {
+		return s.GetByID(ctx, idOrName)
+	}
+
+	return s.GetByName(ctx, idOrName)
+}
+
+func (s *DNSZonesClient) GetByID(
 	ctx context.Context,
 	id string,
 ) (*DNSZone, *Response, error) {
@@ -115,20 +138,20 @@ func (s *DNSZonesClient) GetByName(
 
 func (s *DNSZonesClient) Create(
 	ctx context.Context,
-	orgID string,
-	zone *DNSZoneArguments,
+	org *Organization,
+	args *DNSZoneArguments,
 ) (*DNSZone, *Response, error) {
-	if zone == nil {
-		return nil, nil, errors.New("nil zone arguments")
+	u := &url.URL{Path: "organizations/_/dns/zones"}
+	reqBody := &dnsZoneCreateRequest{
+		Organization: org.LookupReference(),
 	}
 
-	u := &url.URL{Path: fmt.Sprintf("organizations/%s/dns/zones", orgID)}
-	reqBody := &createDNSZoneRequest{
-		Details: &DNSZoneDetails{
-			Name: zone.Name,
-			TTL:  zone.TTL,
-		},
-		SkipVerfication: zone.SkipVerfication,
+	if args != nil {
+		reqBody.Details = &DNSZoneDetails{
+			Name: args.Name,
+			TTL:  args.TTL,
+		}
+		reqBody.SkipVerfication = args.SkipVerfication
 	}
 
 	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
@@ -138,9 +161,13 @@ func (s *DNSZonesClient) Create(
 
 func (s *DNSZonesClient) Delete(
 	ctx context.Context,
-	id string,
+	zone *DNSZone,
 ) (*DNSZone, *Response, error) {
-	u := &url.URL{Path: fmt.Sprintf("dns/zones/%s", id)}
+	if zone == nil {
+		zone = &DNSZone{ID: "_"}
+	}
+
+	u := &url.URL{Path: fmt.Sprintf("dns/zones/%s", zone.ID)}
 	body, resp, err := s.doRequest(ctx, "DELETE", u, nil)
 
 	return body.DNSZone, resp, err
@@ -148,9 +175,15 @@ func (s *DNSZonesClient) Delete(
 
 func (s *DNSZonesClient) VerificationDetails(
 	ctx context.Context,
-	id string,
+	zone *DNSZone,
 ) (*DNSZoneVerificationDetails, *Response, error) {
-	u := &url.URL{Path: fmt.Sprintf("dns/zones/%s/verification_details", id)}
+	if zone == nil {
+		zone = &DNSZone{ID: "_"}
+	}
+
+	u := &url.URL{
+		Path: fmt.Sprintf("dns/zones/%s/verification_details", zone.ID),
+	}
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 
 	return body.VerificationDetails, resp, err
@@ -158,21 +191,27 @@ func (s *DNSZonesClient) VerificationDetails(
 
 func (s *DNSZonesClient) Verify(
 	ctx context.Context,
-	id string,
+	zone *DNSZone,
 ) (*DNSZone, *Response, error) {
-	u := &url.URL{Path: fmt.Sprintf("dns/zones/%s/verify", id)}
-	body, resp, err := s.doRequest(ctx, "POST", u, nil)
+	u := &url.URL{Path: "dns/zones/_/verify"}
+	reqBody := &dnsZoneVerifyRequest{
+		DNSZone: zone.LookupReference(),
+	}
+	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
 
 	return body.DNSZone, resp, err
 }
 
 func (s *DNSZonesClient) UpdateTTL(
 	ctx context.Context,
-	id string,
+	zone *DNSZone,
 	ttl int,
 ) (*DNSZone, *Response, error) {
-	u := &url.URL{Path: fmt.Sprintf("dns/zones/%s/update_ttl", id)}
-	reqBody := &updateDNSZoneTTLRequest{TTL: ttl}
+	u := &url.URL{Path: "dns/zones/_/update_ttl"}
+	reqBody := &dnsZoneUpdateTTLRequest{
+		DNSZone: zone.LookupReference(),
+		TTL:     ttl,
+	}
 	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
 
 	return body.DNSZone, resp, err

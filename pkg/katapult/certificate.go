@@ -63,6 +63,13 @@ func (s CertificatesClient) Get(
 	ctx context.Context,
 	id string,
 ) (*Certificate, *Response, error) {
+	return s.GetByID(ctx, id)
+}
+
+func (s CertificatesClient) GetByID(
+	ctx context.Context,
+	id string,
+) (*Certificate, *Response, error) {
 	u := &url.URL{Path: fmt.Sprintf("certificates/%s", id)}
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 

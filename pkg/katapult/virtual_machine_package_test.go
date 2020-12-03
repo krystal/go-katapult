@@ -173,7 +173,7 @@ func TestVirtualMachinePackagesClient_List(t *testing.T) {
 	tests := []struct {
 		name       string
 		args       args
-		expected   []*VirtualMachinePackage
+		want       []*VirtualMachinePackage
 		pagination *Pagination
 		errStr     string
 		errResp    *ResponseError
@@ -185,7 +185,7 @@ func TestVirtualMachinePackagesClient_List(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 			},
-			expected: packageList,
+			want: packageList,
 			pagination: &Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
@@ -202,7 +202,7 @@ func TestVirtualMachinePackagesClient_List(t *testing.T) {
 				ctx:  context.Background(),
 				opts: &ListOptions{Page: 1, PerPage: 2},
 			},
-			expected: packageList[0:2],
+			want: packageList[0:2],
 			pagination: &Pagination{
 				CurrentPage: 1,
 				TotalPages:  2,
@@ -219,7 +219,7 @@ func TestVirtualMachinePackagesClient_List(t *testing.T) {
 				ctx:  context.Background(),
 				opts: &ListOptions{Page: 2, PerPage: 2},
 			},
-			expected: packageList[2:],
+			want: packageList[2:],
 			pagination: &Pagination{
 				CurrentPage: 2,
 				TotalPages:  2,
@@ -282,8 +282,8 @@ func TestVirtualMachinePackagesClient_List(t *testing.T) {
 				assert.EqualError(t, err, tt.errStr)
 			}
 
-			if tt.expected != nil {
-				assert.Equal(t, tt.expected, got)
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
 			}
 
 			if tt.pagination != nil {
@@ -299,13 +299,135 @@ func TestVirtualMachinePackagesClient_List(t *testing.T) {
 
 func TestVirtualMachinePackagesClient_Get(t *testing.T) {
 	type args struct {
+		ctx           context.Context
+		idOrPermalink string
+	}
+	tests := []struct {
+		name       string
+		args       args
+		reqPath    string
+		reqQuery   *url.Values
+		want       *VirtualMachinePackage
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "by ID",
+			args: args{
+				ctx:           context.Background(),
+				idOrPermalink: "vmpkg_YlqvfsKqZJODtvjG",
+			},
+			reqPath: "virtual_machine_packages/vmpkg_YlqvfsKqZJODtvjG",
+			want: &VirtualMachinePackage{
+				ID:        "vmpkg_YlqvfsKqZJODtvjG",
+				Name:      "Small",
+				Permalink: "small",
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machine_package_get"),
+		},
+		{
+			name: "by Permalink",
+			args: args{
+				ctx:           context.Background(),
+				idOrPermalink: "small",
+			},
+			reqPath: "virtual_machine_packages/_",
+			reqQuery: &url.Values{
+				"virtual_machine_package[permalink]": []string{"small"},
+			},
+			want: &VirtualMachinePackage{
+				ID:        "vmpkg_YlqvfsKqZJODtvjG",
+				Name:      "Small",
+				Permalink: "small",
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machine_package_get"),
+		},
+		{
+			name: "non-existent virtual machine package",
+			args: args{
+				ctx:           context.Background(),
+				idOrPermalink: "vmpkg_nopethisbegone",
+			},
+			errStr:     fixturePackageNotFoundErr,
+			errResp:    fixturePackageNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("package_not_found_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx:           nil,
+				idOrPermalink: "vmpkg_nopethisbegone",
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			path := fmt.Sprintf(
+				"virtual_machine_packages/%s", tt.args.idOrPermalink,
+			)
+			if tt.reqPath != "" {
+				path = tt.reqPath
+			}
+
+			mux.HandleFunc(
+				"/core/v1/"+path,
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "GET", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					if tt.reqQuery != nil {
+						assert.Equal(t, *tt.reqQuery, r.URL.Query())
+					}
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.VirtualMachinePackages.Get(
+				tt.args.ctx, tt.args.idOrPermalink,
+			)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestVirtualMachinePackagesClient_GetByID(t *testing.T) {
+	type args struct {
 		ctx context.Context
 		id  string
 	}
 	tests := []struct {
 		name       string
 		args       args
-		expected   *VirtualMachinePackage
+		want       *VirtualMachinePackage
 		errStr     string
 		errResp    *ResponseError
 		respStatus int
@@ -317,7 +439,7 @@ func TestVirtualMachinePackagesClient_Get(t *testing.T) {
 				ctx: context.Background(),
 				id:  "vmpkg_YlqvfsKqZJODtvjG",
 			},
-			expected: &VirtualMachinePackage{
+			want: &VirtualMachinePackage{
 				ID:        "vmpkg_YlqvfsKqZJODtvjG",
 				Name:      "Small",
 				Permalink: "small",
@@ -362,7 +484,7 @@ func TestVirtualMachinePackagesClient_Get(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.VirtualMachinePackages.Get(
+			got, resp, err := c.VirtualMachinePackages.GetByID(
 				tt.args.ctx, tt.args.id,
 			)
 
@@ -376,8 +498,8 @@ func TestVirtualMachinePackagesClient_Get(t *testing.T) {
 				assert.EqualError(t, err, tt.errStr)
 			}
 
-			if tt.expected != nil {
-				assert.Equal(t, tt.expected, got)
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
 			}
 
 			if tt.errResp != nil {
@@ -395,7 +517,7 @@ func TestVirtualMachinePackagesClient_GetByPermalink(t *testing.T) {
 	tests := []struct {
 		name       string
 		args       args
-		expected   *VirtualMachinePackage
+		want       *VirtualMachinePackage
 		errStr     string
 		errResp    *ResponseError
 		respStatus int
@@ -407,7 +529,7 @@ func TestVirtualMachinePackagesClient_GetByPermalink(t *testing.T) {
 				ctx:       context.Background(),
 				permalink: "small",
 			},
-			expected: &VirtualMachinePackage{
+			want: &VirtualMachinePackage{
 				ID:        "vmpkg_YlqvfsKqZJODtvjG",
 				Name:      "Small",
 				Permalink: "small",
@@ -479,8 +601,8 @@ func TestVirtualMachinePackagesClient_GetByPermalink(t *testing.T) {
 				assert.EqualError(t, err, tt.errStr)
 			}
 
-			if tt.expected != nil {
-				assert.Equal(t, tt.expected, got)
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
 			}
 
 			if tt.errResp != nil {

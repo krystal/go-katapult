@@ -4,7 +4,10 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"strings"
 )
+
+const virtualMachinePackageIDPrefix = "vmpkg_"
 
 type VirtualMachinePackage struct {
 	ID            string      `json:"id,omitempty"`
@@ -70,6 +73,17 @@ func (s *VirtualMachinePackagesClient) List(
 }
 
 func (s *VirtualMachinePackagesClient) Get(
+	ctx context.Context,
+	idOrPermalink string,
+) (*VirtualMachinePackage, *Response, error) {
+	if strings.HasPrefix(idOrPermalink, virtualMachinePackageIDPrefix) {
+		return s.GetByID(ctx, idOrPermalink)
+	}
+
+	return s.GetByPermalink(ctx, idOrPermalink)
+}
+
+func (s *VirtualMachinePackagesClient) GetByID(
 	ctx context.Context,
 	id string,
 ) (*VirtualMachinePackage, *Response, error) {

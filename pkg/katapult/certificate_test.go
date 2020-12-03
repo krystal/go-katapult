@@ -99,7 +99,7 @@ func TestCertificatesClient_List(t *testing.T) {
 	tests := []struct {
 		name       string
 		args       args
-		expected   []*Certificate
+		want       []*Certificate
 		pagination *Pagination
 		errStr     string
 		errResp    *ResponseError
@@ -112,7 +112,7 @@ func TestCertificatesClient_List(t *testing.T) {
 				ctx:   context.Background(),
 				orgID: "org_O648YDMEYeLmqdmn",
 			},
-			expected: certificateList,
+			want: certificateList,
 			pagination: &Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
@@ -130,7 +130,7 @@ func TestCertificatesClient_List(t *testing.T) {
 				orgID: "org_O648YDMEYeLmqdmn",
 				opts:  &ListOptions{Page: 1, PerPage: 2},
 			},
-			expected: certificateList[0:2],
+			want: certificateList[0:2],
 			pagination: &Pagination{
 				CurrentPage: 1,
 				TotalPages:  2,
@@ -148,7 +148,7 @@ func TestCertificatesClient_List(t *testing.T) {
 				orgID: "org_O648YDMEYeLmqdmn",
 				opts:  &ListOptions{Page: 2, PerPage: 2},
 			},
-			expected: certificateList[2:],
+			want: certificateList[2:],
 			pagination: &Pagination{
 				CurrentPage: 2,
 				TotalPages:  2,
@@ -237,8 +237,8 @@ func TestCertificatesClient_List(t *testing.T) {
 				assert.EqualError(t, err, tt.errStr)
 			}
 
-			if tt.expected != nil {
-				assert.Equal(t, tt.expected, got)
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
 			}
 
 			if tt.pagination != nil {
@@ -261,7 +261,7 @@ func TestCertificatesClient_Get(t *testing.T) {
 		name       string
 		args       args
 		id         string
-		expected   *Certificate
+		want       *Certificate
 		errStr     string
 		errResp    *ResponseError
 		respStatus int
@@ -273,7 +273,7 @@ func TestCertificatesClient_Get(t *testing.T) {
 				ctx: context.Background(),
 				id:  "cert_Xr8jREhulOP3UJoM",
 			},
-			expected: &Certificate{
+			want: &Certificate{
 				ID:              "cert_Xr8jREhulOP3UJoM",
 				Name:            "test-1.example.com",
 				AdditionalNames: []string{"test1.domain.com"},
@@ -335,8 +335,102 @@ func TestCertificatesClient_Get(t *testing.T) {
 				assert.EqualError(t, err, tt.errStr)
 			}
 
-			if tt.expected != nil {
-				assert.Equal(t, tt.expected, got)
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestCertificatesClient_GetByID(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		id  string
+	}
+	tests := []struct {
+		name       string
+		args       args
+		id         string
+		want       *Certificate
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "certificate",
+			args: args{
+				ctx: context.Background(),
+				id:  "cert_Xr8jREhulOP3UJoM",
+			},
+			want: &Certificate{
+				ID:              "cert_Xr8jREhulOP3UJoM",
+				Name:            "test-1.example.com",
+				AdditionalNames: []string{"test1.domain.com"},
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("certificate_get"),
+		},
+		{
+			name: "non-existent certificate",
+			args: args{
+				ctx: context.Background(),
+				id:  "lb_nopethisbegone",
+			},
+			errStr: "certificate_not_found: No certificate was found " +
+				"matching any of the criteria provided in the arguments",
+			errResp: &ResponseError{
+				Code: "certificate_not_found",
+				Description: "No certificate was found matching any of the " +
+					"criteria provided in the arguments",
+				Detail: json.RawMessage(`{}`),
+			},
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("certificate_not_found_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx: nil,
+				id:  "cert_Xr8jREhulOP3UJoM",
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			mux.HandleFunc(fmt.Sprintf("/core/v1/certificates/%s", tt.args.id),
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "GET", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.Certificates.GetByID(tt.args.ctx, tt.args.id)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
 			}
 
 			if tt.errResp != nil {

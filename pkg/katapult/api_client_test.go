@@ -27,12 +27,12 @@ func Test_apiClient_NewRequestWithContext(t *testing.T) {
 		body   interface{}
 	}
 	tests := []struct {
-		name         string
-		args         args
-		baseURL      *url.URL
-		codec        *codec.JSON
-		expectedBody string
-		errStr       string
+		name       string
+		args       args
+		baseURL    *url.URL
+		codec      *codec.JSON
+		wantedBody string
+		errStr     string
 	}{
 		{
 			name: "request without body",
@@ -56,7 +56,7 @@ func Test_apiClient_NewRequestWithContext(t *testing.T) {
 				},
 				body: &reqBody{Name: "Other Vol"},
 			},
-			expectedBody: `{"name":"Other Vol"}`,
+			wantedBody: `{"name":"Other Vol"}`,
 		},
 		{
 			name: "nil context",
@@ -105,12 +105,12 @@ func Test_apiClient_NewRequestWithContext(t *testing.T) {
 			if tt.errStr != "" {
 				assert.EqualError(t, err, tt.errStr)
 			} else {
-				expectedURL := tt.baseURL.ResolveReference(tt.args.url)
+				wantedURL := tt.baseURL.ResolveReference(tt.args.url)
 
 				assert.NoError(t, err)
 				assert.Equal(t, tt.args.ctx, got.Context())
 				assert.Equal(t, tt.args.method, got.Method)
-				assert.Equal(t, expectedURL.String(), got.URL.String())
+				assert.Equal(t, wantedURL.String(), got.URL.String())
 				assert.Equal(t,
 					c.UserAgent,
 					got.Header.Get("User-Agent"),
@@ -129,7 +129,7 @@ func Test_apiClient_NewRequestWithContext(t *testing.T) {
 					body, err := ioutil.ReadAll(got.Body)
 					assert.NoError(t, err)
 					assert.Equal(t,
-						tt.expectedBody,
+						tt.wantedBody,
 						string(bytes.TrimSpace(body)),
 					)
 				}
@@ -148,7 +148,7 @@ func Test_apiClient_Do(t *testing.T) {
 		ctx        *context.Context
 		reqBody    string
 		v          interface{}
-		expected   interface{}
+		want       interface{}
 		errStr     string
 		errResp    *ResponseError
 		respStatus int
@@ -158,14 +158,14 @@ func Test_apiClient_Do(t *testing.T) {
 		{
 			name:       "struct body with JSON tags",
 			v:          &respBody{},
-			expected:   &respBody{ID: "foo", Name: "bar"},
+			want:       &respBody{ID: "foo", Name: "bar"},
 			respStatus: http.StatusOK,
 			respBody:   []byte(`{"id":"foo","name":"bar"}`),
 		},
 		{
 			name:       "io.Writer body",
 			v:          &strings.Builder{},
-			expected:   `{"id":"foo"}`,
+			want:       `{"id":"foo"}`,
 			respStatus: http.StatusOK,
 			respBody:   []byte(`{"id":"foo"}`),
 		},
@@ -178,14 +178,14 @@ func Test_apiClient_Do(t *testing.T) {
 		{
 			name:       "response body is ignored for HTTP 204 responses",
 			v:          &strings.Builder{},
-			expected:   "",
+			want:       "",
 			respBody:   []byte(`hi`),
 			respStatus: http.StatusNoContent,
 		},
 		{
 			name:       "request times out",
 			v:          &respBody{},
-			expected:   &Response{},
+			want:       &Response{},
 			errStr:     "Get \"{{baseURL}}/bar\": context deadline exceeded",
 			respStatus: http.StatusOK,
 			respDelay:  10,
@@ -268,17 +268,17 @@ func Test_apiClient_Do(t *testing.T) {
 					tt.errStr, "{{baseURL}}", baseURL,
 				)
 				assert.EqualError(t, err, tt.errStr)
-				if tt.expected != nil {
-					assert.Equal(t, tt.expected, got)
+				if tt.want != nil {
+					assert.Equal(t, tt.want, got)
 				}
 			} else {
 				assert.Equal(t, tt.respStatus, got.StatusCode)
 
 				switch v := tt.v.(type) {
 				case *strings.Builder:
-					assert.Equal(t, tt.expected, v.String())
+					assert.Equal(t, tt.want, v.String())
 				default:
-					assert.Equal(t, tt.expected, tt.v)
+					assert.Equal(t, tt.want, tt.v)
 				}
 			}
 		})

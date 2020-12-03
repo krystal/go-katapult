@@ -4,9 +4,12 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"strings"
 
 	"github.com/augurysys/timestamp"
 )
+
+const virtualMachineIDPrefix = "vm_"
 
 type VirtualMachine struct {
 	ID                  string                 `json:"id,omitempty"`
@@ -15,7 +18,7 @@ type VirtualMachine struct {
 	FQDN                string                 `json:"fqdn,omitempty"`
 	CreatedAt           *timestamp.Timestamp   `json:"created_at,omitempty"`
 	InitialRootPassword string                 `json:"initial_root_password,omitempty"`
-	State               string                 `json:"state,omitempty"`
+	State               VirtualMachineState    `json:"state,omitempty"`
 	Zone                *Zone                  `json:"zone,omitempty"`
 	Organization        *Organization          `json:"organization,omitempty"`
 	Group               *VirtualMachineGroup   `json:"group,omitempty"`
@@ -40,6 +43,20 @@ func (s *VirtualMachine) LookupReference() *VirtualMachine {
 
 	return lr
 }
+
+type VirtualMachineState string
+
+const (
+	VirtualMachineStopped      VirtualMachineState = "stopped"
+	VirtualMachineFailed       VirtualMachineState = "failed"
+	VirtualMachineStarted      VirtualMachineState = "started"
+	VirtualMachineStarting     VirtualMachineState = "starting"
+	VirtualMachineResetting    VirtualMachineState = "resetting"
+	VirtualMachineMigrating    VirtualMachineState = "migrating"
+	VirtualMachineStopping     VirtualMachineState = "stopping"
+	VirtualMachineShuttingDown VirtualMachineState = "shutting_down"
+	VirtualMachineOrphaned     VirtualMachineState = "orphaned"
+)
 
 type VirtualMachineGroup struct {
 	ID        string               `json:"id,omitempty"`
@@ -77,11 +94,15 @@ func newVirtualMachinesClient(
 
 func (s VirtualMachinesClient) List(
 	ctx context.Context,
-	orgID string,
+	org *Organization,
 	opts *ListOptions,
 ) ([]*VirtualMachine, *Response, error) {
+	if org == nil {
+		org = &Organization{ID: "_"}
+	}
+
 	u := &url.URL{
-		Path:     fmt.Sprintf("organizations/%s/virtual_machines", orgID),
+		Path:     fmt.Sprintf("organizations/%s/virtual_machines", org.ID),
 		RawQuery: opts.Values().Encode(),
 	}
 
@@ -91,7 +112,18 @@ func (s VirtualMachinesClient) List(
 	return body.VirtualMachines, resp, err
 }
 
-func (s VirtualMachinesClient) Get(
+func (s *VirtualMachinesClient) Get(
+	ctx context.Context,
+	idOrFQDN string,
+) (*VirtualMachine, *Response, error) {
+	if strings.HasPrefix(idOrFQDN, virtualMachineIDPrefix) {
+		return s.GetByID(ctx, idOrFQDN)
+	}
+
+	return s.GetByFQDN(ctx, idOrFQDN)
+}
+
+func (s VirtualMachinesClient) GetByID(
 	ctx context.Context,
 	id string,
 ) (*VirtualMachine, *Response, error) {
@@ -116,12 +148,12 @@ func (s VirtualMachinesClient) GetByFQDN(
 func (s *VirtualMachinesClient) ChangePackage(
 	ctx context.Context,
 	vm *VirtualMachine,
-	p *VirtualMachinePackage,
+	pkg *VirtualMachinePackage,
 ) (*Task, *Response, error) {
 	u := &url.URL{Path: "virtual_machines/_/package"}
 	reqBody := &virtualMachineChangePackageRequestBody{
 		VirtualMachine: vm.LookupReference(),
-		Package:        p.LookupReference(),
+		Package:        pkg.LookupReference(),
 	}
 	body, resp, err := s.doRequest(ctx, "PUT", u, reqBody)
 
@@ -130,9 +162,13 @@ func (s *VirtualMachinesClient) ChangePackage(
 
 func (s *VirtualMachinesClient) Delete(
 	ctx context.Context,
-	id string,
+	vm *VirtualMachine,
 ) (*TrashObject, *Response, error) {
-	u := &url.URL{Path: fmt.Sprintf("virtual_machines/%s", id)}
+	if vm == nil {
+		vm = &VirtualMachine{ID: "_"}
+	}
+
+	u := &url.URL{Path: fmt.Sprintf("virtual_machines/%s", vm.ID)}
 	body, resp, err := s.doRequest(ctx, "DELETE", u, nil)
 
 	return body.TrashObject, resp, err

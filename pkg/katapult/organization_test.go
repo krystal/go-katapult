@@ -9,7 +9,6 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 var (
@@ -169,6 +168,31 @@ func TestOrganization_LookupReference(t *testing.T) {
 	}
 }
 
+func Test_organizationCreateManagedRequest_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *organizationCreateManagedRequest
+	}{
+		{
+			name: "empty",
+			obj:  &organizationCreateManagedRequest{},
+		},
+		{
+			name: "full",
+			obj: &organizationCreateManagedRequest{
+				Organization: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				Name:         "ACME Rockets Inc.",
+				SubDomain:    "acme-rockets",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
 func Test_organizationsResponseBody_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string
@@ -200,7 +224,7 @@ func TestOrganizationsClient_List(t *testing.T) {
 	tests := []struct {
 		name       string
 		args       args
-		orgs       []*Organization
+		want       []*Organization
 		errStr     string
 		errResp    *ResponseError
 		respStatus int
@@ -211,7 +235,7 @@ func TestOrganizationsClient_List(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 			},
-			orgs: []*Organization{
+			want: []*Organization{
 				{
 					ID:        "org_O648YDMEYeLmqdmn",
 					Name:      "ACME Inc.",
@@ -272,8 +296,8 @@ func TestOrganizationsClient_List(t *testing.T) {
 				assert.EqualError(t, err, tt.errStr)
 			}
 
-			if tt.orgs != nil {
-				assert.Equal(t, tt.orgs, got)
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
 			}
 
 			if tt.errResp != nil {
@@ -285,13 +309,144 @@ func TestOrganizationsClient_List(t *testing.T) {
 
 func TestOrganizationsClient_Get(t *testing.T) {
 	type args struct {
+		ctx           context.Context
+		idOrSubDomain string
+	}
+	tests := []struct {
+		name       string
+		args       args
+		reqPath    string
+		reqQuery   *url.Values
+		want       *Organization
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "by ID",
+			args: args{
+				ctx:           context.Background(),
+				idOrSubDomain: "org_O648YDMEYeLmqdmn",
+			},
+			reqPath: "organizations/org_O648YDMEYeLmqdmn",
+			want: &Organization{
+				ID:        "org_O648YDMEYeLmqdmn",
+				Name:      "ACME Inc.",
+				SubDomain: "acme",
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("organization_get"),
+		},
+		{
+			name: "by SubDomain",
+			args: args{
+				ctx:           context.Background(),
+				idOrSubDomain: "acme",
+			},
+			reqPath: "organizations/_",
+			reqQuery: &url.Values{
+				"organization[sub_domain]": []string{"acme"},
+			},
+			want: &Organization{
+				ID:        "org_O648YDMEYeLmqdmn",
+				Name:      "ACME Inc.",
+				SubDomain: "acme",
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("organization_get"),
+		},
+		{
+			name: "non-existent organization",
+			args: args{
+				ctx:           context.Background(),
+				idOrSubDomain: "org_nopethisbegone",
+			},
+			errStr:     fixtureOrganizationNotFoundErr,
+			errResp:    fixtureOrganizationNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("organization_not_found_error"),
+		},
+		{
+			name: "suspended organization",
+			args: args{
+				ctx:           context.Background(),
+				idOrSubDomain: "org_O648YDMEYeLmqdmn",
+			},
+			errStr:     fixtureOrganizationSuspendedErr,
+			errResp:    fixtureOrganizationSuspendedResponseError,
+			respStatus: http.StatusForbidden,
+			respBody:   fixture("organization_suspended_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx:           nil,
+				idOrSubDomain: "org_O648YDMEYeLmqdmn",
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			path := fmt.Sprintf("organizations/%s", tt.args.idOrSubDomain)
+			if tt.reqPath != "" {
+				path = tt.reqPath
+			}
+
+			mux.HandleFunc(
+				"/core/v1/"+path,
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "GET", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					if tt.reqQuery != nil {
+						assert.Equal(t, *tt.reqQuery, r.URL.Query())
+					}
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.Organizations.Get(
+				tt.args.ctx, tt.args.idOrSubDomain,
+			)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestOrganizationsClient_GetByID(t *testing.T) {
+	type args struct {
 		ctx context.Context
 		id  string
 	}
 	tests := []struct {
 		name       string
 		args       args
-		expected   *Organization
+		want       *Organization
 		errStr     string
 		errResp    *ResponseError
 		respStatus int
@@ -303,7 +458,7 @@ func TestOrganizationsClient_Get(t *testing.T) {
 				ctx: context.Background(),
 				id:  "org_O648YDMEYeLmqdmn",
 			},
-			expected: &Organization{
+			want: &Organization{
 				ID:        "org_O648YDMEYeLmqdmn",
 				Name:      "ACME Inc.",
 				SubDomain: "acme",
@@ -358,7 +513,7 @@ func TestOrganizationsClient_Get(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.Organizations.Get(tt.args.ctx, tt.args.id)
+			got, resp, err := c.Organizations.GetByID(tt.args.ctx, tt.args.id)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -370,8 +525,8 @@ func TestOrganizationsClient_Get(t *testing.T) {
 				assert.EqualError(t, err, tt.errStr)
 			}
 
-			if tt.expected != nil {
-				assert.Equal(t, tt.expected, got)
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
 			}
 
 			if tt.errResp != nil {
@@ -389,7 +544,7 @@ func TestOrganizationsClient_GetBySubDomain(t *testing.T) {
 	tests := []struct {
 		name       string
 		args       args
-		expected   *Organization
+		want       *Organization
 		errStr     string
 		errResp    *ResponseError
 		respStatus int
@@ -401,7 +556,7 @@ func TestOrganizationsClient_GetBySubDomain(t *testing.T) {
 				ctx:       context.Background(),
 				subDomain: "acme",
 			},
-			expected: &Organization{
+			want: &Organization{
 				ID:        "org_O648YDMEYeLmqdmn",
 				Name:      "ACME Inc.",
 				SubDomain: "acme",
@@ -475,8 +630,8 @@ func TestOrganizationsClient_GetBySubDomain(t *testing.T) {
 				assert.EqualError(t, err, tt.errStr)
 			}
 
-			if tt.expected != nil {
-				assert.Equal(t, tt.expected, got)
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
 			}
 
 			if tt.errResp != nil {
@@ -488,19 +643,15 @@ func TestOrganizationsClient_GetBySubDomain(t *testing.T) {
 
 func TestOrganizationsClient_CreateManaged(t *testing.T) {
 	type args struct {
-		ctx       context.Context
-		parentID  string
-		name      string
-		subDomain string
-	}
-	type reqBody struct {
-		Name      string `json:"name"`
-		SubDomain string `json:"sub_domain"`
+		ctx    context.Context
+		parent *Organization
+		args   *OrganizationManagedArguments
 	}
 	tests := []struct {
 		name       string
 		args       args
-		expected   *Organization
+		reqBody    *organizationCreateManagedRequest
+		want       *Organization
 		errStr     string
 		errResp    *ResponseError
 		respStatus int
@@ -509,12 +660,49 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 		{
 			name: "organization",
 			args: args{
-				ctx:       context.Background(),
-				parentID:  "org_O648YDMEYeLmqdmn",
-				name:      "NERV Corp.",
-				subDomain: "nerv",
+				ctx: context.Background(),
+				parent: &Organization{
+					ID:        "org_O648YDMEYeLmqdmn",
+					Name:      "ACME Inc.",
+					SubDomain: "acme",
+				},
+				args: &OrganizationManagedArguments{
+					Name:      "NERV Corp.",
+					SubDomain: "nerv",
+				},
 			},
-			expected: &Organization{
+			reqBody: &organizationCreateManagedRequest{
+				Organization: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				Name:         "NERV Corp.",
+				SubDomain:    "nerv",
+			},
+			want: &Organization{
+				ID:        "org_TZQHTxMg1G8COlfu",
+				Name:      "NERV Corp.",
+				SubDomain: "nerv",
+			},
+			respStatus: http.StatusCreated,
+			respBody:   fixture("organization_managed"),
+		},
+		{
+			name: "organization by SubDomain",
+			args: args{
+				ctx: context.Background(),
+				parent: &Organization{
+					Name:      "ACME Inc.",
+					SubDomain: "acme",
+				},
+				args: &OrganizationManagedArguments{
+					Name:      "NERV Corp.",
+					SubDomain: "nerv",
+				},
+			},
+			reqBody: &organizationCreateManagedRequest{
+				Organization: &Organization{SubDomain: "acme"},
+				Name:         "NERV Corp.",
+				SubDomain:    "nerv",
+			},
+			want: &Organization{
 				ID:        "org_TZQHTxMg1G8COlfu",
 				Name:      "NERV Corp.",
 				SubDomain: "nerv",
@@ -525,10 +713,12 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 		{
 			name: "managed org limit reached",
 			args: args{
-				ctx:       context.Background(),
-				parentID:  "org_O648YDMEYeLmqdmn",
-				name:      "NERV Corp.",
-				subDomain: "nerv",
+				ctx:    context.Background(),
+				parent: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				args: &OrganizationManagedArguments{
+					Name:      "NERV Corp.",
+					SubDomain: "nerv",
+				},
 			},
 			errStr: "organization_limit_reached: The maxmium number of " +
 				"organizations that can be created has been reached",
@@ -544,10 +734,12 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 		{
 			name: "non-existent organization",
 			args: args{
-				ctx:       context.Background(),
-				parentID:  "org_nopewhatbye",
-				name:      "NERV Corp.",
-				subDomain: "nerv",
+				ctx:    context.Background(),
+				parent: &Organization{ID: "org_nopewhatbye"},
+				args: &OrganizationManagedArguments{
+					Name:      "NERV Corp.",
+					SubDomain: "nerv",
+				},
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
@@ -557,10 +749,12 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 		{
 			name: "suspended organization",
 			args: args{
-				ctx:       context.Background(),
-				parentID:  "org_O648YDMEYeLmqdmn",
-				name:      "NERV Corp.",
-				subDomain: "nerv",
+				ctx:    context.Background(),
+				parent: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				args: &OrganizationManagedArguments{
+					Name:      "NERV Corp.",
+					SubDomain: "nerv",
+				},
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
@@ -570,10 +764,12 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 		{
 			name: "validation error for new org details",
 			args: args{
-				ctx:       context.Background(),
-				parentID:  "org_O648YDMEYeLmqdmn",
-				name:      "NERV Corp.",
-				subDomain: "acme",
+				ctx:    context.Background(),
+				parent: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				args: &OrganizationManagedArguments{
+					Name:      "NERV Corp.",
+					SubDomain: "nerv",
+				},
 			},
 			errStr: "validation_error: A validation error occurred with the " +
 				"object that was being created/updated/deleted",
@@ -592,12 +788,41 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 			),
 		},
 		{
+			name: "nil organization",
+			args: args{
+				ctx:    context.Background(),
+				parent: nil,
+				args: &OrganizationManagedArguments{
+					Name:      "NERV Corp.",
+					SubDomain: "nerv",
+				},
+			},
+			errStr:     fixtureOrganizationNotFoundErr,
+			errResp:    fixtureOrganizationNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("organization_not_found_error"),
+		},
+		{
+			name: "nil args",
+			args: args{
+				ctx:    context.Background(),
+				parent: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				args:   nil,
+			},
+			errStr:     fixtureValidationErrorErr,
+			errResp:    fixtureValidationErrorResponseError,
+			respStatus: http.StatusUnprocessableEntity,
+			respBody:   fixture("validation_error"),
+		},
+		{
 			name: "nil context",
 			args: args{
-				ctx:       nil,
-				parentID:  "org_O648YDMEYeLmqdmn",
-				name:      "NERV Corp.",
-				subDomain: "acme",
+				ctx:    nil,
+				parent: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				args: &OrganizationManagedArguments{
+					Name:      "NERV Corp.",
+					SubDomain: "nerv",
+				},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -608,29 +833,25 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 			defer teardown()
 
 			mux.HandleFunc(
-				fmt.Sprintf("/core/v1/organizations/%s/managed",
-					tt.args.parentID,
-				),
+				"/core/v1/organizations/_/managed",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "POST", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
 
-					body := &reqBody{}
-					err := strictUmarshal(r.Body, body)
-					require.NoError(t, err)
-					assert.Equal(t, &reqBody{
-						Name:      tt.args.name,
-						SubDomain: tt.args.subDomain,
-					}, body)
-
+					if tt.reqBody != nil {
+						reqBody := &organizationCreateManagedRequest{}
+						err := strictUmarshal(r.Body, reqBody)
+						assert.NoError(t, err)
+						assert.Equal(t, tt.reqBody, reqBody)
+					}
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
 				},
 			)
 
 			got, resp, err := c.Organizations.CreateManaged(
-				tt.args.ctx, tt.args.parentID, tt.args.name, tt.args.subDomain,
+				tt.args.ctx, tt.args.parent, tt.args.args,
 			)
 
 			if tt.respStatus != 0 {
@@ -643,8 +864,8 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 				assert.EqualError(t, err, tt.errStr)
 			}
 
-			if tt.expected != nil {
-				assert.Equal(t, tt.expected, got)
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
 			}
 
 			if tt.errResp != nil {

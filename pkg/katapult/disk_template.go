@@ -88,11 +88,15 @@ func newDiskTemplatesClient(c *apiClient) *DiskTemplatesClient {
 
 func (s DiskTemplatesClient) List(
 	ctx context.Context,
-	orgID string,
+	org *Organization,
 	opts *DiskTemplateListOptions,
 ) ([]*DiskTemplate, *Response, error) {
+	if org == nil {
+		org = &Organization{ID: "_"}
+	}
+
 	u := &url.URL{
-		Path:     fmt.Sprintf("organizations/%s/disk_templates", orgID),
+		Path:     fmt.Sprintf("organizations/%s/disk_templates", org.ID),
 		RawQuery: opts.Values().Encode(),
 	}
 
