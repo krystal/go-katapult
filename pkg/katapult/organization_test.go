@@ -73,7 +73,7 @@ func TestOrganization_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestOrganization_LookupReference(t *testing.T) {
+func TestOrganization_lookupReference(t *testing.T) {
 	tests := []struct {
 		name string
 		obj  *Organization
@@ -81,7 +81,7 @@ func TestOrganization_LookupReference(t *testing.T) {
 	}{
 		{
 			name: "nil",
-			obj:  (*Organization)(nil),
+			obj:  nil,
 			want: nil,
 		},
 		{
@@ -161,9 +161,75 @@ func TestOrganization_LookupReference(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.obj.LookupReference()
+			got := tt.obj.lookupReference()
 
 			assert.Equal(t, tt.want, got)
+		})
+	}
+}
+
+func TestOrganization_queryValues(t *testing.T) {
+	tests := []struct {
+		name string
+		opts *Organization
+	}{
+		{
+			name: "nil",
+			opts: nil,
+		},
+		{
+			name: "empty",
+			opts: &Organization{},
+		},
+		{
+			name: "full",
+			opts: &Organization{
+				ID:                   "org_O648YDMEYeLmqdmn",
+				Name:                 "ACME Inc.",
+				SubDomain:            "acme",
+				InfrastructureDomain: "infrastructure_domain",
+				Personal:             true,
+				CreatedAt:            timestampPtr(934933),
+				Suspended:            true,
+				Managed:              true,
+				BillingName:          "billing_name",
+				Address1:             "address1",
+				Address2:             "address2",
+				Address3:             "address3",
+				Address4:             "address4",
+				Postcode:             "postcode",
+				VatNumber:            "vat_number",
+				Currency:             &Currency{ID: "id0"},
+				Country:              &Country{ID: "id1"},
+				CountryState:         &CountryState{ID: "id2"},
+			},
+		},
+		{
+			name: "no ID",
+			opts: &Organization{
+				Name:                 "ACME Inc.",
+				SubDomain:            "acme",
+				InfrastructureDomain: "infrastructure_domain",
+				Personal:             true,
+				CreatedAt:            timestampPtr(934933),
+				Suspended:            true,
+				Managed:              true,
+				BillingName:          "billing_name",
+				Address1:             "address1",
+				Address2:             "address2",
+				Address3:             "address3",
+				Address4:             "address4",
+				Postcode:             "postcode",
+				VatNumber:            "vat_number",
+				Currency:             &Currency{ID: "id0"},
+				Country:              &Country{ID: "id1"},
+				CountryState:         &CountryState{ID: "id2"},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testQueryableEncoding(t, tt.opts)
 		})
 	}
 }

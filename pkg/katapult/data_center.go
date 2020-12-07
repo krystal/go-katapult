@@ -16,10 +16,7 @@ type DataCenter struct {
 	Country   *Country `json:"country,omitempty"`
 }
 
-// LookupReference returns a new *DataCenter stripped down to just ID or
-// Permalink fields, making it suitable for endpoints which require a reference
-// to a Data Center by ID or Permalink.
-func (s *DataCenter) LookupReference() *DataCenter {
+func (s *DataCenter) lookupReference() *DataCenter {
 	if s == nil {
 		return nil
 	}

@@ -3,7 +3,6 @@ package katapult
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/url"
 	"testing"
@@ -52,7 +51,7 @@ func TestDiskTemplate_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestDiskTemplate_LookupReference(t *testing.T) {
+func TestDiskTemplate_lookupReference(t *testing.T) {
 	tests := []struct {
 		name string
 		obj  *DiskTemplate
@@ -60,7 +59,7 @@ func TestDiskTemplate_LookupReference(t *testing.T) {
 	}{
 		{
 			name: "nil",
-			obj:  (*DiskTemplate)(nil),
+			obj:  nil,
 			want: nil,
 		},
 		{
@@ -107,7 +106,7 @@ func TestDiskTemplate_LookupReference(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.obj.LookupReference()
+			got := tt.obj.lookupReference()
 
 			assert.Equal(t, tt.want, got)
 		})
@@ -188,45 +187,25 @@ func Test_diskTemplateResponseBody_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestDiskTemplateListOptions_Values(t *testing.T) {
+func TestDiskTemplateListOptions_queryValues(t *testing.T) {
 	tests := []struct {
 		name string
-		opts *DiskTemplateListOptions
+		obj  *DiskTemplateListOptions
 		want *url.Values
 	}{
 		{
-			name: "nil *DiskTemplateListOptions",
-			opts: nil,
+			name: "nil",
+			obj:  nil,
 			want: &url.Values{},
 		},
 		{
-			name: "empty *DiskTemplateListOptions",
-			opts: &DiskTemplateListOptions{},
+			name: "empty",
+			obj:  &DiskTemplateListOptions{},
 			want: &url.Values{},
 		},
 		{
-			name: "zero'd values",
-			opts: &DiskTemplateListOptions{Page: 0, PerPage: 0},
-			want: &url.Values{},
-		},
-		{
-			name: "non-zero Page value",
-			opts: &DiskTemplateListOptions{Page: 3},
-			want: &url.Values{"page": []string{"3"}},
-		},
-		{
-			name: "non-zero PerPage value",
-			opts: &DiskTemplateListOptions{PerPage: 15},
-			want: &url.Values{"per_page": []string{"15"}},
-		},
-		{
-			name: "non-zero IncludeUniversal value",
-			opts: &DiskTemplateListOptions{IncludeUniversal: true},
-			want: &url.Values{"include_universal": []string{"true"}},
-		},
-		{
-			name: "non-zero Page, PerPage, and IncludeUniversal values",
-			opts: &DiskTemplateListOptions{
+			name: "full",
+			obj: &DiskTemplateListOptions{
 				IncludeUniversal: true,
 				Page:             5,
 				PerPage:          15,
@@ -240,7 +219,7 @@ func TestDiskTemplateListOptions_Values(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.opts.Values()
+			got := tt.obj.queryValues()
 
 			assert.Equal(t, tt.want, got)
 		})
@@ -249,7 +228,7 @@ func TestDiskTemplateListOptions_Values(t *testing.T) {
 
 func TestDiskTemplatesClient_List(t *testing.T) {
 	// Correlates to fixtures/disk_templates_list*.json
-	certificateList := []*DiskTemplate{
+	diskTemplateList := []*DiskTemplate{
 		{
 			ID:   "dtpl_YCTIgR4rE2fSgbW0",
 			Name: "CentOS 8.0",
@@ -271,23 +250,47 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 		opts *DiskTemplateListOptions
 	}
 	tests := []struct {
-		name       string
-		args       args
-		want       []*DiskTemplate
-		pagination *Pagination
-		errStr     string
-		errResp    *ResponseError
-		respStatus int
-		respBody   []byte
+		name           string
+		args           args
+		want           []*DiskTemplate
+		wantQuery      *url.Values
+		wantPagination *Pagination
+		errStr         string
+		errResp        *ResponseError
+		respStatus     int
+		respBody       []byte
 	}{
 		{
-			name: "disk templates",
+			name: "by organization ID",
 			args: args{
 				ctx: context.Background(),
 				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
 			},
-			want: certificateList,
-			pagination: &Pagination{
+			want: diskTemplateList,
+			wantQuery: &url.Values{
+				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
+			},
+			wantPagination: &Pagination{
+				CurrentPage: 1,
+				TotalPages:  1,
+				Total:       3,
+				PerPage:     30,
+				LargeSet:    false,
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("disk_templates_list"),
+		},
+		{
+			name: "by organization SubDomain",
+			args: args{
+				ctx: context.Background(),
+				org: &Organization{SubDomain: "acme"},
+			},
+			wantQuery: &url.Values{
+				"organization[sub_domain]": []string{"acme"},
+			},
+			want: diskTemplateList,
+			wantPagination: &Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
 				Total:       3,
@@ -304,8 +307,12 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
 				opts: &DiskTemplateListOptions{IncludeUniversal: true},
 			},
-			want: certificateList,
-			pagination: &Pagination{
+			wantQuery: &url.Values{
+				"organization[id]":  []string{"org_O648YDMEYeLmqdmn"},
+				"include_universal": []string{"true"},
+			},
+			want: diskTemplateList,
+			wantPagination: &Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
 				Total:       3,
@@ -316,14 +323,19 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 			respBody:   fixture("disk_templates_list"),
 		},
 		{
-			name: "page 1 of disk templates",
+			name: "page 1",
 			args: args{
 				ctx:  context.Background(),
 				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
 				opts: &DiskTemplateListOptions{Page: 1, PerPage: 2},
 			},
-			want: certificateList[0:2],
-			pagination: &Pagination{
+			wantQuery: &url.Values{
+				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
+				"page":             []string{"1"},
+				"per_page":         []string{"2"},
+			},
+			want: diskTemplateList[0:2],
+			wantPagination: &Pagination{
 				CurrentPage: 1,
 				TotalPages:  2,
 				Total:       3,
@@ -334,14 +346,19 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 			respBody:   fixture("disk_templates_list_page_1"),
 		},
 		{
-			name: "page 2 of disk templates",
+			name: "page 2",
 			args: args{
 				ctx:  context.Background(),
 				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
 				opts: &DiskTemplateListOptions{Page: 2, PerPage: 2},
 			},
-			want: certificateList[2:],
-			pagination: &Pagination{
+			wantQuery: &url.Values{
+				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
+				"page":             []string{"2"},
+				"per_page":         []string{"2"},
+			},
+			want: diskTemplateList[2:],
+			wantPagination: &Pagination{
 				CurrentPage: 2,
 				TotalPages:  2,
 				Total:       3,
@@ -388,7 +405,7 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 			name: "nil organization",
 			args: args{
 				ctx: context.Background(),
-				org: (*Organization)(nil),
+				org: nil,
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
@@ -409,21 +426,18 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 			c, mux, _, teardown := prepareTestClient()
 			defer teardown()
 
-			org := tt.args.org
-			if org == nil {
-				org = &Organization{ID: "_"}
-			}
-
 			mux.HandleFunc(
-				fmt.Sprintf(
-					"/core/v1/organizations/%s/disk_templates", org.ID,
-				),
+				"/core/v1/organizations/_/disk_templates",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
-					if tt.args.opts != nil {
-						assert.Equal(t, *tt.args.opts.Values(), r.URL.Query())
+
+					if tt.wantQuery != nil {
+						assert.Equal(t, *tt.wantQuery, r.URL.Query())
+					} else {
+						qs := queryValues(tt.args.org, tt.args.opts)
+						assert.Equal(t, *qs, r.URL.Query())
 					}
 
 					w.WriteHeader(tt.respStatus)
@@ -449,8 +463,8 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 				assert.Equal(t, tt.want, got)
 			}
 
-			if tt.pagination != nil {
-				assert.Equal(t, tt.pagination, resp.Pagination)
+			if tt.wantPagination != nil {
+				assert.Equal(t, tt.wantPagination, resp.Pagination)
 			}
 
 			if tt.errResp != nil {

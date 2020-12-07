@@ -2,7 +2,6 @@ package katapult
 
 import (
 	"context"
-	"fmt"
 	"net/url"
 )
 
@@ -16,10 +15,7 @@ type DiskTemplate struct {
 	OperatingSystem *OperatingSystem     `json:"operating_system,omitempty"`
 }
 
-// LookupReference returns a new *DiskTemplate stripped down to just ID or
-// Permalink fields, making it suitable for endpoints which require a reference
-// to a Disk Template by ID or Permalink.
-func (s *DiskTemplate) LookupReference() *DiskTemplate {
+func (s *DiskTemplate) lookupReference() *DiskTemplate {
 	if s == nil {
 		return nil
 	}
@@ -50,7 +46,7 @@ type DiskTemplateListOptions struct {
 	PerPage          int
 }
 
-func (s *DiskTemplateListOptions) Values() *url.Values {
+func (s *DiskTemplateListOptions) queryValues() *url.Values {
 	if s == nil {
 		return &url.Values{}
 	}
@@ -60,8 +56,7 @@ func (s *DiskTemplateListOptions) Values() *url.Values {
 		PerPage: s.PerPage,
 	}
 
-	values := opts.Values()
-
+	values := opts.queryValues()
 	if s.IncludeUniversal {
 		values.Set("include_universal", "true")
 	}
@@ -86,18 +81,15 @@ func newDiskTemplatesClient(c *apiClient) *DiskTemplatesClient {
 	}
 }
 
-func (s DiskTemplatesClient) List(
+func (s *DiskTemplatesClient) List(
 	ctx context.Context,
 	org *Organization,
 	opts *DiskTemplateListOptions,
 ) ([]*DiskTemplate, *Response, error) {
-	if org == nil {
-		org = &Organization{ID: "_"}
-	}
-
+	qs := queryValues(org, opts)
 	u := &url.URL{
-		Path:     fmt.Sprintf("organizations/%s/disk_templates", org.ID),
-		RawQuery: opts.Values().Encode(),
+		Path:     "organizations/_/disk_templates",
+		RawQuery: qs.Encode(),
 	}
 
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)

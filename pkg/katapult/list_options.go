@@ -10,7 +10,7 @@ type ListOptions struct {
 	PerPage int
 }
 
-func (s *ListOptions) Values() *url.Values {
+func (s *ListOptions) queryValues() *url.Values {
 	values := &url.Values{}
 
 	if s == nil {

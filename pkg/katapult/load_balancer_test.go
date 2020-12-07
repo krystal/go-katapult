@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -73,7 +74,7 @@ func TestLoadBalancer_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestLoadBalancer_LookupReference(t *testing.T) {
+func TestLoadBalancer_lookupReference(t *testing.T) {
 	tests := []struct {
 		name string
 		obj  *LoadBalancer
@@ -81,7 +82,7 @@ func TestLoadBalancer_LookupReference(t *testing.T) {
 	}{
 		{
 			name: "nil",
-			obj:  (*LoadBalancer)(nil),
+			obj:  nil,
 			want: nil,
 		},
 		{
@@ -119,9 +120,43 @@ func TestLoadBalancer_LookupReference(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.obj.LookupReference()
+			got := tt.obj.lookupReference()
 
 			assert.Equal(t, tt.want, got)
+		})
+	}
+}
+
+func TestLoadBalancer_queryValues(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *LoadBalancer
+	}{
+		{
+			name: "nil",
+			obj:  nil,
+		},
+		{
+			name: "empty",
+			obj:  &LoadBalancer{},
+		},
+		{
+			name: "full",
+			obj: &LoadBalancer{
+				ID:                    "lb_9IToFxX2AOl7IBSY",
+				Name:                  "web-1",
+				ResourceType:          VirtualMachinesResourceType,
+				ResourceIDs:           []string{"id2", "id3"},
+				IPAddress:             &IPAddress{Address: "134.11.14.137"},
+				HTTPSRedirect:         true,
+				BackendCertificate:    "--BEGIN CERT--\n--END CERT--",
+				BackendCertificateKey: "--BEGIN KEY--\n--END KEY--",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testQueryableEncoding(t, tt.obj)
 		})
 	}
 }
@@ -180,7 +215,7 @@ func TestLoadBalancerArguments_forRequest(t *testing.T) {
 	}{
 		{
 			name: "nil",
-			obj:  (*LoadBalancerArguments)(nil),
+			obj:  nil,
 			want: nil,
 		},
 		{
@@ -409,23 +444,27 @@ func TestLoadBalancersClient_List(t *testing.T) {
 		opts *ListOptions
 	}
 	tests := []struct {
-		name       string
-		args       args
-		want       []*LoadBalancer
-		pagination *Pagination
-		errStr     string
-		errResp    *ResponseError
-		respStatus int
-		respBody   []byte
+		name           string
+		args           args
+		want           []*LoadBalancer
+		wantQuery      *url.Values
+		wantPagination *Pagination
+		errStr         string
+		errResp        *ResponseError
+		respStatus     int
+		respBody       []byte
 	}{
 		{
-			name: "load balancers",
+			name: "by organization ID",
 			args: args{
 				ctx: context.Background(),
 				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			want: loadBalancerList,
-			pagination: &Pagination{
+			wantQuery: &url.Values{
+				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
+			},
+			wantPagination: &Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
 				Total:       3,
@@ -436,14 +475,39 @@ func TestLoadBalancersClient_List(t *testing.T) {
 			respBody:   fixture("load_balancers_list"),
 		},
 		{
-			name: "page 1 of load balancers",
+			name: "by organization SubDomain",
+			args: args{
+				ctx: context.Background(),
+				org: &Organization{SubDomain: "acme"},
+			},
+			want: loadBalancerList,
+			wantQuery: &url.Values{
+				"organization[sub_domain]": []string{"acme"},
+			},
+			wantPagination: &Pagination{
+				CurrentPage: 1,
+				TotalPages:  1,
+				Total:       3,
+				PerPage:     30,
+				LargeSet:    false,
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("load_balancers_list"),
+		},
+		{
+			name: "page 1",
 			args: args{
 				ctx:  context.Background(),
 				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
 				opts: &ListOptions{Page: 1, PerPage: 2},
 			},
 			want: loadBalancerList[0:2],
-			pagination: &Pagination{
+			wantQuery: &url.Values{
+				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
+				"page":             []string{"1"},
+				"per_page":         []string{"2"},
+			},
+			wantPagination: &Pagination{
 				CurrentPage: 1,
 				TotalPages:  2,
 				Total:       3,
@@ -454,14 +518,19 @@ func TestLoadBalancersClient_List(t *testing.T) {
 			respBody:   fixture("load_balancers_list_page_1"),
 		},
 		{
-			name: "page 2 of load balancers",
+			name: "page 2",
 			args: args{
 				ctx:  context.Background(),
 				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
 				opts: &ListOptions{Page: 2, PerPage: 2},
 			},
 			want: loadBalancerList[2:],
-			pagination: &Pagination{
+			wantQuery: &url.Values{
+				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
+				"page":             []string{"2"},
+				"per_page":         []string{"2"},
+			},
+			wantPagination: &Pagination{
 				CurrentPage: 2,
 				TotalPages:  2,
 				Total:       3,
@@ -529,23 +598,18 @@ func TestLoadBalancersClient_List(t *testing.T) {
 			c, mux, _, teardown := prepareTestClient()
 			defer teardown()
 
-			org := tt.args.org
-			if org == nil {
-				org = &Organization{ID: "_"}
-			}
-
 			mux.HandleFunc(
-				fmt.Sprintf(
-					"/core/v1/organizations/%s/load_balancers",
-					org.ID,
-				),
+				"/core/v1/organizations/_/load_balancers",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
 
-					if tt.args.opts != nil {
-						assert.Equal(t, *tt.args.opts.Values(), r.URL.Query())
+					if tt.wantQuery != nil {
+						assert.Equal(t, *tt.wantQuery, r.URL.Query())
+					} else {
+						qs := queryValues(tt.args.org, tt.args.opts)
+						assert.Equal(t, *qs, r.URL.Query())
 					}
 
 					w.WriteHeader(tt.respStatus)
@@ -571,8 +635,8 @@ func TestLoadBalancersClient_List(t *testing.T) {
 				assert.Equal(t, tt.want, got)
 			}
 
-			if tt.pagination != nil {
-				assert.Equal(t, tt.pagination, resp.Pagination)
+			if tt.wantPagination != nil {
+				assert.Equal(t, tt.wantPagination, resp.Pagination)
 			}
 
 			if tt.errResp != nil {
@@ -1214,13 +1278,14 @@ func TestLoadBalancersClient_Delete(t *testing.T) {
 		name       string
 		args       args
 		want       *LoadBalancer
+		wantQuery  *url.Values
 		errStr     string
 		errResp    *ResponseError
 		respStatus int
 		respBody   []byte
 	}{
 		{
-			name: "load balancer",
+			name: "by ID",
 			args: args{
 				ctx: context.Background(),
 				lb:  &LoadBalancer{ID: "lb_7vClpn0rlUegGPDS"},
@@ -1229,6 +1294,9 @@ func TestLoadBalancersClient_Delete(t *testing.T) {
 				ID:           "lb_7vClpn0rlUegGPDS",
 				Name:         "web",
 				ResourceType: TagsResourceType,
+			},
+			wantQuery: &url.Values{
+				"load_balancer[id]": []string{"lb_7vClpn0rlUegGPDS"},
 			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("load_balancer_get"),
@@ -1269,17 +1337,20 @@ func TestLoadBalancersClient_Delete(t *testing.T) {
 			c, mux, _, teardown := prepareTestClient()
 			defer teardown()
 
-			lb := tt.args.lb
-			if lb == nil {
-				lb = &LoadBalancer{ID: "_"}
-			}
-
 			mux.HandleFunc(
-				fmt.Sprintf("/core/v1/load_balancers/%s", lb.ID),
+				"/core/v1/load_balancers/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "DELETE", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+
+					if tt.wantQuery != nil {
+						assert.Equal(t, *tt.wantQuery, r.URL.Query())
+					} else {
+						assert.Equal(t,
+							*tt.args.lb.queryValues(), r.URL.Query(),
+						)
+					}
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)

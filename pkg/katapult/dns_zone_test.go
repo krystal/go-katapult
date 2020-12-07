@@ -66,7 +66,7 @@ func TestDNSZone_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestDNSZone_LookupReference(t *testing.T) {
+func TestDNSZone_lookupReference(t *testing.T) {
 	tests := []struct {
 		name string
 		obj  *DNSZone
@@ -74,7 +74,7 @@ func TestDNSZone_LookupReference(t *testing.T) {
 	}{
 		{
 			name: "nil",
-			obj:  (*DNSZone)(nil),
+			obj:  nil,
 			want: nil,
 		},
 		{
@@ -115,9 +115,49 @@ func TestDNSZone_LookupReference(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.obj.LookupReference()
+			got := tt.obj.lookupReference()
 
 			assert.Equal(t, tt.want, got)
+		})
+	}
+}
+
+func TestDNSZone_queryValues(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *DNSZone
+	}{
+		{
+			name: "nil",
+			obj:  nil,
+		},
+		{
+			name: "empty",
+			obj:  &DNSZone{},
+		},
+		{
+			name: "full",
+			obj: &DNSZone{
+				ID:                 "dnszone_k75eFc4UBOgeE5Zy",
+				Name:               "test1.example.com",
+				TTL:                343,
+				Verified:           true,
+				InfrastructureZone: true,
+			},
+		},
+		{
+			name: "no ID",
+			obj: &DNSZone{
+				Name:               "test1.example.com",
+				TTL:                343,
+				Verified:           true,
+				InfrastructureZone: true,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testQueryableEncoding(t, tt.obj)
 		})
 	}
 }
@@ -298,23 +338,27 @@ func TestDNSZonesClient_List(t *testing.T) {
 		opts *ListOptions
 	}
 	tests := []struct {
-		name       string
-		args       args
-		want       []*DNSZone
-		pagination *Pagination
-		errStr     string
-		errResp    *ResponseError
-		respStatus int
-		respBody   []byte
+		name           string
+		args           args
+		want           []*DNSZone
+		wantQuery      *url.Values
+		wantPagination *Pagination
+		errStr         string
+		errResp        *ResponseError
+		respStatus     int
+		respBody       []byte
 	}{
 		{
-			name: "DNS zones",
+			name: "by organization ID",
 			args: args{
 				ctx: context.Background(),
 				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			want: dnsZonesList,
-			pagination: &Pagination{
+			wantQuery: &url.Values{
+				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
+			},
+			wantPagination: &Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
 				Total:       3,
@@ -325,14 +369,39 @@ func TestDNSZonesClient_List(t *testing.T) {
 			respBody:   fixture("dns_zones_list"),
 		},
 		{
-			name: "page 1 of DNS zones",
+			name: "by organization SubDomain",
+			args: args{
+				ctx: context.Background(),
+				org: &Organization{SubDomain: "acme"},
+			},
+			want: dnsZonesList,
+			wantQuery: &url.Values{
+				"organization[sub_domain]": []string{"acme"},
+			},
+			wantPagination: &Pagination{
+				CurrentPage: 1,
+				TotalPages:  1,
+				Total:       3,
+				PerPage:     30,
+				LargeSet:    false,
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("dns_zones_list"),
+		},
+		{
+			name: "page 1",
 			args: args{
 				ctx:  context.Background(),
 				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
 				opts: &ListOptions{Page: 1, PerPage: 2},
 			},
 			want: dnsZonesList[0:2],
-			pagination: &Pagination{
+			wantQuery: &url.Values{
+				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
+				"page":             []string{"1"},
+				"per_page":         []string{"2"},
+			},
+			wantPagination: &Pagination{
 				CurrentPage: 1,
 				TotalPages:  2,
 				Total:       3,
@@ -343,14 +412,19 @@ func TestDNSZonesClient_List(t *testing.T) {
 			respBody:   fixture("dns_zones_list_page_1"),
 		},
 		{
-			name: "page 2 of DNS zones",
+			name: "page 2",
 			args: args{
 				ctx:  context.Background(),
 				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
 				opts: &ListOptions{Page: 2, PerPage: 2},
 			},
 			want: dnsZonesList[2:],
-			pagination: &Pagination{
+			wantQuery: &url.Values{
+				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
+				"page":             []string{"2"},
+				"per_page":         []string{"2"},
+			},
+			wantPagination: &Pagination{
 				CurrentPage: 2,
 				TotalPages:  2,
 				Total:       3,
@@ -429,22 +503,18 @@ func TestDNSZonesClient_List(t *testing.T) {
 			c, mux, _, teardown := prepareTestClient()
 			defer teardown()
 
-			org := tt.args.org
-			if org == nil {
-				org = &Organization{ID: "_"}
-			}
-
 			mux.HandleFunc(
-				fmt.Sprintf(
-					"/core/v1/organizations/%s/dns/zones", org.ID,
-				),
+				"/core/v1/organizations/_/dns/zones",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
 
-					if tt.args.opts != nil {
-						assert.Equal(t, *tt.args.opts.Values(), r.URL.Query())
+					if tt.wantQuery != nil {
+						assert.Equal(t, *tt.wantQuery, r.URL.Query())
+					} else {
+						qs := queryValues(tt.args.org, tt.args.opts)
+						assert.Equal(t, *qs, r.URL.Query())
 					}
 
 					w.WriteHeader(tt.respStatus)
@@ -470,8 +540,8 @@ func TestDNSZonesClient_List(t *testing.T) {
 				assert.Equal(t, tt.want, got)
 			}
 
-			if tt.pagination != nil {
-				assert.Equal(t, tt.pagination, resp.Pagination)
+			if tt.wantPagination != nil {
+				assert.Equal(t, tt.wantPagination, resp.Pagination)
 			}
 
 			if tt.errResp != nil {
@@ -998,18 +1068,35 @@ func TestDNSZonesClient_Delete(t *testing.T) {
 		name       string
 		args       args
 		want       *DNSZone
+		wantQuery  *url.Values
 		errStr     string
 		errResp    *ResponseError
 		respStatus int
 		respBody   []byte
 	}{
 		{
-			name: "DNS zone",
+			name: "by ID",
 			args: args{
 				ctx:  context.Background(),
 				zone: &DNSZone{ID: "dnszone_k75eFc4UBOgeE5Zy"},
 			},
-			want:       fixtureDNSZone,
+			want: fixtureDNSZone,
+			wantQuery: &url.Values{
+				"dns_zone[id]": []string{"dnszone_k75eFc4UBOgeE5Zy"},
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("dns_zone_get"),
+		},
+		{
+			name: "by Name",
+			args: args{
+				ctx:  context.Background(),
+				zone: &DNSZone{Name: "test1.example.com"},
+			},
+			want: fixtureDNSZone,
+			wantQuery: &url.Values{
+				"dns_zone[name]": []string{"test1.example.com"},
+			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("dns_zone_get"),
 		},
@@ -1049,17 +1136,20 @@ func TestDNSZonesClient_Delete(t *testing.T) {
 			c, mux, _, teardown := prepareTestClient()
 			defer teardown()
 
-			zone := tt.args.zone
-			if zone == nil {
-				zone = &DNSZone{ID: "_"}
-			}
-
 			mux.HandleFunc(
-				fmt.Sprintf("/core/v1/dns/zones/%s", zone.ID),
+				"/core/v1/dns/zones/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "DELETE", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+
+					if tt.wantQuery != nil {
+						assert.Equal(t, *tt.wantQuery, r.URL.Query())
+					} else {
+						assert.Equal(t,
+							*tt.args.zone.queryValues(), r.URL.Query(),
+						)
+					}
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -1098,13 +1188,14 @@ func TestDNSZonesClient_VerificationDetails(t *testing.T) {
 		name       string
 		args       args
 		want       *DNSZoneVerificationDetails
+		wantQuery  *url.Values
 		errStr     string
 		errResp    *ResponseError
 		respStatus int
 		respBody   []byte
 	}{
 		{
-			name: "get details",
+			name: "by ID",
 			args: args{
 				ctx:  context.Background(),
 				zone: &DNSZone{ID: "dnszone_k75eFc4UBOgeE5Zy"},
@@ -1112,6 +1203,25 @@ func TestDNSZonesClient_VerificationDetails(t *testing.T) {
 			want: &DNSZoneVerificationDetails{
 				Nameservers: []string{"ns1.katapult.io", "ns2.katapult.io"},
 				TXTRecord:   "M0Y0SzE1TzNJTUZPSDRoQUV0TDZ4MEZwckFqbW1FNHI=",
+			},
+			wantQuery: &url.Values{
+				"dns_zone[id]": []string{"dnszone_k75eFc4UBOgeE5Zy"},
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("dns_zone_verification_details"),
+		},
+		{
+			name: "by Name",
+			args: args{
+				ctx:  context.Background(),
+				zone: &DNSZone{Name: "test1.example.com"},
+			},
+			want: &DNSZoneVerificationDetails{
+				Nameservers: []string{"ns1.katapult.io", "ns2.katapult.io"},
+				TXTRecord:   "M0Y0SzE1TzNJTUZPSDRoQUV0TDZ4MEZwckFqbW1FNHI=",
+			},
+			wantQuery: &url.Values{
+				"dns_zone[name]": []string{"test1.example.com"},
 			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("dns_zone_verification_details"),
@@ -1182,20 +1292,20 @@ func TestDNSZonesClient_VerificationDetails(t *testing.T) {
 			c, mux, _, teardown := prepareTestClient()
 			defer teardown()
 
-			zone := tt.args.zone
-			if zone == nil {
-				zone = &DNSZone{ID: "_"}
-			}
-
 			mux.HandleFunc(
-				fmt.Sprintf(
-					"/core/v1/dns/zones/%s/verification_details",
-					zone.ID,
-				),
+				"/core/v1/dns/zones/_/verification_details",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+
+					if tt.wantQuery != nil {
+						assert.Equal(t, *tt.wantQuery, r.URL.Query())
+					} else {
+						assert.Equal(t,
+							*tt.args.zone.queryValues(), r.URL.Query(),
+						)
+					}
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -1243,7 +1353,7 @@ func TestDNSZonesClient_Verify(t *testing.T) {
 		respBody   []byte
 	}{
 		{
-			name: "DNS zone",
+			name: "by ID",
 			args: args{
 				ctx: context.Background(),
 				zone: &DNSZone{
@@ -1260,7 +1370,7 @@ func TestDNSZonesClient_Verify(t *testing.T) {
 			respBody:   fixture("dns_zone_get"),
 		},
 		{
-			name: "DNS zone by name",
+			name: "by Name",
 			args: args{
 				ctx: context.Background(),
 				zone: &DNSZone{
@@ -1394,7 +1504,7 @@ func TestDNSZonesClient_UpdateTTL(t *testing.T) {
 		respBody   []byte
 	}{
 		{
-			name: "update TTL",
+			name: "by ID",
 			args: args{
 				ctx:  context.Background(),
 				zone: &DNSZone{ID: "dnszone_lwz66kyviwCQyqQc"},
@@ -1413,7 +1523,7 @@ func TestDNSZonesClient_UpdateTTL(t *testing.T) {
 			respBody:   fixture("dns_zone_update_ttl"),
 		},
 		{
-			name: "zone by name",
+			name: "by Name",
 			args: args{
 				ctx:  context.Background(),
 				zone: &DNSZone{Name: "test1.example.come"},

@@ -17,10 +17,7 @@ type DNSZone struct {
 	InfrastructureZone bool   `json:"infrastructure_zone,omitempty"`
 }
 
-// LookupReference returns a new *DNSZone stripped down to just ID or Name
-// fields, making it suitable for endpoints which require a reference to a
-// DNSZone by ID or Name.
-func (s *DNSZone) LookupReference() *DNSZone {
+func (s *DNSZone) lookupReference() *DNSZone {
 	if s == nil {
 		return nil
 	}
@@ -31,6 +28,21 @@ func (s *DNSZone) LookupReference() *DNSZone {
 	}
 
 	return lr
+}
+
+func (s *DNSZone) queryValues() *url.Values {
+	v := &url.Values{}
+
+	if s != nil {
+		switch {
+		case s.ID != "":
+			v.Set("dns_zone[id]", s.ID)
+		case s.Name != "":
+			v.Set("dns_zone[name]", s.Name)
+		}
+	}
+
+	return v
 }
 
 type DNSZoneVerificationDetails struct {
@@ -88,13 +100,11 @@ func (s *DNSZonesClient) List(
 	org *Organization,
 	opts *ListOptions,
 ) ([]*DNSZone, *Response, error) {
-	if org == nil {
-		org = &Organization{ID: "_"}
-	}
+	qs := queryValues(org, opts)
 
 	u := &url.URL{
-		Path:     fmt.Sprintf("organizations/%s/dns/zones", org.ID),
-		RawQuery: opts.Values().Encode(),
+		Path:     "organizations/_/dns/zones",
+		RawQuery: qs.Encode(),
 	}
 
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
@@ -143,7 +153,7 @@ func (s *DNSZonesClient) Create(
 ) (*DNSZone, *Response, error) {
 	u := &url.URL{Path: "organizations/_/dns/zones"}
 	reqBody := &dnsZoneCreateRequest{
-		Organization: org.LookupReference(),
+		Organization: org.lookupReference(),
 	}
 
 	if args != nil {
@@ -163,11 +173,10 @@ func (s *DNSZonesClient) Delete(
 	ctx context.Context,
 	zone *DNSZone,
 ) (*DNSZone, *Response, error) {
-	if zone == nil {
-		zone = &DNSZone{ID: "_"}
+	u := &url.URL{
+		Path:     "dns/zones/_",
+		RawQuery: zone.queryValues().Encode(),
 	}
-
-	u := &url.URL{Path: fmt.Sprintf("dns/zones/%s", zone.ID)}
 	body, resp, err := s.doRequest(ctx, "DELETE", u, nil)
 
 	return body.DNSZone, resp, err
@@ -177,12 +186,9 @@ func (s *DNSZonesClient) VerificationDetails(
 	ctx context.Context,
 	zone *DNSZone,
 ) (*DNSZoneVerificationDetails, *Response, error) {
-	if zone == nil {
-		zone = &DNSZone{ID: "_"}
-	}
-
 	u := &url.URL{
-		Path: fmt.Sprintf("dns/zones/%s/verification_details", zone.ID),
+		Path:     "dns/zones/_/verification_details",
+		RawQuery: zone.queryValues().Encode(),
 	}
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 
@@ -195,7 +201,7 @@ func (s *DNSZonesClient) Verify(
 ) (*DNSZone, *Response, error) {
 	u := &url.URL{Path: "dns/zones/_/verify"}
 	reqBody := &dnsZoneVerifyRequest{
-		DNSZone: zone.LookupReference(),
+		DNSZone: zone.lookupReference(),
 	}
 	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
 
@@ -209,7 +215,7 @@ func (s *DNSZonesClient) UpdateTTL(
 ) (*DNSZone, *Response, error) {
 	u := &url.URL{Path: "dns/zones/_/update_ttl"}
 	reqBody := &dnsZoneUpdateTTLRequest{
-		DNSZone: zone.LookupReference(),
+		DNSZone: zone.lookupReference(),
 		TTL:     ttl,
 	}
 	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)

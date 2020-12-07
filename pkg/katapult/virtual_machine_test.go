@@ -59,7 +59,7 @@ func TestVirtualMachine_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestVirtualMachine_LookupReference(t *testing.T) {
+func TestVirtualMachine_lookupReference(t *testing.T) {
 	tests := []struct {
 		name string
 		obj  *VirtualMachine
@@ -67,7 +67,7 @@ func TestVirtualMachine_LookupReference(t *testing.T) {
 	}{
 		{
 			name: "nil",
-			obj:  (*VirtualMachine)(nil),
+			obj:  nil,
 			want: nil,
 		},
 		{
@@ -135,9 +135,84 @@ func TestVirtualMachine_LookupReference(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.obj.LookupReference()
+			got := tt.obj.lookupReference()
 
 			assert.Equal(t, tt.want, got)
+		})
+	}
+}
+
+func TestVirtualMachine_queryValues(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *VirtualMachine
+	}{
+		{
+			name: "nil",
+			obj:  nil,
+		},
+		{
+			name: "empty",
+			obj:  &VirtualMachine{},
+		},
+		{
+			name: "full",
+			obj: &VirtualMachine{
+				ID:                  "vm_VkTLr3gjUxGFtCkp",
+				Name:                "Anvil",
+				Hostname:            "anvil",
+				FQDN:                "anvil.amce.katapult.cloud",
+				CreatedAt:           timestampPtr(934834834),
+				InitialRootPassword: "eZNHLt8gwtDJSSd59plNMh8S0BEGJZTe",
+				State:               "Westeros",
+				Zone:                &Zone{ID: "id0"},
+				Organization:        &Organization{ID: "id1"},
+				Group:               &VirtualMachineGroup{ID: "id2"},
+				Package:             &VirtualMachinePackage{ID: "id3"},
+				AttachedISO:         &ISO{ID: "id4"},
+				Tags:                []*Tag{{ID: "id5"}},
+				IPAddresses:         []*IPAddress{{ID: "id6"}},
+			},
+		},
+		{
+			name: "no ID",
+			obj: &VirtualMachine{
+				Name:                "Anvil",
+				Hostname:            "anvil",
+				FQDN:                "anvil.amce.katapult.cloud",
+				CreatedAt:           timestampPtr(934834834),
+				InitialRootPassword: "eZNHLt8gwtDJSSd59plNMh8S0BEGJZTe",
+				State:               "Westeros",
+				Zone:                &Zone{ID: "id0"},
+				Organization:        &Organization{ID: "id1"},
+				Group:               &VirtualMachineGroup{ID: "id2"},
+				Package:             &VirtualMachinePackage{ID: "id3"},
+				AttachedISO:         &ISO{ID: "id4"},
+				Tags:                []*Tag{{ID: "id5"}},
+				IPAddresses:         []*IPAddress{{ID: "id6"}},
+			},
+		},
+		{
+			name: "no ID or FQDN",
+			obj: &VirtualMachine{
+				Name:                "Anvil",
+				Hostname:            "anvil",
+				CreatedAt:           timestampPtr(934834834),
+				InitialRootPassword: "eZNHLt8gwtDJSSd59plNMh8S0BEGJZTe",
+				State:               "Westeros",
+				Zone:                &Zone{ID: "id0"},
+				Organization:        &Organization{ID: "id1"},
+				Group:               &VirtualMachineGroup{ID: "id2"},
+				Package:             &VirtualMachinePackage{ID: "id3"},
+				AttachedISO:         &ISO{ID: "id4"},
+				Tags:                []*Tag{{ID: "id5"}},
+				IPAddresses:         []*IPAddress{{ID: "id6"}},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testQueryableEncoding(t, tt.obj)
 		})
 	}
 }
@@ -302,23 +377,27 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 		opts *ListOptions
 	}
 	tests := []struct {
-		name       string
-		args       args
-		want       []*VirtualMachine
-		pagination *Pagination
-		errStr     string
-		errResp    *ResponseError
-		respStatus int
-		respBody   []byte
+		name           string
+		args           args
+		want           []*VirtualMachine
+		wantQuery      *url.Values
+		wantPagination *Pagination
+		errStr         string
+		errResp        *ResponseError
+		respStatus     int
+		respBody       []byte
 	}{
 		{
-			name: "virtual machines",
+			name: "by organization ID",
 			args: args{
 				ctx: context.Background(),
 				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			want: virtualMachinesList,
-			pagination: &Pagination{
+			wantQuery: &url.Values{
+				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
+			},
+			wantPagination: &Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
 				Total:       3,
@@ -329,14 +408,39 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 			respBody:   fixture("virtual_machines_list"),
 		},
 		{
-			name: "page 1 of virtual machines",
+			name: "by organization SubDomain",
+			args: args{
+				ctx: context.Background(),
+				org: &Organization{SubDomain: "acme"},
+			},
+			want: virtualMachinesList,
+			wantQuery: &url.Values{
+				"organization[sub_domain]": []string{"acme"},
+			},
+			wantPagination: &Pagination{
+				CurrentPage: 1,
+				TotalPages:  1,
+				Total:       3,
+				PerPage:     30,
+				LargeSet:    false,
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machines_list"),
+		},
+		{
+			name: "page 1",
 			args: args{
 				ctx:  context.Background(),
 				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
 				opts: &ListOptions{Page: 1, PerPage: 2},
 			},
 			want: virtualMachinesList[0:2],
-			pagination: &Pagination{
+			wantQuery: &url.Values{
+				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
+				"page":             []string{"1"},
+				"per_page":         []string{"2"},
+			},
+			wantPagination: &Pagination{
 				CurrentPage: 1,
 				TotalPages:  2,
 				Total:       3,
@@ -347,14 +451,19 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 			respBody:   fixture("virtual_machines_list_page_1"),
 		},
 		{
-			name: "page 2 of virtual machines",
+			name: "page 2",
 			args: args{
 				ctx:  context.Background(),
 				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
 				opts: &ListOptions{Page: 2, PerPage: 2},
 			},
 			want: virtualMachinesList[2:],
-			pagination: &Pagination{
+			wantQuery: &url.Values{
+				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
+				"page":             []string{"2"},
+				"per_page":         []string{"2"},
+			},
+			wantPagination: &Pagination{
 				CurrentPage: 2,
 				TotalPages:  2,
 				Total:       3,
@@ -422,23 +531,18 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 			c, mux, _, teardown := prepareTestClient()
 			defer teardown()
 
-			org := tt.args.org
-			if org == nil {
-				org = &Organization{ID: "_"}
-			}
-
 			mux.HandleFunc(
-				fmt.Sprintf(
-					"/core/v1/organizations/%s/virtual_machines",
-					org.ID,
-				),
+				"/core/v1/organizations/_/virtual_machines",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
 
-					if tt.args.opts != nil {
-						assert.Equal(t, *tt.args.opts.Values(), r.URL.Query())
+					if tt.wantQuery != nil {
+						assert.Equal(t, *tt.wantQuery, r.URL.Query())
+					} else {
+						qs := queryValues(tt.args.org, tt.args.opts)
+						assert.Equal(t, *qs, r.URL.Query())
 					}
 
 					w.WriteHeader(tt.respStatus)
@@ -464,8 +568,8 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 				assert.Equal(t, tt.want, got)
 			}
 
-			if tt.pagination != nil {
-				assert.Equal(t, tt.pagination, resp.Pagination)
+			if tt.wantPagination != nil {
+				assert.Equal(t, tt.wantPagination, resp.Pagination)
 			}
 
 			if tt.errResp != nil {
@@ -1141,13 +1245,14 @@ func TestVirtualMachinesClient_Delete(t *testing.T) {
 		name       string
 		args       args
 		want       *TrashObject
+		wantQuery  *url.Values
 		errStr     string
 		errResp    *ResponseError
 		respStatus int
 		respBody   []byte
 	}{
 		{
-			name: "virtual machine",
+			name: "by ID",
 			args: args{
 				ctx: context.Background(),
 				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
@@ -1155,6 +1260,25 @@ func TestVirtualMachinesClient_Delete(t *testing.T) {
 			want: &TrashObject{
 				ID:        "trsh_AmjmS73QadkAZqoE",
 				KeepUntil: timestampPtr(1599672014),
+			},
+			wantQuery: &url.Values{
+				"virtual_machine[id]": []string{"vm_t8yomYsG4bccKw5D"},
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machine_delete"),
+		},
+		{
+			name: "by FQDN",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{FQDN: "anvil.amce.katapult.cloud"},
+			},
+			want: &TrashObject{
+				ID:        "trsh_AmjmS73QadkAZqoE",
+				KeepUntil: timestampPtr(1599672014),
+			},
+			wantQuery: &url.Values{
+				"virtual_machine[fqdn]": []string{"anvil.amce.katapult.cloud"},
 			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("virtual_machine_delete"),
@@ -1206,17 +1330,20 @@ func TestVirtualMachinesClient_Delete(t *testing.T) {
 			c, mux, _, teardown := prepareTestClient()
 			defer teardown()
 
-			vm := tt.args.vm
-			if vm == nil {
-				vm = &VirtualMachine{ID: "_"}
-			}
-
 			mux.HandleFunc(
-				fmt.Sprintf("/core/v1/virtual_machines/%s", vm.ID),
+				"/core/v1/virtual_machines/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "DELETE", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+
+					if tt.wantQuery != nil {
+						assert.Equal(t, *tt.wantQuery, r.URL.Query())
+					} else {
+						assert.Equal(t,
+							*tt.args.vm.queryValues(), r.URL.Query(),
+						)
+					}
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)

@@ -98,13 +98,13 @@ func (s *VirtualMachineBuildsClient) Create(
 	u := &url.URL{Path: "organizations/_/virtual_machines/build"}
 	reqBody := &virtualMachineBuildCreateRequest{
 		Hostname:            args.Hostname,
-		Organization:        org.LookupReference(),
-		Zone:                args.Zone.LookupReference(),
-		DataCenter:          args.DataCenter.LookupReference(),
-		Package:             args.Package.LookupReference(),
-		DiskTemplate:        args.DiskTemplate.LookupReference(),
+		Organization:        org.lookupReference(),
+		Zone:                args.Zone.lookupReference(),
+		DataCenter:          args.DataCenter.lookupReference(),
+		Package:             args.Package.lookupReference(),
+		DiskTemplate:        args.DiskTemplate.lookupReference(),
 		DiskTemplateOptions: args.DiskTemplateOptions,
-		Network:             args.Network.LookupReference(),
+		Network:             args.Network.lookupReference(),
 	}
 
 	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)

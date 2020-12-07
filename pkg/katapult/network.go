@@ -2,7 +2,6 @@ package katapult
 
 import (
 	"context"
-	"fmt"
 	"net/url"
 )
 
@@ -13,10 +12,7 @@ type Network struct {
 	DataCenter *DataCenter `json:"data_center,omitempty"`
 }
 
-// LookupReference returns a new *Network stripped down to just ID or
-// Permalink fields, making it suitable for endpoints which require a reference
-// to a Network by ID or Permalink.
-func (s *Network) LookupReference() *Network {
+func (s *Network) lookupReference() *Network {
 	if s == nil {
 		return nil
 	}
@@ -56,12 +52,9 @@ func (s *NetworksClient) List(
 	ctx context.Context,
 	org *Organization,
 ) ([]*Network, []*VirtualNetwork, *Response, error) {
-	if org == nil {
-		org = &Organization{ID: "_"}
-	}
-
 	u := &url.URL{
-		Path: fmt.Sprintf("organizations/%s/available_networks", org.ID),
+		Path:     "organizations/_/available_networks",
+		RawQuery: org.queryValues().Encode(),
 	}
 
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)

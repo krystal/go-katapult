@@ -21,10 +21,7 @@ type VirtualMachinePackage struct {
 	Icon          *Attachment `json:"icon,omitempty"`
 }
 
-// LookupReference returns a new *VirtualMachinePackage stripped down to just ID
-// or Permalink fields, making it suitable for endpoints which require a
-// reference to a Virtual Machine Package by ID or Permalink.
-func (s *VirtualMachinePackage) LookupReference() *VirtualMachinePackage {
+func (s *VirtualMachinePackage) lookupReference() *VirtualMachinePackage {
 	if s == nil {
 		return nil
 	}
@@ -63,7 +60,7 @@ func (s *VirtualMachinePackagesClient) List(
 ) ([]*VirtualMachinePackage, *Response, error) {
 	u := &url.URL{
 		Path:     "virtual_machine_packages",
-		RawQuery: opts.Values().Encode(),
+		RawQuery: opts.queryValues().Encode(),
 	}
 
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)

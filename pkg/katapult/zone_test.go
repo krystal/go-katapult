@@ -46,7 +46,7 @@ func TestZone_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestZone_LookupReference(t *testing.T) {
+func TestZone_lookupReference(t *testing.T) {
 	tests := []struct {
 		name string
 		obj  *Zone
@@ -54,7 +54,7 @@ func TestZone_LookupReference(t *testing.T) {
 	}{
 		{
 			name: "nil",
-			obj:  (*Zone)(nil),
+			obj:  nil,
 			want: nil,
 		},
 		{
@@ -98,7 +98,7 @@ func TestZone_LookupReference(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.obj.LookupReference()
+			got := tt.obj.lookupReference()
 
 			assert.Equal(t, tt.want, got)
 		})

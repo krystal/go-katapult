@@ -19,15 +19,22 @@ type LoadBalancer struct {
 	DataCenter            *DataCenter  `json:"-"`
 }
 
-// LookupReference returns a new *LoadBalancer stripped down to just the ID
-// field, making it suitable for endpoints which require a reference to a
-// Load Balancer by ID.
-func (s *LoadBalancer) LookupReference() *LoadBalancer {
+func (s *LoadBalancer) lookupReference() *LoadBalancer {
 	if s == nil {
 		return nil
 	}
 
 	return &LoadBalancer{ID: s.ID}
+}
+
+func (s *LoadBalancer) queryValues() *url.Values {
+	v := &url.Values{}
+
+	if s != nil && s.ID != "" {
+		v.Set("load_balancer[id]", s.ID)
+	}
+
+	return v
 }
 
 func (s *LoadBalancer) MarshalJSON() ([]byte, error) {
@@ -87,7 +94,7 @@ func (
 	}
 
 	args := *s
-	args.DataCenter = s.DataCenter.LookupReference()
+	args.DataCenter = s.DataCenter.lookupReference()
 
 	return &args
 }
@@ -135,13 +142,10 @@ func (s *LoadBalancersClient) List(
 	org *Organization,
 	opts *ListOptions,
 ) ([]*LoadBalancer, *Response, error) {
-	if org == nil {
-		org = &Organization{ID: "_"}
-	}
-
+	qs := queryValues(org, opts)
 	u := &url.URL{
-		Path:     fmt.Sprintf("organizations/%s/load_balancers", org.ID),
-		RawQuery: opts.Values().Encode(),
+		Path:     "organizations/_/load_balancers",
+		RawQuery: qs.Encode(),
 	}
 
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
@@ -174,7 +178,7 @@ func (s *LoadBalancersClient) Create(
 ) (*LoadBalancer, *Response, error) {
 	u := &url.URL{Path: "organizations/_/load_balancers"}
 	reqBody := &loadBalancerCreateRequest{
-		Organization: org.LookupReference(),
+		Organization: org.lookupReference(),
 		Properties:   args.forRequest(),
 	}
 
@@ -190,7 +194,7 @@ func (s *LoadBalancersClient) Update(
 ) (*LoadBalancer, *Response, error) {
 	u := &url.URL{Path: "load_balancers/_"}
 	reqBody := &loadBalancerUpdateRequest{
-		LoadBalancer: lb.LookupReference(),
+		LoadBalancer: lb.lookupReference(),
 		Properties:   args.forRequest(),
 	}
 
@@ -203,11 +207,10 @@ func (s *LoadBalancersClient) Delete(
 	ctx context.Context,
 	lb *LoadBalancer,
 ) (*LoadBalancer, *Response, error) {
-	if lb == nil {
-		lb = &LoadBalancer{ID: "_"}
+	u := &url.URL{
+		Path:     "load_balancers/_",
+		RawQuery: lb.queryValues().Encode(),
 	}
-
-	u := &url.URL{Path: fmt.Sprintf("load_balancers/%s", lb.ID)}
 	body, resp, err := s.doRequest(ctx, "DELETE", u, nil)
 
 	return body.LoadBalancer, resp, err

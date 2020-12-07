@@ -32,10 +32,7 @@ type Organization struct {
 	CountryState         *CountryState        `json:"country_state,omitempty"`
 }
 
-// LookupReference returns a new *Organization stripped down to just ID or
-// SubDomain fields, making it suitable for endpoints which require a reference
-// to a Organization by ID or SubDomain.
-func (s *Organization) LookupReference() *Organization {
+func (s *Organization) lookupReference() *Organization {
 	if s == nil {
 		return nil
 	}
@@ -46,6 +43,21 @@ func (s *Organization) LookupReference() *Organization {
 	}
 
 	return lr
+}
+
+func (s *Organization) queryValues() *url.Values {
+	v := &url.Values{}
+
+	if s != nil {
+		switch {
+		case s.ID != "":
+			v.Set("organization[id]", s.ID)
+		case s.SubDomain != "":
+			v.Set("organization[sub_domain]", s.SubDomain)
+		}
+	}
+
+	return v
 }
 
 type OrganizationManagedArguments struct {
@@ -125,7 +137,7 @@ func (s *OrganizationsClient) CreateManaged(
 ) (*Organization, *Response, error) {
 	u := &url.URL{Path: "organizations/_/managed"}
 	reqBody := &organizationCreateManagedRequest{
-		Organization: parent.LookupReference(),
+		Organization: parent.lookupReference(),
 	}
 
 	if args != nil {
