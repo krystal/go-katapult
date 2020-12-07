@@ -1,0 +1,16 @@
+{
+  "network": {
+    "id": "netw_17w3MepxvWE4J3Zx"
+  },
+  "speed_profile": {
+    "id": "nsp_bFQhDNAluyp4t2A9"
+  },
+  "ip_address_allocations": [
+    {
+      "type": "new"
+    },
+    {
+      "type": "existing"
+    }
+  ]
+}

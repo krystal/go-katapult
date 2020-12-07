@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VirtualMachineSpec><DataCenter>dc_0KVdXStXduYtcypG</DataCenter><Resources><Package by="permalink">rock-3</Package></Resources><DiskTemplate><DiskTemplate by="permalink">templates/ubuntu-18-04</DiskTemplate></DiskTemplate><Hostname><Hostname>web-3</Hostname></Hostname></VirtualMachineSpec>

@@ -1,0 +1,101 @@
+<VirtualMachineSpec>
+  <Zone>zone_xmVotL1zwMwo2eXf</Zone>
+  <DataCenter>dc_0KVdXStXduYtcypG</DataCenter>
+  <Resources>
+    <Package>vmpkg_m7mV5O0MafbDFp2n</Package>
+    <Memory>16</Memory>
+    <CPUCores>4</CPUCores>
+  </Resources>
+  <DiskTemplate>
+    <DiskTemplate>dtpl_rlinMl51Lb1uvTez</DiskTemplate>
+    <Version by="number">4</Version>
+    <Option key="foo">bar</Option>
+    <Option key="hello">world</Option>
+  </DiskTemplate>
+  <SystemDisks>
+    <Disk>
+      <Name>System Disk</Name>
+      <Size>10</Size>
+      <Speed>ssd</Speed>
+      <IOProfile>diop_xPlNw7iDmrGOnPRA</IOProfile>
+      <FileSystemType>ext4</FileSystemType>
+      <BackupPolicies>
+        <BackupPolicy>
+          <Retention>24</Retention>
+          <Schedule>
+            <Interval>daily</Interval>
+            <Frequency>1</Frequency>
+            <Time>13</Time>
+          </Schedule>
+        </BackupPolicy>
+        <BackupPolicy>
+          <Retention>30</Retention>
+        </BackupPolicy>
+      </BackupPolicies>
+    </Disk>
+    <Disk>
+      <Name>Another Disk</Name>
+      <Size>22</Size>
+      <Speed>nvme</Speed>
+    </Disk>
+  </SystemDisks>
+  <SharedDisks>
+    <Disk>disk_gJRNxe3h7zi0Hdh5</Disk>
+    <Disk by="name">image-uploads</Disk>
+  </SharedDisks>
+  <NetworkInterfaces>
+    <NetworkInterface>
+      <Network>netw_DRIS3BaTWfKaHlWW</Network>
+      <SpeedProfile>nsp_eHwC5NG3DRAHzVfD</SpeedProfile>
+    </NetworkInterface>
+    <NetworkInterface>
+      <Network>netw_17w3MepxvWE4J3Zx</Network>
+      <SpeedProfile>nsp_bFQhDNAluyp4t2A9</SpeedProfile>
+      <IPAddressAllocation type="new">
+        <Version>4</Version>
+      </IPAddressAllocation>
+      <IPAddressAllocation type="new">
+        <Version>4</Version>
+        <Subnet>sbnt_xxhvuhr3dsvEHcM5</Subnet>
+      </IPAddressAllocation>
+      <IPAddressAllocation type="existing">
+        <IPAddress>ip_Hb8WpvV9qRMznHwZ</IPAddress>
+      </IPAddressAllocation>
+    </NetworkInterface>
+    <NetworkInterface>
+      <VirtualNetwork>vnet_Cuc45YcBaUhWqx6u</VirtualNetwork>
+    </NetworkInterface>
+  </NetworkInterfaces>
+  <Hostname>
+    <Hostname>bitter-beautiful-mango</Hostname>
+  </Hostname>
+  <Name>web-1</Name>
+  <Description>Web Server #1</Description>
+  <Group>vmgrp_dZDXXLw7e54Ep6CG</Group>
+  <AuthorizedKeys>
+    <Users>
+      <User>user_yUfYcKHgU1ywBWzP</User>
+      <User by="email_address">jane@doe.com</User>
+    </Users>
+    <SSHKeys all="yes"></SSHKeys>
+  </AuthorizedKeys>
+  <BackupPolicies>
+    <BackupPolicy>
+      <Retention>24</Retention>
+      <Schedule>
+        <Interval>weekly</Interval>
+        <Frequency>1</Frequency>
+        <Time>13</Time>
+      </Schedule>
+    </BackupPolicy>
+    <BackupPolicy>
+      <Retention>30</Retention>
+    </BackupPolicy>
+  </BackupPolicies>
+  <Tags>
+    <Tag>ha</Tag>
+    <Tag>db</Tag>
+    <Tag>web</Tag>
+  </Tags>
+  <ISO>iso_R6hPTR62bTSj5hQe</ISO>
+</VirtualMachineSpec>

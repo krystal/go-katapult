@@ -1,0 +1,144 @@
+{
+  "zone": {
+    "id": "zone_xmVotL1zwMwo2eXf"
+  },
+  "data_center": {
+    "id": "dc_0KVdXStXduYtcypG"
+  },
+  "resources": {
+    "package": {
+      "id": "vmpkg_m7mV5O0MafbDFp2n"
+    },
+    "memory": 16,
+    "cpu_cores": 4
+  },
+  "disk_template": {
+    "id": "dtpl_rlinMl51Lb1uvTez",
+    "version": 4,
+    "options": [
+      {
+        "key": "foo",
+        "value": "bar"
+      },
+      {
+        "key": "hello",
+        "value": "world"
+      }
+    ]
+  },
+  "system_disks": [
+    {
+      "name": "System Disk",
+      "size": 10,
+      "speed": "ssd",
+      "io_profile": {
+        "id": "diop_xPlNw7iDmrGOnPRA"
+      },
+      "file_system_type": "ext4",
+      "backup_policies": [
+        {
+          "retention": 24,
+          "schedule": {
+            "interval": "daily",
+            "frequency": 1,
+            "time": 13
+          }
+        },
+        {
+          "retention": 30
+        }
+      ]
+    },
+    {
+      "name": "Another Disk",
+      "size": 22,
+      "speed": "nvme"
+    }
+  ],
+  "shared_disks": [
+    {
+      "id": "disk_gJRNxe3h7zi0Hdh5"
+    },
+    {
+      "name": "image-uploads"
+    }
+  ],
+  "network_interfaces": [
+    {
+      "network": {
+        "id": "netw_DRIS3BaTWfKaHlWW"
+      },
+      "speed_profile": {
+        "id": "nsp_eHwC5NG3DRAHzVfD"
+      }
+    },
+    {
+      "network": {
+        "id": "netw_17w3MepxvWE4J3Zx"
+      },
+      "speed_profile": {
+        "id": "nsp_bFQhDNAluyp4t2A9"
+      },
+      "ip_address_allocations": [
+        {
+          "type": "new",
+          "version": 4
+        },
+        {
+          "type": "new",
+          "version": 4,
+          "subnet": {
+            "id": "sbnt_xxhvuhr3dsvEHcM5"
+          }
+        },
+        {
+          "type": "existing",
+          "ip_address": {
+            "id": "ip_Hb8WpvV9qRMznHwZ"
+          }
+        }
+      ]
+    },
+    {
+      "virtual_network": {
+        "id": "vnet_Cuc45YcBaUhWqx6u"
+      }
+    }
+  ],
+  "hostname": "bitter-beautiful-mango",
+  "name": "web-1",
+  "description": "Web Server #1",
+  "group": {
+    "id": "vmgrp_dZDXXLw7e54Ep6CG"
+  },
+  "authorized_keys": {
+    "all_ssh_keys": true,
+    "users": [
+      {
+        "id": "user_yUfYcKHgU1ywBWzP"
+      },
+      {
+        "email_address": "jane@doe.com"
+      }
+    ]
+  },
+  "backup_policies": [
+    {
+      "retention": 24,
+      "schedule": {
+        "interval": "weekly",
+        "frequency": 1,
+        "time": 13
+      }
+    },
+    {
+      "retention": 30
+    }
+  ],
+  "tags": [
+    "ha",
+    "db",
+    "web"
+  ],
+  "iso": "iso_R6hPTR62bTSj5hQe"
+}

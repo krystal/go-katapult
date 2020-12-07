@@ -1,0 +1,11 @@
+<xmlBackupPolicies>
+  <BackupPolicy>
+    <Retention>24</Retention>
+    <Schedule>
+      <Interval>daily</Interval>
+    </Schedule>
+  </BackupPolicy>
+  <BackupPolicy>
+    <Retention>13</Retention>
+  </BackupPolicy>
+</xmlBackupPolicies>

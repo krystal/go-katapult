@@ -1,0 +1,11 @@
+name: System Disk
+size: 10
+speed: ssd
+io_profile:
+  id: diop_xPlNw7iDmrGOnPRA
+file_system_type: ext4
+backup_policies:
+  - retention: 24
+    schedule:
+      interval: daily
+  - retention: 13

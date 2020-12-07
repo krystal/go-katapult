@@ -1,0 +1,5 @@
+<Schedule>
+  <Interval>daily</Interval>
+  <Frequency>1</Frequency>
+  <Time>13</Time>
+</Schedule>

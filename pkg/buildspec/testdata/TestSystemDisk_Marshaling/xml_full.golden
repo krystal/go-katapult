@@ -1,0 +1,18 @@
+<SystemDisk>
+  <Name>System Disk</Name>
+  <Size>10</Size>
+  <Speed>ssd</Speed>
+  <IOProfile>diop_xPlNw7iDmrGOnPRA</IOProfile>
+  <FileSystemType>ext4</FileSystemType>
+  <BackupPolicies>
+    <BackupPolicy>
+      <Retention>24</Retention>
+      <Schedule>
+        <Interval>daily</Interval>
+      </Schedule>
+    </BackupPolicy>
+    <BackupPolicy>
+      <Retention>13</Retention>
+    </BackupPolicy>
+  </BackupPolicies>
+</SystemDisk>

@@ -1,0 +1,8 @@
+{
+  "all_ssh_keys": true,
+  "ssh_keys": [
+    "ssh-rsa saAfjbp8ADNgGRDi19oKuYVIBTHNC66A",
+    "ssh-rsa ouQEux6pnfmyxblOgGQNRpmqIweAO3Qs",
+    "ssh-rsa sxyCHXCRBeZliR6EZDmRZ9A82oHkh1nq"
+  ]
+}

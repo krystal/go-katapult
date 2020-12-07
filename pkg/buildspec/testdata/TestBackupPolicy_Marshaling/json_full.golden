@@ -1,0 +1,6 @@
+{
+  "retention": 24,
+  "schedule": {
+    "interval": "daily"
+  }
+}
