@@ -2,8 +2,8 @@ package katapult
 
 import (
 	"context"
-	"fmt"
 	"net/http"
+	"net/url"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -43,7 +43,7 @@ func TestNetwork_LookupReference(t *testing.T) {
 	}{
 		{
 			name: "nil",
-			obj:  (*Network)(nil),
+			obj:  nil,
 			want: nil,
 		},
 		{
@@ -143,22 +143,23 @@ func TestNetworksClient_List(t *testing.T) {
 		org *Organization
 	}
 	tests := []struct {
-		name        string
-		args        args
-		wantedNets  []*Network
-		wantedVnets []*VirtualNetwork
-		errStr      string
-		errResp     *ResponseError
-		respStatus  int
-		respBody    []byte
+		name       string
+		args       args
+		wantNets   []*Network
+		wantVnets  []*VirtualNetwork
+		wantQuery  *url.Values
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
 	}{
 		{
-			name: "networks",
+			name: "by organization ID",
 			args: args{
 				ctx: context.Background(),
 				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
 			},
-			wantedNets: []*Network{
+			wantNets: []*Network{
 				{
 					ID:   "netw_zDW7KYAeqqfRfVag",
 					Name: "Public Network",
@@ -168,11 +169,42 @@ func TestNetworksClient_List(t *testing.T) {
 					Name: "Private Network",
 				},
 			},
-			wantedVnets: []*VirtualNetwork{
+			wantVnets: []*VirtualNetwork{
 				{
 					ID:   "vnet_1erVCx7A5Y09WknB",
 					Name: "Make-Believe Network",
 				},
+			},
+			wantQuery: &url.Values{
+				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("networks_list"),
+		},
+		{
+			name: "by organization SubDomain",
+			args: args{
+				ctx: context.Background(),
+				org: &Organization{SubDomain: "acme"},
+			},
+			wantNets: []*Network{
+				{
+					ID:   "netw_zDW7KYAeqqfRfVag",
+					Name: "Public Network",
+				},
+				{
+					ID:   "netw_t7Rbyvr6ahqpDohR",
+					Name: "Private Network",
+				},
+			},
+			wantVnets: []*VirtualNetwork{
+				{
+					ID:   "vnet_1erVCx7A5Y09WknB",
+					Name: "Make-Believe Network",
+				},
+			},
+			wantQuery: &url.Values{
+				"organization[sub_domain]": []string{"acme"},
 			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("networks_list"),
@@ -235,20 +267,20 @@ func TestNetworksClient_List(t *testing.T) {
 			c, mux, _, teardown := prepareTestClient()
 			defer teardown()
 
-			org := tt.args.org
-			if org == nil {
-				org = &Organization{ID: "_"}
-			}
-
 			mux.HandleFunc(
-				fmt.Sprintf(
-					"/core/v1/organizations/%s/available_networks",
-					org.ID,
-				),
+				"/core/v1/organizations/_/available_networks",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+
+					if tt.wantQuery != nil {
+						assert.Equal(t, *tt.wantQuery, r.URL.Query())
+					} else {
+						assert.Equal(t,
+							*tt.args.org.queryValues(), r.URL.Query(),
+						)
+					}
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -267,12 +299,12 @@ func TestNetworksClient_List(t *testing.T) {
 				assert.EqualError(t, err, tt.errStr)
 			}
 
-			if tt.wantedNets != nil {
-				assert.Equal(t, tt.wantedNets, got1)
+			if tt.wantNets != nil {
+				assert.Equal(t, tt.wantNets, got1)
 			}
 
-			if tt.wantedVnets != nil {
-				assert.Equal(t, tt.wantedVnets, got2)
+			if tt.wantVnets != nil {
+				assert.Equal(t, tt.wantVnets, got2)
 			}
 
 			if tt.errResp != nil {

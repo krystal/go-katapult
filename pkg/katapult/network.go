@@ -2,7 +2,6 @@ package katapult
 
 import (
 	"context"
-	"fmt"
 	"net/url"
 )
 
@@ -56,12 +55,9 @@ func (s *NetworksClient) List(
 	ctx context.Context,
 	org *Organization,
 ) ([]*Network, []*VirtualNetwork, *Response, error) {
-	if org == nil {
-		org = &Organization{ID: "_"}
-	}
-
 	u := &url.URL{
-		Path: fmt.Sprintf("organizations/%s/available_networks", org.ID),
+		Path:     "organizations/_/available_networks",
+		RawQuery: org.queryValues().Encode(),
 	}
 
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)

@@ -58,7 +58,7 @@ func TestDataCenter_LookupReference(t *testing.T) {
 	}{
 		{
 			name: "nil",
-			obj:  (*DataCenter)(nil),
+			obj:  nil,
 			want: nil,
 		},
 		{

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -92,28 +93,32 @@ func TestCertificatesClient_List(t *testing.T) {
 	}
 
 	type args struct {
-		ctx   context.Context
-		orgID string
-		opts  *ListOptions
+		ctx  context.Context
+		org  *Organization
+		opts *ListOptions
 	}
 	tests := []struct {
-		name       string
-		args       args
-		want       []*Certificate
-		pagination *Pagination
-		errStr     string
-		errResp    *ResponseError
-		respStatus int
-		respBody   []byte
+		name           string
+		args           args
+		want           []*Certificate
+		wantQuery      *url.Values
+		wantPagination *Pagination
+		errStr         string
+		errResp        *ResponseError
+		respStatus     int
+		respBody       []byte
 	}{
 		{
-			name: "certificates",
+			name: "by organization ID",
 			args: args{
-				ctx:   context.Background(),
-				orgID: "org_O648YDMEYeLmqdmn",
+				ctx: context.Background(),
+				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			want: certificateList,
-			pagination: &Pagination{
+			wantQuery: &url.Values{
+				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
+			},
+			wantPagination: &Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
 				Total:       3,
@@ -124,14 +129,39 @@ func TestCertificatesClient_List(t *testing.T) {
 			respBody:   fixture("certificates_list"),
 		},
 		{
-			name: "page 1 of certificates",
+			name: "by organization SubDomain",
 			args: args{
-				ctx:   context.Background(),
-				orgID: "org_O648YDMEYeLmqdmn",
-				opts:  &ListOptions{Page: 1, PerPage: 2},
+				ctx: context.Background(),
+				org: &Organization{SubDomain: "acme"},
+			},
+			want: certificateList,
+			wantQuery: &url.Values{
+				"organization[sub_domain]": []string{"acme"},
+			},
+			wantPagination: &Pagination{
+				CurrentPage: 1,
+				TotalPages:  1,
+				Total:       3,
+				PerPage:     30,
+				LargeSet:    false,
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("certificates_list"),
+		},
+		{
+			name: "page 1",
+			args: args{
+				ctx:  context.Background(),
+				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				opts: &ListOptions{Page: 1, PerPage: 2},
 			},
 			want: certificateList[0:2],
-			pagination: &Pagination{
+			wantQuery: &url.Values{
+				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
+				"page":             []string{"1"},
+				"per_page":         []string{"2"},
+			},
+			wantPagination: &Pagination{
 				CurrentPage: 1,
 				TotalPages:  2,
 				Total:       3,
@@ -142,14 +172,19 @@ func TestCertificatesClient_List(t *testing.T) {
 			respBody:   fixture("certificates_list_page_1"),
 		},
 		{
-			name: "page 2 of certificates",
+			name: "page 2",
 			args: args{
-				ctx:   context.Background(),
-				orgID: "org_O648YDMEYeLmqdmn",
-				opts:  &ListOptions{Page: 2, PerPage: 2},
+				ctx:  context.Background(),
+				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				opts: &ListOptions{Page: 2, PerPage: 2},
 			},
 			want: certificateList[2:],
-			pagination: &Pagination{
+			wantQuery: &url.Values{
+				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
+				"page":             []string{"2"},
+				"per_page":         []string{"2"},
+			},
+			wantPagination: &Pagination{
 				CurrentPage: 2,
 				TotalPages:  2,
 				Total:       3,
@@ -162,8 +197,8 @@ func TestCertificatesClient_List(t *testing.T) {
 		{
 			name: "invalid API token response",
 			args: args{
-				ctx:   context.Background(),
-				orgID: "org_O648YDMEYeLmqdmn",
+				ctx: context.Background(),
+				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureInvalidAPITokenErr,
 			errResp:    fixtureInvalidAPITokenResponseError,
@@ -173,8 +208,8 @@ func TestCertificatesClient_List(t *testing.T) {
 		{
 			name: "non-existent organization",
 			args: args{
-				ctx:   context.Background(),
-				orgID: "org_O648YDMEYeLmqdmn",
+				ctx: context.Background(),
+				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
@@ -184,8 +219,8 @@ func TestCertificatesClient_List(t *testing.T) {
 		{
 			name: "suspended organization",
 			args: args{
-				ctx:   context.Background(),
-				orgID: "org_O648YDMEYeLmqdmn",
+				ctx: context.Background(),
+				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
@@ -195,8 +230,8 @@ func TestCertificatesClient_List(t *testing.T) {
 		{
 			name: "nil context",
 			args: args{
-				ctx:   nil,
-				orgID: "org_O648YDMEYeLmqdmn",
+				ctx: nil,
+				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -207,15 +242,17 @@ func TestCertificatesClient_List(t *testing.T) {
 			defer teardown()
 
 			mux.HandleFunc(
-				fmt.Sprintf(
-					"/core/v1/organizations/%s/certificates", tt.args.orgID,
-				),
+				"/core/v1/organizations/_/certificates",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
-					if tt.args.opts != nil {
-						assert.Equal(t, *tt.args.opts.Values(), r.URL.Query())
+
+					if tt.wantQuery != nil {
+						assert.Equal(t, *tt.wantQuery, r.URL.Query())
+					} else {
+						qs := queryValues(tt.args.org, tt.args.opts)
+						assert.Equal(t, *qs, r.URL.Query())
 					}
 
 					w.WriteHeader(tt.respStatus)
@@ -224,7 +261,7 @@ func TestCertificatesClient_List(t *testing.T) {
 			)
 
 			got, resp, err := c.Certificates.List(
-				tt.args.ctx, tt.args.orgID, tt.args.opts,
+				tt.args.ctx, tt.args.org, tt.args.opts,
 			)
 
 			if tt.respStatus != 0 {
@@ -241,8 +278,8 @@ func TestCertificatesClient_List(t *testing.T) {
 				assert.Equal(t, tt.want, got)
 			}
 
-			if tt.pagination != nil {
-				assert.Equal(t, tt.pagination, resp.Pagination)
+			if tt.wantPagination != nil {
+				assert.Equal(t, tt.wantPagination, resp.Pagination)
 			}
 
 			if tt.errResp != nil {

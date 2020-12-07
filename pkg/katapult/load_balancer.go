@@ -30,6 +30,16 @@ func (s *LoadBalancer) LookupReference() *LoadBalancer {
 	return &LoadBalancer{ID: s.ID}
 }
 
+func (s *LoadBalancer) queryValues() *url.Values {
+	v := &url.Values{}
+
+	if s != nil && s.ID != "" {
+		v.Set("load_balancer[id]", s.ID)
+	}
+
+	return v
+}
+
 func (s *LoadBalancer) MarshalJSON() ([]byte, error) {
 	type alias LoadBalancer
 	resources := []*loadBalancerResource{}
@@ -135,13 +145,10 @@ func (s *LoadBalancersClient) List(
 	org *Organization,
 	opts *ListOptions,
 ) ([]*LoadBalancer, *Response, error) {
-	if org == nil {
-		org = &Organization{ID: "_"}
-	}
-
+	qs := queryValues(org, opts)
 	u := &url.URL{
-		Path:     fmt.Sprintf("organizations/%s/load_balancers", org.ID),
-		RawQuery: opts.Values().Encode(),
+		Path:     "organizations/_/load_balancers",
+		RawQuery: qs.Encode(),
 	}
 
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
@@ -203,11 +210,10 @@ func (s *LoadBalancersClient) Delete(
 	ctx context.Context,
 	lb *LoadBalancer,
 ) (*LoadBalancer, *Response, error) {
-	if lb == nil {
-		lb = &LoadBalancer{ID: "_"}
+	u := &url.URL{
+		Path:     "load_balancers/_",
+		RawQuery: lb.queryValues().Encode(),
 	}
-
-	u := &url.URL{Path: fmt.Sprintf("load_balancers/%s", lb.ID)}
 	body, resp, err := s.doRequest(ctx, "DELETE", u, nil)
 
 	return body.LoadBalancer, resp, err

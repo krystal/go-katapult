@@ -72,6 +72,14 @@ var (
 			"to run this operation.",
 		Detail: json.RawMessage(`{}`),
 	}
+
+	fixtureInvalidArgumentErr = "invalid_argument: The 'X' argument " +
+		"is invalid"
+	fixtureInvalidArgumentResponseError = &ResponseError{
+		Code:        "invalid_argument",
+		Description: "The 'X' argument is invalid",
+		Detail:      json.RawMessage(`{}`),
+	}
 )
 
 func goldenFile(t *testing.T) string {
@@ -162,6 +170,22 @@ func testCustomJSONMarshaling(
 		assert.Equal(t, input, got,
 			"decoding from golden does not match expected object")
 	}
+}
+
+func testQueryableEncoding(t *testing.T, obj queryable) {
+	qs := obj.queryValues()
+	queryStr := qs.Encode()
+
+	if doUpdateGolden {
+		updateGolden(t, []byte(queryStr))
+	}
+
+	g := string(getGolden(t))
+	assert.Equal(t, queryStr, g, "query string does not match golden")
+
+	parsedQuery, err := url.ParseQuery(g)
+	require.NoError(t, err, "parsing golden query string failed")
+	assert.Equal(t, qs, &parsedQuery, "parsed golden values do not match")
 }
 
 func assertFieldSpec(t *testing.T, r *http.Request, spec string) {

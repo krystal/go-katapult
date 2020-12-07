@@ -45,12 +45,13 @@ func newCertificatesClient(c *apiClient) *CertificatesClient {
 
 func (s CertificatesClient) List(
 	ctx context.Context,
-	orgID string,
+	org *Organization,
 	opts *ListOptions,
 ) ([]*Certificate, *Response, error) {
+	qs := queryValues(org, opts)
 	u := &url.URL{
-		Path:     fmt.Sprintf("organizations/%s/certificates", orgID),
-		RawQuery: opts.Values().Encode(),
+		Path:     "organizations/_/certificates",
+		RawQuery: qs.Encode(),
 	}
 
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)

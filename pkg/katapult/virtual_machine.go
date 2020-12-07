@@ -44,6 +44,21 @@ func (s *VirtualMachine) LookupReference() *VirtualMachine {
 	return lr
 }
 
+func (s *VirtualMachine) queryValues() *url.Values {
+	v := &url.Values{}
+
+	if s != nil {
+		switch {
+		case s.ID != "":
+			v.Set("virtual_machine[id]", s.ID)
+		case s.FQDN != "":
+			v.Set("virtual_machine[fqdn]", s.FQDN)
+		}
+	}
+
+	return v
+}
+
 type VirtualMachineState string
 
 const (
@@ -97,13 +112,10 @@ func (s VirtualMachinesClient) List(
 	org *Organization,
 	opts *ListOptions,
 ) ([]*VirtualMachine, *Response, error) {
-	if org == nil {
-		org = &Organization{ID: "_"}
-	}
-
+	qs := queryValues(org, opts)
 	u := &url.URL{
-		Path:     fmt.Sprintf("organizations/%s/virtual_machines", org.ID),
-		RawQuery: opts.Values().Encode(),
+		Path:     "organizations/_/virtual_machines",
+		RawQuery: qs.Encode(),
 	}
 
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
@@ -164,11 +176,10 @@ func (s *VirtualMachinesClient) Delete(
 	ctx context.Context,
 	vm *VirtualMachine,
 ) (*TrashObject, *Response, error) {
-	if vm == nil {
-		vm = &VirtualMachine{ID: "_"}
+	u := &url.URL{
+		Path:     "virtual_machines/_",
+		RawQuery: vm.queryValues().Encode(),
 	}
-
-	u := &url.URL{Path: fmt.Sprintf("virtual_machines/%s", vm.ID)}
 	body, resp, err := s.doRequest(ctx, "DELETE", u, nil)
 
 	return body.TrashObject, resp, err

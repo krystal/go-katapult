@@ -61,7 +61,7 @@ func TestVirtualMachinePackage_LookupReference(t *testing.T) {
 	}{
 		{
 			name: "nil",
-			obj:  (*VirtualMachinePackage)(nil),
+			obj:  nil,
 			want: nil,
 		},
 		{
@@ -171,22 +171,24 @@ func TestVirtualMachinePackagesClient_List(t *testing.T) {
 		opts *ListOptions
 	}
 	tests := []struct {
-		name       string
-		args       args
-		want       []*VirtualMachinePackage
-		pagination *Pagination
-		errStr     string
-		errResp    *ResponseError
-		respStatus int
-		respBody   []byte
+		name           string
+		args           args
+		want           []*VirtualMachinePackage
+		wantQuery      *url.Values
+		wantPagination *Pagination
+		errStr         string
+		errResp        *ResponseError
+		respStatus     int
+		respBody       []byte
 	}{
 		{
-			name: "virtual machine packages",
+			name: "without pagination details",
 			args: args{
 				ctx: context.Background(),
 			},
-			want: packageList,
-			pagination: &Pagination{
+			want:      packageList,
+			wantQuery: &url.Values{},
+			wantPagination: &Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
 				Total:       3,
@@ -197,13 +199,17 @@ func TestVirtualMachinePackagesClient_List(t *testing.T) {
 			respBody:   fixture("virtual_machine_packages_list"),
 		},
 		{
-			name: "page 1 of virtual machine packages",
+			name: "page 1",
 			args: args{
 				ctx:  context.Background(),
 				opts: &ListOptions{Page: 1, PerPage: 2},
 			},
 			want: packageList[0:2],
-			pagination: &Pagination{
+			wantQuery: &url.Values{
+				"page":     []string{"1"},
+				"per_page": []string{"2"},
+			},
+			wantPagination: &Pagination{
 				CurrentPage: 1,
 				TotalPages:  2,
 				Total:       3,
@@ -214,13 +220,17 @@ func TestVirtualMachinePackagesClient_List(t *testing.T) {
 			respBody:   fixture("virtual_machine_packages_list_page_1"),
 		},
 		{
-			name: "page 2 of virtual machine packages",
+			name: "page 2",
 			args: args{
 				ctx:  context.Background(),
 				opts: &ListOptions{Page: 2, PerPage: 2},
 			},
 			want: packageList[2:],
-			pagination: &Pagination{
+			wantQuery: &url.Values{
+				"page":     []string{"2"},
+				"per_page": []string{"2"},
+			},
+			wantPagination: &Pagination{
 				CurrentPage: 2,
 				TotalPages:  2,
 				Total:       3,
@@ -259,8 +269,12 @@ func TestVirtualMachinePackagesClient_List(t *testing.T) {
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
 
-					if tt.args.opts != nil {
-						assert.Equal(t, *tt.args.opts.Values(), r.URL.Query())
+					if tt.wantQuery != nil {
+						assert.Equal(t, *tt.wantQuery, r.URL.Query())
+					} else {
+						assert.Equal(t,
+							*tt.args.opts.queryValues(), r.URL.Query(),
+						)
 					}
 
 					w.WriteHeader(tt.respStatus)
@@ -286,8 +300,8 @@ func TestVirtualMachinePackagesClient_List(t *testing.T) {
 				assert.Equal(t, tt.want, got)
 			}
 
-			if tt.pagination != nil {
-				assert.Equal(t, tt.pagination, resp.Pagination)
+			if tt.wantPagination != nil {
+				assert.Equal(t, tt.wantPagination, resp.Pagination)
 			}
 
 			if tt.errResp != nil {
@@ -356,6 +370,20 @@ func TestVirtualMachinePackagesClient_Get(t *testing.T) {
 			errResp:    fixturePackageNotFoundResponseError,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("package_not_found_error"),
+		},
+		{
+			name: "empty string",
+			args: args{
+				ctx:           context.Background(),
+				idOrPermalink: "",
+			},
+			reqPath: "virtual_machine_packages/_",
+			reqQuery: &url.Values{
+				"virtual_machine_package[permalink]": []string{""},
+			}, errStr: fixtureInvalidArgumentErr,
+			errResp:    fixtureInvalidArgumentResponseError,
+			respStatus: http.StatusBadRequest,
+			respBody:   fixture("invalid_argument_error"),
 		},
 		{
 			name: "nil context",

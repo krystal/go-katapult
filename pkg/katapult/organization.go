@@ -48,6 +48,21 @@ func (s *Organization) LookupReference() *Organization {
 	return lr
 }
 
+func (s *Organization) queryValues() *url.Values {
+	v := &url.Values{}
+
+	if s != nil {
+		switch {
+		case s.ID != "":
+			v.Set("organization[id]", s.ID)
+		case s.SubDomain != "":
+			v.Set("organization[sub_domain]", s.SubDomain)
+		}
+	}
+
+	return v
+}
+
 type OrganizationManagedArguments struct {
 	Name      string
 	SubDomain string

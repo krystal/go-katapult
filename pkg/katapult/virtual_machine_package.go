@@ -63,7 +63,7 @@ func (s *VirtualMachinePackagesClient) List(
 ) ([]*VirtualMachinePackage, *Response, error) {
 	u := &url.URL{
 		Path:     "virtual_machine_packages",
-		RawQuery: opts.Values().Encode(),
+		RawQuery: opts.queryValues().Encode(),
 	}
 
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)

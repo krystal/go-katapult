@@ -54,7 +54,7 @@ func TestZone_LookupReference(t *testing.T) {
 	}{
 		{
 			name: "nil",
-			obj:  (*Zone)(nil),
+			obj:  nil,
 			want: nil,
 		},
 		{
