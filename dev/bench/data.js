@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1607034584277,
+  "lastUpdate": 1607357815693,
   "repoUrl": "https://github.com/krystal/go-katapult",
   "entries": {
     "Benchmark": [
@@ -732,6 +732,60 @@ window.BENCHMARK_DATA = {
             "value": 2761,
             "unit": "ns/op",
             "extra": "435490 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "contact@jimeh.me",
+            "name": "Jim Myhrberg",
+            "username": "jimeh"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1d616a542341a6b6ddd3a8fe1be4d10e29a82064",
+          "message": "Merge pull request #41 from krystal/improve-object-lookup\n\nfeat(client): add queryable interface allowing better object lookup",
+          "timestamp": "2020-12-07T16:16:12Z",
+          "tree_id": "08beeb2294c3e1fedfa403ea3be20157330014be",
+          "url": "https://github.com/krystal/go-katapult/commit/1d616a542341a6b6ddd3a8fe1be4d10e29a82064"
+        },
+        "date": 1607357814931,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkNameGenerator_RandomHostname",
+            "value": 5082,
+            "unit": "ns/op",
+            "extra": "247648 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_NoPrefix",
+            "value": 3530,
+            "unit": "ns/op",
+            "extra": "353046 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_OnePrefix",
+            "value": 3767,
+            "unit": "ns/op",
+            "extra": "353713 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_TwoPrefixes",
+            "value": 3376,
+            "unit": "ns/op",
+            "extra": "351967 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_ThreePrefixes",
+            "value": 3526,
+            "unit": "ns/op",
+            "extra": "346550 times\n2 procs"
           }
         ]
       }
