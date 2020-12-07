@@ -12,10 +12,7 @@ type Network struct {
 	DataCenter *DataCenter `json:"data_center,omitempty"`
 }
 
-// LookupReference returns a new *Network stripped down to just ID or
-// Permalink fields, making it suitable for endpoints which require a reference
-// to a Network by ID or Permalink.
-func (s *Network) LookupReference() *Network {
+func (s *Network) lookupReference() *Network {
 	if s == nil {
 		return nil
 	}

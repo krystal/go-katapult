@@ -66,7 +66,7 @@ func TestDNSZone_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestDNSZone_LookupReference(t *testing.T) {
+func TestDNSZone_lookupReference(t *testing.T) {
 	tests := []struct {
 		name string
 		obj  *DNSZone
@@ -115,7 +115,7 @@ func TestDNSZone_LookupReference(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.obj.LookupReference()
+			got := tt.obj.lookupReference()
 
 			assert.Equal(t, tt.want, got)
 		})

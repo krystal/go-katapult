@@ -15,10 +15,7 @@ type DiskTemplate struct {
 	OperatingSystem *OperatingSystem     `json:"operating_system,omitempty"`
 }
 
-// LookupReference returns a new *DiskTemplate stripped down to just ID or
-// Permalink fields, making it suitable for endpoints which require a reference
-// to a Disk Template by ID or Permalink.
-func (s *DiskTemplate) LookupReference() *DiskTemplate {
+func (s *DiskTemplate) lookupReference() *DiskTemplate {
 	if s == nil {
 		return nil
 	}

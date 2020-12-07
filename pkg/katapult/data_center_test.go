@@ -50,7 +50,7 @@ func TestDataCenter_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestDataCenter_LookupReference(t *testing.T) {
+func TestDataCenter_lookupReference(t *testing.T) {
 	tests := []struct {
 		name string
 		obj  *DataCenter
@@ -102,7 +102,7 @@ func TestDataCenter_LookupReference(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.obj.LookupReference()
+			got := tt.obj.lookupReference()
 
 			assert.Equal(t, tt.want, got)
 		})

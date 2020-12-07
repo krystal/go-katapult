@@ -19,10 +19,7 @@ type LoadBalancer struct {
 	DataCenter            *DataCenter  `json:"-"`
 }
 
-// LookupReference returns a new *LoadBalancer stripped down to just the ID
-// field, making it suitable for endpoints which require a reference to a
-// Load Balancer by ID.
-func (s *LoadBalancer) LookupReference() *LoadBalancer {
+func (s *LoadBalancer) lookupReference() *LoadBalancer {
 	if s == nil {
 		return nil
 	}
@@ -97,7 +94,7 @@ func (
 	}
 
 	args := *s
-	args.DataCenter = s.DataCenter.LookupReference()
+	args.DataCenter = s.DataCenter.lookupReference()
 
 	return &args
 }
@@ -181,7 +178,7 @@ func (s *LoadBalancersClient) Create(
 ) (*LoadBalancer, *Response, error) {
 	u := &url.URL{Path: "organizations/_/load_balancers"}
 	reqBody := &loadBalancerCreateRequest{
-		Organization: org.LookupReference(),
+		Organization: org.lookupReference(),
 		Properties:   args.forRequest(),
 	}
 
@@ -197,7 +194,7 @@ func (s *LoadBalancersClient) Update(
 ) (*LoadBalancer, *Response, error) {
 	u := &url.URL{Path: "load_balancers/_"}
 	reqBody := &loadBalancerUpdateRequest{
-		LoadBalancer: lb.LookupReference(),
+		LoadBalancer: lb.lookupReference(),
 		Properties:   args.forRequest(),
 	}
 

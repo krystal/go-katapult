@@ -28,10 +28,7 @@ type VirtualMachine struct {
 	IPAddresses         []*IPAddress           `json:"ip_addresses,omitempty"`
 }
 
-// LookupReference returns a new *VirtualMachine stripped down to just ID or
-// FQDN fields, making it suitable for endpoints which require a reference to a
-// Virtual Machine by ID or FQDN.
-func (s *VirtualMachine) LookupReference() *VirtualMachine {
+func (s *VirtualMachine) lookupReference() *VirtualMachine {
 	if s == nil {
 		return nil
 	}
@@ -164,8 +161,8 @@ func (s *VirtualMachinesClient) ChangePackage(
 ) (*Task, *Response, error) {
 	u := &url.URL{Path: "virtual_machines/_/package"}
 	reqBody := &virtualMachineChangePackageRequestBody{
-		VirtualMachine: vm.LookupReference(),
-		Package:        pkg.LookupReference(),
+		VirtualMachine: vm.lookupReference(),
+		Package:        pkg.lookupReference(),
 	}
 	body, resp, err := s.doRequest(ctx, "PUT", u, reqBody)
 

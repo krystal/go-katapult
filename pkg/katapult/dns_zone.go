@@ -17,10 +17,7 @@ type DNSZone struct {
 	InfrastructureZone bool   `json:"infrastructure_zone,omitempty"`
 }
 
-// LookupReference returns a new *DNSZone stripped down to just ID or Name
-// fields, making it suitable for endpoints which require a reference to a
-// DNSZone by ID or Name.
-func (s *DNSZone) LookupReference() *DNSZone {
+func (s *DNSZone) lookupReference() *DNSZone {
 	if s == nil {
 		return nil
 	}
@@ -156,7 +153,7 @@ func (s *DNSZonesClient) Create(
 ) (*DNSZone, *Response, error) {
 	u := &url.URL{Path: "organizations/_/dns/zones"}
 	reqBody := &dnsZoneCreateRequest{
-		Organization: org.LookupReference(),
+		Organization: org.lookupReference(),
 	}
 
 	if args != nil {
@@ -204,7 +201,7 @@ func (s *DNSZonesClient) Verify(
 ) (*DNSZone, *Response, error) {
 	u := &url.URL{Path: "dns/zones/_/verify"}
 	reqBody := &dnsZoneVerifyRequest{
-		DNSZone: zone.LookupReference(),
+		DNSZone: zone.lookupReference(),
 	}
 	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
 
@@ -218,7 +215,7 @@ func (s *DNSZonesClient) UpdateTTL(
 ) (*DNSZone, *Response, error) {
 	u := &url.URL{Path: "dns/zones/_/update_ttl"}
 	reqBody := &dnsZoneUpdateTTLRequest{
-		DNSZone: zone.LookupReference(),
+		DNSZone: zone.lookupReference(),
 		TTL:     ttl,
 	}
 	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
