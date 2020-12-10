@@ -12,20 +12,18 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"os"
-	"path/filepath"
 	"reflect"
 	"testing"
 	"time"
 
 	"github.com/augurysys/timestamp"
 	"github.com/krystal/go-katapult/internal/codec"
+	"github.com/krystal/go-katapult/internal/golden"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 var (
-	doUpdateGolden = os.Getenv("UPDATE_GOLDEN") == "1"
-
 	fixtureInvalidAPITokenErr = "invalid_api_token: The API token provided " +
 		"was not valid (it may not exist or have expired)"
 	fixtureInvalidAPITokenResponseError = &ResponseError{
@@ -82,35 +80,6 @@ var (
 	}
 )
 
-func goldenFile(t *testing.T) string {
-	return filepath.Join("testdata", filepath.FromSlash(t.Name())+".golden")
-}
-
-func getGolden(t *testing.T) []byte {
-	gp := goldenFile(t)
-	g, err := ioutil.ReadFile(gp)
-	if err != nil {
-		t.Fatalf("failed reading .golden: %s", err)
-	}
-
-	return g
-}
-
-func updateGolden(t *testing.T, got []byte) {
-	gp := goldenFile(t)
-	dir := filepath.Dir(gp)
-
-	t.Logf("updating .golden file: %s", gp)
-
-	if err := os.MkdirAll(dir, 0o755); err != nil {
-		t.Fatalf("failed to update .golden directory: %s", err)
-	}
-
-	if err := ioutil.WriteFile(gp, got, 0o644); err != nil { //nolint:gosec
-		t.Fatalf("failed to update .golden file: %s", err)
-	}
-}
-
 func timestampPtr(unixtime int64) *timestamp.Timestamp {
 	ts := timestamp.Timestamp(time.Unix(unixtime, 0).UTC())
 
@@ -135,52 +104,36 @@ func fixture(name string) []byte {
 }
 
 func testJSONMarshaling(t *testing.T, input interface{}) {
-	testCustomJSONMarshaling(t, input, nil)
-}
-
-func testCustomJSONMarshaling(
-	t *testing.T,
-	input interface{},
-	decoded interface{},
-) {
 	c := &codec.JSON{}
 
 	buf := &bytes.Buffer{}
 	err := c.Encode(input, buf)
 	require.NoError(t, err, "encoding failed")
 
-	if doUpdateGolden {
-		updateGolden(t, buf.Bytes())
+	if golden.Update() {
+		golden.Set(t, buf.Bytes())
 	}
 
-	g := getGolden(t)
-	assert.Equal(t, string(g), buf.String(),
-		"encoding does not match golden")
+	g := golden.Get(t)
+	assert.Equal(t, string(g), buf.String(), "encoding does not match golden")
 
-	if decoded != nil {
-		got := reflect.New(reflect.TypeOf(decoded).Elem()).Interface()
-		err = c.Decode(bytes.NewBuffer(g), got)
-		require.NoError(t, err, "decoding golden failed")
-		assert.Equal(t, decoded, got,
-			"decoding from golden does not match expected object")
-	} else {
-		got := reflect.New(reflect.TypeOf(input).Elem()).Interface()
-		err = c.Decode(bytes.NewBuffer(g), got)
-		require.NoError(t, err, "decoding golden failed")
-		assert.Equal(t, input, got,
-			"decoding from golden does not match expected object")
-	}
+	got := reflect.New(reflect.TypeOf(input).Elem()).Interface()
+	err = c.Decode(bytes.NewBuffer(g), got)
+	require.NoError(t, err, "decoding golden failed")
+	assert.Equal(t, input, got,
+		"decoding from golden does not match expected object",
+	)
 }
 
 func testQueryableEncoding(t *testing.T, obj queryable) {
 	qs := obj.queryValues()
 	queryStr := qs.Encode()
 
-	if doUpdateGolden {
-		updateGolden(t, []byte(queryStr))
+	if golden.Update() {
+		golden.Set(t, []byte(queryStr))
 	}
 
-	g := string(getGolden(t))
+	g := string(golden.Get(t))
 	assert.Equal(t, queryStr, g, "query string does not match golden")
 
 	parsedQuery, err := url.ParseQuery(g)
