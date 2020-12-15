@@ -6,6 +6,7 @@ import (
 	"net/url"
 
 	"github.com/augurysys/timestamp"
+	"github.com/krystal/go-katapult/pkg/buildspec"
 )
 
 type VirtualMachineBuild struct {
@@ -45,6 +46,11 @@ type virtualMachineBuildCreateRequest struct {
 	DiskTemplate        *DiskTemplate          `json:"disk_template,omitempty"`
 	DiskTemplateOptions []*DiskTemplateOption  `json:"disk_template_options,omitempty"`
 	Network             *Network               `json:"network,omitempty"`
+}
+
+type virtualMachineBuildCreateFromSpecRequest struct {
+	Organization *Organization `json:"organization,omitempty"`
+	XML          string        `json:"xml,omitempty"`
 }
 
 type virtualMachineBuildsResponseBody struct {
@@ -109,12 +115,41 @@ func (s *VirtualMachineBuildsClient) Create(
 
 	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
 
-	build := body.VirtualMachineBuild
-	if build == nil {
-		build = body.Build
+	return body.VirtualMachineBuild, resp, err
+}
+
+func (s *VirtualMachineBuildsClient) CreateFromSpec(
+	ctx context.Context,
+	org *Organization,
+	spec *buildspec.VirtualMachineSpec,
+) (*VirtualMachineBuild, *Response, error) {
+	specXML, _ := spec.XML()
+
+	u := &url.URL{Path: "organizations/_/virtual_machines/build_from_spec"}
+	reqBody := &virtualMachineBuildCreateFromSpecRequest{
+		Organization: org.lookupReference(),
+		XML:          string(specXML),
 	}
 
-	return build, resp, err
+	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
+
+	return body.VirtualMachineBuild, resp, err
+}
+
+func (s *VirtualMachineBuildsClient) CreateFromSpecXML(
+	ctx context.Context,
+	org *Organization,
+	specXML string,
+) (*VirtualMachineBuild, *Response, error) {
+	u := &url.URL{Path: "organizations/_/virtual_machines/build_from_spec"}
+	reqBody := &virtualMachineBuildCreateFromSpecRequest{
+		Organization: org.lookupReference(),
+		XML:          specXML,
+	}
+
+	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
+
+	return body.VirtualMachineBuild, resp, err
 }
 
 func (s *VirtualMachineBuildsClient) doRequest(
@@ -130,6 +165,9 @@ func (s *VirtualMachineBuildsClient) doRequest(
 	req, err := s.client.NewRequestWithContext(ctx, method, u, body)
 	if err == nil {
 		resp, err = s.client.Do(req, respBody)
+	}
+	if respBody.VirtualMachineBuild == nil {
+		respBody.VirtualMachineBuild = respBody.Build
 	}
 
 	return respBody, resp, err

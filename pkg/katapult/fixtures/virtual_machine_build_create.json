@@ -8,5 +8,9 @@
     "id": "vmbuild_TEmhezUShNuAsyac",
     "state": "pending"
   },
+  "virtual_machine_build": {
+    "id": "vmbuild_TEmhezUShNuAsyac",
+    "state": "pending"
+  },
   "hostname": "elegant-jealous-lily"
 }
