@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/jimeh/undent"
+	"github.com/krystal/go-katapult/pkg/buildspec"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -18,6 +20,16 @@ var (
 		Description: "No build was found matching any of the criteria " +
 			"provided in the arguments",
 		Detail: json.RawMessage(`{}`),
+	}
+
+	fixtureInvalidXMLSpecErr = "invalid_spec_xml: The spec XML provided is " +
+		"invalid"
+	fixtureInvalidXMLSpecResponseError = &ResponseError{
+		Code:        "invalid_spec_xml",
+		Description: "The spec XML provided is invalid",
+		Detail: json.RawMessage(`{
+      "errors": "1:21: FATAL: EndTag: '</' not found"
+    }`),
 	}
 )
 
@@ -165,6 +177,37 @@ func Test_virtualMachineBuildCreateRequest_JSONMarshaling(t *testing.T) {
 					{Key: "foo", Value: "bar"},
 				},
 				Network: &Network{ID: "netw_zDW7KYAeqqfRfVag"},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func Test_virtualMachineBuildCreateFromSpecRequest_JSONMarshaling(
+	t *testing.T,
+) {
+	tests := []struct {
+		name string
+		obj  *virtualMachineBuildCreateFromSpecRequest
+	}{
+		{
+			name: "empty",
+			obj:  &virtualMachineBuildCreateFromSpecRequest{},
+		},
+		{
+			name: "full",
+			obj: &virtualMachineBuildCreateFromSpecRequest{
+				Organization: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				XML: undent.String(`
+					<?xml version="1.0" encoding="UTF-8"?>
+					<VirtualMachineSpec>
+						<DataCenter by="permalink">london</DataCenter>
+					</VirtualMachineSpec>`,
+				),
 			},
 		},
 	}
@@ -715,6 +758,405 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 
 			got, resp, err := c.VirtualMachineBuilds.Create(
 				tt.args.ctx, tt.args.org, tt.args.buildArgs,
+			)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestVirtualMachineBuildsClient_CreateFromSpec(t *testing.T) {
+	spec := &buildspec.VirtualMachineSpec{
+		DataCenter: &buildspec.DataCenter{
+			Permalink: "london",
+		},
+		Resources: &buildspec.Resources{
+			Package: &buildspec.Package{
+				Permalink: "rock-3",
+			},
+		},
+		DiskTemplate: &buildspec.DiskTemplate{
+			Permalink: "templates/ubuntu-18-04",
+		},
+		Hostname: "web-3",
+	}
+	xmlSpec, _ := spec.XML()
+
+	type args struct {
+		ctx  context.Context
+		org  *Organization
+		spec *buildspec.VirtualMachineSpec
+	}
+	tests := []struct {
+		name       string
+		args       args
+		reqBody    *virtualMachineBuildCreateFromSpecRequest
+		want       *VirtualMachineBuild
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "virtual machine build",
+			args: args{
+				ctx: context.Background(),
+				org: &Organization{
+					ID:        "org_O648YDMEYeLmqdmn",
+					Name:      "ACME Inc.",
+					SubDomain: "acme",
+				},
+				spec: spec,
+			},
+			reqBody: &virtualMachineBuildCreateFromSpecRequest{
+				Organization: &Organization{
+					ID: "org_O648YDMEYeLmqdmn",
+				},
+				XML: string(xmlSpec),
+			},
+			want: &VirtualMachineBuild{
+				ID:    "vmbuild_TEmhezUShNuAsyac",
+				State: VirtualMachineBuildPending,
+			},
+			respStatus: http.StatusCreated,
+			respBody:   fixture("virtual_machine_build_create"),
+		},
+		{
+			name: "invalid API token response",
+			args: args{
+				ctx:  context.Background(),
+				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				spec: spec,
+			},
+			errStr:     fixtureInvalidAPITokenErr,
+			errResp:    fixtureInvalidAPITokenResponseError,
+			respStatus: http.StatusForbidden,
+			respBody:   fixture("invalid_api_token_error"),
+		},
+		{
+			name: "invalid XML spec",
+			args: args{
+				ctx:  context.Background(),
+				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				spec: spec,
+			},
+			errStr:     fixtureInvalidXMLSpecErr,
+			errResp:    fixtureInvalidXMLSpecResponseError,
+			respStatus: http.StatusBadRequest,
+			respBody:   fixture("invalid_spec_xml_error"),
+		},
+		{
+			name: "non-existent organization",
+			args: args{
+				ctx:  context.Background(),
+				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				spec: spec,
+			},
+			errStr:     fixtureOrganizationNotFoundErr,
+			errResp:    fixtureOrganizationNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("organization_not_found_error"),
+		},
+		{
+			name: "suspended organization",
+			args: args{
+				ctx:  context.Background(),
+				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				spec: spec,
+			},
+			errStr:     fixtureOrganizationSuspendedErr,
+			errResp:    fixtureOrganizationSuspendedResponseError,
+			respStatus: http.StatusForbidden,
+			respBody:   fixture("organization_suspended_error"),
+		},
+		{
+			name: "permission denied",
+			args: args{
+				ctx:  context.Background(),
+				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				spec: spec,
+			},
+			errStr:     fixturePermissionDeniedErr,
+			errResp:    fixturePermissionDeniedResponseError,
+			respStatus: http.StatusForbidden,
+			respBody:   fixture("permission_denied_error"),
+		},
+		{
+			name: "validation error",
+			args: args{
+				ctx:  context.Background(),
+				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				spec: spec,
+			},
+			errStr:     fixtureValidationErrorErr,
+			errResp:    fixtureValidationErrorResponseError,
+			respStatus: http.StatusUnprocessableEntity,
+			respBody:   fixture("validation_error"),
+		},
+		{
+			name: "nil organization",
+			args: args{
+				ctx:  context.Background(),
+				org:  nil,
+				spec: spec,
+			},
+			errStr:     fixtureOrganizationNotFoundErr,
+			errResp:    fixtureOrganizationNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("organization_not_found_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx:  nil,
+				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				spec: spec,
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			mux.HandleFunc(
+				"/core/v1/organizations/_/virtual_machines/build_from_spec",
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "POST", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					if tt.reqBody != nil {
+						reqBody := &virtualMachineBuildCreateFromSpecRequest{}
+						err := strictUmarshal(r.Body, reqBody)
+						assert.NoError(t, err)
+						assert.Equal(t, tt.reqBody, reqBody)
+					}
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.VirtualMachineBuilds.CreateFromSpec(
+				tt.args.ctx, tt.args.org, tt.args.spec,
+			)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestVirtualMachineBuildsClient_CreateFromSpecXML(t *testing.T) {
+	//nolint:lll
+	specXML := undent.String(`
+		<?xml version="1.0" encoding="UTF-8"?>
+		<VirtualMachineSpec>
+			<DataCenter by="permalink">london</DataCenter>
+			<Resources>
+				<Package by="permalink">rock-3</Package>
+			</Resources>
+			<DiskTemplate>
+				<DiskTemplate by="permalink">templates/ubuntu-18-04</DiskTemplate>
+			</DiskTemplate>
+			<Hostname>
+				<Hostname>web-3</Hostname>
+			</Hostname>
+		</VirtualMachineSpec>`,
+	)
+
+	type args struct {
+		ctx context.Context
+		org *Organization
+		xml string
+	}
+	tests := []struct {
+		name       string
+		args       args
+		reqBody    *virtualMachineBuildCreateFromSpecRequest
+		want       *VirtualMachineBuild
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "virtual machine build",
+			args: args{
+				ctx: context.Background(),
+				org: &Organization{
+					ID:        "org_O648YDMEYeLmqdmn",
+					Name:      "ACME Inc.",
+					SubDomain: "acme",
+				},
+				xml: specXML,
+			},
+			reqBody: &virtualMachineBuildCreateFromSpecRequest{
+				Organization: &Organization{
+					ID: "org_O648YDMEYeLmqdmn",
+				},
+				XML: specXML,
+			},
+			want: &VirtualMachineBuild{
+				ID:    "vmbuild_TEmhezUShNuAsyac",
+				State: VirtualMachineBuildPending,
+			},
+			respStatus: http.StatusCreated,
+			respBody:   fixture("virtual_machine_build_create"),
+		},
+		{
+			name: "invalid API token response",
+			args: args{
+				ctx: context.Background(),
+				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				xml: specXML,
+			},
+			errStr:     fixtureInvalidAPITokenErr,
+			errResp:    fixtureInvalidAPITokenResponseError,
+			respStatus: http.StatusForbidden,
+			respBody:   fixture("invalid_api_token_error"),
+		},
+		{
+			name: "invalid XML spec",
+			args: args{
+				ctx: context.Background(),
+				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				xml: specXML,
+			},
+			errStr:     fixtureInvalidXMLSpecErr,
+			errResp:    fixtureInvalidXMLSpecResponseError,
+			respStatus: http.StatusBadRequest,
+			respBody:   fixture("invalid_spec_xml_error"),
+		},
+		{
+			name: "non-existent organization",
+			args: args{
+				ctx: context.Background(),
+				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				xml: specXML,
+			},
+			errStr:     fixtureOrganizationNotFoundErr,
+			errResp:    fixtureOrganizationNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("organization_not_found_error"),
+		},
+		{
+			name: "suspended organization",
+			args: args{
+				ctx: context.Background(),
+				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				xml: specXML,
+			},
+			errStr:     fixtureOrganizationSuspendedErr,
+			errResp:    fixtureOrganizationSuspendedResponseError,
+			respStatus: http.StatusForbidden,
+			respBody:   fixture("organization_suspended_error"),
+		},
+		{
+			name: "permission denied",
+			args: args{
+				ctx: context.Background(),
+				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				xml: specXML,
+			},
+			errStr:     fixturePermissionDeniedErr,
+			errResp:    fixturePermissionDeniedResponseError,
+			respStatus: http.StatusForbidden,
+			respBody:   fixture("permission_denied_error"),
+		},
+		{
+			name: "validation error",
+			args: args{
+				ctx: context.Background(),
+				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				xml: specXML,
+			},
+			errStr:     fixtureValidationErrorErr,
+			errResp:    fixtureValidationErrorResponseError,
+			respStatus: http.StatusUnprocessableEntity,
+			respBody:   fixture("validation_error"),
+		},
+		{
+			name: "nil organization",
+			args: args{
+				ctx: context.Background(),
+				org: nil,
+				xml: specXML,
+			},
+			errStr:     fixtureOrganizationNotFoundErr,
+			errResp:    fixtureOrganizationNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("organization_not_found_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx: nil,
+				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				xml: specXML,
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			mux.HandleFunc(
+				"/core/v1/organizations/_/virtual_machines/build_from_spec",
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "POST", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					if tt.reqBody != nil {
+						reqBody := &virtualMachineBuildCreateFromSpecRequest{}
+						err := strictUmarshal(r.Body, reqBody)
+						assert.NoError(t, err)
+						assert.Equal(t, tt.reqBody, reqBody)
+					}
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.VirtualMachineBuilds.CreateFromSpecXML(
+				tt.args.ctx, tt.args.org, tt.args.xml,
 			)
 
 			if tt.respStatus != 0 {
