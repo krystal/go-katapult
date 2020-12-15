@@ -1,3 +1,4 @@
+GOMODNAME := $(shell grep 'module' go.mod | sed -e 's/^module //')
 SOURCES := $(shell find . -name "*.go" -or -name "go.mod" -or -name "go.sum" \
 	-or -name "Makefile")
 
@@ -49,9 +50,9 @@ $(TOOLDIR)/$(1): $(TOOLDIR)/gobin Makefile
 	gobin $(V) "$(2)"
 endef
 
+$(eval $(call tool,godoc,golang.org/x/tools/cmd/godoc))
 $(eval $(call tool,gofumports,mvdan.cc/gofumpt/gofumports))
 $(eval $(call tool,golangci-lint,github.com/golangci/golangci-lint/cmd/golangci-lint@v1.31))
-$(eval $(call tool,golds,go101.org/golds@v0.1))
 
 .PHONY: tools
 tools: $(TOOLS)
@@ -161,6 +162,6 @@ check-tidy:
 
 # Serve docs
 .PHONY: docs
-docs: golds
-	$(info Serving go docs)
-	@golds -emphasize-wdpkgs ./...
+docs: godoc
+	$(info serviing docs on http://127.0.0.1:6060/pkg/$(GOMODNAME)/)
+	@godoc -http=127.0.0.1:6060
