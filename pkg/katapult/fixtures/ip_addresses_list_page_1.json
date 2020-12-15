@@ -1,0 +1,21 @@
+{
+  "pagination": {
+    "current_page": 1,
+    "total_pages": 2,
+    "total": 3,
+    "per_page": 2,
+    "large_set": false
+  },
+  "ip_addresses": [
+    {
+      "id": "ip_dZLqwQifQFtboHXW",
+      "address": "169.37.118.179",
+      "reverse_dns": "bitter-beautiful-mango.acme.katapult.cloud"
+    },
+    {
+      "id": "ip_fAwrdP9NvW0Z25eE",
+      "address": "95.135.35.113",
+      "reverse_dns": "popular-shapely-tank.acme.katapult.cloud"
+    }
+  ]
+}

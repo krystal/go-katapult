@@ -2,11 +2,23 @@ package katapult
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"net/url"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+)
+
+var (
+	fixtureNetworkNotFoundErr = "network_not_found: No network was found " +
+		"matching any of the criteria provided in the arguments"
+	fixtureNetworkNotFoundResponseError = &ResponseError{
+		Code: "network_not_found",
+		Description: "No network was found matching any of the criteria " +
+			"provided in the arguments",
+		Detail: json.RawMessage(`{}`),
+	}
 )
 
 func TestNetwork_JSONMarshaling(t *testing.T) {

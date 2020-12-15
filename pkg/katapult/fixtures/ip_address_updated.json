@@ -1,0 +1,9 @@
+{
+  "ip_address": {
+    "id": "ip_dZLqwQifQFtboHXW",
+    "address": "169.37.118.179",
+    "vip": true,
+    "label": "web-east-3",
+    "reverse_dns": "web-east-3.acme.katapult.cloud"
+  }
+}

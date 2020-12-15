@@ -1,1 +1,1 @@
-{"id":"id1","address":"address","reverse_dns":"reverse_dns","vip":true,"address_with_mask":"address_with_mask"}
+{"id":"ip_Ru4ef2oh6STZEQkC","address":"218.205.195.217","reverse_dns":"reverse_dns","vip":true,"label":"east-3","address_with_mask":"218.205.195.217/24","network":{"id":"netw_zDW7KYAeqqfRfVag"},"allocation_id":"vm_USg3i8oJTG5OdbQM","allocation_type":"VirtualMachine"}

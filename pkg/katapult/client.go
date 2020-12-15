@@ -34,6 +34,7 @@ type Client struct {
 	DNSZones               *DNSZonesClient
 	DataCenters            *DataCentersClient
 	DiskTemplates          *DiskTemplatesClient
+	IPAddresses            *IPAddressesClient
 	LoadBalancers          *LoadBalancersClient
 	Networks               *NetworksClient
 	Organizations          *OrganizationsClient
@@ -58,6 +59,7 @@ func NewClient(config *Config) (*Client, error) {
 		DiskTemplates:          newDiskTemplatesClient(ac),
 		LoadBalancers:          newLoadBalancersClient(ac),
 		Networks:               newNetworksClient(ac),
+		IPAddresses:            newIPAddressesClient(ac),
 		Organizations:          newOrganizationsClient(ac),
 		VirtualMachineBuilds:   newVirtualMachineBuildsClient(ac),
 		VirtualMachinePackages: newVirtualMachinePackagesClient(ac),
