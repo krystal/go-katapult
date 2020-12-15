@@ -1,8 +1,10 @@
-package buildspec
+package buildspec_test
 
 import (
 	"fmt"
 	"strings"
+
+	"github.com/krystal/go-katapult/pkg/buildspec"
 )
 
 func ExampleFromJSON() {
@@ -22,7 +24,7 @@ func ExampleFromJSON() {
   }
 }`)
 
-	spec, _ := FromJSON(r)
+	spec, _ := buildspec.FromJSON(r)
 
 	fmt.Println(spec.DataCenter.Permalink)
 	fmt.Println(spec.Resources.Package.Permalink)
@@ -51,7 +53,7 @@ func ExampleFromXML() {
   </Hostname>
 </VirtualMachineSpec>`)
 
-	spec, _ := FromXML(r)
+	spec, _ := buildspec.FromXML(r)
 
 	fmt.Println(spec.DataCenter.Permalink)
 	fmt.Println(spec.Resources.Package.Permalink)
@@ -75,7 +77,7 @@ disk_template:
   permalink: templates/ubuntu-18-04
 hostname: web-3`)
 
-	spec, _ := FromYAML(r)
+	spec, _ := buildspec.FromYAML(r)
 
 	fmt.Println(spec.DataCenter.Permalink)
 	fmt.Println(spec.Resources.Package.Permalink)
