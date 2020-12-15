@@ -1,0 +1,14 @@
+{
+  "id": "dtpl_rlinMl51Lb1uvTez",
+  "version": 4,
+  "options": [
+    {
+      "key": "foo",
+      "value": "bar"
+    },
+    {
+      "key": "hello",
+      "value": "world"
+    }
+  ]
+}

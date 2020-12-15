@@ -1,0 +1,7 @@
+<AuthorizedKeys>
+  <SSHKeys>
+    <SSHKey>ssh-rsa saAfjbp8ADNgGRDi19oKuYVIBTHNC66A</SSHKey>
+    <SSHKey>ssh-rsa ouQEux6pnfmyxblOgGQNRpmqIweAO3Qs</SSHKey>
+    <SSHKey>ssh-rsa sxyCHXCRBeZliR6EZDmRZ9A82oHkh1nq</SSHKey>
+  </SSHKeys>
+</AuthorizedKeys>

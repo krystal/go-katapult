@@ -1,0 +1,6 @@
+<DiskTemplate>
+  <DiskTemplate>dtpl_rlinMl51Lb1uvTez</DiskTemplate>
+  <Version by="number">4</Version>
+  <Option key="foo">bar</Option>
+  <Option key="hello">world</Option>
+</DiskTemplate>

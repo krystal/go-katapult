@@ -1,0 +1,12 @@
+<xmlSystemDisks>
+  <Disk>
+    <Name>System Disk</Name>
+    <Size>10</Size>
+    <Speed>ssd</Speed>
+  </Disk>
+  <Disk>
+    <Name>Another Disk</Name>
+    <Size>30</Size>
+    <Speed>nvme</Speed>
+  </Disk>
+</xmlSystemDisks>

@@ -70,6 +70,12 @@ issues:
     - source: "`json:"
       linters:
         - lll
+    - source: "`xml:"
+      linters:
+        - lll
+    - source: "`yaml:"
+      linters:
+        - lll
 
 run:
   timeout: 2m

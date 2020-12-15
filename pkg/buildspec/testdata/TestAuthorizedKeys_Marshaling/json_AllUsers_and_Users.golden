@@ -1,0 +1,11 @@
+{
+  "all_users": true,
+  "users": [
+    {
+      "id": "user_yUfYcKHgU1ywBWzP"
+    },
+    {
+      "email_address": "jane@doe.com"
+    }
+  ]
+}

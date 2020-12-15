@@ -1,0 +1,6 @@
+<NetworkInterface>
+  <Network>netw_17w3MepxvWE4J3Zx</Network>
+  <SpeedProfile>nsp_bFQhDNAluyp4t2A9</SpeedProfile>
+  <IPAddressAllocation type="new"></IPAddressAllocation>
+  <IPAddressAllocation type="existing"></IPAddressAllocation>
+</NetworkInterface>
