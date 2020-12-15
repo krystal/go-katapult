@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1607357815693,
+  "lastUpdate": 1608037016540,
   "repoUrl": "https://github.com/krystal/go-katapult",
   "entries": {
     "Benchmark": [
@@ -786,6 +786,60 @@ window.BENCHMARK_DATA = {
             "value": 3526,
             "unit": "ns/op",
             "extra": "346550 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "contact@jimeh.me",
+            "name": "Jim Myhrberg",
+            "username": "jimeh"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "86aa7a493b9ee57a180d8d0fe8615450dccd30f8",
+          "message": "Merge pull request #42 from krystal/add-buildspec-package\n\nfeat(buildspec): add buildspec package to create VM Build spec XML documents",
+          "timestamp": "2020-12-15T12:56:20Z",
+          "tree_id": "8b12c872230541b8b325114c9aea7d82e63e06e8",
+          "url": "https://github.com/krystal/go-katapult/commit/86aa7a493b9ee57a180d8d0fe8615450dccd30f8"
+        },
+        "date": 1608037015529,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkNameGenerator_RandomHostname",
+            "value": 4639,
+            "unit": "ns/op",
+            "extra": "230096 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_NoPrefix",
+            "value": 3319,
+            "unit": "ns/op",
+            "extra": "360321 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_OnePrefix",
+            "value": 3351,
+            "unit": "ns/op",
+            "extra": "358150 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_TwoPrefixes",
+            "value": 3481,
+            "unit": "ns/op",
+            "extra": "358094 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_ThreePrefixes",
+            "value": 3450,
+            "unit": "ns/op",
+            "extra": "359203 times\n2 procs"
           }
         ]
       }
