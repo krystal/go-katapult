@@ -635,14 +635,8 @@ func TestVirtualMachinesClient_Get(t *testing.T) {
 				ctx:      context.Background(),
 				idOrFQDN: "vm_nopethisbegone",
 			},
-			errStr: "virtual_machine_not_found: No virtual machine was found " +
-				"matching any of the criteria provided in the arguments",
-			errResp: &ResponseError{
-				Code: "virtual_machine_not_found",
-				Description: "No virtual machine was found matching any of " +
-					"the criteria provided in the arguments",
-				Detail: json.RawMessage(`{}`),
-			},
+			errStr:     fixtureVirtualMachineNotFoundErr,
+			errResp:    fixtureVirtualMachineNotFoundResponseError,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("virtual_machine_not_found_error"),
 		},
@@ -751,14 +745,8 @@ func TestVirtualMachinesClient_GetByID(t *testing.T) {
 				ctx: context.Background(),
 				id:  "vm_nopethisbegone",
 			},
-			errStr: "virtual_machine_not_found: No virtual machine was found " +
-				"matching any of the criteria provided in the arguments",
-			errResp: &ResponseError{
-				Code: "virtual_machine_not_found",
-				Description: "No virtual machine was found matching any of " +
-					"the criteria provided in the arguments",
-				Detail: json.RawMessage(`{}`),
-			},
+			errStr:     fixtureVirtualMachineNotFoundErr,
+			errResp:    fixtureVirtualMachineNotFoundResponseError,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("virtual_machine_not_found_error"),
 		},
@@ -856,14 +844,8 @@ func TestVirtualMachinesClient_GetByFQDN(t *testing.T) {
 				ctx:  context.Background(),
 				fqdn: "vm_nopethisbegone",
 			},
-			errStr: "virtual_machine_not_found: No virtual machine was found " +
-				"matching any of the criteria provided in the arguments",
-			errResp: &ResponseError{
-				Code: "virtual_machine_not_found",
-				Description: "No virtual machine was found matching any of " +
-					"the criteria provided in the arguments",
-				Detail: json.RawMessage(`{}`),
-			},
+			errStr:     fixtureVirtualMachineNotFoundErr,
+			errResp:    fixtureVirtualMachineNotFoundResponseError,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("virtual_machine_not_found_error"),
 		},
