@@ -2,7 +2,6 @@ package katapult
 
 import (
 	"context"
-	"fmt"
 	"net/url"
 	"strings"
 )
@@ -27,6 +26,21 @@ func (s *Network) lookupReference() *Network {
 	}
 
 	return lr
+}
+
+func (s *Network) queryValues() *url.Values {
+	v := &url.Values{}
+
+	if s != nil {
+		switch {
+		case s.ID != "":
+			v.Set("network[id]", s.ID)
+		case s.Permalink != "":
+			v.Set("network[permalink]", s.Permalink)
+		}
+	}
+
+	return v
 }
 
 type VirtualNetwork struct {
@@ -82,18 +96,24 @@ func (s *NetworksClient) GetByID(
 	ctx context.Context,
 	id string,
 ) (*Network, *Response, error) {
-	u := &url.URL{Path: fmt.Sprintf("networks/%s", id)}
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
-
-	return body.Network, resp, err
+	return s.get(ctx, &Network{ID: id})
 }
 
 func (s *NetworksClient) GetByPermalink(
 	ctx context.Context,
 	permalink string,
 ) (*Network, *Response, error) {
-	qs := url.Values{"network[permalink]": []string{permalink}}
-	u := &url.URL{Path: "networks/_", RawQuery: qs.Encode()}
+	return s.get(ctx, &Network{Permalink: permalink})
+}
+
+func (s *NetworksClient) get(
+	ctx context.Context,
+	network *Network,
+) (*Network, *Response, error) {
+	u := &url.URL{
+		Path:     "networks/_",
+		RawQuery: network.queryValues().Encode(),
+	}
 
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 

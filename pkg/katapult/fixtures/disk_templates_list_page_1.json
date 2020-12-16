@@ -10,12 +10,12 @@
     {
       "id": "dtpl_YCTIgR4rE2fSgbW0",
       "name": "CentOS 8.0",
-      "description": null
+      "permalink": "templates/centos-8"
     },
     {
       "id": "dtpl_KXGG3fOWbJqvZvoq",
       "name": "Debian 10",
-      "description": null
+      "permalink": "templates/debian-10"
     }
   ]
 }
