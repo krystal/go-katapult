@@ -126,20 +126,24 @@ func (s *IPAddressesClient) GetByID(
 	ctx context.Context,
 	id string,
 ) (*IPAddress, *Response, error) {
-	qs := queryValues(&IPAddress{ID: id})
-	u := &url.URL{Path: "ip_addresses/_", RawQuery: qs.Encode()}
-
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
-
-	return body.IPAddress, resp, err
+	return s.get(ctx, &IPAddress{ID: id})
 }
 
 func (s *IPAddressesClient) GetByAddress(
 	ctx context.Context,
 	address string,
 ) (*IPAddress, *Response, error) {
-	qs := queryValues(&IPAddress{Address: address})
-	u := &url.URL{Path: "ip_addresses/_", RawQuery: qs.Encode()}
+	return s.get(ctx, &IPAddress{Address: address})
+}
+
+func (s *IPAddressesClient) get(
+	ctx context.Context,
+	ip *IPAddress,
+) (*IPAddress, *Response, error) {
+	u := &url.URL{
+		Path:     "ip_addresses/_",
+		RawQuery: ip.queryValues().Encode(),
+	}
 
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 

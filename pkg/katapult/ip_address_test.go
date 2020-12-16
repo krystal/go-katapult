@@ -459,14 +459,14 @@ func TestIPAddressesClient_Get(t *testing.T) {
 		idOrAddress string
 	}
 	tests := []struct {
-		name         string
-		args         args
-		want         *IPAddress
-		wantReqQuery *url.Values
-		errStr       string
-		errResp      *ResponseError
-		respStatus   int
-		respBody     []byte
+		name       string
+		args       args
+		want       *IPAddress
+		wantQuery  *url.Values
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
 	}{
 		{
 			name: "by ID",
@@ -479,7 +479,7 @@ func TestIPAddressesClient_Get(t *testing.T) {
 				Address:    "169.37.118.179",
 				ReverseDNS: "bitter-beautiful-mango.acme.katapult.cloud",
 			},
-			wantReqQuery: &url.Values{
+			wantQuery: &url.Values{
 				"ip_address[id]": []string{"ip_dZLqwQifQFtboHXW"},
 			},
 			respStatus: http.StatusOK,
@@ -496,7 +496,7 @@ func TestIPAddressesClient_Get(t *testing.T) {
 				Address:    "169.37.118.179",
 				ReverseDNS: "bitter-beautiful-mango.acme.katapult.cloud",
 			},
-			wantReqQuery: &url.Values{
+			wantQuery: &url.Values{
 				"ip_address[address]": []string{"169.37.118.179"},
 			},
 			respStatus: http.StatusOK,
@@ -545,8 +545,8 @@ func TestIPAddressesClient_Get(t *testing.T) {
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
 
-					if tt.wantReqQuery != nil {
-						assert.Equal(t, *tt.wantReqQuery, r.URL.Query())
+					if tt.wantQuery != nil {
+						assert.Equal(t, *tt.wantQuery, r.URL.Query())
 					}
 
 					w.WriteHeader(tt.respStatus)
