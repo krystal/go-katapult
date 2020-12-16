@@ -2,8 +2,12 @@ package katapult
 
 import (
 	"context"
+	"fmt"
 	"net/url"
+	"strings"
 )
+
+const networkIDPrefix = "netw_"
 
 type Network struct {
 	ID         string      `json:"id,omitempty"`
@@ -32,6 +36,7 @@ type VirtualNetwork struct {
 }
 
 type networksResponseBody struct {
+	Network         *Network          `json:"network,omitempty"`
 	Networks        []*Network        `json:"networks,omitempty"`
 	VirtualNetworks []*VirtualNetwork `json:"virtual_networks,omitempty"`
 }
@@ -60,6 +65,39 @@ func (s *NetworksClient) List(
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 
 	return body.Networks, body.VirtualNetworks, resp, err
+}
+
+func (s *NetworksClient) Get(
+	ctx context.Context,
+	idOrPermalink string,
+) (*Network, *Response, error) {
+	if strings.HasPrefix(idOrPermalink, networkIDPrefix) {
+		return s.GetByID(ctx, idOrPermalink)
+	}
+
+	return s.GetByPermalink(ctx, idOrPermalink)
+}
+
+func (s *NetworksClient) GetByID(
+	ctx context.Context,
+	id string,
+) (*Network, *Response, error) {
+	u := &url.URL{Path: fmt.Sprintf("networks/%s", id)}
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+
+	return body.Network, resp, err
+}
+
+func (s *NetworksClient) GetByPermalink(
+	ctx context.Context,
+	permalink string,
+) (*Network, *Response, error) {
+	qs := url.Values{"network[permalink]": []string{permalink}}
+	u := &url.URL{Path: "networks/_", RawQuery: qs.Encode()}
+
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+
+	return body.Network, resp, err
 }
 
 func (s *NetworksClient) doRequest(
