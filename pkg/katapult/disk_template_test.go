@@ -20,6 +20,31 @@ var (
 			"criteria provided in the arguments",
 		Detail: json.RawMessage(`{}`),
 	}
+
+	fixtureDiskTemplateFull = &DiskTemplate{
+		ID:              "dtpl_ytP13XD5DE1RdSL9",
+		Name:            "Ubuntu 18.04 Server",
+		Description:     "A clean installation of Ubuntu 18.04 server",
+		Permalink:       "templates/ubuntu-18-04",
+		Universal:       true,
+		LatestVersion:   &DiskTemplateVersion{ID: "id2"},
+		OperatingSystem: &OperatingSystem{ID: "id3"},
+	}
+	fixtureDiskTemplateNoID = &DiskTemplate{
+		Name:            fixtureDiskTemplateFull.Name,
+		Description:     fixtureDiskTemplateFull.Description,
+		Permalink:       fixtureDiskTemplateFull.Permalink,
+		Universal:       fixtureDiskTemplateFull.Universal,
+		LatestVersion:   fixtureDiskTemplateFull.LatestVersion,
+		OperatingSystem: fixtureDiskTemplateFull.OperatingSystem,
+	}
+	fixtureDiskTemplateNoLookupField = &DiskTemplate{
+		Name:            fixtureDiskTemplateFull.Name,
+		Description:     fixtureDiskTemplateFull.Description,
+		Universal:       fixtureDiskTemplateFull.Universal,
+		LatestVersion:   fixtureDiskTemplateFull.LatestVersion,
+		OperatingSystem: fixtureDiskTemplateFull.OperatingSystem,
+	}
 )
 
 func TestDiskTemplate_JSONMarshaling(t *testing.T) {
@@ -33,15 +58,7 @@ func TestDiskTemplate_JSONMarshaling(t *testing.T) {
 		},
 		{
 			name: "full",
-			obj: &DiskTemplate{
-				ID:              "dtpl_ytP13XD5DE1RdSL9",
-				Name:            "Ubuntu 18.04 Server",
-				Description:     "A clean installation of Ubuntu 18.04 server",
-				Permalink:       "templates/ubuntu-18-04",
-				Universal:       true,
-				LatestVersion:   &DiskTemplateVersion{ID: "id2"},
-				OperatingSystem: &OperatingSystem{ID: "id3"},
-			},
+			obj:  fixtureDiskTemplateFull,
 		},
 	}
 	for _, tt := range tests {
@@ -69,38 +86,17 @@ func TestDiskTemplate_lookupReference(t *testing.T) {
 		},
 		{
 			name: "full",
-			obj: &DiskTemplate{
-				ID:              "dtpl_ytP13XD5DE1RdSL9",
-				Name:            "Ubuntu 18.04 Server",
-				Description:     "A clean installation of Ubuntu 18.04 server",
-				Permalink:       "templates/ubuntu-18-04",
-				Universal:       true,
-				LatestVersion:   &DiskTemplateVersion{ID: "id2"},
-				OperatingSystem: &OperatingSystem{ID: "id3"},
-			},
+			obj:  fixtureDiskTemplateFull,
 			want: &DiskTemplate{ID: "dtpl_ytP13XD5DE1RdSL9"},
 		},
 		{
 			name: "no ID",
-			obj: &DiskTemplate{
-				Name:            "Ubuntu 18.04 Server",
-				Description:     "A clean installation of Ubuntu 18.04 server",
-				Permalink:       "templates/ubuntu-18-04",
-				Universal:       true,
-				LatestVersion:   &DiskTemplateVersion{ID: "id2"},
-				OperatingSystem: &OperatingSystem{ID: "id3"},
-			},
+			obj:  fixtureDiskTemplateNoID,
 			want: &DiskTemplate{Permalink: "templates/ubuntu-18-04"},
 		},
 		{
 			name: "no ID or Permalink",
-			obj: &DiskTemplate{
-				Name:            "Ubuntu 18.04 Server",
-				Description:     "A clean installation of Ubuntu 18.04 server",
-				Universal:       true,
-				LatestVersion:   &DiskTemplateVersion{ID: "id2"},
-				OperatingSystem: &OperatingSystem{ID: "id3"},
-			},
+			obj:  fixtureDiskTemplateNoLookupField,
 			want: &DiskTemplate{},
 		},
 	}
@@ -109,6 +105,39 @@ func TestDiskTemplate_lookupReference(t *testing.T) {
 			got := tt.obj.lookupReference()
 
 			assert.Equal(t, tt.want, got)
+		})
+	}
+}
+
+func TestDiskTemplate_queryValues(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *DiskTemplate
+	}{
+		{
+			name: "nil",
+			obj:  nil,
+		},
+		{
+			name: "empty",
+			obj:  &DiskTemplate{},
+		},
+		{
+			name: "full",
+			obj:  fixtureDiskTemplateFull,
+		},
+		{
+			name: "no ID",
+			obj:  fixtureDiskTemplateNoID,
+		},
+		{
+			name: "no ID or Permalink",
+			obj:  fixtureDiskTemplateNoLookupField,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testQueryableEncoding(t, tt.obj)
 		})
 	}
 }
@@ -176,6 +205,7 @@ func Test_diskTemplateResponseBody_JSONMarshaling(t *testing.T) {
 			name: "full",
 			obj: &diskTemplateResponseBody{
 				Pagination:    &Pagination{CurrentPage: 42},
+				DiskTemplate:  &DiskTemplate{ID: "id1"},
 				DiskTemplates: []*DiskTemplate{{ID: "id2"}},
 			},
 		},
@@ -230,17 +260,19 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 	// Correlates to fixtures/disk_templates_list*.json
 	diskTemplateList := []*DiskTemplate{
 		{
-			ID:   "dtpl_YCTIgR4rE2fSgbW0",
-			Name: "CentOS 8.0",
+			ID:        "dtpl_YCTIgR4rE2fSgbW0",
+			Name:      "CentOS 8.0",
+			Permalink: "templates/centos-8",
 		},
 		{
-			ID:   "dtpl_KXGG3fOWbJqvZvoq",
-			Name: "Debian 10",
+			ID:        "dtpl_KXGG3fOWbJqvZvoq",
+			Name:      "Debian 10",
+			Permalink: "templates/debian-10",
 		},
 		{
-			ID:          "dtpl_ytP13XD5DE1RdSL9",
-			Name:        "Ubuntu 18.04 Server",
-			Description: "A clean installation of Ubuntu 18.04 server",
+			ID:        "dtpl_ytP13XD5DE1RdSL9",
+			Name:      "Ubuntu 18.04 Server",
+			Permalink: "templates/ubuntu-18-04",
 		},
 	}
 
@@ -465,6 +497,317 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 
 			if tt.wantPagination != nil {
 				assert.Equal(t, tt.wantPagination, resp.Pagination)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestDiskTemplatesClient_Get(t *testing.T) {
+	// Correlates to fixtures/disk_template_get.json
+	diskTemplate := &DiskTemplate{
+		ID:        "dtpl_ytP13XD5DE1RdSL9",
+		Name:      "Ubuntu 18.04 Server",
+		Permalink: "templates/ubuntu-18-04",
+	}
+
+	type args struct {
+		ctx           context.Context
+		idOrPermalink string
+	}
+	tests := []struct {
+		name       string
+		args       args
+		want       *DiskTemplate
+		wantQuery  *url.Values
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "by ID",
+			args: args{
+				ctx:           context.Background(),
+				idOrPermalink: "dtpl_ytP13XD5DE1RdSL9",
+			},
+			want: diskTemplate,
+			wantQuery: &url.Values{
+				"disk_template[id]": []string{"dtpl_ytP13XD5DE1RdSL9"},
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("disk_template_get"),
+		},
+		{
+			name: "by Permalink",
+			args: args{
+				ctx:           context.Background(),
+				idOrPermalink: "public",
+			},
+			wantQuery: &url.Values{
+				"disk_template[permalink]": []string{"public"},
+			},
+			want:       diskTemplate,
+			respStatus: http.StatusOK,
+			respBody:   fixture("disk_template_get"),
+		},
+		{
+			name: "non-existent disk template by ID",
+			args: args{
+				ctx:           context.Background(),
+				idOrPermalink: "dtpl_nopethisbegone",
+			},
+			errStr:     fixtureDiskTemplateNotFoundErr,
+			errResp:    fixtureDiskTemplateNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("disk_template_not_found_error"),
+		},
+		{
+			name: "non-existent disk template by Permalink",
+			args: args{
+				ctx:           context.Background(),
+				idOrPermalink: "templates/darwin-11",
+			},
+			errStr:     fixtureDiskTemplateNotFoundErr,
+			errResp:    fixtureDiskTemplateNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("disk_template_not_found_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx:           nil,
+				idOrPermalink: "dtpl_ytP13XD5DE1RdSL9",
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			mux.HandleFunc(
+				"/core/v1/disk_templates/_",
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "GET", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					if tt.wantQuery != nil {
+						assert.Equal(t, *tt.wantQuery, r.URL.Query())
+					}
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.DiskTemplates.Get(
+				tt.args.ctx, tt.args.idOrPermalink,
+			)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestDiskTemplatesClient_GetByID(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		id  string
+	}
+	tests := []struct {
+		name       string
+		args       args
+		want       *DiskTemplate
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "disk template",
+			args: args{
+				ctx: context.Background(),
+				id:  "dtpl_ytP13XD5DE1RdSL9",
+			},
+			want: &DiskTemplate{
+				ID:        "dtpl_ytP13XD5DE1RdSL9",
+				Name:      "Ubuntu 18.04 Server",
+				Permalink: "templates/ubuntu-18-04",
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("disk_template_get"),
+		},
+		{
+			name: "non-existent disk template",
+			args: args{
+				ctx: context.Background(),
+				id:  "dtpl_nopethisbegone",
+			},
+			errStr:     fixtureDiskTemplateNotFoundErr,
+			errResp:    fixtureDiskTemplateNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("disk_template_not_found_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx: nil,
+				id:  "dtpl_ytP13XD5DE1RdSL9",
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			mux.HandleFunc("/core/v1/disk_templates/_",
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "GET", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					qs := url.Values{
+						"disk_template[id]": []string{tt.args.id},
+					}
+					assert.Equal(t, qs, r.URL.Query())
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.DiskTemplates.GetByID(tt.args.ctx, tt.args.id)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestDiskTemplatesClient_GetByPermalink(t *testing.T) {
+	type args struct {
+		ctx       context.Context
+		permalink string
+	}
+	tests := []struct {
+		name       string
+		args       args
+		want       *DiskTemplate
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "disk template",
+			args: args{
+				ctx:       context.Background(),
+				permalink: "public",
+			},
+			want: &DiskTemplate{
+				ID:        "dtpl_ytP13XD5DE1RdSL9",
+				Name:      "Ubuntu 18.04 Server",
+				Permalink: "templates/ubuntu-18-04",
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("disk_template_get"),
+		},
+		{
+			name: "non-existent disk template",
+			args: args{
+				ctx:       context.Background(),
+				permalink: "not-here",
+			},
+			errStr:     fixtureDiskTemplateNotFoundErr,
+			errResp:    fixtureDiskTemplateNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("disk_template_not_found_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx:       nil,
+				permalink: "public",
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			mux.HandleFunc("/core/v1/disk_templates/_",
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "GET", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					qs := url.Values{
+						"disk_template[permalink]": []string{tt.args.permalink},
+					}
+					assert.Equal(t, qs, r.URL.Query())
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.DiskTemplates.GetByPermalink(
+				tt.args.ctx, tt.args.permalink,
+			)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
 			}
 
 			if tt.errResp != nil {

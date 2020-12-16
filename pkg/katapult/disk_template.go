@@ -3,7 +3,10 @@ package katapult
 import (
 	"context"
 	"net/url"
+	"strings"
 )
+
+const diskTemplateIDPrefix = "dtpl_"
 
 type DiskTemplate struct {
 	ID              string               `json:"id,omitempty"`
@@ -26,6 +29,21 @@ func (s *DiskTemplate) lookupReference() *DiskTemplate {
 	}
 
 	return lr
+}
+
+func (s *DiskTemplate) queryValues() *url.Values {
+	v := &url.Values{}
+
+	if s != nil {
+		switch {
+		case s.ID != "":
+			v.Set("disk_template[id]", s.ID)
+		case s.Permalink != "":
+			v.Set("disk_template[permalink]", s.Permalink)
+		}
+	}
+
+	return v
 }
 
 type DiskTemplateVersion struct {
@@ -66,6 +84,7 @@ func (s *DiskTemplateListOptions) queryValues() *url.Values {
 
 type diskTemplateResponseBody struct {
 	Pagination    *Pagination     `json:"pagination,omitempty"`
+	DiskTemplate  *DiskTemplate   `json:"disk_template,omitempty"`
 	DiskTemplates []*DiskTemplate `json:"disk_templates,omitempty"`
 }
 
@@ -96,6 +115,45 @@ func (s *DiskTemplatesClient) List(
 	resp.Pagination = body.Pagination
 
 	return body.DiskTemplates, resp, err
+}
+
+func (s *DiskTemplatesClient) Get(
+	ctx context.Context,
+	idOrPermalink string,
+) (*DiskTemplate, *Response, error) {
+	if strings.HasPrefix(idOrPermalink, diskTemplateIDPrefix) {
+		return s.GetByID(ctx, idOrPermalink)
+	}
+
+	return s.GetByPermalink(ctx, idOrPermalink)
+}
+
+func (s *DiskTemplatesClient) GetByID(
+	ctx context.Context,
+	id string,
+) (*DiskTemplate, *Response, error) {
+	return s.get(ctx, &DiskTemplate{ID: id})
+}
+
+func (s *DiskTemplatesClient) GetByPermalink(
+	ctx context.Context,
+	permalink string,
+) (*DiskTemplate, *Response, error) {
+	return s.get(ctx, &DiskTemplate{Permalink: permalink})
+}
+
+func (s *DiskTemplatesClient) get(
+	ctx context.Context,
+	dt *DiskTemplate,
+) (*DiskTemplate, *Response, error) {
+	u := &url.URL{
+		Path:     "disk_templates/_",
+		RawQuery: dt.queryValues().Encode(),
+	}
+
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+
+	return body.DiskTemplate, resp, err
 }
 
 func (s *DiskTemplatesClient) doRequest(
