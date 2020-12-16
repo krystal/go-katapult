@@ -1,0 +1,26 @@
+{
+  "pagination": {
+    "current_page": 1,
+    "total_pages": 1,
+    "total": 3,
+    "per_page": 30,
+    "large_set": false
+  },
+  "ip_addresses": [
+    {
+      "id": "ip_dZLqwQifQFtboHXW",
+      "address": "169.37.118.179",
+      "reverse_dns": "bitter-beautiful-mango.acme.katapult.cloud"
+    },
+    {
+      "id": "ip_fAwrdP9NvW0Z25eE",
+      "address": "95.135.35.113",
+      "reverse_dns": "popular-shapely-tank.acme.katapult.cloud"
+    },
+    {
+      "id": "ip_KDPs2kKBiaFohrsF",
+      "address": "200.175.55.138",
+      "reverse_dns": "popular-blue-kumquat.acme.katapult.cloud"
+    }
+  ]
+}

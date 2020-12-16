@@ -226,6 +226,27 @@ func TestOrganization_queryValues(t *testing.T) {
 				CountryState:         &CountryState{ID: "id2"},
 			},
 		},
+		{
+			name: "no ID or SubDomain",
+			opts: &Organization{
+				Name:                 "ACME Inc.",
+				InfrastructureDomain: "infrastructure_domain",
+				Personal:             true,
+				CreatedAt:            timestampPtr(934933),
+				Suspended:            true,
+				Managed:              true,
+				BillingName:          "billing_name",
+				Address1:             "address1",
+				Address2:             "address2",
+				Address3:             "address3",
+				Address4:             "address4",
+				Postcode:             "postcode",
+				VatNumber:            "vat_number",
+				Currency:             &Currency{ID: "id0"},
+				Country:              &Country{ID: "id1"},
+				CountryState:         &CountryState{ID: "id2"},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

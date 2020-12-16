@@ -1,0 +1,16 @@
+{
+  "pagination": {
+    "current_page": 2,
+    "total_pages": 2,
+    "total": 3,
+    "per_page": 2,
+    "large_set": false
+  },
+  "ip_addresses": [
+    {
+      "id": "ip_KDPs2kKBiaFohrsF",
+      "address": "200.175.55.138",
+      "reverse_dns": "popular-blue-kumquat.acme.katapult.cloud"
+    }
+  ]
+}
