@@ -3,7 +3,6 @@ package katapult
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/url"
 	"testing"
@@ -19,6 +18,22 @@ var (
 		Description: "No network was found matching any of the criteria " +
 			"provided in the arguments",
 		Detail: json.RawMessage(`{}`),
+	}
+
+	fixtureNetworkFull = &Network{
+		ID:         "netw_zDW7KYAeqqfRfVag",
+		Name:       "Public Network",
+		Permalink:  "public",
+		DataCenter: &DataCenter{ID: "id2"},
+	}
+	fixtureNetworkNoID = &Network{
+		Name:       fixtureNetworkFull.Name,
+		Permalink:  fixtureNetworkFull.Permalink,
+		DataCenter: fixtureNetworkFull.DataCenter,
+	}
+	fixtureNetworkNoLookupField = &Network{
+		Name:       fixtureNetworkFull.Name,
+		DataCenter: fixtureNetworkFull.DataCenter,
 	}
 )
 
@@ -66,29 +81,17 @@ func TestNetwork_lookupReference(t *testing.T) {
 		},
 		{
 			name: "full",
-			obj: &Network{
-				ID:         "netw_zDW7KYAeqqfRfVag",
-				Name:       "Public Network",
-				Permalink:  "public",
-				DataCenter: &DataCenter{ID: "id2"},
-			},
+			obj:  fixtureNetworkFull,
 			want: &Network{ID: "netw_zDW7KYAeqqfRfVag"},
 		},
 		{
 			name: "no ID",
-			obj: &Network{
-				Name:       "Public Network",
-				Permalink:  "public",
-				DataCenter: &DataCenter{ID: "id2"},
-			},
+			obj:  fixtureNetworkNoID,
 			want: &Network{Permalink: "public"},
 		},
 		{
 			name: "no ID or Permalink",
-			obj: &Network{
-				Name:       "Public Network",
-				DataCenter: &DataCenter{ID: "id2"},
-			},
+			obj:  fixtureNetworkNoLookupField,
 			want: &Network{},
 		},
 	}
@@ -97,6 +100,39 @@ func TestNetwork_lookupReference(t *testing.T) {
 			got := tt.obj.lookupReference()
 
 			assert.Equal(t, tt.want, got)
+		})
+	}
+}
+
+func TestNetwork_queryValues(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *Network
+	}{
+		{
+			name: "nil",
+			obj:  nil,
+		},
+		{
+			name: "empty",
+			obj:  &Network{},
+		},
+		{
+			name: "full",
+			obj:  fixtureNetworkFull,
+		},
+		{
+			name: "no ID",
+			obj:  fixtureNetworkNoID,
+		},
+		{
+			name: "no ID or Permalink",
+			obj:  fixtureNetworkNoLookupField,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testQueryableEncoding(t, tt.obj)
 		})
 	}
 }
@@ -343,9 +379,8 @@ func TestNetworksClient_Get(t *testing.T) {
 	tests := []struct {
 		name       string
 		args       args
-		reqPath    string
-		reqQuery   *url.Values
 		want       *Network
+		wantQuery  *url.Values
 		errStr     string
 		errResp    *ResponseError
 		respStatus int
@@ -357,8 +392,10 @@ func TestNetworksClient_Get(t *testing.T) {
 				ctx:           context.Background(),
 				idOrPermalink: "netw_zDW7KYAeqqfRfVag",
 			},
-			reqPath:    "networks/netw_zDW7KYAeqqfRfVag",
-			want:       network,
+			want: network,
+			wantQuery: &url.Values{
+				"network[id]": []string{"netw_zDW7KYAeqqfRfVag"},
+			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("network_get"),
 		},
@@ -368,19 +405,29 @@ func TestNetworksClient_Get(t *testing.T) {
 				ctx:           context.Background(),
 				idOrPermalink: "public",
 			},
-			reqPath: "networks/_",
-			reqQuery: &url.Values{
+			want: network,
+			wantQuery: &url.Values{
 				"network[permalink]": []string{"public"},
 			},
-			want:       network,
 			respStatus: http.StatusOK,
 			respBody:   fixture("network_get"),
 		},
 		{
-			name: "non-existent network",
+			name: "non-existent network by ID",
 			args: args{
 				ctx:           context.Background(),
 				idOrPermalink: "netw_nopethisbegone",
+			},
+			errStr:     fixtureNetworkNotFoundErr,
+			errResp:    fixtureNetworkNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("network_not_found_error"),
+		},
+		{
+			name: "non-existent network by Permalink",
+			args: args{
+				ctx:           context.Background(),
+				idOrPermalink: "public",
 			},
 			errStr:     fixtureNetworkNotFoundErr,
 			errResp:    fixtureNetworkNotFoundResponseError,
@@ -401,20 +448,15 @@ func TestNetworksClient_Get(t *testing.T) {
 			c, mux, _, teardown := prepareTestClient()
 			defer teardown()
 
-			path := fmt.Sprintf("networks/%s", tt.args.idOrPermalink)
-			if tt.reqPath != "" {
-				path = tt.reqPath
-			}
-
 			mux.HandleFunc(
-				"/core/v1/"+path,
+				"/core/v1/networks/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
 
-					if tt.reqQuery != nil {
-						assert.Equal(t, *tt.reqQuery, r.URL.Query())
+					if tt.wantQuery != nil {
+						assert.Equal(t, *tt.wantQuery, r.URL.Query())
 					}
 
 					w.WriteHeader(tt.respStatus)
@@ -503,11 +545,16 @@ func TestNetworksClient_GetByID(t *testing.T) {
 			c, mux, _, teardown := prepareTestClient()
 			defer teardown()
 
-			mux.HandleFunc(fmt.Sprintf("/core/v1/networks/%s", tt.args.id),
+			mux.HandleFunc("/core/v1/networks/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+
+					qs := url.Values{
+						"network[id]": []string{tt.args.id},
+					}
+					assert.Equal(t, qs, r.URL.Query())
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
