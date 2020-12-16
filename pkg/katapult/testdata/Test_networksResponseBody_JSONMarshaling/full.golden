@@ -1,1 +1,1 @@
-{"networks":[{"id":"id1"}],"virtual_networks":[{"id":"id2"}]}
+{"network":{"id":"id1"},"networks":[{"id":"id2"}],"virtual_networks":[{"id":"id3"}]}

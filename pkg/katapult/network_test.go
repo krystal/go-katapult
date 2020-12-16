@@ -3,6 +3,7 @@ package katapult
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/url"
 	"testing"
@@ -137,8 +138,9 @@ func Test_networksResponseBody_JSONMarshaling(t *testing.T) {
 		{
 			name: "full",
 			obj: &networksResponseBody{
-				Networks:        []*Network{{ID: "id1"}},
-				VirtualNetworks: []*VirtualNetwork{{ID: "id2"}},
+				Network:         &Network{ID: "id1"},
+				Networks:        []*Network{{ID: "id2"}},
+				VirtualNetworks: []*VirtualNetwork{{ID: "id3"}},
 			},
 		},
 	}
@@ -317,6 +319,312 @@ func TestNetworksClient_List(t *testing.T) {
 
 			if tt.wantVnets != nil {
 				assert.Equal(t, tt.wantVnets, got2)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestNetworksClient_Get(t *testing.T) {
+	// Correlates to fixtures/network_get.json
+	network := &Network{
+		ID:        "netw_zDW7KYAeqqfRfVag",
+		Name:      "Public Network",
+		Permalink: "public",
+	}
+
+	type args struct {
+		ctx           context.Context
+		idOrPermalink string
+	}
+	tests := []struct {
+		name       string
+		args       args
+		reqPath    string
+		reqQuery   *url.Values
+		want       *Network
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "by ID",
+			args: args{
+				ctx:           context.Background(),
+				idOrPermalink: "netw_zDW7KYAeqqfRfVag",
+			},
+			reqPath:    "networks/netw_zDW7KYAeqqfRfVag",
+			want:       network,
+			respStatus: http.StatusOK,
+			respBody:   fixture("network_get"),
+		},
+		{
+			name: "by Permalink",
+			args: args{
+				ctx:           context.Background(),
+				idOrPermalink: "public",
+			},
+			reqPath: "networks/_",
+			reqQuery: &url.Values{
+				"network[permalink]": []string{"public"},
+			},
+			want:       network,
+			respStatus: http.StatusOK,
+			respBody:   fixture("network_get"),
+		},
+		{
+			name: "non-existent network",
+			args: args{
+				ctx:           context.Background(),
+				idOrPermalink: "netw_nopethisbegone",
+			},
+			errStr:     fixtureNetworkNotFoundErr,
+			errResp:    fixtureNetworkNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("network_not_found_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx:           nil,
+				idOrPermalink: "netw_zDW7KYAeqqfRfVag",
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			path := fmt.Sprintf("networks/%s", tt.args.idOrPermalink)
+			if tt.reqPath != "" {
+				path = tt.reqPath
+			}
+
+			mux.HandleFunc(
+				"/core/v1/"+path,
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "GET", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					if tt.reqQuery != nil {
+						assert.Equal(t, *tt.reqQuery, r.URL.Query())
+					}
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.Networks.Get(
+				tt.args.ctx, tt.args.idOrPermalink,
+			)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestNetworksClient_GetByID(t *testing.T) {
+	// Correlates to fixtures/network_get.json
+	network := &Network{
+		ID:        "netw_zDW7KYAeqqfRfVag",
+		Name:      "Public Network",
+		Permalink: "public",
+	}
+
+	type args struct {
+		ctx context.Context
+		id  string
+	}
+	tests := []struct {
+		name       string
+		args       args
+		want       *Network
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "network",
+			args: args{
+				ctx: context.Background(),
+				id:  "netw_zDW7KYAeqqfRfVag",
+			},
+			want:       network,
+			respStatus: http.StatusOK,
+			respBody:   fixture("network_get"),
+		},
+		{
+			name: "non-existent network",
+			args: args{
+				ctx: context.Background(),
+				id:  "netw_nopethisbegone",
+			},
+			errStr:     fixtureNetworkNotFoundErr,
+			errResp:    fixtureNetworkNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("network_not_found_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx: nil,
+				id:  "netw_zDW7KYAeqqfRfVag",
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			mux.HandleFunc(fmt.Sprintf("/core/v1/networks/%s", tt.args.id),
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "GET", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.Networks.GetByID(tt.args.ctx, tt.args.id)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestNetworksClient_GetByPermalink(t *testing.T) {
+	// Correlates to fixtures/network_get.json
+	network := &Network{
+		ID:        "netw_zDW7KYAeqqfRfVag",
+		Name:      "Public Network",
+		Permalink: "public",
+	}
+
+	type args struct {
+		ctx       context.Context
+		permalink string
+	}
+	tests := []struct {
+		name       string
+		args       args
+		want       *Network
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "network",
+			args: args{
+				ctx:       context.Background(),
+				permalink: "public",
+			},
+			want:       network,
+			respStatus: http.StatusOK,
+			respBody:   fixture("network_get"),
+		},
+		{
+			name: "non-existent network",
+			args: args{
+				ctx:       context.Background(),
+				permalink: "not-here",
+			},
+			errStr:     fixtureNetworkNotFoundErr,
+			errResp:    fixtureNetworkNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("network_not_found_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx:       nil,
+				permalink: "public",
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			mux.HandleFunc("/core/v1/networks/_",
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "GET", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					qs := url.Values{
+						"network[permalink]": []string{tt.args.permalink},
+					}
+					assert.Equal(t, qs, r.URL.Query())
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.Networks.GetByPermalink(
+				tt.args.ctx, tt.args.permalink,
+			)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
 			}
 
 			if tt.errResp != nil {
