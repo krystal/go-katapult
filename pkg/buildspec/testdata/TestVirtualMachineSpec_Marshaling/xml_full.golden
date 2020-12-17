@@ -55,8 +55,15 @@
         <Version>4</Version>
       </IPAddressAllocation>
       <IPAddressAllocation type="new">
+        <Version>6</Version>
+      </IPAddressAllocation>
+      <IPAddressAllocation type="new">
         <Version>4</Version>
         <Subnet>sbnt_xxhvuhr3dsvEHcM5</Subnet>
+      </IPAddressAllocation>
+      <IPAddressAllocation type="new">
+        <Version>6</Version>
+        <Subnet>sbnt_Pms921K2pYf35nae</Subnet>
       </IPAddressAllocation>
       <IPAddressAllocation type="existing">
         <IPAddress>ip_Hb8WpvV9qRMznHwZ</IPAddress>

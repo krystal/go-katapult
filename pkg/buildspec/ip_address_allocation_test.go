@@ -16,14 +16,14 @@ func TestIPAddressAllocation_Marshaling(t *testing.T) {
 			name: "new IPAddress",
 			obj: &IPAddressAllocation{
 				Type:    NewIPAddressAllocation,
-				Version: 4,
+				Version: IPv4,
 			},
 		},
 		{
 			name: "new IPAddress with Subnet",
 			obj: &IPAddressAllocation{
 				Type:    NewIPAddressAllocation,
-				Version: 4,
+				Version: IPv4,
 				Subnet:  &Subnet{ID: "sbnt_xxhvuhr3dsvEHcM5"},
 			},
 		},

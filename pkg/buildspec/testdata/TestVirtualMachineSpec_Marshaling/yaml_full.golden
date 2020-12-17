@@ -48,9 +48,15 @@ network_interfaces:
       - type: new
         version: 4
       - type: new
+        version: 6
+      - type: new
         version: 4
         subnet:
           id: sbnt_xxhvuhr3dsvEHcM5
+      - type: new
+        version: 6
+        subnet:
+          id: sbnt_Pms921K2pYf35nae
       - type: existing
         ip_address:
           id: ip_Hb8WpvV9qRMznHwZ

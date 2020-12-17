@@ -102,12 +102,21 @@ func TestVirtualMachineSpec_Marshaling(t *testing.T) {
 						IPAddressAllocations: []*IPAddressAllocation{
 							{
 								Type:    NewIPAddressAllocation,
-								Version: 4,
+								Version: IPv4,
 							},
 							{
 								Type:    NewIPAddressAllocation,
-								Version: 4,
+								Version: IPv6,
+							},
+							{
+								Type:    NewIPAddressAllocation,
+								Version: IPv4,
 								Subnet:  &Subnet{ID: "sbnt_xxhvuhr3dsvEHcM5"},
+							},
+							{
+								Type:    NewIPAddressAllocation,
+								Version: IPv6,
+								Subnet:  &Subnet{ID: "sbnt_Pms921K2pYf35nae"},
 							},
 							{
 								Type: ExistingIPAddressAllocation,
