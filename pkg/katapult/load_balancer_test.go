@@ -161,43 +161,28 @@ func TestLoadBalancer_queryValues(t *testing.T) {
 	}
 }
 
-func TestLoadBalancer_UnmarshalJSON_Invalid(t *testing.T) {
-	lb := &LoadBalancer{}
-	raw := []byte(`{"id":"lb_foo","name":}`)
-
-	err := lb.UnmarshalJSON(raw)
-
-	assert.EqualError(t,
-		err, "invalid character '}' looking for beginning of value",
-	)
-}
-
-func TestLoadBalancerArguments_JSONMarshaling(t *testing.T) {
+func TestLoadBalancerCreateArguments_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string
-		obj  *LoadBalancerArguments
+		obj  *LoadBalancerCreateArguments
 	}{
 		{
 			name: "empty",
-			obj:  &LoadBalancerArguments{},
+			obj:  &LoadBalancerCreateArguments{},
 		},
 		{
 			name: "full",
-			obj: &LoadBalancerArguments{
-				Name:         "helper",
-				ResourceType: TagsResourceType,
-				ResourceIDs:  []string{"id1", "id2"},
-				DataCenter:   &DataCenter{ID: "id4"},
+			obj: &LoadBalancerCreateArguments{
+				DataCenter:    &DataCenter{ID: "id4"},
+				Name:          "helper",
+				ResourceType:  TagsResourceType,
+				ResourceIDs:   &[]string{"id1", "id2"},
+				HTTPSRedirect: true,
 			},
 		},
 		{
-			name: "with empty ResourceIDs",
-			obj: &LoadBalancerArguments{
-				Name:         "helper",
-				ResourceType: TagsResourceType,
-				ResourceIDs:  []string{},
-				DataCenter:   &DataCenter{ID: "id4"},
-			},
+			name: "empty ResourceIDs",
+			obj:  &LoadBalancerCreateArguments{ResourceIDs: &[]string{}},
 		},
 	}
 	for _, tt := range tests {
@@ -207,11 +192,11 @@ func TestLoadBalancerArguments_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestLoadBalancerArguments_forRequest(t *testing.T) {
+func TestLoadBalancerCreateArguments_forRequest(t *testing.T) {
 	tests := []struct {
 		name string
-		obj  *LoadBalancerArguments
-		want *LoadBalancerArguments
+		obj  *LoadBalancerCreateArguments
+		want *LoadBalancerCreateArguments
 	}{
 		{
 			name: "nil",
@@ -220,60 +205,60 @@ func TestLoadBalancerArguments_forRequest(t *testing.T) {
 		},
 		{
 			name: "empty",
-			obj:  &LoadBalancerArguments{},
-			want: &LoadBalancerArguments{},
+			obj:  &LoadBalancerCreateArguments{},
+			want: &LoadBalancerCreateArguments{},
 		},
 		{
 			name: "full",
-			obj: &LoadBalancerArguments{
+			obj: &LoadBalancerCreateArguments{
 				Name:         "helper",
 				ResourceType: TagsResourceType,
-				ResourceIDs:  []string{"id1", "id2"},
+				ResourceIDs:  &[]string{"id1", "id2"},
 				DataCenter: &DataCenter{
 					ID:        "dc_25d48761871e4bf",
 					Name:      "Woodland",
 					Permalink: "woodland",
 				},
 			},
-			want: &LoadBalancerArguments{
+			want: &LoadBalancerCreateArguments{
 				Name:         "helper",
 				ResourceType: TagsResourceType,
-				ResourceIDs:  []string{"id1", "id2"},
+				ResourceIDs:  &[]string{"id1", "id2"},
 				DataCenter:   &DataCenter{ID: "dc_25d48761871e4bf"},
 			},
 		},
 		{
-			name: "data center has Permalink by no ID",
-			obj: &LoadBalancerArguments{
+			name: "data center by Permalink",
+			obj: &LoadBalancerCreateArguments{
 				Name:         "helper",
 				ResourceType: TagsResourceType,
-				ResourceIDs:  []string{"id1", "id2"},
+				ResourceIDs:  &[]string{"id1", "id2"},
 				DataCenter: &DataCenter{
 					Name:      "Woodland",
 					Permalink: "woodland",
 				},
 			},
-			want: &LoadBalancerArguments{
+			want: &LoadBalancerCreateArguments{
 				Name:         "helper",
 				ResourceType: TagsResourceType,
-				ResourceIDs:  []string{"id1", "id2"},
+				ResourceIDs:  &[]string{"id1", "id2"},
 				DataCenter:   &DataCenter{Permalink: "woodland"},
 			},
 		},
 		{
-			name: "data center has no Permalink or ID",
-			obj: &LoadBalancerArguments{
+			name: "data center with no ID or Permalink",
+			obj: &LoadBalancerCreateArguments{
 				Name:         "helper",
 				ResourceType: TagsResourceType,
-				ResourceIDs:  []string{"id1", "id2"},
+				ResourceIDs:  &[]string{"id1", "id2"},
 				DataCenter: &DataCenter{
 					Name: "Woodland",
 				},
 			},
-			want: &LoadBalancerArguments{
+			want: &LoadBalancerCreateArguments{
 				Name:         "helper",
 				ResourceType: TagsResourceType,
-				ResourceIDs:  []string{"id1", "id2"},
+				ResourceIDs:  &[]string{"id1", "id2"},
 				DataCenter:   &DataCenter{},
 			},
 		},
@@ -297,45 +282,27 @@ func TestLoadBalancerArguments_forRequest(t *testing.T) {
 	}
 }
 
-func Test_loadBalancerResource_JSONMarshaling(t *testing.T) {
+func TestLoadBalancerUpdateArguments_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string
-		obj  *loadBalancerResource
+		obj  *LoadBalancerUpdateArguments
 	}{
 		{
 			name: "empty",
-			obj:  &loadBalancerResource{},
+			obj:  &LoadBalancerUpdateArguments{},
 		},
 		{
 			name: "full",
-			obj: &loadBalancerResource{
-				Type:  "VirtualMachine",
-				Value: &loadBalancerResourceValue{ID: "id4"},
+			obj: &LoadBalancerUpdateArguments{
+				Name:          "helper",
+				ResourceType:  TagsResourceType,
+				ResourceIDs:   &[]string{"id1", "id2"},
+				HTTPSRedirect: true,
 			},
 		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			testJSONMarshaling(t, tt.obj)
-		})
-	}
-}
-
-func Test_loadBalancerResourceValue_JSONMarshaling(t *testing.T) {
-	tests := []struct {
-		name string
-		obj  *loadBalancerResourceValue
-	}{
 		{
-			name: "empty",
-			obj:  &loadBalancerResourceValue{},
-		},
-		{
-			name: "full",
-			obj: &loadBalancerResourceValue{
-				ID:   "id4",
-				Name: "helper",
-			},
+			name: "empty ResourceIDs",
+			obj:  &LoadBalancerUpdateArguments{ResourceIDs: &[]string{}},
 		},
 	}
 	for _, tt := range tests {
@@ -358,7 +325,7 @@ func Test_loadBalancerCreateRequest_JSONMarshaling(t *testing.T) {
 			name: "full",
 			obj: &loadBalancerCreateRequest{
 				Organization: &Organization{ID: "org_rs55YZNYMw7o3jnQ"},
-				Properties:   &LoadBalancerArguments{Name: "web-1"},
+				Properties:   &LoadBalancerCreateArguments{Name: "web-1"},
 			},
 		},
 	}
@@ -382,7 +349,7 @@ func Test_loadBalancerUpdateRequest_JSONMarshaling(t *testing.T) {
 			name: "full",
 			obj: &loadBalancerUpdateRequest{
 				LoadBalancer: &LoadBalancer{ID: "lb_0krMCRl7DIZr0XV2"},
-				Properties:   &LoadBalancerArguments{Name: "web-east-1"},
+				Properties:   &LoadBalancerUpdateArguments{Name: "web-east-1"},
 			},
 		},
 	}
@@ -825,23 +792,23 @@ func TestLoadBalancersClient_GetByID(t *testing.T) {
 }
 
 func TestLoadBalancersClient_Create(t *testing.T) {
-	lbArgs := &LoadBalancerArguments{
+	lbArgs := &LoadBalancerCreateArguments{
 		Name:         "api-test",
 		ResourceType: VirtualMachinesResourceType,
-		ResourceIDs:  []string{"id2", "id3"},
+		ResourceIDs:  &[]string{"id2", "id3"},
 		DataCenter:   &DataCenter{ID: "id4", Name: "other"},
 	}
-	lbReqArgs := &LoadBalancerArguments{
+	lbReqArgs := &LoadBalancerCreateArguments{
 		Name:         "api-test",
 		ResourceType: VirtualMachinesResourceType,
-		ResourceIDs:  []string{"id2", "id3"},
+		ResourceIDs:  &[]string{"id2", "id3"},
 		DataCenter:   &DataCenter{ID: "id4"},
 	}
 
 	type args struct {
 		ctx    context.Context
 		org    *Organization
-		lbArgs *LoadBalancerArguments
+		lbArgs *LoadBalancerCreateArguments
 	}
 	tests := []struct {
 		name       string
@@ -903,7 +870,7 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
-				lbArgs: &LoadBalancerArguments{
+				lbArgs: &LoadBalancerCreateArguments{
 					Name:         lbArgs.Name,
 					ResourceType: lbArgs.ResourceType,
 					DataCenter:   lbArgs.DataCenter,
@@ -911,7 +878,7 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 			},
 			reqBody: &loadBalancerCreateRequest{
 				Organization: &Organization{ID: "org_O648YDMEYeLmqdmn"},
-				Properties: &LoadBalancerArguments{
+				Properties: &LoadBalancerCreateArguments{
 					Name:         lbReqArgs.Name,
 					ResourceType: lbReqArgs.ResourceType,
 					DataCenter:   lbReqArgs.DataCenter,
@@ -930,7 +897,7 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
-				lbArgs: &LoadBalancerArguments{
+				lbArgs: &LoadBalancerCreateArguments{
 					Name:         lbArgs.Name,
 					ResourceType: lbArgs.ResourceType,
 					ResourceIDs:  lbArgs.ResourceIDs,
@@ -1093,16 +1060,16 @@ func TestLoadBalancersClient_Update(t *testing.T) {
 			Name: "New Town",
 		},
 	}
-	lbArgs := &LoadBalancerArguments{
+	lbArgs := &LoadBalancerUpdateArguments{
 		Name:         "web-east-1",
 		ResourceType: TagsResourceType,
-		ResourceIDs:  []string{"tag2", "tag4"},
+		ResourceIDs:  &[]string{"tag2", "tag4"},
 	}
 
 	type args struct {
 		ctx    context.Context
 		lb     *LoadBalancer
-		lbArgs *LoadBalancerArguments
+		lbArgs *LoadBalancerUpdateArguments
 	}
 	tests := []struct {
 		name       string
