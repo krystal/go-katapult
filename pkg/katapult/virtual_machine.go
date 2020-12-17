@@ -82,7 +82,7 @@ type VirtualMachineUpdateArguments struct {
 	Name        string    `json:"name,omitempty"`
 	Hostname    string    `json:"hostname,omitempty"`
 	Description string    `json:"description,omitempty"`
-	Tags        *[]string `json:"tag_names,omitempty"`
+	TagNames    *[]string `json:"tag_names,omitempty"`
 }
 
 type virtualMachinesResponseBody struct {

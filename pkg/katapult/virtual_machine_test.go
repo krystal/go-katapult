@@ -269,13 +269,13 @@ func TestVirtualMachineUpdateArguments_JSONMarshaling(t *testing.T) {
 				Name:        "db 3",
 				Hostname:    "db-3",
 				Description: "Database server #3",
-				Tags:        &[]string{"db", "east"},
+				TagNames:    &[]string{"db", "east"},
 			},
 		},
 		{
 			name: "empty Tags",
 			obj: &VirtualMachineUpdateArguments{
-				Tags: &[]string{},
+				TagNames: &[]string{},
 			},
 		},
 	}
