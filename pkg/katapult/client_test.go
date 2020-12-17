@@ -33,8 +33,10 @@ var (
 		Detail: json.RawMessage(`{}`),
 	}
 
+	//nolint:lll
 	fixturePermissionDeniedErr = "permission_denied: The authenticated " +
-		"identity is not permitted to perform this action"
+		"identity is not permitted to perform this action -- " +
+		"{\n  \"details\": \"Additional information regarding the reason why permission was denied\"\n}"
 	fixturePermissionDeniedResponseError = &ResponseError{
 		Code: "permission_denied",
 		Description: "The authenticated identity is not permitted to perform " +
@@ -45,8 +47,10 @@ var (
     }`),
 	}
 
+	//nolint:lll
 	fixtureValidationErrorErr = "validation_error: A validation error " +
-		"occurred with the object that was being created/updated/deleted"
+		"occurred with the object that was being created/updated/deleted -- " +
+		"{\n  \"errors\": [\n    \"Failed reticulating 3-dimensional splines\",\n    \"Failed preparing captive simulators\"\n  ]\n}"
 	fixtureValidationErrorResponseError = &ResponseError{
 		Code: "validation_error",
 		Description: "A validation error occurred with the object that was " +

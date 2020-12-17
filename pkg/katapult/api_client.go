@@ -3,6 +3,7 @@ package katapult
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -90,6 +91,21 @@ func (c *apiClient) handleResponseError(resp *Response) (*Response, error) {
 		return resp, errors.New("unexpected response")
 	}
 	resp.Error = body.ErrorInfo
+
+	if len(resp.Error.Detail) > 2 {
+		buf := &bytes.Buffer{}
+		_ = json.Indent(buf, resp.Error.Detail, "", "  ")
+
+		baseErr := fmt.Errorf("%s: %s",
+			resp.Error.Code,
+			resp.Error.Description,
+		)
+
+		return resp, fmt.Errorf("%w -- %s",
+			baseErr,
+			buf.String(),
+		)
+	}
 
 	return resp, fmt.Errorf("%s: %s",
 		resp.Error.Code,

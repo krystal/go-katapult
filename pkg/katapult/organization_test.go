@@ -858,8 +858,10 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 					SubDomain: "nerv",
 				},
 			},
+			//nolint:lll
 			errStr: "validation_error: A validation error occurred with the " +
-				"object that was being created/updated/deleted",
+				"object that was being created/updated/deleted -- " +
+				"{\n  \"errors\": [\n    \"Sub domain has already been taken\"\n  ]\n}",
 			errResp: &ResponseError{
 				Code: "validation_error",
 				Description: "A validation error occurred with the object " +
