@@ -2,7 +2,6 @@ package katapult
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/url"
 )
@@ -11,7 +10,7 @@ type LoadBalancer struct {
 	ID                    string       `json:"id,omitempty"`
 	Name                  string       `json:"name,omitempty"`
 	ResourceType          ResourceType `json:"resource_type,omitempty"`
-	ResourceIDs           []string     `json:"-"`
+	ResourceIDs           []string     `json:"resource_ids,omitempty"`
 	IPAddress             *IPAddress   `json:"ip_address,omitempty"`
 	HTTPSRedirect         bool         `json:"https_redirect,omitempty"`
 	BackendCertificate    string       `json:"backend_certificate,omitempty"`
@@ -37,58 +36,17 @@ func (s *LoadBalancer) queryValues() *url.Values {
 	return v
 }
 
-func (s *LoadBalancer) MarshalJSON() ([]byte, error) {
-	type alias LoadBalancer
-	resources := []*loadBalancerResource{}
-
-	for _, id := range s.ResourceIDs {
-		resources = append(resources, &loadBalancerResource{
-			Type:  s.ResourceType.objectType(),
-			Value: &loadBalancerResourceValue{ID: id},
-		})
-	}
-
-	return json.Marshal(&struct {
-		*alias
-		Resources []*loadBalancerResource `json:"resources,omitempty"`
-	}{
-		alias:     (*alias)(s),
-		Resources: resources,
-	})
-}
-
-func (s *LoadBalancer) UnmarshalJSON(b []byte) error {
-	type alias LoadBalancer
-	aux := &struct {
-		*alias
-		Resources []*loadBalancerResource `json:"resources,omitempty"`
-	}{
-		alias: (*alias)(s),
-	}
-
-	if err := json.Unmarshal(b, &aux); err != nil {
-		return err
-	}
-
-	for _, r := range aux.Resources {
-		if r.Value != nil {
-			s.ResourceIDs = append(s.ResourceIDs, r.Value.ID)
-		}
-	}
-
-	return nil
-}
-
-type LoadBalancerArguments struct {
-	Name         string       `json:"name,omitempty"`
-	ResourceType ResourceType `json:"resource_type,omitempty"`
-	ResourceIDs  []string     `json:"resource_ids"`
-	DataCenter   *DataCenter  `json:"data_center,omitempty"`
+type LoadBalancerCreateArguments struct {
+	DataCenter    *DataCenter  `json:"data_center,omitempty"`
+	Name          string       `json:"name,omitempty"`
+	ResourceType  ResourceType `json:"resource_type,omitempty"`
+	ResourceIDs   *[]string    `json:"resource_ids,omitempty"`
+	HTTPSRedirect bool         `json:"https_redirect,omitempty"`
 }
 
 func (
-	s *LoadBalancerArguments,
-) forRequest() *LoadBalancerArguments {
+	s *LoadBalancerCreateArguments,
+) forRequest() *LoadBalancerCreateArguments {
 	if s == nil {
 		return nil
 	}
@@ -99,24 +57,21 @@ func (
 	return &args
 }
 
-type loadBalancerResource struct {
-	Type  string                     `json:"type,omitempty"`
-	Value *loadBalancerResourceValue `json:"value,omitempty"`
-}
-
-type loadBalancerResourceValue struct {
-	ID   string `json:"id,omitempty"`
-	Name string `json:"name,omitempty"`
+type LoadBalancerUpdateArguments struct {
+	Name          string       `json:"name,omitempty"`
+	ResourceType  ResourceType `json:"resource_type,omitempty"`
+	ResourceIDs   *[]string    `json:"resource_ids,omitempty"`
+	HTTPSRedirect bool         `json:"https_redirect,omitempty"`
 }
 
 type loadBalancerCreateRequest struct {
-	Organization *Organization          `json:"organization,omitempty"`
-	Properties   *LoadBalancerArguments `json:"properties,omitempty"`
+	Organization *Organization                `json:"organization,omitempty"`
+	Properties   *LoadBalancerCreateArguments `json:"properties,omitempty"`
 }
 
 type loadBalancerUpdateRequest struct {
-	LoadBalancer *LoadBalancer          `json:"load_balancer,omitempty"`
-	Properties   *LoadBalancerArguments `json:"properties,omitempty"`
+	LoadBalancer *LoadBalancer                `json:"load_balancer,omitempty"`
+	Properties   *LoadBalancerUpdateArguments `json:"properties,omitempty"`
 }
 
 type loadBalancersResponseBody struct {
@@ -174,7 +129,7 @@ func (s LoadBalancersClient) GetByID(
 func (s *LoadBalancersClient) Create(
 	ctx context.Context,
 	org *Organization,
-	args *LoadBalancerArguments,
+	args *LoadBalancerCreateArguments,
 ) (*LoadBalancer, *Response, error) {
 	u := &url.URL{Path: "organizations/_/load_balancers"}
 	reqBody := &loadBalancerCreateRequest{
@@ -190,12 +145,12 @@ func (s *LoadBalancersClient) Create(
 func (s *LoadBalancersClient) Update(
 	ctx context.Context,
 	lb *LoadBalancer,
-	args *LoadBalancerArguments,
+	args *LoadBalancerUpdateArguments,
 ) (*LoadBalancer, *Response, error) {
 	u := &url.URL{Path: "load_balancers/_"}
 	reqBody := &loadBalancerUpdateRequest{
 		LoadBalancer: lb.lookupReference(),
-		Properties:   args.forRequest(),
+		Properties:   args,
 	}
 
 	body, resp, err := s.doRequest(ctx, "PATCH", u, reqBody)
