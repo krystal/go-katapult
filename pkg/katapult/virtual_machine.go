@@ -2,7 +2,6 @@ package katapult
 
 import (
 	"context"
-	"fmt"
 	"net/url"
 	"strings"
 
@@ -136,18 +135,24 @@ func (s VirtualMachinesClient) GetByID(
 	ctx context.Context,
 	id string,
 ) (*VirtualMachine, *Response, error) {
-	u := &url.URL{Path: fmt.Sprintf("virtual_machines/%s", id)}
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
-
-	return body.VirtualMachine, resp, err
+	return s.get(ctx, &VirtualMachine{ID: id})
 }
 
 func (s VirtualMachinesClient) GetByFQDN(
 	ctx context.Context,
 	fqdn string,
 ) (*VirtualMachine, *Response, error) {
-	qs := url.Values{"virtual_machine[fqdn]": []string{fqdn}}
-	u := &url.URL{Path: "virtual_machines/_", RawQuery: qs.Encode()}
+	return s.get(ctx, &VirtualMachine{FQDN: fqdn})
+}
+
+func (s VirtualMachinesClient) get(
+	ctx context.Context,
+	vm *VirtualMachine,
+) (*VirtualMachine, *Response, error) {
+	u := &url.URL{
+		Path:     "virtual_machines/_",
+		RawQuery: vm.queryValues().Encode(),
+	}
 
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 

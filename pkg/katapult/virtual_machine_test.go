@@ -3,7 +3,6 @@ package katapult
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/url"
 	"testing"
@@ -587,9 +586,8 @@ func TestVirtualMachinesClient_Get(t *testing.T) {
 	tests := []struct {
 		name       string
 		args       args
-		reqPath    string
-		reqQuery   *url.Values
 		want       *VirtualMachine
+		wantQuery  *url.Values
 		errStr     string
 		errResp    *ResponseError
 		respStatus int
@@ -601,11 +599,13 @@ func TestVirtualMachinesClient_Get(t *testing.T) {
 				ctx:      context.Background(),
 				idOrFQDN: "vm_t8yomYsG4bccKw5D",
 			},
-			reqPath: "virtual_machines/vm_t8yomYsG4bccKw5D",
 			want: &VirtualMachine{
 				ID:       "vm_t8yomYsG4bccKw5D",
 				Name:     "bitter-beautiful-mango",
 				Hostname: "bitter-beautiful-mango",
+			},
+			wantQuery: &url.Values{
+				"virtual_machine[id]": []string{"vm_t8yomYsG4bccKw5D"},
 			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("virtual_machine_get"),
@@ -616,15 +616,13 @@ func TestVirtualMachinesClient_Get(t *testing.T) {
 				ctx:      context.Background(),
 				idOrFQDN: "anvil.amce.katapult.cloud",
 			},
-			reqPath: "virtual_machines/_",
-			reqQuery: &url.Values{
-				"virtual_machine[fqdn]": []string{"anvil.amce.katapult.cloud"},
-			},
-
 			want: &VirtualMachine{
 				ID:       "vm_t8yomYsG4bccKw5D",
 				Name:     "bitter-beautiful-mango",
 				Hostname: "bitter-beautiful-mango",
+			},
+			wantQuery: &url.Values{
+				"virtual_machine[fqdn]": []string{"anvil.amce.katapult.cloud"},
 			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("virtual_machine_get"),
@@ -665,20 +663,15 @@ func TestVirtualMachinesClient_Get(t *testing.T) {
 			c, mux, _, teardown := prepareTestClient()
 			defer teardown()
 
-			path := fmt.Sprintf("virtual_machines/%s", tt.args.idOrFQDN)
-			if tt.reqPath != "" {
-				path = tt.reqPath
-			}
-
 			mux.HandleFunc(
-				"/core/v1/"+path,
+				"/core/v1/virtual_machines/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
 
-					if tt.reqQuery != nil {
-						assert.Equal(t, *tt.reqQuery, r.URL.Query())
+					if tt.wantQuery != nil {
+						assert.Equal(t, *tt.wantQuery, r.URL.Query())
 					}
 
 					w.WriteHeader(tt.respStatus)
@@ -776,11 +769,16 @@ func TestVirtualMachinesClient_GetByID(t *testing.T) {
 			defer teardown()
 
 			mux.HandleFunc(
-				fmt.Sprintf("/core/v1/virtual_machines/%s", tt.args.id),
+				"/core/v1/virtual_machines/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+
+					qs := url.Values{
+						"virtual_machine[id]": []string{tt.args.id},
+					}
+					assert.Equal(t, qs, r.URL.Query())
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
