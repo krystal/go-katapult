@@ -177,8 +177,7 @@ func (s *IPAddressesClient) Update(
 	ip *IPAddress,
 	args *IPAddressUpdateArguments,
 ) (*IPAddress, *Response, error) {
-	qs := queryValues(ip)
-	u := &url.URL{Path: "ip_addresses/_", RawQuery: qs.Encode()}
+	u := &url.URL{Path: "ip_addresses/_"}
 	reqBody := &ipAddressUpdateRequest{
 		IPAddress: ip.lookupReference(),
 	}
