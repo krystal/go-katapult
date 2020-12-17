@@ -15,6 +15,7 @@ type VirtualMachine struct {
 	Name                string                 `json:"name,omitempty"`
 	Hostname            string                 `json:"hostname,omitempty"`
 	FQDN                string                 `json:"fqdn,omitempty"`
+	Description         string                 `json:"description,omitempty"`
 	CreatedAt           *timestamp.Timestamp   `json:"created_at,omitempty"`
 	InitialRootPassword string                 `json:"initial_root_password,omitempty"`
 	State               VirtualMachineState    `json:"state,omitempty"`

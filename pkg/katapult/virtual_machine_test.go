@@ -26,6 +26,7 @@ var (
 		Name:                "Anvil",
 		Hostname:            "anvil",
 		FQDN:                "anvil.amce.katapult.cloud",
+		Description:         "A heavy anvil-like little box.",
 		CreatedAt:           timestampPtr(934834834),
 		InitialRootPassword: "eZNHLt8gwtDJSSd59plNMh8S0BEGJZTe",
 		State:               "Westeros",
@@ -41,6 +42,7 @@ var (
 		Name:                fixtureVirtualMachineFull.Name,
 		Hostname:            fixtureVirtualMachineFull.Hostname,
 		FQDN:                fixtureVirtualMachineFull.FQDN,
+		Description:         fixtureVirtualMachineFull.Description,
 		CreatedAt:           fixtureVirtualMachineFull.CreatedAt,
 		InitialRootPassword: fixtureVirtualMachineFull.InitialRootPassword,
 		State:               fixtureVirtualMachineFull.State,
@@ -55,6 +57,7 @@ var (
 	fixtureVirtualMachineNoLookupField = &VirtualMachine{
 		Name:                fixtureVirtualMachineFull.Name,
 		Hostname:            fixtureVirtualMachineFull.Hostname,
+		Description:         fixtureVirtualMachineFull.Description,
 		CreatedAt:           fixtureVirtualMachineFull.CreatedAt,
 		InitialRootPassword: fixtureVirtualMachineFull.InitialRootPassword,
 		State:               fixtureVirtualMachineFull.State,
