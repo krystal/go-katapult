@@ -22,7 +22,7 @@ var (
 	}
 
 	fixtureVirtualMachineFull = &VirtualMachine{
-		ID:                  "vm_VkTLr3gjUxGFtCkp",
+		ID:                  "vm_t8yomYsG4bccKw5D",
 		Name:                "Anvil",
 		Hostname:            "anvil",
 		FQDN:                "anvil.amce.katapult.cloud",
@@ -111,7 +111,7 @@ func TestVirtualMachine_lookupReference(t *testing.T) {
 		{
 			name: "full",
 			obj:  fixtureVirtualMachineFull,
-			want: &VirtualMachine{ID: "vm_VkTLr3gjUxGFtCkp"},
+			want: &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
 		},
 		{
 			name: "no ID",
@@ -266,7 +266,13 @@ func TestVirtualMachineUpdateArguments_JSONMarshaling(t *testing.T) {
 				Name:        "db 3",
 				Hostname:    "db-3",
 				Description: "Database server #3",
-				Tags:        []string{"db", "east"},
+				Tags:        &[]string{"db", "east"},
+			},
+		},
+		{
+			name: "empty Tags",
+			obj: &VirtualMachineUpdateArguments{
+				Tags: &[]string{},
 			},
 		},
 	}

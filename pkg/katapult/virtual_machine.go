@@ -78,10 +78,10 @@ type VirtualMachineGroup struct {
 }
 
 type VirtualMachineUpdateArguments struct {
-	Name        string   `json:"name,omitempty"`
-	Hostname    string   `json:"hostname,omitempty"`
-	Description string   `json:"description,omitempty"`
-	Tags        []string `json:"tag_names,omitempty"`
+	Name        string    `json:"name,omitempty"`
+	Hostname    string    `json:"hostname,omitempty"`
+	Description string    `json:"description,omitempty"`
+	Tags        *[]string `json:"tag_names,omitempty"`
 }
 
 type virtualMachinesResponseBody struct {
