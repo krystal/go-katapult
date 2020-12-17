@@ -22,7 +22,7 @@ var (
 	}
 
 	fixtureVirtualMachineFull = &VirtualMachine{
-		ID:                  "vm_VkTLr3gjUxGFtCkp",
+		ID:                  "vm_t8yomYsG4bccKw5D",
 		Name:                "Anvil",
 		Hostname:            "anvil",
 		FQDN:                "anvil.amce.katapult.cloud",
@@ -111,7 +111,7 @@ func TestVirtualMachine_lookupReference(t *testing.T) {
 		{
 			name: "full",
 			obj:  fixtureVirtualMachineFull,
-			want: &VirtualMachine{ID: "vm_VkTLr3gjUxGFtCkp"},
+			want: &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
 		},
 		{
 			name: "no ID",
@@ -266,7 +266,13 @@ func TestVirtualMachineUpdateArguments_JSONMarshaling(t *testing.T) {
 				Name:        "db 3",
 				Hostname:    "db-3",
 				Description: "Database server #3",
-				Tags:        []string{"db", "east"},
+				Tags:        &[]string{"db", "east"},
+			},
+		},
+		{
+			name: "empty Tags",
+			obj: &VirtualMachineUpdateArguments{
+				Tags: &[]string{},
 			},
 		},
 	}
@@ -1217,6 +1223,11 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 }
 
 func TestVirtualMachinesClient_Update(t *testing.T) {
+	vmArgs := &VirtualMachineUpdateArguments{
+		Name:     "Anvil Next",
+		Hostname: "anvil-next",
+	}
+
 	type args struct {
 		ctx  context.Context
 		vm   *VirtualMachine
@@ -1235,24 +1246,20 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 		{
 			name: "by ID",
 			args: args{
-				ctx: context.Background(),
-				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
-				args: &VirtualMachineUpdateArguments{
-					Name:     "web (old)",
-					Hostname: "web-old",
-				},
+				ctx:  context.Background(),
+				vm:   fixtureVirtualMachineFull,
+				args: vmArgs,
 			},
 			reqBody: &virtualMachineUpdateRequest{
-				VirtualMachine: &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
-				Properties: &VirtualMachineUpdateArguments{
-					Name:     "web (old)",
-					Hostname: "web-old",
+				VirtualMachine: &VirtualMachine{
+					ID: fixtureVirtualMachineFull.ID,
 				},
+				Properties: vmArgs,
 			},
 			want: &VirtualMachine{
 				ID:       "vm_t8yomYsG4bccKw5D",
-				Name:     "web (old)",
-				Hostname: "web-old",
+				Name:     "Anvil Next",
+				Hostname: "anvil-next",
 			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("virtual_machine_update"),
@@ -1260,26 +1267,20 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 		{
 			name: "by FQDN",
 			args: args{
-				ctx: context.Background(),
-				vm:  &VirtualMachine{FQDN: "anvil.amce.katapult.cloud"},
-				args: &VirtualMachineUpdateArguments{
-					Name:     "web (old)",
-					Hostname: "web-old",
-				},
+				ctx:  context.Background(),
+				vm:   fixtureVirtualMachineNoID,
+				args: vmArgs,
 			},
 			reqBody: &virtualMachineUpdateRequest{
 				VirtualMachine: &VirtualMachine{
-					FQDN: "anvil.amce.katapult.cloud",
+					FQDN: fixtureVirtualMachineNoID.FQDN,
 				},
-				Properties: &VirtualMachineUpdateArguments{
-					Name:     "web (old)",
-					Hostname: "web-old",
-				},
+				Properties: vmArgs,
 			},
 			want: &VirtualMachine{
 				ID:       "vm_t8yomYsG4bccKw5D",
-				Name:     "web (old)",
-				Hostname: "web-old",
+				Name:     "Anvil Next",
+				Hostname: "anvil-next",
 			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("virtual_machine_update"),
@@ -1287,12 +1288,9 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 		{
 			name: "non-existent virtual machine",
 			args: args{
-				ctx: context.Background(),
-				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
-				args: &VirtualMachineUpdateArguments{
-					Name:     "web (old)",
-					Hostname: "web-old",
-				},
+				ctx:  context.Background(),
+				vm:   fixtureVirtualMachineFull,
+				args: vmArgs,
 			},
 			errStr:     fixtureVirtualMachineNotFoundErr,
 			errResp:    fixtureVirtualMachineNotFoundResponseError,
@@ -1302,12 +1300,9 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 		{
 			name: "virtual machine is in trash",
 			args: args{
-				ctx: context.Background(),
-				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
-				args: &VirtualMachineUpdateArguments{
-					Name:     "web (old)",
-					Hostname: "web-old",
-				},
+				ctx:  context.Background(),
+				vm:   fixtureVirtualMachineFull,
+				args: vmArgs,
 			},
 			errStr:     fixtureObjectInTrashErr,
 			errResp:    fixtureObjectInTrashResponseError,
@@ -1317,12 +1312,9 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 		{
 			name: "permission_denied",
 			args: args{
-				ctx: context.Background(),
-				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
-				args: &VirtualMachineUpdateArguments{
-					Name:     "web (old)",
-					Hostname: "web-old",
-				},
+				ctx:  context.Background(),
+				vm:   fixtureVirtualMachineFull,
+				args: vmArgs,
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
@@ -1332,18 +1324,12 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 		{
 			name: "nil virtual machine",
 			args: args{
-				ctx: context.Background(),
-				vm:  nil,
-				args: &VirtualMachineUpdateArguments{
-					Name:     "web (old)",
-					Hostname: "web-old",
-				},
+				ctx:  context.Background(),
+				vm:   nil,
+				args: vmArgs,
 			},
 			reqBody: &virtualMachineUpdateRequest{
-				Properties: &VirtualMachineUpdateArguments{
-					Name:     "web (old)",
-					Hostname: "web-old",
-				},
+				Properties: vmArgs,
 			},
 			errStr:     fixtureVirtualMachineNotFoundErr,
 			errResp:    fixtureVirtualMachineNotFoundResponseError,
@@ -1353,10 +1339,8 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 		{
 			name: "nil virtual machine update arguments",
 			args: args{
-				ctx: context.Background(),
-				vm: &VirtualMachine{
-					ID: "vm_t8yomYsG4bccKw5D",
-				},
+				ctx:  context.Background(),
+				vm:   fixtureVirtualMachineFull,
 				args: nil,
 			},
 			reqBody: &virtualMachineUpdateRequest{
@@ -1375,15 +1359,11 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 		{
 			name: "nil context",
 			args: args{
-				ctx: nil,
-				vm: &VirtualMachine{
-					ID: "vm_t8yomYsG4bccKw5D",
-				},
-				args: &VirtualMachineUpdateArguments{
-					Name:     "web (old)",
-					Hostname: "web-old",
-				},
+				ctx:  nil,
+				vm:   fixtureVirtualMachineFull,
+				args: vmArgs,
 			},
+
 			errStr: "net/http: nil Context",
 		},
 	}
