@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1608137830441,
+  "lastUpdate": 1608207986778,
   "repoUrl": "https://github.com/krystal/go-katapult",
   "entries": {
     "Benchmark": [
@@ -1110,6 +1110,60 @@ window.BENCHMARK_DATA = {
             "value": 3216,
             "unit": "ns/op",
             "extra": "351176 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "contact@jimeh.me",
+            "name": "Jim Myhrberg",
+            "username": "jimeh"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0f33be5133683e5e57831d8cbf76cba156a7f60c",
+          "message": "Merge pull request #48 from krystal/add-buildspec-ip-version-type\n\nfeat(buildspec): add IPVersion type to constrain IP versions to 4 or 6",
+          "timestamp": "2020-12-17T12:25:51Z",
+          "tree_id": "c6d3a043796d12c96d35b5d89b06d1dff1fea553",
+          "url": "https://github.com/krystal/go-katapult/commit/0f33be5133683e5e57831d8cbf76cba156a7f60c"
+        },
+        "date": 1608207986238,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkNameGenerator_RandomHostname",
+            "value": 4540,
+            "unit": "ns/op",
+            "extra": "267232 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_NoPrefix",
+            "value": 3257,
+            "unit": "ns/op",
+            "extra": "366387 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_OnePrefix",
+            "value": 3303,
+            "unit": "ns/op",
+            "extra": "375150 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_TwoPrefixes",
+            "value": 3373,
+            "unit": "ns/op",
+            "extra": "359774 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_ThreePrefixes",
+            "value": 3347,
+            "unit": "ns/op",
+            "extra": "371595 times\n2 procs"
           }
         ]
       }
