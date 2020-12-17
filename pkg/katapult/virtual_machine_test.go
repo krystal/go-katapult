@@ -36,6 +36,7 @@ var (
 		Package:             &VirtualMachinePackage{ID: "id3"},
 		AttachedISO:         &ISO{ID: "id4"},
 		Tags:                []*Tag{{ID: "id5"}},
+		TagNames:            []string{"heavy"},
 		IPAddresses:         []*IPAddress{{ID: "id6"}},
 	}
 	fixtureVirtualMachineNoID = &VirtualMachine{
@@ -52,6 +53,7 @@ var (
 		Package:             fixtureVirtualMachineFull.Package,
 		AttachedISO:         fixtureVirtualMachineFull.AttachedISO,
 		Tags:                fixtureVirtualMachineFull.Tags,
+		TagNames:            fixtureVirtualMachineFull.TagNames,
 		IPAddresses:         fixtureVirtualMachineFull.IPAddresses,
 	}
 	fixtureVirtualMachineNoLookupField = &VirtualMachine{
@@ -67,6 +69,7 @@ var (
 		Package:             fixtureVirtualMachineFull.Package,
 		AttachedISO:         fixtureVirtualMachineFull.AttachedISO,
 		Tags:                fixtureVirtualMachineFull.Tags,
+		TagNames:            fixtureVirtualMachineFull.TagNames,
 		IPAddresses:         fixtureVirtualMachineFull.IPAddresses,
 	}
 )
@@ -266,13 +269,13 @@ func TestVirtualMachineUpdateArguments_JSONMarshaling(t *testing.T) {
 				Name:        "db 3",
 				Hostname:    "db-3",
 				Description: "Database server #3",
-				Tags:        &[]string{"db", "east"},
+				TagNames:    &[]string{"db", "east"},
 			},
 		},
 		{
 			name: "empty Tags",
 			obj: &VirtualMachineUpdateArguments{
-				Tags: &[]string{},
+				TagNames: &[]string{},
 			},
 		},
 	}
