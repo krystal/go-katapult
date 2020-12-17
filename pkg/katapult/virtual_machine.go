@@ -25,6 +25,7 @@ type VirtualMachine struct {
 	Package             *VirtualMachinePackage `json:"package,omitempty"`
 	AttachedISO         *ISO                   `json:"attached_iso,omitempty"`
 	Tags                []*Tag                 `json:"tags,omitempty"`
+	TagNames            []string               `json:"tag_names,omitempty"`
 	IPAddresses         []*IPAddress           `json:"ip_addresses,omitempty"`
 }
 
