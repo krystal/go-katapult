@@ -251,6 +251,32 @@ func TestVirtualMachineGroup_JSONMarshaling(t *testing.T) {
 	}
 }
 
+func TestVirtualMachineUpdateArguments_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *VirtualMachineUpdateArguments
+	}{
+		{
+			name: "empty",
+			obj:  &VirtualMachineUpdateArguments{},
+		},
+		{
+			name: "full",
+			obj: &VirtualMachineUpdateArguments{
+				Name:        "db 3",
+				Hostname:    "db-3",
+				Description: "Database server #3",
+				Tags:        []string{"db", "east"},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
 func Test_virtualMachinesResponseBody_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string
@@ -290,6 +316,30 @@ func Test_virtualMachineChangePackageRequest_JSONMarshaling(t *testing.T) {
 			obj: &virtualMachineChangePackageRequest{
 				VirtualMachine: &VirtualMachine{ID: "id1"},
 				Package:        &VirtualMachinePackage{ID: "id2"},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func Test_virtualMachineUpdateRequest_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *virtualMachineUpdateRequest
+	}{
+		{
+			name: "empty",
+			obj:  &virtualMachineUpdateRequest{},
+		},
+		{
+			name: "full",
+			obj: &virtualMachineUpdateRequest{
+				VirtualMachine: &VirtualMachine{ID: "id1"},
+				Properties:     &VirtualMachineUpdateArguments{Name: "hi"},
 			},
 		},
 	}
@@ -1143,6 +1193,226 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 
 			got, resp, err := c.VirtualMachines.ChangePackage(
 				tt.args.ctx, tt.args.vm, tt.args.pkg,
+			)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestVirtualMachinesClient_Update(t *testing.T) {
+	type args struct {
+		ctx  context.Context
+		vm   *VirtualMachine
+		args *VirtualMachineUpdateArguments
+	}
+	tests := []struct {
+		name       string
+		args       args
+		reqBody    *virtualMachineUpdateRequest
+		want       *VirtualMachine
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "by ID",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				args: &VirtualMachineUpdateArguments{
+					Name:     "web (old)",
+					Hostname: "web-old",
+				},
+			},
+			reqBody: &virtualMachineUpdateRequest{
+				VirtualMachine: &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				Properties: &VirtualMachineUpdateArguments{
+					Name:     "web (old)",
+					Hostname: "web-old",
+				},
+			},
+			want: &VirtualMachine{
+				ID:       "vm_t8yomYsG4bccKw5D",
+				Name:     "web (old)",
+				Hostname: "web-old",
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machine_update"),
+		},
+		{
+			name: "by FQDN",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{FQDN: "anvil.amce.katapult.cloud"},
+				args: &VirtualMachineUpdateArguments{
+					Name:     "web (old)",
+					Hostname: "web-old",
+				},
+			},
+			reqBody: &virtualMachineUpdateRequest{
+				VirtualMachine: &VirtualMachine{
+					FQDN: "anvil.amce.katapult.cloud",
+				},
+				Properties: &VirtualMachineUpdateArguments{
+					Name:     "web (old)",
+					Hostname: "web-old",
+				},
+			},
+			want: &VirtualMachine{
+				ID:       "vm_t8yomYsG4bccKw5D",
+				Name:     "web (old)",
+				Hostname: "web-old",
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machine_update"),
+		},
+		{
+			name: "non-existent virtual machine",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				args: &VirtualMachineUpdateArguments{
+					Name:     "web (old)",
+					Hostname: "web-old",
+				},
+			},
+			errStr:     fixtureVirtualMachineNotFoundErr,
+			errResp:    fixtureVirtualMachineNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("virtual_machine_not_found_error"),
+		},
+		{
+			name: "virtual machine is in trash",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				args: &VirtualMachineUpdateArguments{
+					Name:     "web (old)",
+					Hostname: "web-old",
+				},
+			},
+			errStr:     fixtureObjectInTrashErr,
+			errResp:    fixtureObjectInTrashResponseError,
+			respStatus: http.StatusNotAcceptable,
+			respBody:   fixture("object_in_trash_error"),
+		},
+		{
+			name: "permission_denied",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				args: &VirtualMachineUpdateArguments{
+					Name:     "web (old)",
+					Hostname: "web-old",
+				},
+			},
+			errStr:     fixturePermissionDeniedErr,
+			errResp:    fixturePermissionDeniedResponseError,
+			respStatus: http.StatusForbidden,
+			respBody:   fixture("permission_denied_error"),
+		},
+		{
+			name: "nil virtual machine",
+			args: args{
+				ctx: context.Background(),
+				vm:  nil,
+				args: &VirtualMachineUpdateArguments{
+					Name:     "web (old)",
+					Hostname: "web-old",
+				},
+			},
+			reqBody: &virtualMachineUpdateRequest{
+				Properties: &VirtualMachineUpdateArguments{
+					Name:     "web (old)",
+					Hostname: "web-old",
+				},
+			},
+			errStr:     fixtureVirtualMachineNotFoundErr,
+			errResp:    fixtureVirtualMachineNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("virtual_machine_not_found_error"),
+		},
+		{
+			name: "nil virtual machine update arguments",
+			args: args{
+				ctx: context.Background(),
+				vm: &VirtualMachine{
+					ID: "vm_t8yomYsG4bccKw5D",
+				},
+				args: nil,
+			},
+			reqBody: &virtualMachineUpdateRequest{
+				VirtualMachine: &VirtualMachine{
+					ID: "vm_t8yomYsG4bccKw5D",
+				},
+			},
+			want: &VirtualMachine{
+				ID:       "vm_t8yomYsG4bccKw5D",
+				Name:     "bitter-beautiful-mango",
+				Hostname: "bitter-beautiful-mango",
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machine_get"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx: nil,
+				vm: &VirtualMachine{
+					ID: "vm_t8yomYsG4bccKw5D",
+				},
+				args: &VirtualMachineUpdateArguments{
+					Name:     "web (old)",
+					Hostname: "web-old",
+				},
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			mux.HandleFunc(
+				"/core/v1/virtual_machines/_",
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "PATCH", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					if tt.reqBody != nil {
+						reqBody := &virtualMachineUpdateRequest{}
+						err := strictUmarshal(r.Body, reqBody)
+						assert.NoError(t, err)
+						assert.Equal(t, tt.reqBody, reqBody)
+					}
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.VirtualMachines.Update(
+				tt.args.ctx, tt.args.vm, tt.args.args,
 			)
 
 			if tt.respStatus != 0 {

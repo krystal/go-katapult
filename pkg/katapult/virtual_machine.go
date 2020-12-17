@@ -77,6 +77,13 @@ type VirtualMachineGroup struct {
 	CreatedAt *timestamp.Timestamp `json:"created_at,omitempty"`
 }
 
+type VirtualMachineUpdateArguments struct {
+	Name        string   `json:"name,omitempty"`
+	Hostname    string   `json:"hostname,omitempty"`
+	Description string   `json:"description,omitempty"`
+	Tags        []string `json:"tag_names,omitempty"`
+}
+
 type virtualMachinesResponseBody struct {
 	Pagination      *Pagination       `json:"pagination,omitempty"`
 	Task            *Task             `json:"task,omitempty"`
@@ -88,6 +95,11 @@ type virtualMachinesResponseBody struct {
 type virtualMachineChangePackageRequest struct {
 	VirtualMachine *VirtualMachine        `json:"virtual_machine,omitempty"`
 	Package        *VirtualMachinePackage `json:"virtual_machine_package,omitempty"`
+}
+
+type virtualMachineUpdateRequest struct {
+	VirtualMachine *VirtualMachine                `json:"virtual_machine,omitempty"`
+	Properties     *VirtualMachineUpdateArguments `json:"properties,omitempty"`
 }
 
 type VirtualMachinesClient struct {
@@ -173,6 +185,21 @@ func (s *VirtualMachinesClient) ChangePackage(
 	body, resp, err := s.doRequest(ctx, "PUT", u, reqBody)
 
 	return body.Task, resp, err
+}
+
+func (s *VirtualMachinesClient) Update(
+	ctx context.Context,
+	vm *VirtualMachine,
+	args *VirtualMachineUpdateArguments,
+) (*VirtualMachine, *Response, error) {
+	u := &url.URL{Path: "virtual_machines/_"}
+	reqBody := &virtualMachineUpdateRequest{
+		VirtualMachine: vm.lookupReference(),
+		Properties:     args,
+	}
+	body, resp, err := s.doRequest(ctx, "PATCH", u, reqBody)
+
+	return body.VirtualMachine, resp, err
 }
 
 func (s *VirtualMachinesClient) Delete(
