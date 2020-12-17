@@ -326,18 +326,18 @@ func Test_virtualMachinesResponseBody_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func Test_virtualMachineChangePackageRequestBody_JSONMarshaling(t *testing.T) {
+func Test_virtualMachineChangePackageRequest_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string
-		obj  *virtualMachineChangePackageRequestBody
+		obj  *virtualMachineChangePackageRequest
 	}{
 		{
 			name: "empty",
-			obj:  &virtualMachineChangePackageRequestBody{},
+			obj:  &virtualMachineChangePackageRequest{},
 		},
 		{
 			name: "full",
-			obj: &virtualMachineChangePackageRequestBody{
+			obj: &virtualMachineChangePackageRequest{
 				VirtualMachine: &VirtualMachine{ID: "id1"},
 				Package:        &VirtualMachinePackage{ID: "id2"},
 			},
@@ -923,7 +923,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 	tests := []struct {
 		name       string
 		args       args
-		reqBody    *virtualMachineChangePackageRequestBody
+		reqBody    *virtualMachineChangePackageRequest
 		want       *Task
 		errStr     string
 		errResp    *ResponseError
@@ -941,7 +941,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
 			},
-			reqBody: &virtualMachineChangePackageRequestBody{
+			reqBody: &virtualMachineChangePackageRequest{
 				VirtualMachine: &VirtualMachine{
 					ID: "vm_t8yomYsG4bccKw5D",
 				},
@@ -971,7 +971,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 					Permalink: "xsmall",
 				},
 			},
-			reqBody: &virtualMachineChangePackageRequestBody{
+			reqBody: &virtualMachineChangePackageRequest{
 				VirtualMachine: &VirtualMachine{
 					FQDN: "anvil.amce.katapult.cloud",
 				},
@@ -1019,7 +1019,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 					Icon:          &Attachment{URL: "url"},
 				},
 			},
-			reqBody: &virtualMachineChangePackageRequestBody{
+			reqBody: &virtualMachineChangePackageRequest{
 				VirtualMachine: &VirtualMachine{
 					ID: "vm_t8yomYsG4bccKw5D",
 				},
@@ -1124,7 +1124,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
 			},
-			reqBody: &virtualMachineChangePackageRequestBody{
+			reqBody: &virtualMachineChangePackageRequest{
 				Package: &VirtualMachinePackage{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
@@ -1143,7 +1143,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 				},
 				pkg: nil,
 			},
-			reqBody: &virtualMachineChangePackageRequestBody{
+			reqBody: &virtualMachineChangePackageRequest{
 				VirtualMachine: &VirtualMachine{
 					ID: "vm_t8yomYsG4bccKw5D",
 				},
@@ -1180,7 +1180,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 					assertAuthorization(t, r)
 
 					if tt.reqBody != nil {
-						reqBody := &virtualMachineChangePackageRequestBody{}
+						reqBody := &virtualMachineChangePackageRequest{}
 						err := strictUmarshal(r.Body, reqBody)
 						assert.NoError(t, err)
 						assert.Equal(t, tt.reqBody, reqBody)

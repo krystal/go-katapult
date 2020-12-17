@@ -84,7 +84,7 @@ type virtualMachinesResponseBody struct {
 	VirtualMachines []*VirtualMachine `json:"virtual_machines,omitempty"`
 }
 
-type virtualMachineChangePackageRequestBody struct {
+type virtualMachineChangePackageRequest struct {
 	VirtualMachine *VirtualMachine        `json:"virtual_machine,omitempty"`
 	Package        *VirtualMachinePackage `json:"virtual_machine_package,omitempty"`
 }
@@ -165,7 +165,7 @@ func (s *VirtualMachinesClient) ChangePackage(
 	pkg *VirtualMachinePackage,
 ) (*Task, *Response, error) {
 	u := &url.URL{Path: "virtual_machines/_/package"}
-	reqBody := &virtualMachineChangePackageRequestBody{
+	reqBody := &virtualMachineChangePackageRequest{
 		VirtualMachine: vm.lookupReference(),
 		Package:        pkg.lookupReference(),
 	}
