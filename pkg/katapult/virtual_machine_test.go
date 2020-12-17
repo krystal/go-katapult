@@ -3,7 +3,6 @@ package katapult
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/url"
 	"testing"
@@ -21,6 +20,55 @@ var (
 			"criteria provided in the arguments",
 		Detail: json.RawMessage(`{}`),
 	}
+
+	fixtureVirtualMachineFull = &VirtualMachine{
+		ID:                  "vm_VkTLr3gjUxGFtCkp",
+		Name:                "Anvil",
+		Hostname:            "anvil",
+		FQDN:                "anvil.amce.katapult.cloud",
+		Description:         "A heavy anvil-like little box.",
+		CreatedAt:           timestampPtr(934834834),
+		InitialRootPassword: "eZNHLt8gwtDJSSd59plNMh8S0BEGJZTe",
+		State:               "Westeros",
+		Zone:                &Zone{ID: "id0"},
+		Organization:        &Organization{ID: "id1"},
+		Group:               &VirtualMachineGroup{ID: "id2"},
+		Package:             &VirtualMachinePackage{ID: "id3"},
+		AttachedISO:         &ISO{ID: "id4"},
+		Tags:                []*Tag{{ID: "id5"}},
+		IPAddresses:         []*IPAddress{{ID: "id6"}},
+	}
+	fixtureVirtualMachineNoID = &VirtualMachine{
+		Name:                fixtureVirtualMachineFull.Name,
+		Hostname:            fixtureVirtualMachineFull.Hostname,
+		FQDN:                fixtureVirtualMachineFull.FQDN,
+		Description:         fixtureVirtualMachineFull.Description,
+		CreatedAt:           fixtureVirtualMachineFull.CreatedAt,
+		InitialRootPassword: fixtureVirtualMachineFull.InitialRootPassword,
+		State:               fixtureVirtualMachineFull.State,
+		Zone:                fixtureVirtualMachineFull.Zone,
+		Organization:        fixtureVirtualMachineFull.Organization,
+		Group:               fixtureVirtualMachineFull.Group,
+		Package:             fixtureVirtualMachineFull.Package,
+		AttachedISO:         fixtureVirtualMachineFull.AttachedISO,
+		Tags:                fixtureVirtualMachineFull.Tags,
+		IPAddresses:         fixtureVirtualMachineFull.IPAddresses,
+	}
+	fixtureVirtualMachineNoLookupField = &VirtualMachine{
+		Name:                fixtureVirtualMachineFull.Name,
+		Hostname:            fixtureVirtualMachineFull.Hostname,
+		Description:         fixtureVirtualMachineFull.Description,
+		CreatedAt:           fixtureVirtualMachineFull.CreatedAt,
+		InitialRootPassword: fixtureVirtualMachineFull.InitialRootPassword,
+		State:               fixtureVirtualMachineFull.State,
+		Zone:                fixtureVirtualMachineFull.Zone,
+		Organization:        fixtureVirtualMachineFull.Organization,
+		Group:               fixtureVirtualMachineFull.Group,
+		Package:             fixtureVirtualMachineFull.Package,
+		AttachedISO:         fixtureVirtualMachineFull.AttachedISO,
+		Tags:                fixtureVirtualMachineFull.Tags,
+		IPAddresses:         fixtureVirtualMachineFull.IPAddresses,
+	}
 )
 
 func TestVirtualMachine_JSONMarshaling(t *testing.T) {
@@ -34,22 +82,7 @@ func TestVirtualMachine_JSONMarshaling(t *testing.T) {
 		},
 		{
 			name: "full",
-			obj: &VirtualMachine{
-				ID:                  "vm_VkTLr3gjUxGFtCkp",
-				Name:                "Anvil",
-				Hostname:            "anvil",
-				FQDN:                "anvil.amce.katapult.cloud",
-				CreatedAt:           timestampPtr(934834834),
-				InitialRootPassword: "eZNHLt8gwtDJSSd59plNMh8S0BEGJZTe",
-				State:               "Westeros",
-				Zone:                &Zone{ID: "id0"},
-				Organization:        &Organization{ID: "id1"},
-				Group:               &VirtualMachineGroup{ID: "id2"},
-				Package:             &VirtualMachinePackage{ID: "id3"},
-				AttachedISO:         &ISO{ID: "id4"},
-				Tags:                []*Tag{{ID: "id5"}},
-				IPAddresses:         []*IPAddress{{ID: "id6"}},
-			},
+			obj:  fixtureVirtualMachineFull,
 		},
 	}
 	for _, tt := range tests {
@@ -77,59 +110,17 @@ func TestVirtualMachine_lookupReference(t *testing.T) {
 		},
 		{
 			name: "full",
-			obj: &VirtualMachine{
-				ID:                  "vm_VkTLr3gjUxGFtCkp",
-				Name:                "Anvil",
-				Hostname:            "anvil",
-				FQDN:                "anvil.amce.katapult.cloud",
-				CreatedAt:           timestampPtr(934834834),
-				InitialRootPassword: "eZNHLt8gwtDJSSd59plNMh8S0BEGJZTe",
-				State:               "Westeros",
-				Zone:                &Zone{ID: "id0"},
-				Organization:        &Organization{ID: "id1"},
-				Group:               &VirtualMachineGroup{ID: "id2"},
-				Package:             &VirtualMachinePackage{ID: "id3"},
-				AttachedISO:         &ISO{ID: "id4"},
-				Tags:                []*Tag{{ID: "id5"}},
-				IPAddresses:         []*IPAddress{{ID: "id6"}},
-			},
+			obj:  fixtureVirtualMachineFull,
 			want: &VirtualMachine{ID: "vm_VkTLr3gjUxGFtCkp"},
 		},
 		{
 			name: "no ID",
-			obj: &VirtualMachine{
-				Name:                "Anvil",
-				Hostname:            "anvil",
-				FQDN:                "anvil.amce.katapult.cloud",
-				CreatedAt:           timestampPtr(934834834),
-				InitialRootPassword: "eZNHLt8gwtDJSSd59plNMh8S0BEGJZTe",
-				State:               "Westeros",
-				Zone:                &Zone{ID: "id0"},
-				Organization:        &Organization{ID: "id1"},
-				Group:               &VirtualMachineGroup{ID: "id2"},
-				Package:             &VirtualMachinePackage{ID: "id3"},
-				AttachedISO:         &ISO{ID: "id4"},
-				Tags:                []*Tag{{ID: "id5"}},
-				IPAddresses:         []*IPAddress{{ID: "id6"}},
-			},
+			obj:  fixtureVirtualMachineNoID,
 			want: &VirtualMachine{FQDN: "anvil.amce.katapult.cloud"},
 		},
 		{
 			name: "no ID or FQDN",
-			obj: &VirtualMachine{
-				Name:                "Anvil",
-				Hostname:            "anvil",
-				CreatedAt:           timestampPtr(934834834),
-				InitialRootPassword: "eZNHLt8gwtDJSSd59plNMh8S0BEGJZTe",
-				State:               "Westeros",
-				Zone:                &Zone{ID: "id0"},
-				Organization:        &Organization{ID: "id1"},
-				Group:               &VirtualMachineGroup{ID: "id2"},
-				Package:             &VirtualMachinePackage{ID: "id3"},
-				AttachedISO:         &ISO{ID: "id4"},
-				Tags:                []*Tag{{ID: "id5"}},
-				IPAddresses:         []*IPAddress{{ID: "id6"}},
-			},
+			obj:  fixtureVirtualMachineNoLookupField,
 			want: &VirtualMachine{},
 		},
 	}
@@ -157,57 +148,15 @@ func TestVirtualMachine_queryValues(t *testing.T) {
 		},
 		{
 			name: "full",
-			obj: &VirtualMachine{
-				ID:                  "vm_VkTLr3gjUxGFtCkp",
-				Name:                "Anvil",
-				Hostname:            "anvil",
-				FQDN:                "anvil.amce.katapult.cloud",
-				CreatedAt:           timestampPtr(934834834),
-				InitialRootPassword: "eZNHLt8gwtDJSSd59plNMh8S0BEGJZTe",
-				State:               "Westeros",
-				Zone:                &Zone{ID: "id0"},
-				Organization:        &Organization{ID: "id1"},
-				Group:               &VirtualMachineGroup{ID: "id2"},
-				Package:             &VirtualMachinePackage{ID: "id3"},
-				AttachedISO:         &ISO{ID: "id4"},
-				Tags:                []*Tag{{ID: "id5"}},
-				IPAddresses:         []*IPAddress{{ID: "id6"}},
-			},
+			obj:  fixtureVirtualMachineFull,
 		},
 		{
 			name: "no ID",
-			obj: &VirtualMachine{
-				Name:                "Anvil",
-				Hostname:            "anvil",
-				FQDN:                "anvil.amce.katapult.cloud",
-				CreatedAt:           timestampPtr(934834834),
-				InitialRootPassword: "eZNHLt8gwtDJSSd59plNMh8S0BEGJZTe",
-				State:               "Westeros",
-				Zone:                &Zone{ID: "id0"},
-				Organization:        &Organization{ID: "id1"},
-				Group:               &VirtualMachineGroup{ID: "id2"},
-				Package:             &VirtualMachinePackage{ID: "id3"},
-				AttachedISO:         &ISO{ID: "id4"},
-				Tags:                []*Tag{{ID: "id5"}},
-				IPAddresses:         []*IPAddress{{ID: "id6"}},
-			},
+			obj:  fixtureVirtualMachineNoID,
 		},
 		{
 			name: "no ID or FQDN",
-			obj: &VirtualMachine{
-				Name:                "Anvil",
-				Hostname:            "anvil",
-				CreatedAt:           timestampPtr(934834834),
-				InitialRootPassword: "eZNHLt8gwtDJSSd59plNMh8S0BEGJZTe",
-				State:               "Westeros",
-				Zone:                &Zone{ID: "id0"},
-				Organization:        &Organization{ID: "id1"},
-				Group:               &VirtualMachineGroup{ID: "id2"},
-				Package:             &VirtualMachinePackage{ID: "id3"},
-				AttachedISO:         &ISO{ID: "id4"},
-				Tags:                []*Tag{{ID: "id5"}},
-				IPAddresses:         []*IPAddress{{ID: "id6"}},
-			},
+			obj:  fixtureVirtualMachineNoLookupField,
 		},
 	}
 	for _, tt := range tests {
@@ -302,6 +251,32 @@ func TestVirtualMachineGroup_JSONMarshaling(t *testing.T) {
 	}
 }
 
+func TestVirtualMachineUpdateArguments_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *VirtualMachineUpdateArguments
+	}{
+		{
+			name: "empty",
+			obj:  &VirtualMachineUpdateArguments{},
+		},
+		{
+			name: "full",
+			obj: &VirtualMachineUpdateArguments{
+				Name:        "db 3",
+				Hostname:    "db-3",
+				Description: "Database server #3",
+				Tags:        []string{"db", "east"},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
 func Test_virtualMachinesResponseBody_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string
@@ -327,20 +302,44 @@ func Test_virtualMachinesResponseBody_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func Test_virtualMachineChangePackageRequestBody_JSONMarshaling(t *testing.T) {
+func Test_virtualMachineChangePackageRequest_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string
-		obj  *virtualMachineChangePackageRequestBody
+		obj  *virtualMachineChangePackageRequest
 	}{
 		{
 			name: "empty",
-			obj:  &virtualMachineChangePackageRequestBody{},
+			obj:  &virtualMachineChangePackageRequest{},
 		},
 		{
 			name: "full",
-			obj: &virtualMachineChangePackageRequestBody{
+			obj: &virtualMachineChangePackageRequest{
 				VirtualMachine: &VirtualMachine{ID: "id1"},
 				Package:        &VirtualMachinePackage{ID: "id2"},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func Test_virtualMachineUpdateRequest_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *virtualMachineUpdateRequest
+	}{
+		{
+			name: "empty",
+			obj:  &virtualMachineUpdateRequest{},
+		},
+		{
+			name: "full",
+			obj: &virtualMachineUpdateRequest{
+				VirtualMachine: &VirtualMachine{ID: "id1"},
+				Properties:     &VirtualMachineUpdateArguments{Name: "hi"},
 			},
 		},
 	}
@@ -587,9 +586,8 @@ func TestVirtualMachinesClient_Get(t *testing.T) {
 	tests := []struct {
 		name       string
 		args       args
-		reqPath    string
-		reqQuery   *url.Values
 		want       *VirtualMachine
+		wantQuery  *url.Values
 		errStr     string
 		errResp    *ResponseError
 		respStatus int
@@ -601,11 +599,13 @@ func TestVirtualMachinesClient_Get(t *testing.T) {
 				ctx:      context.Background(),
 				idOrFQDN: "vm_t8yomYsG4bccKw5D",
 			},
-			reqPath: "virtual_machines/vm_t8yomYsG4bccKw5D",
 			want: &VirtualMachine{
 				ID:       "vm_t8yomYsG4bccKw5D",
 				Name:     "bitter-beautiful-mango",
 				Hostname: "bitter-beautiful-mango",
+			},
+			wantQuery: &url.Values{
+				"virtual_machine[id]": []string{"vm_t8yomYsG4bccKw5D"},
 			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("virtual_machine_get"),
@@ -616,15 +616,13 @@ func TestVirtualMachinesClient_Get(t *testing.T) {
 				ctx:      context.Background(),
 				idOrFQDN: "anvil.amce.katapult.cloud",
 			},
-			reqPath: "virtual_machines/_",
-			reqQuery: &url.Values{
-				"virtual_machine[fqdn]": []string{"anvil.amce.katapult.cloud"},
-			},
-
 			want: &VirtualMachine{
 				ID:       "vm_t8yomYsG4bccKw5D",
 				Name:     "bitter-beautiful-mango",
 				Hostname: "bitter-beautiful-mango",
+			},
+			wantQuery: &url.Values{
+				"virtual_machine[fqdn]": []string{"anvil.amce.katapult.cloud"},
 			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("virtual_machine_get"),
@@ -665,20 +663,15 @@ func TestVirtualMachinesClient_Get(t *testing.T) {
 			c, mux, _, teardown := prepareTestClient()
 			defer teardown()
 
-			path := fmt.Sprintf("virtual_machines/%s", tt.args.idOrFQDN)
-			if tt.reqPath != "" {
-				path = tt.reqPath
-			}
-
 			mux.HandleFunc(
-				"/core/v1/"+path,
+				"/core/v1/virtual_machines/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
 
-					if tt.reqQuery != nil {
-						assert.Equal(t, *tt.reqQuery, r.URL.Query())
+					if tt.wantQuery != nil {
+						assert.Equal(t, *tt.wantQuery, r.URL.Query())
 					}
 
 					w.WriteHeader(tt.respStatus)
@@ -776,11 +769,16 @@ func TestVirtualMachinesClient_GetByID(t *testing.T) {
 			defer teardown()
 
 			mux.HandleFunc(
-				fmt.Sprintf("/core/v1/virtual_machines/%s", tt.args.id),
+				"/core/v1/virtual_machines/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+
+					qs := url.Values{
+						"virtual_machine[id]": []string{tt.args.id},
+					}
+					assert.Equal(t, qs, r.URL.Query())
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -925,7 +923,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 	tests := []struct {
 		name       string
 		args       args
-		reqBody    *virtualMachineChangePackageRequestBody
+		reqBody    *virtualMachineChangePackageRequest
 		want       *Task
 		errStr     string
 		errResp    *ResponseError
@@ -943,7 +941,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
 			},
-			reqBody: &virtualMachineChangePackageRequestBody{
+			reqBody: &virtualMachineChangePackageRequest{
 				VirtualMachine: &VirtualMachine{
 					ID: "vm_t8yomYsG4bccKw5D",
 				},
@@ -973,7 +971,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 					Permalink: "xsmall",
 				},
 			},
-			reqBody: &virtualMachineChangePackageRequestBody{
+			reqBody: &virtualMachineChangePackageRequest{
 				VirtualMachine: &VirtualMachine{
 					FQDN: "anvil.amce.katapult.cloud",
 				},
@@ -1021,7 +1019,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 					Icon:          &Attachment{URL: "url"},
 				},
 			},
-			reqBody: &virtualMachineChangePackageRequestBody{
+			reqBody: &virtualMachineChangePackageRequest{
 				VirtualMachine: &VirtualMachine{
 					ID: "vm_t8yomYsG4bccKw5D",
 				},
@@ -1126,7 +1124,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
 			},
-			reqBody: &virtualMachineChangePackageRequestBody{
+			reqBody: &virtualMachineChangePackageRequest{
 				Package: &VirtualMachinePackage{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
@@ -1145,7 +1143,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 				},
 				pkg: nil,
 			},
-			reqBody: &virtualMachineChangePackageRequestBody{
+			reqBody: &virtualMachineChangePackageRequest{
 				VirtualMachine: &VirtualMachine{
 					ID: "vm_t8yomYsG4bccKw5D",
 				},
@@ -1182,7 +1180,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 					assertAuthorization(t, r)
 
 					if tt.reqBody != nil {
-						reqBody := &virtualMachineChangePackageRequestBody{}
+						reqBody := &virtualMachineChangePackageRequest{}
 						err := strictUmarshal(r.Body, reqBody)
 						assert.NoError(t, err)
 						assert.Equal(t, tt.reqBody, reqBody)
@@ -1195,6 +1193,226 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 
 			got, resp, err := c.VirtualMachines.ChangePackage(
 				tt.args.ctx, tt.args.vm, tt.args.pkg,
+			)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestVirtualMachinesClient_Update(t *testing.T) {
+	type args struct {
+		ctx  context.Context
+		vm   *VirtualMachine
+		args *VirtualMachineUpdateArguments
+	}
+	tests := []struct {
+		name       string
+		args       args
+		reqBody    *virtualMachineUpdateRequest
+		want       *VirtualMachine
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "by ID",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				args: &VirtualMachineUpdateArguments{
+					Name:     "web (old)",
+					Hostname: "web-old",
+				},
+			},
+			reqBody: &virtualMachineUpdateRequest{
+				VirtualMachine: &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				Properties: &VirtualMachineUpdateArguments{
+					Name:     "web (old)",
+					Hostname: "web-old",
+				},
+			},
+			want: &VirtualMachine{
+				ID:       "vm_t8yomYsG4bccKw5D",
+				Name:     "web (old)",
+				Hostname: "web-old",
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machine_update"),
+		},
+		{
+			name: "by FQDN",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{FQDN: "anvil.amce.katapult.cloud"},
+				args: &VirtualMachineUpdateArguments{
+					Name:     "web (old)",
+					Hostname: "web-old",
+				},
+			},
+			reqBody: &virtualMachineUpdateRequest{
+				VirtualMachine: &VirtualMachine{
+					FQDN: "anvil.amce.katapult.cloud",
+				},
+				Properties: &VirtualMachineUpdateArguments{
+					Name:     "web (old)",
+					Hostname: "web-old",
+				},
+			},
+			want: &VirtualMachine{
+				ID:       "vm_t8yomYsG4bccKw5D",
+				Name:     "web (old)",
+				Hostname: "web-old",
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machine_update"),
+		},
+		{
+			name: "non-existent virtual machine",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				args: &VirtualMachineUpdateArguments{
+					Name:     "web (old)",
+					Hostname: "web-old",
+				},
+			},
+			errStr:     fixtureVirtualMachineNotFoundErr,
+			errResp:    fixtureVirtualMachineNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("virtual_machine_not_found_error"),
+		},
+		{
+			name: "virtual machine is in trash",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				args: &VirtualMachineUpdateArguments{
+					Name:     "web (old)",
+					Hostname: "web-old",
+				},
+			},
+			errStr:     fixtureObjectInTrashErr,
+			errResp:    fixtureObjectInTrashResponseError,
+			respStatus: http.StatusNotAcceptable,
+			respBody:   fixture("object_in_trash_error"),
+		},
+		{
+			name: "permission_denied",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				args: &VirtualMachineUpdateArguments{
+					Name:     "web (old)",
+					Hostname: "web-old",
+				},
+			},
+			errStr:     fixturePermissionDeniedErr,
+			errResp:    fixturePermissionDeniedResponseError,
+			respStatus: http.StatusForbidden,
+			respBody:   fixture("permission_denied_error"),
+		},
+		{
+			name: "nil virtual machine",
+			args: args{
+				ctx: context.Background(),
+				vm:  nil,
+				args: &VirtualMachineUpdateArguments{
+					Name:     "web (old)",
+					Hostname: "web-old",
+				},
+			},
+			reqBody: &virtualMachineUpdateRequest{
+				Properties: &VirtualMachineUpdateArguments{
+					Name:     "web (old)",
+					Hostname: "web-old",
+				},
+			},
+			errStr:     fixtureVirtualMachineNotFoundErr,
+			errResp:    fixtureVirtualMachineNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("virtual_machine_not_found_error"),
+		},
+		{
+			name: "nil virtual machine update arguments",
+			args: args{
+				ctx: context.Background(),
+				vm: &VirtualMachine{
+					ID: "vm_t8yomYsG4bccKw5D",
+				},
+				args: nil,
+			},
+			reqBody: &virtualMachineUpdateRequest{
+				VirtualMachine: &VirtualMachine{
+					ID: "vm_t8yomYsG4bccKw5D",
+				},
+			},
+			want: &VirtualMachine{
+				ID:       "vm_t8yomYsG4bccKw5D",
+				Name:     "bitter-beautiful-mango",
+				Hostname: "bitter-beautiful-mango",
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machine_get"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx: nil,
+				vm: &VirtualMachine{
+					ID: "vm_t8yomYsG4bccKw5D",
+				},
+				args: &VirtualMachineUpdateArguments{
+					Name:     "web (old)",
+					Hostname: "web-old",
+				},
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			mux.HandleFunc(
+				"/core/v1/virtual_machines/_",
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "PATCH", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					if tt.reqBody != nil {
+						reqBody := &virtualMachineUpdateRequest{}
+						err := strictUmarshal(r.Body, reqBody)
+						assert.NoError(t, err)
+						assert.Equal(t, tt.reqBody, reqBody)
+					}
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.VirtualMachines.Update(
+				tt.args.ctx, tt.args.vm, tt.args.args,
 			)
 
 			if tt.respStatus != 0 {

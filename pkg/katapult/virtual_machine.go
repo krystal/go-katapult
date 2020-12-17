@@ -2,7 +2,6 @@ package katapult
 
 import (
 	"context"
-	"fmt"
 	"net/url"
 	"strings"
 
@@ -16,6 +15,7 @@ type VirtualMachine struct {
 	Name                string                 `json:"name,omitempty"`
 	Hostname            string                 `json:"hostname,omitempty"`
 	FQDN                string                 `json:"fqdn,omitempty"`
+	Description         string                 `json:"description,omitempty"`
 	CreatedAt           *timestamp.Timestamp   `json:"created_at,omitempty"`
 	InitialRootPassword string                 `json:"initial_root_password,omitempty"`
 	State               VirtualMachineState    `json:"state,omitempty"`
@@ -77,6 +77,13 @@ type VirtualMachineGroup struct {
 	CreatedAt *timestamp.Timestamp `json:"created_at,omitempty"`
 }
 
+type VirtualMachineUpdateArguments struct {
+	Name        string   `json:"name,omitempty"`
+	Hostname    string   `json:"hostname,omitempty"`
+	Description string   `json:"description,omitempty"`
+	Tags        []string `json:"tag_names,omitempty"`
+}
+
 type virtualMachinesResponseBody struct {
 	Pagination      *Pagination       `json:"pagination,omitempty"`
 	Task            *Task             `json:"task,omitempty"`
@@ -85,9 +92,14 @@ type virtualMachinesResponseBody struct {
 	VirtualMachines []*VirtualMachine `json:"virtual_machines,omitempty"`
 }
 
-type virtualMachineChangePackageRequestBody struct {
+type virtualMachineChangePackageRequest struct {
 	VirtualMachine *VirtualMachine        `json:"virtual_machine,omitempty"`
 	Package        *VirtualMachinePackage `json:"virtual_machine_package,omitempty"`
+}
+
+type virtualMachineUpdateRequest struct {
+	VirtualMachine *VirtualMachine                `json:"virtual_machine,omitempty"`
+	Properties     *VirtualMachineUpdateArguments `json:"properties,omitempty"`
 }
 
 type VirtualMachinesClient struct {
@@ -136,18 +148,24 @@ func (s VirtualMachinesClient) GetByID(
 	ctx context.Context,
 	id string,
 ) (*VirtualMachine, *Response, error) {
-	u := &url.URL{Path: fmt.Sprintf("virtual_machines/%s", id)}
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
-
-	return body.VirtualMachine, resp, err
+	return s.get(ctx, &VirtualMachine{ID: id})
 }
 
 func (s VirtualMachinesClient) GetByFQDN(
 	ctx context.Context,
 	fqdn string,
 ) (*VirtualMachine, *Response, error) {
-	qs := url.Values{"virtual_machine[fqdn]": []string{fqdn}}
-	u := &url.URL{Path: "virtual_machines/_", RawQuery: qs.Encode()}
+	return s.get(ctx, &VirtualMachine{FQDN: fqdn})
+}
+
+func (s VirtualMachinesClient) get(
+	ctx context.Context,
+	vm *VirtualMachine,
+) (*VirtualMachine, *Response, error) {
+	u := &url.URL{
+		Path:     "virtual_machines/_",
+		RawQuery: vm.queryValues().Encode(),
+	}
 
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 
@@ -160,13 +178,28 @@ func (s *VirtualMachinesClient) ChangePackage(
 	pkg *VirtualMachinePackage,
 ) (*Task, *Response, error) {
 	u := &url.URL{Path: "virtual_machines/_/package"}
-	reqBody := &virtualMachineChangePackageRequestBody{
+	reqBody := &virtualMachineChangePackageRequest{
 		VirtualMachine: vm.lookupReference(),
 		Package:        pkg.lookupReference(),
 	}
 	body, resp, err := s.doRequest(ctx, "PUT", u, reqBody)
 
 	return body.Task, resp, err
+}
+
+func (s *VirtualMachinesClient) Update(
+	ctx context.Context,
+	vm *VirtualMachine,
+	args *VirtualMachineUpdateArguments,
+) (*VirtualMachine, *Response, error) {
+	u := &url.URL{Path: "virtual_machines/_"}
+	reqBody := &virtualMachineUpdateRequest{
+		VirtualMachine: vm.lookupReference(),
+		Properties:     args,
+	}
+	body, resp, err := s.doRequest(ctx, "PATCH", u, reqBody)
+
+	return body.VirtualMachine, resp, err
 }
 
 func (s *VirtualMachinesClient) Delete(
