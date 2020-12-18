@@ -162,9 +162,13 @@ func Test_ipAddressCreateRequest_JSONMarshaling(t *testing.T) {
 				Organization: &Organization{ID: "org_O648YDMEYeLmqdmn"},
 				Network:      &Network{ID: "netw_zDW7KYAeqqfRfVag"},
 				Version:      IPv4,
-				VIP:          true,
+				VIP:          truePtr,
 				Label:        "web-east-3",
 			},
+		},
+		{
+			name: "false VIP",
+			obj:  &ipAddressCreateRequest{VIP: falsePtr},
 		},
 	}
 	for _, tt := range tests {
@@ -187,10 +191,14 @@ func Test_ipAddressUpdateRequest_JSONMarshaling(t *testing.T) {
 			name: "full",
 			obj: &ipAddressUpdateRequest{
 				IPAddress:  &IPAddress{ID: "ip_Ru4ef2oh6STZEQkC"},
-				VIP:        true,
+				VIP:        truePtr,
 				Label:      "web-east-3",
 				ReverseDNS: "web-east-3.acme.katapult.cloud",
 			},
+		},
+		{
+			name: "false VIP",
+			obj:  &ipAddressUpdateRequest{VIP: falsePtr},
 		},
 	}
 	for _, tt := range tests {
@@ -1035,7 +1043,7 @@ func TestIPAddressesClient_Create(t *testing.T) {
 
 func TestIPAddressesClient_Update(t *testing.T) {
 	ipArgs := &IPAddressUpdateArguments{
-		VIP:        true,
+		VIP:        truePtr,
 		Label:      "web-east-3",
 		ReverseDNS: "web-east-3.acme.katapult.cloud",
 	}
@@ -1063,15 +1071,11 @@ func TestIPAddressesClient_Update(t *testing.T) {
 					ID:      "ip_dZLqwQifQFtboHXW",
 					Address: "169.37.118.179",
 				},
-				args: &IPAddressUpdateArguments{
-					VIP:        true,
-					Label:      "web-east-3",
-					ReverseDNS: "web-east-3.acme.katapult.cloud",
-				},
+				args: ipArgs,
 			},
 			reqBody: &ipAddressUpdateRequest{
 				IPAddress:  &IPAddress{ID: "ip_dZLqwQifQFtboHXW"},
-				VIP:        true,
+				VIP:        truePtr,
 				Label:      "web-east-3",
 				ReverseDNS: "web-east-3.acme.katapult.cloud",
 			},
@@ -1088,17 +1092,13 @@ func TestIPAddressesClient_Update(t *testing.T) {
 		{
 			name: "by Address",
 			args: args{
-				ctx: context.Background(),
-				ip:  &IPAddress{Address: "169.37.118.179"},
-				args: &IPAddressUpdateArguments{
-					VIP:        true,
-					Label:      "web-east-3",
-					ReverseDNS: "web-east-3.acme.katapult.cloud",
-				},
+				ctx:  context.Background(),
+				ip:   &IPAddress{Address: "169.37.118.179"},
+				args: ipArgs,
 			},
 			reqBody: &ipAddressUpdateRequest{
 				IPAddress:  &IPAddress{Address: "169.37.118.179"},
-				VIP:        true,
+				VIP:        truePtr,
 				Label:      "web-east-3",
 				ReverseDNS: "web-east-3.acme.katapult.cloud",
 			},

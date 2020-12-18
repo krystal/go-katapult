@@ -51,12 +51,12 @@ func (s *IPAddress) queryValues() *url.Values {
 type IPAddressCreateArguments struct {
 	Network *Network
 	Version IPVersion
-	VIP     bool
+	VIP     *bool
 	Label   string
 }
 
 type IPAddressUpdateArguments struct {
-	VIP        bool
+	VIP        *bool
 	Label      string
 	ReverseDNS string
 }
@@ -65,13 +65,13 @@ type ipAddressCreateRequest struct {
 	Organization *Organization `json:"organization,omitempty"`
 	Network      *Network      `json:"network,omitempty"`
 	Version      IPVersion     `json:"version,omitempty"`
-	VIP          bool          `json:"vip,omitempty"`
+	VIP          *bool         `json:"vip,omitempty"`
 	Label        string        `json:"label,omitempty"`
 }
 
 type ipAddressUpdateRequest struct {
 	IPAddress  *IPAddress `json:"ip_address,omitempty"`
-	VIP        bool       `json:"vip,omitempty"`
+	VIP        *bool      `json:"vip,omitempty"`
 	Label      string     `json:"label,omitempty"`
 	ReverseDNS string     `json:"reverse_dns,omitempty"`
 }
