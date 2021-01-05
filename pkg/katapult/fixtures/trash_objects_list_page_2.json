@@ -1,0 +1,17 @@
+{
+  "pagination": {
+    "current_page": 2,
+    "total_pages": 2,
+    "total": 3,
+    "per_page": 2,
+    "large_set": false
+  },
+  "trash_objects": [
+    {
+      "id": "trsh_h6An31KwJU0jOq5y",
+      "keep_until": 1610039283,
+      "object_id": "fsv_f9WF2pMAb5BY8vlK",
+      "object_type": "FileStorageVolume"
+    }
+  ]
+}

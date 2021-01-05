@@ -1,8 +1,181 @@
 package katapult
 
-import "github.com/augurysys/timestamp"
+import (
+	"context"
+	"net/url"
+	"strings"
+
+	"github.com/augurysys/timestamp"
+)
+
+const trashObjectIDPrefix = "trsh_"
 
 type TrashObject struct {
-	ID        string               `json:"id,omitempty"`
-	KeepUntil *timestamp.Timestamp `json:"keep_until,omitempty"`
+	ID         string               `json:"id,omitempty"`
+	KeepUntil  *timestamp.Timestamp `json:"keep_until,omitempty"`
+	ObjectID   string               `json:"object_id,omitempty"`
+	ObjectType string               `json:"object_type,omitempty"`
+}
+
+func (s *TrashObject) lookupReference() *TrashObject {
+	if s == nil {
+		return nil
+	}
+
+	lr := &TrashObject{ID: s.ID}
+	if lr.ID == "" {
+		lr.ObjectID = s.ObjectID
+	}
+
+	return lr
+}
+
+func (s *TrashObject) queryValues() *url.Values {
+	v := &url.Values{}
+
+	if s != nil {
+		switch {
+		case s.ID != "":
+			v.Set("trash_object[id]", s.ID)
+		case s.ObjectID != "":
+			v.Set("trash_object[object_id]", s.ObjectID)
+		}
+	}
+
+	return v
+}
+
+type trashObjectsResponseBody struct {
+	Pagination   *Pagination    `json:"pagination,omitempty"`
+	TrashObject  *TrashObject   `json:"trash_object,omitempty"`
+	TrashObjects []*TrashObject `json:"trash_objects,omitempty"`
+	Task         *Task          `json:"task,omitempty"`
+}
+
+type TrashObjectsClient struct {
+	client   *apiClient
+	basePath *url.URL
+}
+
+func newTrashObjectsClient(c *apiClient) *TrashObjectsClient {
+	return &TrashObjectsClient{
+		client:   c,
+		basePath: &url.URL{Path: "/core/v1/"},
+	}
+}
+
+func (s *TrashObjectsClient) List(
+	ctx context.Context,
+	org *Organization,
+	opts *ListOptions,
+) ([]*TrashObject, *Response, error) {
+	qs := queryValues(org, opts)
+	u := &url.URL{
+		Path:     "organizations/_/trash_objects",
+		RawQuery: qs.Encode(),
+	}
+
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	resp.Pagination = body.Pagination
+
+	return body.TrashObjects, resp, err
+}
+
+func (s *TrashObjectsClient) Get(
+	ctx context.Context,
+	idOrObjectID string,
+) (*TrashObject, *Response, error) {
+	if strings.HasPrefix(idOrObjectID, trashObjectIDPrefix) {
+		return s.GetByID(ctx, idOrObjectID)
+	}
+
+	return s.GetByObjectID(ctx, idOrObjectID)
+}
+
+func (s *TrashObjectsClient) GetByID(
+	ctx context.Context,
+	id string,
+) (*TrashObject, *Response, error) {
+	return s.get(ctx, &TrashObject{ID: id})
+}
+
+func (s *TrashObjectsClient) GetByObjectID(
+	ctx context.Context,
+	objectID string,
+) (*TrashObject, *Response, error) {
+	return s.get(ctx, &TrashObject{ObjectID: objectID})
+}
+
+func (s *TrashObjectsClient) get(
+	ctx context.Context,
+	trsh *TrashObject,
+) (*TrashObject, *Response, error) {
+	u := &url.URL{
+		Path:     "trash_objects/_",
+		RawQuery: trsh.queryValues().Encode(),
+	}
+
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+
+	return body.TrashObject, resp, err
+}
+
+func (s *TrashObjectsClient) Purge(
+	ctx context.Context,
+	trsh *TrashObject,
+) (*Task, *Response, error) {
+	u := &url.URL{
+		Path:     "trash_objects/_",
+		RawQuery: trsh.queryValues().Encode(),
+	}
+
+	body, resp, err := s.doRequest(ctx, "DELETE", u, nil)
+
+	return body.Task, resp, err
+}
+
+func (s *TrashObjectsClient) PurgeAll(
+	ctx context.Context,
+	org *Organization,
+) (*Task, *Response, error) {
+	u := &url.URL{
+		Path:     "organizations/_/trash_objects/purge_all",
+		RawQuery: org.queryValues().Encode(),
+	}
+
+	body, resp, err := s.doRequest(ctx, "POST", u, nil)
+
+	return body.Task, resp, err
+}
+
+func (s *TrashObjectsClient) Restore(
+	ctx context.Context,
+	trsh *TrashObject,
+) (*TrashObject, *Response, error) {
+	u := &url.URL{
+		Path:     "trash_objects/_/restore",
+		RawQuery: trsh.queryValues().Encode(),
+	}
+
+	body, resp, err := s.doRequest(ctx, "POST", u, nil)
+
+	return body.TrashObject, resp, err
+}
+
+func (s *TrashObjectsClient) doRequest(
+	ctx context.Context,
+	method string,
+	u *url.URL,
+	body interface{},
+) (*trashObjectsResponseBody, *Response, error) {
+	u = s.basePath.ResolveReference(u)
+	respBody := &trashObjectsResponseBody{}
+	resp := &Response{}
+
+	req, err := s.client.NewRequestWithContext(ctx, method, u, body)
+	if err == nil {
+		resp, err = s.client.Do(req, respBody)
+	}
+
+	return respBody, resp, err
 }
