@@ -1255,7 +1255,7 @@ func TestIPAddressesClient_Delete(t *testing.T) {
 				"ip_address[address]": []string{"169.37.118.179"},
 			},
 			respStatus: http.StatusOK,
-			respBody:   fixture("load_balancer_get"),
+			respBody:   []byte("{}"),
 		},
 		{
 			name: "non-existent IP address",
