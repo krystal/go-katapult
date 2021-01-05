@@ -1,0 +1,23 @@
+{
+  "pagination": {
+    "current_page": 1,
+    "total_pages": 2,
+    "total": 3,
+    "per_page": 2,
+    "large_set": false
+  },
+  "trash_objects": [
+    {
+      "id": "trsh_hkW1SMq0Bn8yNrRx",
+      "keep_until": 1610039056,
+      "object_id": "vm_KTKc6pwFxLjJ40QY",
+      "object_type": "VirtualMachine"
+    },
+    {
+      "id": "trsh_WX7ZTIdCb2gZ0PQ9",
+      "keep_until": 1610039191,
+      "object_id": "disk_reWHTQagpihFhSuh",
+      "object_type": "Disk"
+    }
+  ]
+}
