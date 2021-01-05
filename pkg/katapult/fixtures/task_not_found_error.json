@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "task_not_found",
+    "description": "No task was found matching any of the criteria provided in the arguments",
+    "detail": {}
+  }
+}
