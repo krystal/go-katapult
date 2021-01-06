@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1609873082085,
+  "lastUpdate": 1609950853079,
   "repoUrl": "https://github.com/krystal/go-katapult",
   "entries": {
     "Benchmark": [
@@ -1596,6 +1596,60 @@ window.BENCHMARK_DATA = {
             "value": 3252,
             "unit": "ns/op",
             "extra": "348922 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "contact@jimeh.me",
+            "name": "Jim Myhrberg",
+            "username": "jimeh"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e9163057d5772d7b3f7d5ed9a5c775f55f8e6496",
+          "message": "Merge pull request #57 from krystal/add-virtual-machine-power-control-functions\n\nfeat(virtual_machines): add Start, Stop, Shutdown, and Reset power control functions",
+          "timestamp": "2021-01-06T16:33:28Z",
+          "tree_id": "91a8622fa1bd1c201ec14f7ecb384cdf0520ebea",
+          "url": "https://github.com/krystal/go-katapult/commit/e9163057d5772d7b3f7d5ed9a5c775f55f8e6496"
+        },
+        "date": 1609950852534,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkNameGenerator_RandomHostname",
+            "value": 4145,
+            "unit": "ns/op",
+            "extra": "269954 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_NoPrefix",
+            "value": 3056,
+            "unit": "ns/op",
+            "extra": "404052 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_OnePrefix",
+            "value": 2983,
+            "unit": "ns/op",
+            "extra": "415623 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_TwoPrefixes",
+            "value": 2990,
+            "unit": "ns/op",
+            "extra": "405886 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_ThreePrefixes",
+            "value": 3016,
+            "unit": "ns/op",
+            "extra": "403684 times\n2 procs"
           }
         ]
       }
