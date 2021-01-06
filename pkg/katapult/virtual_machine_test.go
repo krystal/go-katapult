@@ -1555,3 +1555,551 @@ func TestVirtualMachinesClient_Delete(t *testing.T) {
 		})
 	}
 }
+
+func TestVirtualMachinesClient_Start(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		vm  *VirtualMachine
+	}
+	tests := []struct {
+		name       string
+		args       args
+		want       *Task
+		wantQuery  *url.Values
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "by ID",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+			},
+			want: &Task{
+				ID:     "task_otL5Dkr3bi40yn9h",
+				Name:   "Start virtual machine",
+				Status: "pending",
+			},
+			wantQuery: &url.Values{
+				"virtual_machine[id]": []string{"vm_t8yomYsG4bccKw5D"},
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machine_start"),
+		},
+		{
+			name: "by FQDN",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{FQDN: "anvil.amce.katapult.cloud"},
+			},
+			want: &Task{
+				ID:     "task_otL5Dkr3bi40yn9h",
+				Name:   "Start virtual machine",
+				Status: "pending",
+			},
+			wantQuery: &url.Values{
+				"virtual_machine[fqdn]": []string{"anvil.amce.katapult.cloud"},
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machine_start"),
+		},
+		{
+			name: "non-existent virtual machine",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{ID: "vm_nopethisbegone"},
+			},
+			errStr:     fixtureVirtualMachineNotFoundErr,
+			errResp:    fixtureVirtualMachineNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("virtual_machine_not_found_error"),
+		},
+		{
+			name: "virtual machine is in trash",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+			},
+			errStr:     fixtureObjectInTrashErr,
+			errResp:    fixtureObjectInTrashResponseError,
+			respStatus: http.StatusNotAcceptable,
+			respBody:   fixture("object_in_trash_error"),
+		},
+		{
+			name: "error queuing task",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+			},
+			errStr:     fixtureTaskQueueingErrorErr,
+			errResp:    fixtureTaskQueueingErrorResponseError,
+			respStatus: http.StatusNotAcceptable,
+			respBody:   fixture("task_queueing_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx: nil,
+				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			mux.HandleFunc(
+				"/core/v1/virtual_machines/_/start",
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "POST", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					if tt.wantQuery != nil {
+						assert.Equal(t, *tt.wantQuery, r.URL.Query())
+					}
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.VirtualMachines.Start(
+				tt.args.ctx, tt.args.vm,
+			)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestVirtualMachinesClient_Stop(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		vm  *VirtualMachine
+	}
+	tests := []struct {
+		name       string
+		args       args
+		want       *Task
+		wantQuery  *url.Values
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "by ID",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+			},
+			want: &Task{
+				ID:     "task_UWMEbeWyZx3qZIzK",
+				Name:   "Stop virtual machine",
+				Status: "pending",
+			},
+			wantQuery: &url.Values{
+				"virtual_machine[id]": []string{"vm_t8yomYsG4bccKw5D"},
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machine_stop"),
+		},
+		{
+			name: "by FQDN",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{FQDN: "anvil.amce.katapult.cloud"},
+			},
+			want: &Task{
+				ID:     "task_UWMEbeWyZx3qZIzK",
+				Name:   "Stop virtual machine",
+				Status: "pending",
+			},
+			wantQuery: &url.Values{
+				"virtual_machine[fqdn]": []string{"anvil.amce.katapult.cloud"},
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machine_stop"),
+		},
+		{
+			name: "non-existent virtual machine",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{ID: "vm_nopethisbegone"},
+			},
+			errStr:     fixtureVirtualMachineNotFoundErr,
+			errResp:    fixtureVirtualMachineNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("virtual_machine_not_found_error"),
+		},
+		{
+			name: "virtual machine is in trash",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+			},
+			errStr:     fixtureObjectInTrashErr,
+			errResp:    fixtureObjectInTrashResponseError,
+			respStatus: http.StatusNotAcceptable,
+			respBody:   fixture("object_in_trash_error"),
+		},
+		{
+			name: "error queuing task",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+			},
+			errStr:     fixtureTaskQueueingErrorErr,
+			errResp:    fixtureTaskQueueingErrorResponseError,
+			respStatus: http.StatusNotAcceptable,
+			respBody:   fixture("task_queueing_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx: nil,
+				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			mux.HandleFunc(
+				"/core/v1/virtual_machines/_/stop",
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "POST", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					if tt.wantQuery != nil {
+						assert.Equal(t, *tt.wantQuery, r.URL.Query())
+					}
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.VirtualMachines.Stop(
+				tt.args.ctx, tt.args.vm,
+			)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestVirtualMachinesClient_Shutdown(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		vm  *VirtualMachine
+	}
+	tests := []struct {
+		name       string
+		args       args
+		want       *Task
+		wantQuery  *url.Values
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "by ID",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+			},
+			want: &Task{
+				ID:     "task_zSdnw8Ocz8QAQTZK",
+				Name:   "Shutdown virtual machine",
+				Status: "pending",
+			},
+			wantQuery: &url.Values{
+				"virtual_machine[id]": []string{"vm_t8yomYsG4bccKw5D"},
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machine_shutdown"),
+		},
+		{
+			name: "by FQDN",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{FQDN: "anvil.amce.katapult.cloud"},
+			},
+			want: &Task{
+				ID:     "task_zSdnw8Ocz8QAQTZK",
+				Name:   "Shutdown virtual machine",
+				Status: "pending",
+			},
+			wantQuery: &url.Values{
+				"virtual_machine[fqdn]": []string{"anvil.amce.katapult.cloud"},
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machine_shutdown"),
+		},
+		{
+			name: "non-existent virtual machine",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{ID: "vm_nopethisbegone"},
+			},
+			errStr:     fixtureVirtualMachineNotFoundErr,
+			errResp:    fixtureVirtualMachineNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("virtual_machine_not_found_error"),
+		},
+		{
+			name: "virtual machine is in trash",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+			},
+			errStr:     fixtureObjectInTrashErr,
+			errResp:    fixtureObjectInTrashResponseError,
+			respStatus: http.StatusNotAcceptable,
+			respBody:   fixture("object_in_trash_error"),
+		},
+		{
+			name: "error queuing task",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+			},
+			errStr:     fixtureTaskQueueingErrorErr,
+			errResp:    fixtureTaskQueueingErrorResponseError,
+			respStatus: http.StatusNotAcceptable,
+			respBody:   fixture("task_queueing_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx: nil,
+				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			mux.HandleFunc(
+				"/core/v1/virtual_machines/_/shutdown",
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "POST", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					if tt.wantQuery != nil {
+						assert.Equal(t, *tt.wantQuery, r.URL.Query())
+					}
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.VirtualMachines.Shutdown(
+				tt.args.ctx, tt.args.vm,
+			)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestVirtualMachinesClient_Reset(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		vm  *VirtualMachine
+	}
+	tests := []struct {
+		name       string
+		args       args
+		want       *Task
+		wantQuery  *url.Values
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "by ID",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+			},
+			want: &Task{
+				ID:     "task_vZYARjrFue1Or2pt",
+				Name:   "Reset virtual machine",
+				Status: "pending",
+			},
+			wantQuery: &url.Values{
+				"virtual_machine[id]": []string{"vm_t8yomYsG4bccKw5D"},
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machine_reset"),
+		},
+		{
+			name: "by FQDN",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{FQDN: "anvil.amce.katapult.cloud"},
+			},
+			want: &Task{
+				ID:     "task_vZYARjrFue1Or2pt",
+				Name:   "Reset virtual machine",
+				Status: "pending",
+			},
+			wantQuery: &url.Values{
+				"virtual_machine[fqdn]": []string{"anvil.amce.katapult.cloud"},
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machine_reset"),
+		},
+		{
+			name: "non-existent virtual machine",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{ID: "vm_nopethisbegone"},
+			},
+			errStr:     fixtureVirtualMachineNotFoundErr,
+			errResp:    fixtureVirtualMachineNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("virtual_machine_not_found_error"),
+		},
+		{
+			name: "virtual machine is in trash",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+			},
+			errStr:     fixtureObjectInTrashErr,
+			errResp:    fixtureObjectInTrashResponseError,
+			respStatus: http.StatusNotAcceptable,
+			respBody:   fixture("object_in_trash_error"),
+		},
+		{
+			name: "error queuing task",
+			args: args{
+				ctx: context.Background(),
+				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+			},
+			errStr:     fixtureTaskQueueingErrorErr,
+			errResp:    fixtureTaskQueueingErrorResponseError,
+			respStatus: http.StatusNotAcceptable,
+			respBody:   fixture("task_queueing_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx: nil,
+				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			mux.HandleFunc(
+				"/core/v1/virtual_machines/_/reset",
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "POST", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					if tt.wantQuery != nil {
+						assert.Equal(t, *tt.wantQuery, r.URL.Query())
+					}
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.VirtualMachines.Reset(
+				tt.args.ctx, tt.args.vm,
+			)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}

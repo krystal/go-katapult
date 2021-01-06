@@ -216,6 +216,62 @@ func (s *VirtualMachinesClient) Delete(
 	return body.TrashObject, resp, err
 }
 
+func (s VirtualMachinesClient) Start(
+	ctx context.Context,
+	vm *VirtualMachine,
+) (*Task, *Response, error) {
+	u := &url.URL{
+		Path:     "virtual_machines/_/start",
+		RawQuery: vm.queryValues().Encode(),
+	}
+
+	body, resp, err := s.doRequest(ctx, "POST", u, nil)
+
+	return body.Task, resp, err
+}
+
+func (s VirtualMachinesClient) Stop(
+	ctx context.Context,
+	vm *VirtualMachine,
+) (*Task, *Response, error) {
+	u := &url.URL{
+		Path:     "virtual_machines/_/stop",
+		RawQuery: vm.queryValues().Encode(),
+	}
+
+	body, resp, err := s.doRequest(ctx, "POST", u, nil)
+
+	return body.Task, resp, err
+}
+
+func (s VirtualMachinesClient) Shutdown(
+	ctx context.Context,
+	vm *VirtualMachine,
+) (*Task, *Response, error) {
+	u := &url.URL{
+		Path:     "virtual_machines/_/shutdown",
+		RawQuery: vm.queryValues().Encode(),
+	}
+
+	body, resp, err := s.doRequest(ctx, "POST", u, nil)
+
+	return body.Task, resp, err
+}
+
+func (s VirtualMachinesClient) Reset(
+	ctx context.Context,
+	vm *VirtualMachine,
+) (*Task, *Response, error) {
+	u := &url.URL{
+		Path:     "virtual_machines/_/reset",
+		RawQuery: vm.queryValues().Encode(),
+	}
+
+	body, resp, err := s.doRequest(ctx, "POST", u, nil)
+
+	return body.Task, resp, err
+}
+
 func (s *VirtualMachinesClient) doRequest(
 	ctx context.Context,
 	method string,
