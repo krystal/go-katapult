@@ -85,7 +85,7 @@ func (s *CertificatesClient) doRequest(
 ) (*certificatesResponseBody, *Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &certificatesResponseBody{}
-	resp := &Response{}
+	resp := newResponse(nil)
 
 	req, err := s.client.NewRequestWithContext(ctx, method, u, body)
 	if err == nil {

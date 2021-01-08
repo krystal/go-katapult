@@ -98,7 +98,7 @@ func (s *DataCentersClient) doRequest(
 ) (*dataCentersResponseBody, *Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &dataCentersResponseBody{}
-	resp := &Response{}
+	resp := newResponse(nil)
 
 	req, err := s.client.NewRequestWithContext(ctx, method, u, body)
 	if err == nil {

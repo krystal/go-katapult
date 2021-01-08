@@ -179,7 +179,7 @@ func (s *LoadBalancersClient) doRequest(
 ) (*loadBalancersResponseBody, *Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &loadBalancersResponseBody{}
-	resp := &Response{}
+	resp := newResponse(nil)
 
 	req, err := s.client.NewRequestWithContext(ctx, method, u, body)
 	if err == nil {

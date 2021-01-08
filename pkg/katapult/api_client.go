@@ -60,7 +60,7 @@ func (c *apiClient) NewRequestWithContext(
 func (c *apiClient) Do(req *http.Request, v interface{}) (*Response, error) {
 	r, err := c.httpClient.Do(req)
 	if err != nil {
-		return &Response{}, err
+		return newResponse(nil), err
 	}
 	defer r.Body.Close()
 

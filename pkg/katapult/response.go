@@ -13,6 +13,10 @@ type Response struct {
 }
 
 func newResponse(r *http.Response) *Response {
+	if r == nil {
+		r = &http.Response{}
+	}
+
 	return &Response{Response: r}
 }
 

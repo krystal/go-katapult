@@ -231,7 +231,7 @@ func (s *DNSZonesClient) doRequest(
 ) (*dnsZoneResponseBody, *Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &dnsZoneResponseBody{}
-	resp := &Response{}
+	resp := newResponse(nil)
 
 	req, err := s.client.NewRequestWithContext(ctx, method, u, body)
 	if err == nil {
