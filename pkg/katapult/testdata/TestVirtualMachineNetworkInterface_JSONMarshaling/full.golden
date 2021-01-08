@@ -1,0 +1,1 @@
+{"id":"vmnet_Qlu34yEQgkrIlzql","virtual_machine":{"id":"vm_i5qfOrvEI1CmNrJx"},"name":"Public Network on foo-bar","network":{"id":"net_HjwzDggBv9gsHZ1T"},"mac_address":"ab:cd:ef:12:34:56","state":"attached","ip_addresses":[{"id":"ip_7S6uoasz4jM5mkMs"}]}

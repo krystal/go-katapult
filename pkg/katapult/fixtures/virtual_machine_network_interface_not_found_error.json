@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "virtual_machine_network_interface_not_found",
+    "description": "No network interface was found matching any of the criteria provided in the arguments",
+    "detail": {}
+  }
+}

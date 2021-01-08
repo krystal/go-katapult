@@ -11,6 +11,26 @@ import (
 )
 
 var (
+	fixtureIPAlreadyAllocatedErr = "ip_already_allocated: " +
+		"This IP address has already been allocated to another " +
+		"virtual machine."
+	fixtureIPAlreadyAllocatedResponseError = &ResponseError{
+		Code: "ip_already_allocated",
+		Description: "This IP address has already been allocated to another " +
+			"virtual machine.",
+		Detail: json.RawMessage(`{}`),
+	}
+	fixtureNoAvailableAddressesErr = "no_available_addresses: We don't have " +
+		"any available IPs for that network and address version at the " +
+		"moment. Please contact support for assistance."
+	fixtureNoAvailableAddressesResponseError = &ResponseError{
+		Code: "no_available_addresses",
+		Description: "We don't have any available IPs for that network and " +
+			"address version at the moment. Please contact support for " +
+			"assistance.",
+		Detail: json.RawMessage(`{}`),
+	}
+
 	fixtureIPAddressFull = &IPAddress{
 		ID:              "ip_Ru4ef2oh6STZEQkC",
 		Address:         "218.205.195.217",
@@ -923,16 +943,8 @@ func TestIPAddressesClient_Create(t *testing.T) {
 				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
 				args: ipArgs,
 			},
-			errStr: "no_available_addresses: We don't have any available IPs " +
-				"for that network and address version at the moment. " +
-				"Please contact support for assistance.",
-			errResp: &ResponseError{
-				Code: "no_available_addresses",
-				Description: "We don't have any available IPs for that " +
-					"network and address version at the moment. Please " +
-					"contact support for assistance.",
-				Detail: json.RawMessage(`{}`),
-			},
+			errStr:     fixtureNoAvailableAddressesErr,
+			errResp:    fixtureNoAvailableAddressesResponseError,
 			respStatus: http.StatusServiceUnavailable,
 			respBody:   fixture("no_available_addresses_error"),
 		},
