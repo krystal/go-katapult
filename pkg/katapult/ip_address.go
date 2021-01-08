@@ -225,7 +225,7 @@ func (s *IPAddressesClient) doRequest(
 ) (*ipAddressesResponseBody, *Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &ipAddressesResponseBody{}
-	resp := &Response{}
+	resp := newResponse(nil)
 
 	req, err := s.client.NewRequestWithContext(ctx, method, u, body)
 	if err == nil {

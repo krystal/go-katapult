@@ -117,7 +117,7 @@ func newVirtualMachinesClient(
 	}
 }
 
-func (s VirtualMachinesClient) List(
+func (s *VirtualMachinesClient) List(
 	ctx context.Context,
 	org *Organization,
 	opts *ListOptions,
@@ -145,21 +145,21 @@ func (s *VirtualMachinesClient) Get(
 	return s.GetByFQDN(ctx, idOrFQDN)
 }
 
-func (s VirtualMachinesClient) GetByID(
+func (s *VirtualMachinesClient) GetByID(
 	ctx context.Context,
 	id string,
 ) (*VirtualMachine, *Response, error) {
 	return s.get(ctx, &VirtualMachine{ID: id})
 }
 
-func (s VirtualMachinesClient) GetByFQDN(
+func (s *VirtualMachinesClient) GetByFQDN(
 	ctx context.Context,
 	fqdn string,
 ) (*VirtualMachine, *Response, error) {
 	return s.get(ctx, &VirtualMachine{FQDN: fqdn})
 }
 
-func (s VirtualMachinesClient) get(
+func (s *VirtualMachinesClient) get(
 	ctx context.Context,
 	vm *VirtualMachine,
 ) (*VirtualMachine, *Response, error) {
@@ -216,7 +216,7 @@ func (s *VirtualMachinesClient) Delete(
 	return body.TrashObject, resp, err
 }
 
-func (s VirtualMachinesClient) Start(
+func (s *VirtualMachinesClient) Start(
 	ctx context.Context,
 	vm *VirtualMachine,
 ) (*Task, *Response, error) {
@@ -230,7 +230,7 @@ func (s VirtualMachinesClient) Start(
 	return body.Task, resp, err
 }
 
-func (s VirtualMachinesClient) Stop(
+func (s *VirtualMachinesClient) Stop(
 	ctx context.Context,
 	vm *VirtualMachine,
 ) (*Task, *Response, error) {
@@ -244,7 +244,7 @@ func (s VirtualMachinesClient) Stop(
 	return body.Task, resp, err
 }
 
-func (s VirtualMachinesClient) Shutdown(
+func (s *VirtualMachinesClient) Shutdown(
 	ctx context.Context,
 	vm *VirtualMachine,
 ) (*Task, *Response, error) {
@@ -258,7 +258,7 @@ func (s VirtualMachinesClient) Shutdown(
 	return body.Task, resp, err
 }
 
-func (s VirtualMachinesClient) Reset(
+func (s *VirtualMachinesClient) Reset(
 	ctx context.Context,
 	vm *VirtualMachine,
 ) (*Task, *Response, error) {
@@ -280,7 +280,7 @@ func (s *VirtualMachinesClient) doRequest(
 ) (*virtualMachinesResponseBody, *Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &virtualMachinesResponseBody{}
-	resp := &Response{}
+	resp := newResponse(nil)
 
 	req, err := s.client.NewRequestWithContext(ctx, method, u, body)
 	if err == nil {

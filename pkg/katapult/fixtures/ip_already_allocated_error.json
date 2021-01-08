@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "ip_already_allocated",
+    "description": "This IP address has already been allocated to another virtual machine.",
+    "detail": {}
+  }
+}

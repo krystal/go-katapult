@@ -128,7 +128,7 @@ func (s *NetworksClient) doRequest(
 ) (*networksResponseBody, *Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &networksResponseBody{}
-	resp := &Response{}
+	resp := newResponse(nil)
 
 	req, err := s.client.NewRequestWithContext(ctx, method, u, body)
 	if err == nil {

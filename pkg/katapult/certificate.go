@@ -43,7 +43,7 @@ func newCertificatesClient(c *apiClient) *CertificatesClient {
 	}
 }
 
-func (s CertificatesClient) List(
+func (s *CertificatesClient) List(
 	ctx context.Context,
 	org *Organization,
 	opts *ListOptions,
@@ -60,14 +60,14 @@ func (s CertificatesClient) List(
 	return body.Certificates, resp, err
 }
 
-func (s CertificatesClient) Get(
+func (s *CertificatesClient) Get(
 	ctx context.Context,
 	id string,
 ) (*Certificate, *Response, error) {
 	return s.GetByID(ctx, id)
 }
 
-func (s CertificatesClient) GetByID(
+func (s *CertificatesClient) GetByID(
 	ctx context.Context,
 	id string,
 ) (*Certificate, *Response, error) {
@@ -85,7 +85,7 @@ func (s *CertificatesClient) doRequest(
 ) (*certificatesResponseBody, *Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &certificatesResponseBody{}
-	resp := &Response{}
+	resp := newResponse(nil)
 
 	req, err := s.client.NewRequestWithContext(ctx, method, u, body)
 	if err == nil {

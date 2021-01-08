@@ -30,19 +30,20 @@ type Config struct {
 type Client struct {
 	apiClient *apiClient
 
-	Certificates           *CertificatesClient
-	DNSZones               *DNSZonesClient
-	DataCenters            *DataCentersClient
-	DiskTemplates          *DiskTemplatesClient
-	IPAddresses            *IPAddressesClient
-	LoadBalancers          *LoadBalancersClient
-	Networks               *NetworksClient
-	Organizations          *OrganizationsClient
-	Tasks                  *TasksClient
-	TrashObjects           *TrashObjectsClient
-	VirtualMachineBuilds   *VirtualMachineBuildsClient
-	VirtualMachinePackages *VirtualMachinePackagesClient
-	VirtualMachines        *VirtualMachinesClient
+	Certificates                    *CertificatesClient
+	DNSZones                        *DNSZonesClient
+	DataCenters                     *DataCentersClient
+	DiskTemplates                   *DiskTemplatesClient
+	IPAddresses                     *IPAddressesClient
+	LoadBalancers                   *LoadBalancersClient
+	Networks                        *NetworksClient
+	Organizations                   *OrganizationsClient
+	Tasks                           *TasksClient
+	TrashObjects                    *TrashObjectsClient
+	VirtualMachineBuilds            *VirtualMachineBuildsClient
+	VirtualMachineNetworkInterfaces *VirtualMachineNetworkInterfacesClient
+	VirtualMachinePackages          *VirtualMachinePackagesClient
+	VirtualMachines                 *VirtualMachinesClient
 }
 
 func NewClient(config *Config) (*Client, error) {
@@ -53,21 +54,23 @@ func NewClient(config *Config) (*Client, error) {
 		UserAgent:  DefaultUserAgent,
 	}
 
+	//nolint:lll
 	c := &Client{
-		apiClient:              ac,
-		Certificates:           newCertificatesClient(ac),
-		DNSZones:               newDNSZonesClient(ac),
-		DataCenters:            newDataCentersClient(ac),
-		DiskTemplates:          newDiskTemplatesClient(ac),
-		IPAddresses:            newIPAddressesClient(ac),
-		LoadBalancers:          newLoadBalancersClient(ac),
-		Networks:               newNetworksClient(ac),
-		Organizations:          newOrganizationsClient(ac),
-		Tasks:                  newTasksClient(ac),
-		TrashObjects:           newTrashObjectsClient(ac),
-		VirtualMachineBuilds:   newVirtualMachineBuildsClient(ac),
-		VirtualMachinePackages: newVirtualMachinePackagesClient(ac),
-		VirtualMachines:        newVirtualMachinesClient(ac),
+		apiClient:                       ac,
+		Certificates:                    newCertificatesClient(ac),
+		DNSZones:                        newDNSZonesClient(ac),
+		DataCenters:                     newDataCentersClient(ac),
+		DiskTemplates:                   newDiskTemplatesClient(ac),
+		IPAddresses:                     newIPAddressesClient(ac),
+		LoadBalancers:                   newLoadBalancersClient(ac),
+		Networks:                        newNetworksClient(ac),
+		Organizations:                   newOrganizationsClient(ac),
+		Tasks:                           newTasksClient(ac),
+		TrashObjects:                    newTrashObjectsClient(ac),
+		VirtualMachineBuilds:            newVirtualMachineBuildsClient(ac),
+		VirtualMachineNetworkInterfaces: newVirtualMachineNetworkInterfacesClient(ac),
+		VirtualMachinePackages:          newVirtualMachinePackagesClient(ac),
+		VirtualMachines:                 newVirtualMachinesClient(ac),
 	}
 
 	err := c.configure(config)

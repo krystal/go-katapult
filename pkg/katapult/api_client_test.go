@@ -187,7 +187,7 @@ func Test_apiClient_Do(t *testing.T) {
 		{
 			name:       "request times out",
 			v:          &respBody{},
-			want:       &Response{},
+			want:       &Response{Response: &http.Response{}},
 			errStr:     "Get \"{{baseURL}}/bar\": context deadline exceeded",
 			respStatus: http.StatusOK,
 			respDelay:  10,

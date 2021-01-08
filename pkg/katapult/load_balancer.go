@@ -109,14 +109,14 @@ func (s *LoadBalancersClient) List(
 	return body.LoadBalancers, resp, err
 }
 
-func (s LoadBalancersClient) Get(
+func (s *LoadBalancersClient) Get(
 	ctx context.Context,
 	id string,
 ) (*LoadBalancer, *Response, error) {
 	return s.GetByID(ctx, id)
 }
 
-func (s LoadBalancersClient) GetByID(
+func (s *LoadBalancersClient) GetByID(
 	ctx context.Context,
 	id string,
 ) (*LoadBalancer, *Response, error) {
@@ -179,7 +179,7 @@ func (s *LoadBalancersClient) doRequest(
 ) (*loadBalancersResponseBody, *Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &loadBalancersResponseBody{}
-	resp := &Response{}
+	resp := newResponse(nil)
 
 	req, err := s.client.NewRequestWithContext(ctx, method, u, body)
 	if err == nil {

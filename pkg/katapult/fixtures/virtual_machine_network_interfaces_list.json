@@ -1,0 +1,23 @@
+{
+  "pagination": {
+    "current_page": 1,
+    "total_pages": 1,
+    "total": 3,
+    "per_page": 30,
+    "large_set": false
+  },
+  "virtual_machine_network_interfaces": [
+    {
+      "id": "vmnet_olNAz8ThH0emHvdr",
+      "name": "Public Network on bitter-beautiful-mango"
+    },
+    {
+      "id": "vmnet_KxKhb8M7jpN8hTBL",
+      "name": "Private Network on bitter-beautiful-mango"
+    },
+    {
+      "id": "vmnet_19JWZO4oHJ51J79y",
+      "name": "Internal Network on bitter-beautiful-mango"
+    }
+  ]
+}

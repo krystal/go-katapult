@@ -64,7 +64,7 @@ func (s *TasksClient) doRequest(
 ) (*tasksResponseBody, *Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &tasksResponseBody{}
-	resp := &Response{}
+	resp := newResponse(nil)
 
 	req, err := s.client.NewRequestWithContext(ctx, method, u, body)
 	if err == nil {
