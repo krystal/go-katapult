@@ -95,6 +95,51 @@ func TestVirtualMachine_JSONMarshaling(t *testing.T) {
 	}
 }
 
+func TestNewVirtualMachineLookup(t *testing.T) {
+	type args struct {
+		idOrFQDN string
+	}
+	tests := []struct {
+		name  string
+		args  args
+		want  *VirtualMachine
+		field FieldName
+	}{
+		{
+			name:  "empty string",
+			args:  args{idOrFQDN: ""},
+			want:  &VirtualMachine{},
+			field: FQDNField,
+		},
+		{
+			name:  "vm_ prefixed ID",
+			args:  args{idOrFQDN: "vm_rq1Zdv6aC66bvsU7"},
+			want:  &VirtualMachine{ID: "vm_rq1Zdv6aC66bvsU7"},
+			field: IDField,
+		},
+		{
+			name:  "fqdn",
+			args:  args{idOrFQDN: "noisy-pink-banana"},
+			want:  &VirtualMachine{FQDN: "noisy-pink-banana"},
+			field: FQDNField,
+		},
+		{
+			name:  "random text",
+			args:  args{idOrFQDN: "4lgGRmCPW7XhizQj"},
+			want:  &VirtualMachine{FQDN: "4lgGRmCPW7XhizQj"},
+			field: FQDNField,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, field := NewVirtualMachineLookup(tt.args.idOrFQDN)
+
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.field, field)
+		})
+	}
+}
+
 func TestVirtualMachine_lookupReference(t *testing.T) {
 	tests := []struct {
 		name string

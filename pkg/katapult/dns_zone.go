@@ -7,14 +7,26 @@ import (
 	"strings"
 )
 
-const dnsZoneIDPrefix = "dnszone_"
-
 type DNSZone struct {
 	ID                 string `json:"id,omitempty"`
 	Name               string `json:"name,omitempty"`
 	TTL                int    `json:"ttl,omitempty"`
 	Verified           bool   `json:"verified,omitempty"`
 	InfrastructureZone bool   `json:"infrastructure_zone,omitempty"`
+}
+
+// NewDNSZoneLookup takes a string that is a DNSZone ID or Name, returning a
+// empty *DNSZone struct with either the ID or Name field populated with the
+// given value. This struct is suitable as input to other methods which accept a
+// *DNSZone as input.
+func NewDNSZoneLookup(
+	idOrName string,
+) (lr *DNSZone, f FieldName) {
+	if strings.HasPrefix(idOrName, "dnszone_") {
+		return &DNSZone{ID: idOrName}, IDField
+	}
+
+	return &DNSZone{Name: idOrName}, NameField
 }
 
 func (s *DNSZone) lookupReference() *DNSZone {
@@ -117,7 +129,7 @@ func (s *DNSZonesClient) Get(
 	ctx context.Context,
 	idOrName string,
 ) (*DNSZone, *Response, error) {
-	if strings.HasPrefix(idOrName, dnsZoneIDPrefix) {
+	if _, f := NewDNSZoneLookup(idOrName); f == IDField {
 		return s.GetByID(ctx, idOrName)
 	}
 

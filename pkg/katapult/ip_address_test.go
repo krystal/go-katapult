@@ -93,6 +93,51 @@ func TestIPAddress_JSONMarshaling(t *testing.T) {
 	}
 }
 
+func TestNewIPAddressLookup(t *testing.T) {
+	type args struct {
+		idOrAddress string
+	}
+	tests := []struct {
+		name  string
+		args  args
+		want  *IPAddress
+		field FieldName
+	}{
+		{
+			name:  "empty string",
+			args:  args{idOrAddress: ""},
+			want:  &IPAddress{},
+			field: AddressField,
+		},
+		{
+			name:  "ip_ prefixed ID",
+			args:  args{idOrAddress: "ip_robwZQGtT4hnAsx4"},
+			want:  &IPAddress{ID: "ip_robwZQGtT4hnAsx4"},
+			field: IDField,
+		},
+		{
+			name:  "address",
+			args:  args{idOrAddress: "51.130.20.179"},
+			want:  &IPAddress{Address: "51.130.20.179"},
+			field: AddressField,
+		},
+		{
+			name:  "random text",
+			args:  args{idOrAddress: "oiTx8fUUh7f32GSw"},
+			want:  &IPAddress{Address: "oiTx8fUUh7f32GSw"},
+			field: AddressField,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, field := NewIPAddressLookup(tt.args.idOrAddress)
+
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.field, field)
+		})
+	}
+}
+
 func TestIPAddress_lookupReference(t *testing.T) {
 	tests := []struct {
 		name string

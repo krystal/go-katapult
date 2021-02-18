@@ -63,6 +63,51 @@ func TestNetwork_JSONMarshaling(t *testing.T) {
 	}
 }
 
+func TestNewNetworkLookup(t *testing.T) {
+	type args struct {
+		idOrPermalink string
+	}
+	tests := []struct {
+		name  string
+		args  args
+		want  *Network
+		field FieldName
+	}{
+		{
+			name:  "empty string",
+			args:  args{idOrPermalink: ""},
+			want:  &Network{},
+			field: PermalinkField,
+		},
+		{
+			name:  "netw_ prefixed ID",
+			args:  args{idOrPermalink: "netw_UoGX2x12BlVK0CAo"},
+			want:  &Network{ID: "netw_UoGX2x12BlVK0CAo"},
+			field: IDField,
+		},
+		{
+			name:  "permalink",
+			args:  args{idOrPermalink: "country-city-1-public"},
+			want:  &Network{Permalink: "country-city-1-public"},
+			field: PermalinkField,
+		},
+		{
+			name:  "random text",
+			args:  args{idOrPermalink: "JRdJ017AgV4WYbkv"},
+			want:  &Network{Permalink: "JRdJ017AgV4WYbkv"},
+			field: PermalinkField,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, field := NewNetworkLookup(tt.args.idOrPermalink)
+
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.field, field)
+		})
+	}
+}
+
 func TestNetwork_lookupReference(t *testing.T) {
 	tests := []struct {
 		name string

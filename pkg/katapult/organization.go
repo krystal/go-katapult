@@ -9,8 +9,6 @@ import (
 	"github.com/augurysys/timestamp"
 )
 
-const organizationIDPrefix = "org_"
-
 type Organization struct {
 	ID                   string               `json:"id,omitempty"`
 	Name                 string               `json:"name,omitempty"`
@@ -30,6 +28,20 @@ type Organization struct {
 	Currency             *Currency            `json:"currency,omitempty"`
 	Country              *Country             `json:"country,omitempty"`
 	CountryState         *CountryState        `json:"country_state,omitempty"`
+}
+
+// NewOrganizationLookup takes a string that is a Organization ID or SubDomain,
+// returning a empty *Organization struct with either the ID or SubDomain field
+// populated with the given value. This struct is suitable as input to other
+// methods which accept a *Organization as input.
+func NewOrganizationLookup(
+	idOrSubDomain string,
+) (lr *Organization, f FieldName) {
+	if strings.HasPrefix(idOrSubDomain, "org_") {
+		return &Organization{ID: idOrSubDomain}, IDField
+	}
+
+	return &Organization{SubDomain: idOrSubDomain}, SubDomainField
 }
 
 func (s *Organization) lookupReference() *Organization {
@@ -101,7 +113,7 @@ func (s *OrganizationsClient) Get(
 	ctx context.Context,
 	idOrSubDomain string,
 ) (*Organization, *Response, error) {
-	if strings.HasPrefix(idOrSubDomain, organizationIDPrefix) {
+	if _, f := NewOrganizationLookup(idOrSubDomain); f == IDField {
 		return s.GetByID(ctx, idOrSubDomain)
 	}
 

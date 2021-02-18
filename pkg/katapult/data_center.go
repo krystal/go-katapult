@@ -7,13 +7,27 @@ import (
 	"strings"
 )
 
-const dataCenterIDPrefix = "dc_"
-
 type DataCenter struct {
 	ID        string   `json:"id,omitempty"`
 	Name      string   `json:"name,omitempty"`
 	Permalink string   `json:"permalink,omitempty"`
 	Country   *Country `json:"country,omitempty"`
+}
+
+// NewDataCenterLookup takes a string that is a DataCenter ID or Permalink,
+// returning a empty *DataCenter struct with either the ID or Permalink field
+// populated with the given value. This struct is suitable as input to other
+// methods which accept a *DataCenter as input.
+func NewDataCenterLookup(
+	idOrPermalink string,
+) (lr *DataCenter, f FieldName) {
+	// check for "dc_" and legacy "loc_" ID prefixes
+	if strings.HasPrefix(idOrPermalink, "dc_") ||
+		strings.HasPrefix(idOrPermalink, "loc_") {
+		return &DataCenter{ID: idOrPermalink}, IDField
+	}
+
+	return &DataCenter{Permalink: idOrPermalink}, PermalinkField
 }
 
 func (s *DataCenter) lookupReference() *DataCenter {
@@ -59,9 +73,7 @@ func (s *DataCentersClient) Get(
 	ctx context.Context,
 	idOrPermalink string,
 ) (*DataCenter, *Response, error) {
-	// Check for both current "dc_" and legacy "loc_" ID prefixes.
-	if strings.HasPrefix(idOrPermalink, dataCenterIDPrefix) ||
-		strings.HasPrefix(idOrPermalink, "loc_") {
+	if _, f := NewDataCenterLookup(idOrPermalink); f == IDField {
 		return s.GetByID(ctx, idOrPermalink)
 	}
 

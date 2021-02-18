@@ -8,8 +8,6 @@ import (
 	"github.com/augurysys/timestamp"
 )
 
-const virtualMachineIDPrefix = "vm_"
-
 type VirtualMachine struct {
 	ID                  string                 `json:"id,omitempty"`
 	Name                string                 `json:"name,omitempty"`
@@ -27,6 +25,20 @@ type VirtualMachine struct {
 	Tags                []*Tag                 `json:"tags,omitempty"`
 	TagNames            []string               `json:"tag_names,omitempty"`
 	IPAddresses         []*IPAddress           `json:"ip_addresses,omitempty"`
+}
+
+// NewVirtualMachineLookup takes a string that is a VirtualMachine ID or FQDN,
+// returning a empty *VirtualMachine struct with either the ID or FQDN field
+// populated with the given value. This struct is suitable as input to other
+// methods which accept a *VirtualMachine as input.
+func NewVirtualMachineLookup(
+	idOrFQDN string,
+) (lr *VirtualMachine, f FieldName) {
+	if strings.HasPrefix(idOrFQDN, "vm_") {
+		return &VirtualMachine{ID: idOrFQDN}, IDField
+	}
+
+	return &VirtualMachine{FQDN: idOrFQDN}, FQDNField
 }
 
 func (s *VirtualMachine) lookupReference() *VirtualMachine {
@@ -138,7 +150,7 @@ func (s *VirtualMachinesClient) Get(
 	ctx context.Context,
 	idOrFQDN string,
 ) (*VirtualMachine, *Response, error) {
-	if strings.HasPrefix(idOrFQDN, virtualMachineIDPrefix) {
+	if _, f := NewVirtualMachineLookup(idOrFQDN); f == IDField {
 		return s.GetByID(ctx, idOrFQDN)
 	}
 

@@ -73,6 +73,51 @@ func TestOrganization_JSONMarshaling(t *testing.T) {
 	}
 }
 
+func TestNewOrganizationLookup(t *testing.T) {
+	type args struct {
+		idOrSubDomain string
+	}
+	tests := []struct {
+		name  string
+		args  args
+		want  *Organization
+		field FieldName
+	}{
+		{
+			name:  "empty string",
+			args:  args{idOrSubDomain: ""},
+			want:  &Organization{},
+			field: SubDomainField,
+		},
+		{
+			name:  "org_ prefixed ID",
+			args:  args{idOrSubDomain: "org_4LmWzxTJ5PRn8BZx"},
+			want:  &Organization{ID: "org_4LmWzxTJ5PRn8BZx"},
+			field: IDField,
+		},
+		{
+			name:  "subdomain",
+			args:  args{idOrSubDomain: "acme-labs"},
+			want:  &Organization{SubDomain: "acme-labs"},
+			field: SubDomainField,
+		},
+		{
+			name:  "random text",
+			args:  args{idOrSubDomain: "yz0ka92Cq92FM39l"},
+			want:  &Organization{SubDomain: "yz0ka92Cq92FM39l"},
+			field: SubDomainField,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, field := NewOrganizationLookup(tt.args.idOrSubDomain)
+
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.field, field)
+		})
+	}
+}
+
 func TestOrganization_lookupReference(t *testing.T) {
 	tests := []struct {
 		name string

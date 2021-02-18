@@ -66,6 +66,51 @@ func TestDNSZone_JSONMarshaling(t *testing.T) {
 	}
 }
 
+func TestNewDNSZoneLookup(t *testing.T) {
+	type args struct {
+		idOrName string
+	}
+	tests := []struct {
+		name  string
+		args  args
+		want  *DNSZone
+		field FieldName
+	}{
+		{
+			name:  "empty string",
+			args:  args{idOrName: ""},
+			want:  &DNSZone{},
+			field: NameField,
+		},
+		{
+			name:  "dnszone_ prefixed ID",
+			args:  args{idOrName: "dnszone_L9t6URxo1600lM9C"},
+			want:  &DNSZone{ID: "dnszone_L9t6URxo1600lM9C"},
+			field: IDField,
+		},
+		{
+			name:  "name",
+			args:  args{idOrName: "acme-labs.katapult.cloud"},
+			want:  &DNSZone{Name: "acme-labs.katapult.cloud"},
+			field: NameField,
+		},
+		{
+			name:  "random text",
+			args:  args{idOrName: "txgi81hUaEcPYNpF"},
+			want:  &DNSZone{Name: "txgi81hUaEcPYNpF"},
+			field: NameField,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, field := NewDNSZoneLookup(tt.args.idOrName)
+
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.field, field)
+		})
+	}
+}
+
 func TestDNSZone_lookupReference(t *testing.T) {
 	tests := []struct {
 		name string

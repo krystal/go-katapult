@@ -7,8 +7,6 @@ import (
 	"strings"
 )
 
-const virtualMachinePackageIDPrefix = "vmpkg_"
-
 type VirtualMachinePackage struct {
 	ID            string      `json:"id,omitempty"`
 	Name          string      `json:"name,omitempty"`
@@ -19,6 +17,21 @@ type VirtualMachinePackage struct {
 	StorageInGB   int         `json:"storage_in_gb,omitempty"`
 	Privacy       string      `json:"privacy,omitempty"`
 	Icon          *Attachment `json:"icon,omitempty"`
+}
+
+// NewVirtualMachinePackageLookup takes a string that is a VirtualMachinePackage
+// ID or Permalink returning, a empty *VirtualMachinePackage struct with either
+// the ID or Permalink field populated with the given value. This struct is
+// suitable as input to other methods which accept a *VirtualMachinePackage as
+// input.
+func NewVirtualMachinePackageLookup(
+	idOrPermalink string,
+) (lr *VirtualMachinePackage, f FieldName) {
+	if strings.HasPrefix(idOrPermalink, "vmpkg_") {
+		return &VirtualMachinePackage{ID: idOrPermalink}, IDField
+	}
+
+	return &VirtualMachinePackage{Permalink: idOrPermalink}, PermalinkField
 }
 
 func (s *VirtualMachinePackage) lookupReference() *VirtualMachinePackage {
@@ -73,7 +86,7 @@ func (s *VirtualMachinePackagesClient) Get(
 	ctx context.Context,
 	idOrPermalink string,
 ) (*VirtualMachinePackage, *Response, error) {
-	if strings.HasPrefix(idOrPermalink, virtualMachinePackageIDPrefix) {
+	if _, f := NewVirtualMachinePackageLookup(idOrPermalink); f == IDField {
 		return s.GetByID(ctx, idOrPermalink)
 	}
 

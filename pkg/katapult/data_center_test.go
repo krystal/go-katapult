@@ -50,6 +50,57 @@ func TestDataCenter_JSONMarshaling(t *testing.T) {
 	}
 }
 
+func TestNewDataCenterLookup(t *testing.T) {
+	type args struct {
+		idOrPermalink string
+	}
+	tests := []struct {
+		name  string
+		args  args
+		want  *DataCenter
+		field FieldName
+	}{
+		{
+			name:  "empty string",
+			args:  args{idOrPermalink: ""},
+			want:  &DataCenter{},
+			field: PermalinkField,
+		},
+		{
+			name:  "dc_ prefixed ID",
+			args:  args{idOrPermalink: "dc_HHwnaBCIwNHqv0aO"},
+			want:  &DataCenter{ID: "dc_HHwnaBCIwNHqv0aO"},
+			field: IDField,
+		},
+		{
+			name:  "loc_ prefixed ID",
+			args:  args{idOrPermalink: "loc_RuHTM4fyzucbYGCK"},
+			want:  &DataCenter{ID: "loc_RuHTM4fyzucbYGCK"},
+			field: IDField,
+		},
+		{
+			name:  "permalink",
+			args:  args{idOrPermalink: "country-city-1"},
+			want:  &DataCenter{Permalink: "country-city-1"},
+			field: PermalinkField,
+		},
+		{
+			name:  "random text",
+			args:  args{idOrPermalink: "dXUt33rNLmbatuAa"},
+			want:  &DataCenter{Permalink: "dXUt33rNLmbatuAa"},
+			field: PermalinkField,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, field := NewDataCenterLookup(tt.args.idOrPermalink)
+
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.field, field)
+		})
+	}
+}
+
 func TestDataCenter_lookupReference(t *testing.T) {
 	tests := []struct {
 		name string

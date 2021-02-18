@@ -46,6 +46,51 @@ func TestZone_JSONMarshaling(t *testing.T) {
 	}
 }
 
+func TestNewZoneLookup(t *testing.T) {
+	type args struct {
+		idOrPermalink string
+	}
+	tests := []struct {
+		name  string
+		args  args
+		want  *Zone
+		field FieldName
+	}{
+		{
+			name:  "empty string",
+			args:  args{idOrPermalink: ""},
+			want:  &Zone{},
+			field: PermalinkField,
+		},
+		{
+			name:  "zone_ prefixed ID",
+			args:  args{idOrPermalink: "zone_NeK95mFtiSXfUtW2"},
+			want:  &Zone{ID: "zone_NeK95mFtiSXfUtW2"},
+			field: IDField,
+		},
+		{
+			name:  "permalink",
+			args:  args{idOrPermalink: "city-zone-1"},
+			want:  &Zone{Permalink: "city-zone-1"},
+			field: PermalinkField,
+		},
+		{
+			name:  "random text",
+			args:  args{idOrPermalink: "1UKzPq0izsQsNCsd"},
+			want:  &Zone{Permalink: "1UKzPq0izsQsNCsd"},
+			field: PermalinkField,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, field := NewZoneLookup(tt.args.idOrPermalink)
+
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.field, field)
+		})
+	}
+}
+
 func TestZone_lookupReference(t *testing.T) {
 	tests := []struct {
 		name string
