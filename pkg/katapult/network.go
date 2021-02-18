@@ -6,13 +6,25 @@ import (
 	"strings"
 )
 
-const networkIDPrefix = "netw_"
-
 type Network struct {
 	ID         string      `json:"id,omitempty"`
 	Name       string      `json:"name,omitempty"`
 	Permalink  string      `json:"permalink,omitempty"`
 	DataCenter *DataCenter `json:"data_center,omitempty"`
+}
+
+// NewNetworkLookup takes a string that is a Network ID or Permalink, returning
+// a empty *Network struct with either the ID or Permalink field populated with
+// the given value. This struct is suitable as input to other methods which
+// accept a *Network as input.
+func NewNetworkLookup(
+	idOrPermalink string,
+) (lr *Network, f FieldName) {
+	if strings.HasPrefix(idOrPermalink, "netw_") {
+		return &Network{ID: idOrPermalink}, IDField
+	}
+
+	return &Network{Permalink: idOrPermalink}, PermalinkField
 }
 
 func (s *Network) lookupReference() *Network {
@@ -85,7 +97,7 @@ func (s *NetworksClient) Get(
 	ctx context.Context,
 	idOrPermalink string,
 ) (*Network, *Response, error) {
-	if strings.HasPrefix(idOrPermalink, networkIDPrefix) {
+	if _, f := NewNetworkLookup(idOrPermalink); f == IDField {
 		return s.GetByID(ctx, idOrPermalink)
 	}
 

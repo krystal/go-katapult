@@ -8,13 +8,25 @@ import (
 	"github.com/augurysys/timestamp"
 )
 
-const trashObjectIDPrefix = "trsh_"
-
 type TrashObject struct {
 	ID         string               `json:"id,omitempty"`
 	KeepUntil  *timestamp.Timestamp `json:"keep_until,omitempty"`
 	ObjectID   string               `json:"object_id,omitempty"`
 	ObjectType string               `json:"object_type,omitempty"`
+}
+
+// NewTrashObjectLookup takes a string that is a TrashObject ID or ObjectID
+// returning, a empty *TrashObject struct with either the ID or ObjectID field
+// populated with the given value. This struct is suitable as input to other
+// methods which accept a *TrashObject as input.
+func NewTrashObjectLookup(
+	idOrObjectID string,
+) (lr *TrashObject, f FieldName) {
+	if strings.HasPrefix(idOrObjectID, "trsh_") {
+		return &TrashObject{ID: idOrObjectID}, IDField
+	}
+
+	return &TrashObject{ObjectID: idOrObjectID}, ObjectIDField
 }
 
 func (s *TrashObject) lookupReference() *TrashObject {
@@ -85,7 +97,7 @@ func (s *TrashObjectsClient) Get(
 	ctx context.Context,
 	idOrObjectID string,
 ) (*TrashObject, *Response, error) {
-	if strings.HasPrefix(idOrObjectID, trashObjectIDPrefix) {
+	if _, f := NewTrashObjectLookup(idOrObjectID); f == IDField {
 		return s.GetByID(ctx, idOrObjectID)
 	}
 

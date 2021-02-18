@@ -53,6 +53,51 @@ func TestVirtualMachinePackage_JSONMarshaling(t *testing.T) {
 	}
 }
 
+func TestNewVirtualMachinePackageLookup(t *testing.T) {
+	type args struct {
+		idOrPermalink string
+	}
+	tests := []struct {
+		name  string
+		args  args
+		want  *VirtualMachinePackage
+		field FieldName
+	}{
+		{
+			name:  "empty string",
+			args:  args{idOrPermalink: ""},
+			want:  &VirtualMachinePackage{},
+			field: PermalinkField,
+		},
+		{
+			name:  "vmpkg_ prefixed ID",
+			args:  args{idOrPermalink: "vmpkg_bVCqY58SxSwheKV6"},
+			want:  &VirtualMachinePackage{ID: "vmpkg_bVCqY58SxSwheKV6"},
+			field: IDField,
+		},
+		{
+			name:  "permalink",
+			args:  args{idOrPermalink: "rock-3"},
+			want:  &VirtualMachinePackage{Permalink: "rock-3"},
+			field: PermalinkField,
+		},
+		{
+			name:  "random text",
+			args:  args{idOrPermalink: "Z0jCwfGCIzli3Vk5"},
+			want:  &VirtualMachinePackage{Permalink: "Z0jCwfGCIzli3Vk5"},
+			field: PermalinkField,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, field := NewVirtualMachinePackageLookup(tt.args.idOrPermalink)
+
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.field, field)
+		})
+	}
+}
+
 func TestVirtualMachinePackage_lookupReference(t *testing.T) {
 	tests := []struct {
 		name string

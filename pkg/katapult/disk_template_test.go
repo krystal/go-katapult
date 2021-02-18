@@ -68,6 +68,51 @@ func TestDiskTemplate_JSONMarshaling(t *testing.T) {
 	}
 }
 
+func TestNewDiskTemplateLookup(t *testing.T) {
+	type args struct {
+		idOrPermalink string
+	}
+	tests := []struct {
+		name  string
+		args  args
+		want  *DiskTemplate
+		field FieldName
+	}{
+		{
+			name:  "empty string",
+			args:  args{idOrPermalink: ""},
+			want:  &DiskTemplate{},
+			field: PermalinkField,
+		},
+		{
+			name:  "dtpl_ prefixed ID",
+			args:  args{idOrPermalink: "dtpl_xnboGWaq0xROo0Sf"},
+			want:  &DiskTemplate{ID: "dtpl_xnboGWaq0xROo0Sf"},
+			field: IDField,
+		},
+		{
+			name:  "permalink",
+			args:  args{idOrPermalink: "country-city-01"},
+			want:  &DiskTemplate{Permalink: "country-city-01"},
+			field: PermalinkField,
+		},
+		{
+			name:  "random text",
+			args:  args{idOrPermalink: "dXUt33rNLmbatuAa"},
+			want:  &DiskTemplate{Permalink: "dXUt33rNLmbatuAa"},
+			field: PermalinkField,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, field := NewDiskTemplateLookup(tt.args.idOrPermalink)
+
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.field, field)
+		})
+	}
+}
+
 func TestDiskTemplate_lookupReference(t *testing.T) {
 	tests := []struct {
 		name string

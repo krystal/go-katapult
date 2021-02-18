@@ -6,8 +6,6 @@ import (
 	"strings"
 )
 
-const ipAddressIDPrefix = "ip_"
-
 type IPAddress struct {
 	ID              string   `json:"id,omitempty"`
 	Address         string   `json:"address,omitempty"`
@@ -18,6 +16,20 @@ type IPAddress struct {
 	Network         *Network `json:"network,omitempty"`
 	AllocationID    string   `json:"allocation_id,omitempty"`
 	AllocationType  string   `json:"allocation_type,omitempty"`
+}
+
+// NewIPAddressLookup takes a string that is a IPAddress ID or Address,
+// returning a empty *IPAddress struct with either the ID or Address field
+// populated with the given value. This struct is suitable as input to other
+// methods which accept a *IPAddress as input.
+func NewIPAddressLookup(
+	idOrAddress string,
+) (lr *IPAddress, f FieldName) {
+	if strings.HasPrefix(idOrAddress, "ip_") {
+		return &IPAddress{ID: idOrAddress}, IDField
+	}
+
+	return &IPAddress{Address: idOrAddress}, AddressField
 }
 
 func (s *IPAddress) lookupReference() *IPAddress {
@@ -115,7 +127,7 @@ func (s *IPAddressesClient) Get(
 	ctx context.Context,
 	idOrAddress string,
 ) (*IPAddress, *Response, error) {
-	if strings.HasPrefix(idOrAddress, ipAddressIDPrefix) {
+	if _, f := NewIPAddressLookup(idOrAddress); f == IDField {
 		return s.GetByID(ctx, idOrAddress)
 	}
 

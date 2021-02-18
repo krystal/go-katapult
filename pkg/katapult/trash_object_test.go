@@ -58,6 +58,51 @@ func TestTrashObject_JSONMarshaling(t *testing.T) {
 	}
 }
 
+func TestNewTrashObjectLookup(t *testing.T) {
+	type args struct {
+		idOrObjectID string
+	}
+	tests := []struct {
+		name  string
+		args  args
+		want  *TrashObject
+		field FieldName
+	}{
+		{
+			name:  "empty string",
+			args:  args{idOrObjectID: ""},
+			want:  &TrashObject{},
+			field: ObjectIDField,
+		},
+		{
+			name:  "trsh_ prefixed ID",
+			args:  args{idOrObjectID: "trsh_vAGgmacZGf2ucIcx"},
+			want:  &TrashObject{ID: "trsh_vAGgmacZGf2ucIcx"},
+			field: IDField,
+		},
+		{
+			name:  "object ID",
+			args:  args{idOrObjectID: "vm_2yiadNK5xxJiclVq"},
+			want:  &TrashObject{ObjectID: "vm_2yiadNK5xxJiclVq"},
+			field: ObjectIDField,
+		},
+		{
+			name:  "random text",
+			args:  args{idOrObjectID: "JKeIKf2ILMw4OEaw"},
+			want:  &TrashObject{ObjectID: "JKeIKf2ILMw4OEaw"},
+			field: ObjectIDField,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, field := NewTrashObjectLookup(tt.args.idOrObjectID)
+
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.field, field)
+		})
+	}
+}
+
 func TestTrashObject_lookupReference(t *testing.T) {
 	tests := []struct {
 		name string

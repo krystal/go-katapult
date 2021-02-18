@@ -6,8 +6,6 @@ import (
 	"strings"
 )
 
-const diskTemplateIDPrefix = "dtpl_"
-
 type DiskTemplate struct {
 	ID              string               `json:"id,omitempty"`
 	Name            string               `json:"name,omitempty"`
@@ -16,6 +14,20 @@ type DiskTemplate struct {
 	Universal       bool                 `json:"universal,omitempty"`
 	LatestVersion   *DiskTemplateVersion `json:"latest_version,omitempty"`
 	OperatingSystem *OperatingSystem     `json:"operating_system,omitempty"`
+}
+
+// NewDiskTemplateLookup takes a string that is a DiskTemplate ID or Permalink,
+// returning a empty *DiskTemplate struct with either the ID or Permalink field
+// populated with the given value. This struct is suitable as input to other
+// methods which accept a *DiskTemplate as input.
+func NewDiskTemplateLookup(
+	idOrPermalink string,
+) (lr *DiskTemplate, f FieldName) {
+	if strings.HasPrefix(idOrPermalink, "dtpl_") {
+		return &DiskTemplate{ID: idOrPermalink}, IDField
+	}
+
+	return &DiskTemplate{Permalink: idOrPermalink}, PermalinkField
 }
 
 func (s *DiskTemplate) lookupReference() *DiskTemplate {
@@ -121,7 +133,7 @@ func (s *DiskTemplatesClient) Get(
 	ctx context.Context,
 	idOrPermalink string,
 ) (*DiskTemplate, *Response, error) {
-	if strings.HasPrefix(idOrPermalink, diskTemplateIDPrefix) {
+	if _, f := NewDiskTemplateLookup(idOrPermalink); f == IDField {
 		return s.GetByID(ctx, idOrPermalink)
 	}
 
