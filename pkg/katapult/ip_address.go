@@ -32,6 +32,14 @@ func NewIPAddressLookup(
 	return &IPAddress{Address: idOrAddress}, AddressField
 }
 
+func (s *IPAddress) Version() IPVersion {
+	if strings.Count(s.Address, ":") < 2 {
+		return IPv4
+	}
+
+	return IPv6
+}
+
 func (s *IPAddress) lookupReference() *IPAddress {
 	if s == nil {
 		return nil
