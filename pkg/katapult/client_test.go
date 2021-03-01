@@ -233,23 +233,6 @@ func TestNewClient(t *testing.T) {
 				},
 			},
 		},
-		{
-			name: "config with HTTPTransport",
-			args: args{
-				config: &Config{
-					Transport: &http.Transport{MaxIdleConns: 42},
-				},
-			},
-		},
-		{
-			name: "config with HTTPClient and HTTPTransport",
-			args: args{
-				config: &Config{
-					HTTPClient: &http.Client{Timeout: time.Second * 13},
-					Transport:  &http.Transport{MaxIdleConns: 42},
-				},
-			},
-		},
 	}
 
 	for _, tt := range tests {
@@ -300,14 +283,6 @@ func TestNewClient(t *testing.T) {
 					assert.IsType(t, new(http.Client), c.apiClient.httpClient)
 					assert.Equal(t,
 						testDefaultTimeout, c.apiClient.httpClient.Timeout,
-					)
-				}
-
-				if tt.args.config != nil &&
-					tt.args.config.Transport != nil {
-					assert.Equal(t,
-						tt.args.config.Transport,
-						c.apiClient.httpClient.Transport,
 					)
 				}
 			}
@@ -626,101 +601,6 @@ func TestClient_SetHTTPClient(t *testing.T) {
 				}
 			} else {
 				assert.Equal(t, tt.args.httpClient, c.apiClient.httpClient)
-			}
-		})
-	}
-}
-
-func TestClient_Transport(t *testing.T) {
-	tests := []struct {
-		name          string
-		httpClient    *http.Client
-		httpTransport http.RoundTripper
-		want          http.RoundTripper
-	}{
-		{
-			name:          "default",
-			httpClient:    &http.Client{},
-			httpTransport: nil,
-			want:          nil,
-		},
-		{
-			name:          "custom",
-			httpClient:    &http.Client{},
-			httpTransport: &http.Transport{MaxConnsPerHost: 949},
-			want:          &http.Transport{MaxConnsPerHost: 949},
-		},
-		{
-			name:          "nil http client",
-			httpClient:    nil,
-			httpTransport: &http.Transport{MaxConnsPerHost: 949},
-			want:          nil,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			c, err := NewClient(nil)
-			require.NoError(t, err)
-
-			c.apiClient.httpClient = tt.httpClient
-
-			if tt.httpTransport != nil && c.apiClient.httpClient != nil {
-				c.apiClient.httpClient.Transport = tt.httpTransport
-			}
-
-			got := c.Transport()
-
-			assert.Equal(t, tt.want, got)
-		})
-	}
-}
-
-func TestClient_SetTransport(t *testing.T) {
-	type args struct {
-		httpTransport http.RoundTripper
-	}
-	tests := []struct {
-		name   string
-		args   args
-		errStr string
-		errIs  []error
-	}{
-		{
-			name: "custom",
-			args: args{
-				httpTransport: &http.Transport{MaxIdleConnsPerHost: 9438},
-			},
-		},
-		{
-			name: "nil",
-			args: args{
-				httpTransport: nil,
-			},
-			errStr: "client: http transport cannot be nil",
-			errIs:  []error{Err, ErrClient},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			c, err := NewClient(nil)
-			require.NoError(t, err)
-
-			original := c.apiClient.httpClient.Transport
-			err = c.SetTransport(tt.args.httpTransport)
-
-			if tt.errStr != "" || len(tt.errIs) > 0 {
-				assert.Equal(t, original, c.apiClient.httpClient.Transport)
-
-				if tt.errStr != "" {
-					assert.EqualError(t, err, tt.errStr)
-				}
-				for _, e := range tt.errIs {
-					assert.True(t, errors.Is(err, e))
-				}
-			} else {
-				assert.Equal(t,
-					tt.args.httpTransport, c.apiClient.httpClient.Transport,
-				)
 			}
 		})
 	}
