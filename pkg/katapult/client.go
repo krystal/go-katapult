@@ -21,10 +21,8 @@ type Config struct {
 	UserAgent  string
 	HTTPClient *http.Client
 
-	// BaseURL and Transport fields should only be relevant for testing
-	// purposes.
-	BaseURL   *url.URL
-	Transport http.RoundTripper
+	// BaseURL should only be relevant for testing purposes.
+	BaseURL *url.URL
 }
 
 type Client struct {
@@ -101,10 +99,6 @@ func (c *Client) configure(config *Config) error {
 		if config.HTTPClient != nil {
 			_ = c.SetHTTPClient(config.HTTPClient)
 		}
-
-		if config.Transport != nil {
-			_ = c.SetTransport(config.Transport)
-		}
 	}
 
 	return nil
@@ -155,24 +149,6 @@ func (c *Client) SetHTTPClient(httpClient *http.Client) error {
 	}
 
 	c.apiClient.httpClient = httpClient
-
-	return nil
-}
-
-func (c *Client) Transport() http.RoundTripper {
-	if c.apiClient.httpClient == nil {
-		return nil
-	}
-
-	return c.apiClient.httpClient.Transport
-}
-
-func (c *Client) SetTransport(transport http.RoundTripper) error {
-	if transport == nil {
-		return fmt.Errorf("%w: http transport cannot be nil", ErrClient)
-	}
-
-	c.apiClient.httpClient.Transport = transport
 
 	return nil
 }
