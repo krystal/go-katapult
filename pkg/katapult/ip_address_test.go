@@ -138,6 +138,72 @@ func TestNewIPAddressLookup(t *testing.T) {
 	}
 }
 
+func TestIPAddress_Version(t *testing.T) {
+	type fields struct {
+		Address string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   IPVersion
+	}{
+		{
+			name:   "IPv4 basic",
+			fields: fields{Address: "192.168.0.1"},
+			want:   IPv4,
+		},
+		{
+			name:   "IPv4 with port",
+			fields: fields{Address: "192.168.0.1:80"},
+			want:   IPv4,
+		},
+		{
+			name:   "IPv6 basic",
+			fields: fields{Address: "::FFFF:C0A8:1"},
+			want:   IPv6,
+		},
+		{
+			name:   "IPv6 leading zeros",
+			fields: fields{Address: "::FFFF:C0A8:0001"},
+			want:   IPv6,
+		},
+		{
+			name:   "IPv6 double colon expanded",
+			fields: fields{Address: "0000:0000:0000:0000:0000:FFFF:C0A8:1"},
+			want:   IPv6,
+		},
+		{
+			name:   "IPv6 with zone info",
+			fields: fields{Address: "::FFFF:C0A8:1%1"},
+			want:   IPv6,
+		},
+		{
+			name:   "IPv6 IPv4 literal",
+			fields: fields{Address: "::FFFF:192.168.0.1"},
+			want:   IPv6,
+		},
+		{
+			name:   "IPv6 with port info",
+			fields: fields{Address: "[::FFFF:C0A8:1]:80"},
+			want:   IPv6,
+		},
+		{
+			name:   "IPv6 with zone and port info",
+			fields: fields{Address: "[::FFFF:C0A8:1%1]:80"},
+			want:   IPv6,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ip := &IPAddress{Address: tt.fields.Address}
+
+			got := ip.Version()
+
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}
+
 func TestIPAddress_lookupReference(t *testing.T) {
 	tests := []struct {
 		name string
