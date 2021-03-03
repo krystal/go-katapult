@@ -39,6 +39,7 @@ type Client struct {
 	Tasks                           *TasksClient
 	TrashObjects                    *TrashObjectsClient
 	VirtualMachineBuilds            *VirtualMachineBuildsClient
+	VirtualMachineGroups            *VirtualMachineGroupsClient
 	VirtualMachineNetworkInterfaces *VirtualMachineNetworkInterfacesClient
 	VirtualMachinePackages          *VirtualMachinePackagesClient
 	VirtualMachines                 *VirtualMachinesClient
@@ -66,6 +67,7 @@ func NewClient(config *Config) (*Client, error) {
 		Tasks:                           newTasksClient(ac),
 		TrashObjects:                    newTrashObjectsClient(ac),
 		VirtualMachineBuilds:            newVirtualMachineBuildsClient(ac),
+		VirtualMachineGroups:            newVirtualMachineGroupsClient(ac),
 		VirtualMachineNetworkInterfaces: newVirtualMachineNetworkInterfacesClient(ac),
 		VirtualMachinePackages:          newVirtualMachinePackagesClient(ac),
 		VirtualMachines:                 newVirtualMachinesClient(ac),

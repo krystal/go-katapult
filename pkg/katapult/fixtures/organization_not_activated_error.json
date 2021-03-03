@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "organization_not_activated",
+    "description": "An organization was found from the arguments provided but it wasn't activated yet",
+    "detail": {}
+  }
+}

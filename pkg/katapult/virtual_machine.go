@@ -83,13 +83,6 @@ const (
 	VirtualMachineOrphaned     VirtualMachineState = "orphaned"
 )
 
-type VirtualMachineGroup struct {
-	ID        string               `json:"id,omitempty"`
-	Name      string               `json:"name,omitempty"`
-	Segregate bool                 `json:"segregate,omitempty"`
-	CreatedAt *timestamp.Timestamp `json:"created_at,omitempty"`
-}
-
 type VirtualMachineUpdateArguments struct {
 	Name        string    `json:"name,omitempty"`
 	Hostname    string    `json:"hostname,omitempty"`
