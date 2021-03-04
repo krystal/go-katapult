@@ -30,6 +30,7 @@ linters:
     - goconst
     - gocritic
     - gocyclo
+    - gofumpt
     - goimports
     - golint
     - goprintffuncname
