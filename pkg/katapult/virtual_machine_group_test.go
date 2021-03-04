@@ -62,13 +62,19 @@ func Test_virtualMachineGroupCreateRequest_JSONMarshaling(t *testing.T) {
 			name: "full",
 			obj: &virtualMachineGroupCreateRequest{
 				Organization: &Organization{ID: "org_O648YDMEYeLmqdmn"},
-				Name:         "vm group test",
-				Segregate:    truePtr,
+				Properties: &VirtualMachineGroupCreateArguments{
+					Name:      "vm group test",
+					Segregate: truePtr,
+				},
 			},
 		},
 		{
 			name: "false segregate",
-			obj:  &virtualMachineGroupCreateRequest{Segregate: falsePtr},
+			obj: &virtualMachineGroupCreateRequest{
+				Properties: &VirtualMachineGroupCreateArguments{
+					Segregate: falsePtr,
+				},
+			},
 		},
 	}
 	for _, tt := range tests {
@@ -90,13 +96,19 @@ func Test_virtualMachineGroupUpdateRequest_JSONMarshaling(t *testing.T) {
 		{
 			name: "full",
 			obj: &virtualMachineGroupUpdateRequest{
-				Name:      "vm group test",
-				Segregate: truePtr,
+				Properties: &VirtualMachineGroupUpdateArguments{
+					Name:      "vm group test",
+					Segregate: truePtr,
+				},
 			},
 		},
 		{
 			name: "false segregate",
-			obj:  &virtualMachineGroupUpdateRequest{Segregate: falsePtr},
+			obj: &virtualMachineGroupUpdateRequest{
+				Properties: &VirtualMachineGroupUpdateArguments{
+					Segregate: falsePtr,
+				},
+			},
 		},
 	}
 	for _, tt := range tests {
@@ -531,8 +543,10 @@ func TestVirtualMachineGroupsClient_Create(t *testing.T) {
 			},
 			reqBody: &virtualMachineGroupCreateRequest{
 				Organization: &Organization{ID: "org_O648YDMEYeLmqdmn"},
-				Name:         "vm group test",
-				Segregate:    falsePtr,
+				Properties: &VirtualMachineGroupCreateArguments{
+					Name:      "vm group test",
+					Segregate: falsePtr,
+				},
 			},
 			want: &VirtualMachineGroup{
 				ID:        "vmgrp_gsEUFPp3ybVQm5QQ",
@@ -554,8 +568,10 @@ func TestVirtualMachineGroupsClient_Create(t *testing.T) {
 			},
 			reqBody: &virtualMachineGroupCreateRequest{
 				Organization: &Organization{SubDomain: "acme"},
-				Name:         "vm group test",
-				Segregate:    falsePtr,
+				Properties: &VirtualMachineGroupCreateArguments{
+					Name:      "vm group test",
+					Segregate: falsePtr,
+				},
 			},
 			want: &VirtualMachineGroup{
 				ID:        "vmgrp_gsEUFPp3ybVQm5QQ",
@@ -715,8 +731,10 @@ func TestVirtualMachineGroupsClient_Update(t *testing.T) {
 				VirtualMachineGroup: &VirtualMachineGroup{
 					ID: "vmgrp_gsEUFPp3ybVQm5QQ",
 				},
-				Name:      "vm group test",
-				Segregate: truePtr,
+				Properties: &VirtualMachineGroupUpdateArguments{
+					Name:      "vm group test",
+					Segregate: truePtr,
+				},
 			},
 			want: &VirtualMachineGroup{
 				ID:        "vmgrp_gsEUFPp3ybVQm5QQ",

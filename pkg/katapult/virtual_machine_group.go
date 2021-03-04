@@ -34,25 +34,23 @@ func (s *VirtualMachineGroup) queryValues() *url.Values {
 }
 
 type VirtualMachineGroupCreateArguments struct {
-	Name      string
-	Segregate *bool
+	Name      string `json:"name,omitempty"`
+	Segregate *bool  `json:"segregate,omitempty"`
 }
 
 type VirtualMachineGroupUpdateArguments struct {
-	Name      string
-	Segregate *bool
+	Name      string `json:"name,omitempty"`
+	Segregate *bool  `json:"segregate,omitempty"`
 }
 
 type virtualMachineGroupCreateRequest struct {
 	Organization *Organization `json:"organization,omitempty"`
-	Name         string        `json:"name,omitempty"`
-	Segregate    *bool         `json:"segregate,omitempty"`
+	Properties   *VirtualMachineGroupCreateArguments
 }
 
 type virtualMachineGroupUpdateRequest struct {
 	VirtualMachineGroup *VirtualMachineGroup `json:"virtual_machine_group,omitempty"`
-	Name                string               `json:"name,omitempty"`
-	Segregate           *bool                `json:"segregate,omitempty"`
+	Properties          *VirtualMachineGroupUpdateArguments
 }
 
 type virtualMachineGroupsResponseBody struct {
@@ -117,11 +115,7 @@ func (s *VirtualMachineGroupsClient) Create(
 	u := &url.URL{Path: "organizations/_/virtual_machine_groups"}
 	reqBody := &virtualMachineGroupCreateRequest{
 		Organization: org.lookupReference(),
-	}
-
-	if args != nil {
-		reqBody.Name = args.Name
-		reqBody.Segregate = args.Segregate
+		Properties:   args,
 	}
 
 	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
@@ -137,11 +131,7 @@ func (s *VirtualMachineGroupsClient) Update(
 	u := &url.URL{Path: "virtual_machine_groups/_"}
 	reqBody := &virtualMachineGroupUpdateRequest{
 		VirtualMachineGroup: group.lookupReference(),
-	}
-
-	if args != nil {
-		reqBody.Name = args.Name
-		reqBody.Segregate = args.Segregate
+		Properties:          args,
 	}
 
 	body, resp, err := s.doRequest(ctx, "PATCH", u, reqBody)
