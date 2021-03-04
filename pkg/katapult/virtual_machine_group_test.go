@@ -625,3 +625,159 @@ func TestVirtualMachineGroupsClient_Create(t *testing.T) {
 		})
 	}
 }
+
+func TestVirtualMachineGroupsClient_Update(t *testing.T) {
+	groupArgs := &VirtualMachineGroupUpdateArguments{
+		Name:      "vm group test",
+		Segregate: truePtr,
+	}
+
+	type args struct {
+		ctx   context.Context
+		group *VirtualMachineGroup
+		args  *VirtualMachineGroupUpdateArguments
+	}
+	tests := []struct {
+		name       string
+		args       args
+		reqBody    *virtualMachineGroupUpdateRequest
+		want       *VirtualMachineGroup
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "by ID",
+			args: args{
+				ctx: context.Background(),
+				group: &VirtualMachineGroup{
+					ID: "vmgrp_gsEUFPp3ybVQm5QQ",
+				},
+				args: groupArgs,
+			},
+			reqBody: &virtualMachineGroupUpdateRequest{
+				VirtualMachineGroup: &VirtualMachineGroup{ID: "vmgrp_gsEUFPp3ybVQm5QQ"},
+				Name:                "vm group test",
+				Segregate:           truePtr,
+			},
+			want: &VirtualMachineGroup{
+				ID:        "vmgrp_gsEUFPp3ybVQm5QQ",
+				Name:      "vm group test",
+				Segregate: true,
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machine_group_updated"),
+		},
+		{
+			name: "non-existent virtual machine group",
+			args: args{
+				ctx:   context.Background(),
+				group: &VirtualMachineGroup{ID: "vmgrp_nopethisdoesnotexist"},
+				args:  &VirtualMachineGroupUpdateArguments{},
+			},
+			errStr:     fixtureVMGroupNotFoundErr,
+			errResp:    fixtureVMGroupNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("virtual_machine_group_not_found_error"),
+		},
+		{
+			name: "permission denied",
+			args: args{
+				ctx: context.Background(),
+				group: &VirtualMachineGroup{
+					ID: "vmgrp_gsEUFPp3ybVQm5QQ",
+				},
+				args: groupArgs,
+			},
+			errStr:     fixturePermissionDeniedErr,
+			errResp:    fixturePermissionDeniedResponseError,
+			respStatus: http.StatusForbidden,
+			respBody:   fixture("permission_denied_error"),
+		},
+		{
+			name: "validation error",
+			args: args{
+				ctx: context.Background(),
+				group: &VirtualMachineGroup{
+					ID: "vmgrp_gsEUFPp3ybVQm5QQ",
+				},
+				args: groupArgs,
+			},
+			errStr:     fixtureValidationErrorErr,
+			errResp:    fixtureValidationErrorResponseError,
+			respStatus: http.StatusUnprocessableEntity,
+			respBody:   fixture("validation_error"),
+		},
+		{
+			name: "nil group",
+			args: args{
+				ctx:   context.Background(),
+				group: nil,
+				args:  groupArgs,
+			},
+			errStr:     fixtureValidationErrorErr,
+			errResp:    fixtureValidationErrorResponseError,
+			respStatus: http.StatusUnprocessableEntity,
+			respBody:   fixture("validation_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx: nil,
+				group: &VirtualMachineGroup{
+					ID: "vmgrp_gsEUFPp3ybVQm5QQ",
+				},
+				args: groupArgs,
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			mux.HandleFunc(
+				"/core/v1/virtual_machine_groups/_",
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "PATCH", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					if tt.reqBody != nil {
+						reqBody := &virtualMachineGroupUpdateRequest{}
+						err := strictUmarshal(r.Body, reqBody)
+						assert.NoError(t, err)
+						assert.Equal(t, tt.reqBody, reqBody)
+					}
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.VirtualMachineGroups.Update(
+				tt.args.ctx, tt.args.group, tt.args.args,
+			)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}

@@ -15,7 +15,20 @@ type VirtualMachineGroup struct {
 	CreatedAt *timestamp.Timestamp `json:"created_at,omitempty"`
 }
 
+func (s *VirtualMachineGroup) lookupReference() *VirtualMachineGroup {
+	if s == nil {
+		return nil
+	}
+
+	return &VirtualMachineGroup{ID: s.ID}
+}
+
 type VirtualMachineGroupCreateArguments struct {
+	Name      string
+	Segregate *bool
+}
+
+type VirtualMachineGroupUpdateArguments struct {
 	Name      string
 	Segregate *bool
 }
@@ -24,6 +37,12 @@ type virtualMachineGroupCreateRequest struct {
 	Organization *Organization `json:"organization,omitempty"`
 	Name         string        `json:"name,omitempty"`
 	Segregate    *bool         `json:"segregate,omitempty"`
+}
+
+type virtualMachineGroupUpdateRequest struct {
+	VirtualMachineGroup *VirtualMachineGroup `json:"virtual_machine_group,omitempty"`
+	Name                string               `json:"name,omitempty"`
+	Segregate           *bool                `json:"segregate,omitempty"`
 }
 
 type virtualMachineGroupsResponseBody struct {
@@ -95,6 +114,26 @@ func (s *VirtualMachineGroupsClient) Create(
 	}
 
 	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
+
+	return body.VirtualMachineGroup, resp, err
+}
+
+func (s *VirtualMachineGroupsClient) Update(
+	ctx context.Context,
+	group *VirtualMachineGroup,
+	args *VirtualMachineGroupUpdateArguments,
+) (*VirtualMachineGroup, *Response, error) {
+	u := &url.URL{Path: "virtual_machine_groups/_"}
+	reqBody := &virtualMachineGroupUpdateRequest{
+		VirtualMachineGroup: group.lookupReference(),
+	}
+
+	if args != nil {
+		reqBody.Name = args.Name
+		reqBody.Segregate = args.Segregate
+	}
+
+	body, resp, err := s.doRequest(ctx, "PATCH", u, reqBody)
 
 	return body.VirtualMachineGroup, resp, err
 }

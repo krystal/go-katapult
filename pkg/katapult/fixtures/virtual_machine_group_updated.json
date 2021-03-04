@@ -1,0 +1,7 @@
+{
+  "virtual_machine_group": {
+    "id": "vmgrp_gsEUFPp3ybVQm5QQ",
+    "name": "vm group test",
+    "segregate": true
+  }
+}
