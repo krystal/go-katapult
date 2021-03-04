@@ -59,6 +59,7 @@ type virtualMachineGroupsResponseBody struct {
 	VirtualMachineGroups []*VirtualMachineGroup `json:"virtual_machine_groups,omitempty"`
 	VirtualMachineGroup  *VirtualMachineGroup   `json:"virtual_machine_group,omitempty"`
 }
+
 type VirtualMachineGroupsClient struct {
 	client   *apiClient
 	basePath *url.URL

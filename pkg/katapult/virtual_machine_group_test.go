@@ -49,6 +49,63 @@ func TestVirtualMachineGroup_JSONMarshaling(t *testing.T) {
 	}
 }
 
+func Test_virtualMachineGroupCreateRequest_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *virtualMachineGroupCreateRequest
+	}{
+		{
+			name: "empty",
+			obj:  &virtualMachineGroupCreateRequest{},
+		},
+		{
+			name: "full",
+			obj: &virtualMachineGroupCreateRequest{
+				Organization: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				Name:         "vm group test",
+				Segregate:    truePtr,
+			},
+		},
+		{
+			name: "false segregate",
+			obj:  &virtualMachineGroupCreateRequest{Segregate: falsePtr},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func Test_virtualMachineGroupUpdateRequest_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *virtualMachineGroupUpdateRequest
+	}{
+		{
+			name: "empty",
+			obj:  &virtualMachineGroupUpdateRequest{},
+		},
+		{
+			name: "full",
+			obj: &virtualMachineGroupUpdateRequest{
+				Name:      "vm group test",
+				Segregate: truePtr,
+			},
+		},
+		{
+			name: "false segregate",
+			obj:  &virtualMachineGroupUpdateRequest{Segregate: falsePtr},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
 func TestVirtualMachineGroupsClient_List(t *testing.T) {
 	// Correlates to fixtures/virtual_machine_groups_list*.json
 	virtualMachineGroupList := []*VirtualMachineGroup{
