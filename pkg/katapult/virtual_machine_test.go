@@ -273,32 +273,6 @@ func TestVirtualMachineStates(t *testing.T) {
 	}
 }
 
-func TestVirtualMachineGroup_JSONMarshaling(t *testing.T) {
-	tests := []struct {
-		name string
-		obj  *VirtualMachineGroup
-	}{
-		{
-			name: "empty",
-			obj:  &VirtualMachineGroup{},
-		},
-		{
-			name: "full",
-			obj: &VirtualMachineGroup{
-				ID:        "id",
-				Name:      "name",
-				Segregate: true,
-				CreatedAt: timestampPtr(934834834),
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			testJSONMarshaling(t, tt.obj)
-		})
-	}
-}
-
 func TestVirtualMachineUpdateArguments_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string

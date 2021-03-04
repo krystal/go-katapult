@@ -1,0 +1,14 @@
+{
+  "virtual_machine_groups": [
+    {
+      "id": "vmgrp_gsEUFPp3ybVQm5QQ",
+      "name": "vm group 1",
+      "segregate": true
+    },
+    {
+      "id": "vmgrp_bcfdEFn2viWCm5ve",
+      "name": "vm group 2",
+      "segregate": false
+    }
+  ]
+}

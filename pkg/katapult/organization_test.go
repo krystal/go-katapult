@@ -31,6 +31,16 @@ var (
 			"criteria provided in the arguments",
 		Detail: json.RawMessage(`{}`),
 	}
+
+	fixtureOrganizationNotActivatedErr = "organization_not_activated: " +
+		"An organization was found from the arguments provided but it wasn't " +
+		"activated yet"
+	fixtureOrganizationNotActivatedResponseError = &ResponseError{
+		Code: "organization_not_activated",
+		Description: "An organization was found from the arguments provided " +
+			"but it wasn't activated yet",
+		Detail: json.RawMessage(`{}`),
+	}
 )
 
 func TestOrganization_JSONMarshaling(t *testing.T) {
@@ -511,6 +521,17 @@ func TestOrganizationsClient_Get(t *testing.T) {
 			respBody:   fixture("organization_suspended_error"),
 		},
 		{
+			name: "not activated organization",
+			args: args{
+				ctx:           context.Background(),
+				idOrSubDomain: "org_O648YDMEYeLmqdmn",
+			},
+			errStr:     fixtureOrganizationNotActivatedErr,
+			errResp:    fixtureOrganizationNotActivatedResponseError,
+			respStatus: http.StatusForbidden,
+			respBody:   fixture("organization_not_activated_error"),
+		},
+		{
 			name: "nil context",
 			args: args{
 				ctx:           nil,
@@ -621,6 +642,17 @@ func TestOrganizationsClient_GetByID(t *testing.T) {
 			respBody:   fixture("organization_suspended_error"),
 		},
 		{
+			name: "not activated organization",
+			args: args{
+				ctx: context.Background(),
+				id:  "org_O648YDMEYeLmqdmn",
+			},
+			errStr:     fixtureOrganizationNotActivatedErr,
+			errResp:    fixtureOrganizationNotActivatedResponseError,
+			respStatus: http.StatusForbidden,
+			respBody:   fixture("organization_not_activated_error"),
+		},
+		{
 			name: "nil context",
 			args: args{
 				ctx: nil,
@@ -717,6 +749,17 @@ func TestOrganizationsClient_GetBySubDomain(t *testing.T) {
 			errResp:    fixtureOrganizationSuspendedResponseError,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
+		},
+		{
+			name: "not activated organization",
+			args: args{
+				ctx:       context.Background(),
+				subDomain: "acme",
+			},
+			errStr:     fixtureOrganizationNotActivatedErr,
+			errResp:    fixtureOrganizationNotActivatedResponseError,
+			respStatus: http.StatusForbidden,
+			respBody:   fixture("organization_not_activated_error"),
 		},
 		{
 			name: "nil context",
@@ -892,6 +935,21 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 			errResp:    fixtureOrganizationSuspendedResponseError,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
+		},
+		{
+			name: "not activated organization",
+			args: args{
+				ctx:    context.Background(),
+				parent: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				args: &OrganizationManagedArguments{
+					Name:      "NERV Corp.",
+					SubDomain: "nerv",
+				},
+			},
+			errStr:     fixtureOrganizationNotActivatedErr,
+			errResp:    fixtureOrganizationNotActivatedResponseError,
+			respStatus: http.StatusForbidden,
+			respBody:   fixture("organization_not_activated_error"),
 		},
 		{
 			name: "validation error for new org details",
