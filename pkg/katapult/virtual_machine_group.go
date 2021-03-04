@@ -15,14 +15,24 @@ type VirtualMachineGroup struct {
 	CreatedAt *timestamp.Timestamp `json:"created_at,omitempty"`
 }
 
-type VirtualMachineGroupsClient struct {
-	client   *apiClient
-	basePath *url.URL
+type VirtualMachineGroupCreateArguments struct {
+	Name      string
+	Segregate *bool
+}
+
+type virtualMachineGroupCreateRequest struct {
+	Organization *Organization `json:"organization,omitempty"`
+	Name         string        `json:"name,omitempty"`
+	Segregate    *bool         `json:"segregate,omitempty"`
 }
 
 type virtualMachineGroupsResponseBody struct {
 	VirtualMachineGroups []*VirtualMachineGroup `json:"virtual_machine_groups,omitempty"`
 	VirtualMachineGroup  *VirtualMachineGroup   `json:"virtual_machine_group,omitempty"`
+}
+type VirtualMachineGroupsClient struct {
+	client   *apiClient
+	basePath *url.URL
 }
 
 func newVirtualMachineGroupsClient(
@@ -65,6 +75,26 @@ func (s *VirtualMachineGroupsClient) GetByID(
 	}
 
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+
+	return body.VirtualMachineGroup, resp, err
+}
+
+func (s *VirtualMachineGroupsClient) Create(
+	ctx context.Context,
+	org *Organization,
+	args *VirtualMachineGroupCreateArguments,
+) (*VirtualMachineGroup, *Response, error) {
+	u := &url.URL{Path: "organizations/_/virtual_machine_groups"}
+	reqBody := &virtualMachineGroupCreateRequest{
+		Organization: org.lookupReference(),
+	}
+
+	if args != nil {
+		reqBody.Name = args.Name
+		reqBody.Segregate = args.Segregate
+	}
+
+	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
 
 	return body.VirtualMachineGroup, resp, err
 }

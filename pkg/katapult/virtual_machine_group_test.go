@@ -439,3 +439,189 @@ func TestVirtualMachineGroupsClient_GetByID(t *testing.T) {
 		})
 	}
 }
+
+func TestVirtualMachineGroupsClient_Create(t *testing.T) {
+	vmGroupArgs := &VirtualMachineGroupCreateArguments{
+		Name:      "vm group test",
+		Segregate: falsePtr,
+	}
+
+	type args struct {
+		ctx  context.Context
+		org  *Organization
+		args *VirtualMachineGroupCreateArguments
+	}
+	tests := []struct {
+		name       string
+		args       args
+		reqBody    *virtualMachineGroupCreateRequest
+		want       *VirtualMachineGroup
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "virtual machine group by organization ID",
+			args: args{
+				ctx: context.Background(),
+				org: &Organization{
+					ID:        "org_O648YDMEYeLmqdmn",
+					Name:      "ACME Inc.",
+					SubDomain: "acme",
+				},
+				args: vmGroupArgs,
+			},
+			reqBody: &virtualMachineGroupCreateRequest{
+				Organization: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				Name:         "vm group test",
+				Segregate:    falsePtr,
+			},
+			want: &VirtualMachineGroup{
+				ID:        "vmgrp_gsEUFPp3ybVQm5QQ",
+				Name:      "vm group test",
+				Segregate: false,
+			},
+			respStatus: http.StatusCreated,
+			respBody:   fixture("virtual_machine_group_create"),
+		},
+		{
+			name: "virtual machine group by organization SubDomain",
+			args: args{
+				ctx: context.Background(),
+				org: &Organization{
+					Name:      "ACME Inc.",
+					SubDomain: "acme",
+				},
+				args: vmGroupArgs,
+			},
+			reqBody: &virtualMachineGroupCreateRequest{
+				Organization: &Organization{SubDomain: "acme"},
+				Name:         "vm group test",
+				Segregate:    falsePtr,
+			},
+			want: &VirtualMachineGroup{
+				ID:        "vmgrp_gsEUFPp3ybVQm5QQ",
+				Name:      "vm group test",
+				Segregate: false,
+			},
+			respStatus: http.StatusCreated,
+			respBody:   fixture("virtual_machine_group_create"),
+		},
+		{
+			name: "non-existent Organization",
+			args: args{
+				ctx:  context.Background(),
+				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				args: vmGroupArgs,
+			},
+			errStr:     fixtureOrganizationNotFoundErr,
+			errResp:    fixtureOrganizationNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("organization_not_found_error"),
+		},
+		{
+			name: "suspended Organization",
+			args: args{
+				ctx:  context.Background(),
+				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				args: vmGroupArgs,
+			},
+			errStr:     fixtureOrganizationSuspendedErr,
+			errResp:    fixtureOrganizationSuspendedResponseError,
+			respStatus: http.StatusForbidden,
+			respBody:   fixture("organization_suspended_error"),
+		},
+		{
+			name: "not activated Organization",
+			args: args{
+				ctx: context.Background(),
+				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+			},
+			errStr:     fixtureOrganizationNotActivatedErr,
+			errResp:    fixtureOrganizationNotActivatedResponseError,
+			respStatus: http.StatusForbidden,
+			respBody:   fixture("organization_not_activated_error"),
+		},
+		{
+			name: "permission denied",
+			args: args{
+				ctx:  context.Background(),
+				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				args: vmGroupArgs,
+			},
+			errStr:     fixturePermissionDeniedErr,
+			errResp:    fixturePermissionDeniedResponseError,
+			respStatus: http.StatusForbidden,
+			respBody:   fixture("permission_denied_error"),
+		},
+		{
+			name: "validation error",
+			args: args{
+				ctx:  context.Background(),
+				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				args: vmGroupArgs,
+			},
+			errStr:     fixtureValidationErrorErr,
+			errResp:    fixtureValidationErrorResponseError,
+			respStatus: http.StatusUnprocessableEntity,
+			respBody:   fixture("validation_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx:  nil,
+				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				args: vmGroupArgs,
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			mux.HandleFunc(
+				"/core/v1/organizations/_/virtual_machine_groups",
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "POST", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					if tt.reqBody != nil {
+						reqBody := &virtualMachineGroupCreateRequest{}
+						err := strictUmarshal(r.Body, reqBody)
+						assert.NoError(t, err)
+						assert.Equal(t, tt.reqBody, reqBody)
+					}
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.VirtualMachineGroups.Create(
+				tt.args.ctx, tt.args.org, tt.args.args,
+			)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
