@@ -118,6 +118,30 @@ func Test_virtualMachineGroupUpdateRequest_JSONMarshaling(t *testing.T) {
 	}
 }
 
+func Test_virtualMachineGroupsResponseBody_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *virtualMachineGroupsResponseBody
+	}{
+		{
+			name: "empty",
+			obj:  &virtualMachineGroupsResponseBody{},
+		},
+		{
+			name: "full",
+			obj: &virtualMachineGroupsResponseBody{
+				VirtualMachineGroup:  &VirtualMachineGroup{ID: "id1"},
+				VirtualMachineGroups: []*VirtualMachineGroup{{ID: "id2"}},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
 func TestVirtualMachineGroupsClient_List(t *testing.T) {
 	// Correlates to fixtures/virtual_machine_groups_list*.json
 	virtualMachineGroupList := []*VirtualMachineGroup{
