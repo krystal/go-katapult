@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1614857490181,
+  "lastUpdate": 1614874084708,
   "repoUrl": "https://github.com/krystal/go-katapult",
   "entries": {
     "Benchmark": [
@@ -1920,6 +1920,60 @@ window.BENCHMARK_DATA = {
             "value": 3489,
             "unit": "ns/op",
             "extra": "339733 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "ajtait.uk@gmail.com",
+            "name": "Andrew Tait",
+            "username": "andrewjtait"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "680721c1cda521bc0f6be0572ff19b215071add6",
+          "message": "feat(virtual_machine_groups): Get, Create, Update and Delete (#77)",
+          "timestamp": "2021-03-04T16:07:19Z",
+          "tree_id": "c84783f91c2b0570600f1803f7d103a590d03f0c",
+          "url": "https://github.com/krystal/go-katapult/commit/680721c1cda521bc0f6be0572ff19b215071add6"
+        },
+        "date": 1614874082364,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkNameGenerator_RandomHostname",
+            "value": 4580,
+            "unit": "ns/op",
+            "extra": "267406 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_NoPrefix",
+            "value": 3332,
+            "unit": "ns/op",
+            "extra": "370185 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_OnePrefix",
+            "value": 3340,
+            "unit": "ns/op",
+            "extra": "384268 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_TwoPrefixes",
+            "value": 3193,
+            "unit": "ns/op",
+            "extra": "384349 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_ThreePrefixes",
+            "value": 3344,
+            "unit": "ns/op",
+            "extra": "376566 times\n2 procs"
           }
         ]
       }
