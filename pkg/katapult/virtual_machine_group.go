@@ -44,13 +44,13 @@ type VirtualMachineGroupUpdateArguments struct {
 }
 
 type virtualMachineGroupCreateRequest struct {
-	Organization *Organization `json:"organization,omitempty"`
-	Properties   *VirtualMachineGroupCreateArguments
+	Organization *Organization                       `json:"organization,omitempty"`
+	Properties   *VirtualMachineGroupCreateArguments `json:"properties,omitempty"`
 }
 
 type virtualMachineGroupUpdateRequest struct {
-	VirtualMachineGroup *VirtualMachineGroup `json:"virtual_machine_group,omitempty"`
-	Properties          *VirtualMachineGroupUpdateArguments
+	VirtualMachineGroup *VirtualMachineGroup                `json:"virtual_machine_group,omitempty"`
+	Properties          *VirtualMachineGroupUpdateArguments `json:"properties,omitempty"`
 }
 
 type virtualMachineGroupsResponseBody struct {
