@@ -2,11 +2,25 @@ package katapult
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/url"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+)
+
+var (
+	fixtureVMGroupNotFoundErr = "virtual_machine_group_not_found: " +
+		"No virtual machine group was found matching any of the criteria " +
+		"provided in the arguments"
+	fixtureVMGroupNotFoundResponseError = &ResponseError{
+		Code: "virtual_machine_group_not_found",
+		Description: "No virtual machine group was found matching any of " +
+			"the criteria provided in the arguments",
+		Detail: json.RawMessage(`{}`),
+	}
 )
 
 func TestVirtualMachineGroup_JSONMarshaling(t *testing.T) {
@@ -191,6 +205,218 @@ func TestVirtualMachineGroupsClient_List(t *testing.T) {
 
 			got, resp, err := c.VirtualMachineGroups.List(
 				tt.args.ctx, tt.args.org,
+			)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestVirtualMachineGroupsClient_Get(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		id  string
+	}
+	tests := []struct {
+		name       string
+		args       args
+		want       *VirtualMachineGroup
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "by ID",
+			args: args{
+				ctx: context.Background(),
+				id:  "vmgrp_gsEUFPp3ybVQm5QQ",
+			},
+			want: &VirtualMachineGroup{
+				ID:        "vmgrp_gsEUFPp3ybVQm5QQ",
+				Name:      "vm group 1",
+				Segregate: true,
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machine_group_get"),
+		},
+		{
+			name: "non-existent virtual machine group",
+			args: args{
+				ctx: context.Background(),
+				id:  "vmgrp_gsEUFPp3ybVQm5QQ",
+			},
+			errStr:     fixtureVMGroupNotFoundErr,
+			errResp:    fixtureVMGroupNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody: fixture(
+				"virtual_machine_group_not_found_error",
+			),
+		},
+		{
+			name: "permission denied",
+			args: args{
+				ctx: context.Background(),
+				id:  "vmgrp_gsEUFPp3ybVQm5QQ",
+			},
+			errStr:     fixturePermissionDeniedErr,
+			errResp:    fixturePermissionDeniedResponseError,
+			respStatus: http.StatusForbidden,
+			respBody:   fixture("permission_denied_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx: nil,
+				id:  "vmgrp_gsEUFPp3ybVQm5QQ",
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			mux.HandleFunc(
+				fmt.Sprintf(
+					"/core/v1/virtual_machine_groups/%s",
+					tt.args.id,
+				),
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "GET", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.VirtualMachineGroups.Get(
+				tt.args.ctx, tt.args.id,
+			)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestVirtualMachineGroupsClient_GetByID(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		id  string
+	}
+	tests := []struct {
+		name       string
+		args       args
+		want       *VirtualMachineGroup
+		errStr     string
+		errResp    *ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "by ID",
+			args: args{
+				ctx: context.Background(),
+				id:  "vmgrp_gsEUFPp3ybVQm5QQ",
+			},
+			want: &VirtualMachineGroup{
+				ID:        "vmgrp_gsEUFPp3ybVQm5QQ",
+				Name:      "vm group 1",
+				Segregate: true,
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machine_group_get"),
+		},
+		{
+			name: "non-existent virtual machine group",
+			args: args{
+				ctx: context.Background(),
+				id:  "vmgrp_gsEUFPp3ybVQm5QQ",
+			},
+			errStr:     fixtureVMGroupNotFoundErr,
+			errResp:    fixtureVMGroupNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody: fixture(
+				"virtual_machine_group_not_found_error",
+			),
+		},
+		{
+			name: "permission denied",
+			args: args{
+				ctx: context.Background(),
+				id:  "vmgrp_gsEUFPp3ybVQm5QQ",
+			},
+			errStr:     fixturePermissionDeniedErr,
+			errResp:    fixturePermissionDeniedResponseError,
+			respStatus: http.StatusForbidden,
+			respBody:   fixture("permission_denied_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx: nil,
+				id:  "vmgrp_gsEUFPp3ybVQm5QQ",
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			mux.HandleFunc(
+				fmt.Sprintf(
+					"/core/v1/virtual_machine_groups/%s",
+					tt.args.id,
+				),
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "GET", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.VirtualMachineGroups.GetByID(
+				tt.args.ctx, tt.args.id,
 			)
 
 			if tt.respStatus != 0 {

@@ -2,6 +2,7 @@ package katapult
 
 import (
 	"context"
+	"fmt"
 	"net/url"
 
 	"github.com/augurysys/timestamp"
@@ -21,6 +22,7 @@ type VirtualMachineGroupsClient struct {
 
 type virtualMachineGroupsResponseBody struct {
 	VirtualMachineGroups []*VirtualMachineGroup `json:"virtual_machine_groups,omitempty"`
+	VirtualMachineGroup  *VirtualMachineGroup   `json:"virtual_machine_group,omitempty"`
 }
 
 func newVirtualMachineGroupsClient(
@@ -45,6 +47,26 @@ func (s *VirtualMachineGroupsClient) List(
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 
 	return body.VirtualMachineGroups, resp, err
+}
+
+func (s *VirtualMachineGroupsClient) Get(
+	ctx context.Context,
+	id string,
+) (*VirtualMachineGroup, *Response, error) {
+	return s.GetByID(ctx, id)
+}
+
+func (s *VirtualMachineGroupsClient) GetByID(
+	ctx context.Context,
+	id string,
+) (*VirtualMachineGroup, *Response, error) {
+	u := &url.URL{
+		Path: fmt.Sprintf("virtual_machine_groups/%s", id),
+	}
+
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+
+	return body.VirtualMachineGroup, resp, err
 }
 
 func (s *VirtualMachineGroupsClient) doRequest(
