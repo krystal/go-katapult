@@ -23,6 +23,16 @@ func (s *VirtualMachineGroup) lookupReference() *VirtualMachineGroup {
 	return &VirtualMachineGroup{ID: s.ID}
 }
 
+func (s *VirtualMachineGroup) queryValues() *url.Values {
+	v := &url.Values{}
+
+	if s != nil {
+		v.Set("virtual_machine_group[id]", s.ID)
+	}
+
+	return v
+}
+
 type VirtualMachineGroupCreateArguments struct {
 	Name      string
 	Segregate *bool
@@ -136,6 +146,18 @@ func (s *VirtualMachineGroupsClient) Update(
 	body, resp, err := s.doRequest(ctx, "PATCH", u, reqBody)
 
 	return body.VirtualMachineGroup, resp, err
+}
+
+func (s *VirtualMachineGroupsClient) Delete(
+	ctx context.Context,
+	group *VirtualMachineGroup,
+) (*Response, error) {
+	qs := queryValues(group)
+	u := &url.URL{Path: "virtual_machine_groups/_", RawQuery: qs.Encode()}
+
+	_, resp, err := s.doRequest(ctx, "DELETE", u, nil)
+
+	return resp, err
 }
 
 func (s *VirtualMachineGroupsClient) doRequest(
