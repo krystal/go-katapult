@@ -84,10 +84,11 @@ const (
 )
 
 type VirtualMachineUpdateArguments struct {
-	Name        string    `json:"name,omitempty"`
-	Hostname    string    `json:"hostname,omitempty"`
-	Description string    `json:"description,omitempty"`
-	TagNames    *[]string `json:"tag_names,omitempty"`
+	Name        string               `json:"name,omitempty"`
+	Hostname    string               `json:"hostname,omitempty"`
+	Description string               `json:"description,omitempty"`
+	TagNames    *[]string            `json:"tag_names,omitempty"`
+	Group       *VirtualMachineGroup `json:"group,omitempty"`
 }
 
 type virtualMachinesResponseBody struct {

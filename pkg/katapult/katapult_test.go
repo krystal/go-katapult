@@ -55,6 +55,14 @@ func fixture(name string) []byte {
 }
 
 func testJSONMarshaling(t *testing.T, input interface{}) {
+	testCustomJSONMarshaling(t, input, nil)
+}
+
+func testCustomJSONMarshaling(
+	t *testing.T,
+	input interface{},
+	decoded interface{},
+) {
 	c := &codec.JSON{}
 
 	buf := &bytes.Buffer{}
@@ -68,10 +76,15 @@ func testJSONMarshaling(t *testing.T, input interface{}) {
 	g := golden.Get(t)
 	assert.Equal(t, string(g), buf.String(), "encoding does not match golden")
 
-	got := reflect.New(reflect.TypeOf(input).Elem()).Interface()
+	want := decoded
+	if isNil(want) {
+		want = input
+	}
+
+	got := reflect.New(reflect.TypeOf(want).Elem()).Interface()
 	err = c.Decode(bytes.NewBuffer(g), got)
 	require.NoError(t, err, "decoding golden failed")
-	assert.Equal(t, input, got,
+	assert.Equal(t, want, got,
 		"decoding from golden does not match expected object",
 	)
 }
@@ -90,4 +103,17 @@ func testQueryableEncoding(t *testing.T, obj queryable) {
 	parsedQuery, err := url.ParseQuery(g)
 	require.NoError(t, err, "parsing golden query string failed")
 	assert.Equal(t, qs, &parsedQuery, "parsed golden values do not match")
+}
+
+func isNil(i interface{}) bool {
+	if i == nil {
+		return true
+	}
+
+	switch reflect.TypeOf(i).Kind() {
+	case reflect.Ptr, reflect.Map, reflect.Array, reflect.Chan, reflect.Slice:
+		return reflect.ValueOf(i).IsNil()
+	}
+
+	return false
 }
