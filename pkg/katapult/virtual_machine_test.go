@@ -275,8 +275,9 @@ func TestVirtualMachineStates(t *testing.T) {
 
 func TestVirtualMachineUpdateArguments_JSONMarshaling(t *testing.T) {
 	tests := []struct {
-		name string
-		obj  *VirtualMachineUpdateArguments
+		name    string
+		obj     *VirtualMachineUpdateArguments
+		decoded *VirtualMachineUpdateArguments
 	}{
 		{
 			name: "empty",
@@ -297,10 +298,19 @@ func TestVirtualMachineUpdateArguments_JSONMarshaling(t *testing.T) {
 				TagNames: &[]string{},
 			},
 		},
+		{
+			name: "null Group",
+			obj: &VirtualMachineUpdateArguments{
+				Group: NullVirtualMachineGroup,
+			},
+			decoded: &VirtualMachineUpdateArguments{
+				Group: nil,
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			testJSONMarshaling(t, tt.obj)
+			testCustomJSONMarshaling(t, tt.obj, tt.decoded)
 		})
 	}
 }

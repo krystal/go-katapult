@@ -1,11 +1,18 @@
 package katapult
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/url"
 
 	"github.com/augurysys/timestamp"
+)
+
+var (
+	nullBytes               = []byte("null")
+	NullVirtualMachineGroup = &VirtualMachineGroup{null: true}
 )
 
 type VirtualMachineGroup struct {
@@ -13,6 +20,29 @@ type VirtualMachineGroup struct {
 	Name      string               `json:"name,omitempty"`
 	Segregate bool                 `json:"segregate,omitempty"`
 	CreatedAt *timestamp.Timestamp `json:"created_at,omitempty"`
+	null      bool
+}
+
+func (s *VirtualMachineGroup) UnmarshalJSON(b []byte) error {
+	type alias VirtualMachineGroup
+
+	if bytes.Equal(b, nullBytes) {
+		*s = VirtualMachineGroup{null: true}
+
+		return nil
+	}
+
+	return json.Unmarshal(b, (*alias)(s))
+}
+
+func (s *VirtualMachineGroup) MarshalJSON() ([]byte, error) {
+	type alias VirtualMachineGroup
+
+	if s.null {
+		return nullBytes, nil
+	}
+
+	return json.Marshal((*alias)(s))
 }
 
 func (s *VirtualMachineGroup) lookupReference() *VirtualMachineGroup {

@@ -25,8 +25,9 @@ var (
 
 func TestVirtualMachineGroup_JSONMarshaling(t *testing.T) {
 	tests := []struct {
-		name string
-		obj  *VirtualMachineGroup
+		name    string
+		obj     *VirtualMachineGroup
+		decoded *VirtualMachineGroup
 	}{
 		{
 			name: "empty",
@@ -41,10 +42,30 @@ func TestVirtualMachineGroup_JSONMarshaling(t *testing.T) {
 				CreatedAt: timestampPtr(934834834),
 			},
 		},
+		{
+			name: "null",
+			obj: &VirtualMachineGroup{
+				ID:        "id",
+				Name:      "name",
+				Segregate: true,
+				CreatedAt: timestampPtr(934834834),
+				null:      true,
+			},
+			decoded: &VirtualMachineGroup{
+				null: true,
+			},
+		},
+		{
+			name: "NullVirtualMachineGroup",
+			obj:  NullVirtualMachineGroup,
+			decoded: &VirtualMachineGroup{
+				null: true,
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			testJSONMarshaling(t, tt.obj)
+			testCustomJSONMarshaling(t, tt.obj, tt.decoded)
 		})
 	}
 }
