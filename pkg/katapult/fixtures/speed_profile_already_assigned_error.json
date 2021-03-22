@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "speed_profile_already_assigned",
+    "description": "This network speed profile is already assigned to this virtual machine network interface.",
+    "detail": {}
+  }
+}

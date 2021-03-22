@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "network_speed_profile_not_found",
+    "description": "No network speed profile was found matching any of the criteria provided in the arguments",
+    "detail": {}
+  }
+}

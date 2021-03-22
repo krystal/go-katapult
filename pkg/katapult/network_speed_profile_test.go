@@ -36,6 +36,62 @@ func TestNetworkSpeedProfile_JSONMarshaling(t *testing.T) {
 	}
 }
 
+func TestNetworkSpeedProfile_lookupReference(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *NetworkSpeedProfile
+		want *NetworkSpeedProfile
+	}{
+		{
+			name: "nil",
+			obj:  nil,
+			want: nil,
+		},
+		{
+			name: "empty",
+			obj:  &NetworkSpeedProfile{},
+			want: &NetworkSpeedProfile{},
+		},
+		{
+			name: "full",
+			obj: &NetworkSpeedProfile{
+				ID:                  "nsp_CReSzkaCt01kWoi7",
+				Name:                "1 Gbps",
+				UploadSpeedInMbit:   100,
+				DownloadSpeedInMbit: 1000,
+				Permalink:           "1gbps",
+			},
+			want: &NetworkSpeedProfile{ID: "nsp_CReSzkaCt01kWoi7"},
+		},
+		{
+			name: "no ID",
+			obj: &NetworkSpeedProfile{
+				Name:                "1 Gbps",
+				UploadSpeedInMbit:   100,
+				DownloadSpeedInMbit: 1000,
+				Permalink:           "1gbps",
+			},
+			want: &NetworkSpeedProfile{Permalink: "1gbps"},
+		},
+		{
+			name: "no ID or Permalink",
+			obj: &NetworkSpeedProfile{
+				Name:                "1 Gbps",
+				UploadSpeedInMbit:   100,
+				DownloadSpeedInMbit: 1000,
+			},
+			want: &NetworkSpeedProfile{},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.obj.lookupReference()
+
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}
+
 func Test_networkSpeedProfileResponseBody_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string

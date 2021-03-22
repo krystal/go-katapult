@@ -13,6 +13,19 @@ type NetworkSpeedProfile struct {
 	Permalink           string `json:"permalink,omitempty"`
 }
 
+func (s *NetworkSpeedProfile) lookupReference() *NetworkSpeedProfile {
+	if s == nil {
+		return nil
+	}
+
+	lr := &NetworkSpeedProfile{ID: s.ID}
+	if lr.ID == "" {
+		lr.Permalink = s.Permalink
+	}
+
+	return lr
+}
+
 type networkSpeedProfileResponseBody struct {
 	Pagination           *Pagination            `json:"pagination,omitempty"`
 	NetworkSpeedProfiles []*NetworkSpeedProfile `json:"network_speed_profiles,omitempty"`
