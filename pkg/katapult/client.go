@@ -34,6 +34,7 @@ type Client struct {
 	DiskTemplates                   *DiskTemplatesClient
 	IPAddresses                     *IPAddressesClient
 	LoadBalancers                   *LoadBalancersClient
+	NetworkSpeedProfiles            *NetworkSpeedProfilesClient
 	Networks                        *NetworksClient
 	Organizations                   *OrganizationsClient
 	Tasks                           *TasksClient
@@ -62,6 +63,7 @@ func NewClient(config *Config) (*Client, error) {
 		DiskTemplates:                   newDiskTemplatesClient(ac),
 		IPAddresses:                     newIPAddressesClient(ac),
 		LoadBalancers:                   newLoadBalancersClient(ac),
+		NetworkSpeedProfiles:            newNetworkSpeedProfilesClient(ac),
 		Networks:                        newNetworksClient(ac),
 		Organizations:                   newOrganizationsClient(ac),
 		Tasks:                           newTasksClient(ac),

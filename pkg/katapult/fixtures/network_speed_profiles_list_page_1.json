@@ -1,0 +1,21 @@
+{
+  "pagination": {
+    "current_page": 1,
+    "total_pages": 2,
+    "total": 3,
+    "per_page": 2,
+    "large_set": false
+  },
+  "network_speed_profiles": [
+    {
+      "id": "nsp_H3Mknnus3dtDIbIc",
+      "name": "1 Gbps",
+      "permalink": "1gbps"
+    },
+    {
+      "id": "nsp_m2yvaph9SoMFbupJ",
+      "name": "100 Mbps",
+      "permalink": "100mbps"
+    }
+  ]
+}
