@@ -7,13 +7,14 @@ import (
 )
 
 type VirtualMachineNetworkInterface struct {
-	ID             string          `json:"id,omitempty"`
-	VirtualMachine *VirtualMachine `json:"virtual_machine,omitempty"`
-	Name           string          `json:"name,omitempty"`
-	Network        *Network        `json:"network,omitempty"`
-	MACAddress     string          `json:"mac_address,omitempty"`
-	State          string          `json:"state,omitempty"`
-	IPAddresses    []*IPAddress    `json:"ip_addresses,omitempty"`
+	ID             string               `json:"id,omitempty"`
+	VirtualMachine *VirtualMachine      `json:"virtual_machine,omitempty"`
+	Name           string               `json:"name,omitempty"`
+	Network        *Network             `json:"network,omitempty"`
+	MACAddress     string               `json:"mac_address,omitempty"`
+	State          string               `json:"state,omitempty"`
+	IPAddresses    []*IPAddress         `json:"ip_addresses,omitempty"`
+	SpeedProfile   *NetworkSpeedProfile `json:"speed_profile,omitempty"`
 }
 
 //nolint:lll
@@ -37,6 +38,7 @@ func (s *VirtualMachineNetworkInterface) queryValues() *url.Values {
 
 type virtualMachineNetworkInterfacesResponseBody struct {
 	Pagination                      *Pagination                       `json:"pagination,omitempty"`
+	Task                            *Task                             `json:"task,omitempty"`
 	VirtualMachineNetworkInterface  *VirtualMachineNetworkInterface   `json:"virtual_machine_network_interface,omitempty"`
 	VirtualMachineNetworkInterfaces []*VirtualMachineNetworkInterface `json:"virtual_machine_network_interfaces,omitempty"`
 	IPAddress                       *IPAddress                        `json:"ip_address,omitempty"`
@@ -51,6 +53,11 @@ type virtualMachineNetworkInterfaceAllocateIPRequest struct {
 type virtualMachineNetworkInterfaceAllocateNewIPRequest struct {
 	VirtualMachineNetworkInterface *VirtualMachineNetworkInterface `json:"virtual_machine_network_interface,omitempty"`
 	AddressVersion                 IPVersion                       `json:"address_version,omitempty"`
+}
+
+type virtualMachineNetworkInterfaceUpdateSpeedProfileRequest struct {
+	VirtualMachineNetworkInterface *VirtualMachineNetworkInterface `json:"virtual_machine_network_interface,omitempty"`
+	SpeedProfile                   *NetworkSpeedProfile            `json:"speed_profile,omitempty"`
 }
 
 type VirtualMachineNetworkInterfacesClient struct {
@@ -144,6 +151,24 @@ func (s *VirtualMachineNetworkInterfacesClient) AllocateNewIP(
 	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
 
 	return body.IPAddress, resp, err
+}
+
+func (s *VirtualMachineNetworkInterfacesClient) UpdateSpeedProfile(
+	ctx context.Context,
+	vmnet *VirtualMachineNetworkInterface,
+	speedProfile *NetworkSpeedProfile,
+) (*Task, *Response, error) {
+	u := &url.URL{
+		Path: "virtual_machine_network_interfaces/_/update_speed_profile",
+	}
+	reqBody := &virtualMachineNetworkInterfaceUpdateSpeedProfileRequest{
+		VirtualMachineNetworkInterface: vmnet.lookupReference(),
+		SpeedProfile:                   speedProfile.lookupReference(),
+	}
+
+	body, resp, err := s.doRequest(ctx, "PATCH", u, reqBody)
+
+	return body.Task, resp, err
 }
 
 func (s *VirtualMachineNetworkInterfacesClient) doRequest(

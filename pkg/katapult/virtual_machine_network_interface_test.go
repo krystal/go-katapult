@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"testing"
 
+	"github.com/jimeh/undent"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -23,6 +24,26 @@ var (
 		Detail: json.RawMessage(`{}`),
 	}
 
+	fixtureNetworkSpeedProfileNotFoundErr = "network_speed_profile_not_found: " +
+		"No network speed profile was found matching any of the criteria " +
+		"provided in the arguments"
+	fixtureNetworkSpeedProfileNotFoundResponseError = &ResponseError{
+		Code: "network_speed_profile_not_found",
+		Description: "No network speed profile was found matching any of the " +
+			"criteria provided in the arguments",
+		Detail: json.RawMessage(`{}`),
+	}
+
+	fixtureSpeedProfileAlreadyAssignedNotFoundErr = "speed_profile_already_assigned: " +
+		"This network speed profile is already assigned to this virtual " +
+		"machine network interface."
+	fixtureSpeedProfileAlreadyAssignedNotFoundResponseError = &ResponseError{
+		Code: "speed_profile_already_assigned",
+		Description: "This network speed profile is already assigned to this " +
+			"virtual machine network interface.",
+		Detail: json.RawMessage(`{}`),
+	}
+
 	fixtureVirtualMachineNetworkInterfaceFull = &VirtualMachineNetworkInterface{
 		ID:             "vmnet_Qlu34yEQgkrIlzql",
 		VirtualMachine: &VirtualMachine{ID: "vm_i5qfOrvEI1CmNrJx"},
@@ -31,6 +52,11 @@ var (
 		MACAddress:     "ab:cd:ef:12:34:56",
 		State:          "attached",
 		IPAddresses:    []*IPAddress{{ID: "ip_7S6uoasz4jM5mkMs"}},
+		SpeedProfile: &NetworkSpeedProfile{
+			ID:        "nsp_H3Mknnus3dtDIbIc",
+			Name:      "1 Gbps",
+			Permalink: "1gbps",
+		},
 	}
 	fixtureVirtualMachineNetworkInterfaceNoID = &VirtualMachineNetworkInterface{
 		VirtualMachine: fixtureVirtualMachineNetworkInterfaceFull.VirtualMachine,
@@ -128,7 +154,9 @@ func TestVirtualMachineNetworkInterface_queryValues(t *testing.T) {
 	}
 }
 
-func Test_virtualMachineNetworkInterfacesResponseBody_JSONMarshaling(t *testing.T) { //nolint:lll
+func Test_virtualMachineNetworkInterfacesResponseBody_JSONMarshaling(
+	t *testing.T,
+) {
 	tests := []struct {
 		name string
 		obj  *virtualMachineNetworkInterfacesResponseBody
@@ -150,6 +178,102 @@ func Test_virtualMachineNetworkInterfacesResponseBody_JSONMarshaling(t *testing.
 				},
 				IPAddress:   &IPAddress{ID: "id3"},
 				IPAddresses: []*IPAddress{{ID: "id4"}},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func Test_virtualMachineNetworkInterfaceAllocateIPRequest_JSONMarshaling(
+	t *testing.T,
+) {
+	tests := []struct {
+		name string
+		obj  *virtualMachineNetworkInterfaceAllocateIPRequest
+	}{
+		{
+			name: "empty",
+			obj:  &virtualMachineNetworkInterfaceAllocateIPRequest{},
+		},
+		{
+			name: "full",
+			obj: &virtualMachineNetworkInterfaceAllocateIPRequest{
+				VirtualMachineNetworkInterface: &VirtualMachineNetworkInterface{
+					ID: "id1",
+				},
+				IPAddress: &IPAddress{ID: "id3"},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func Test_virtualMachineNetworkInterfaceAllocateNewIPRequest_JSONMarshaling(
+	t *testing.T,
+) {
+	tests := []struct {
+		name string
+		obj  *virtualMachineNetworkInterfaceAllocateNewIPRequest
+	}{
+		{
+			name: "empty",
+			obj:  &virtualMachineNetworkInterfaceAllocateNewIPRequest{},
+		},
+		{
+			name: "ipv4",
+			obj: &virtualMachineNetworkInterfaceAllocateNewIPRequest{
+				VirtualMachineNetworkInterface: &VirtualMachineNetworkInterface{
+					ID: "id1",
+				},
+				AddressVersion: IPv4,
+			},
+		},
+		{
+			name: "ipv6",
+			obj: &virtualMachineNetworkInterfaceAllocateNewIPRequest{
+				VirtualMachineNetworkInterface: &VirtualMachineNetworkInterface{
+					ID: "id1",
+				},
+				AddressVersion: IPv6,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+//nolint:lll
+func Test_virtualMachineNetworkInterfaceUpdateSpeedProfileRequest_JSONMarshaling(
+	t *testing.T,
+) {
+	tests := []struct {
+		name string
+		obj  *virtualMachineNetworkInterfaceUpdateSpeedProfileRequest
+	}{
+		{
+			name: "empty",
+			obj:  &virtualMachineNetworkInterfaceUpdateSpeedProfileRequest{},
+		},
+		{
+			name: "full",
+			obj: &virtualMachineNetworkInterfaceUpdateSpeedProfileRequest{
+				VirtualMachineNetworkInterface: &VirtualMachineNetworkInterface{
+					ID: "id1",
+				},
+				SpeedProfile: &NetworkSpeedProfile{
+					ID: "id2",
+				},
 			},
 		},
 	}
@@ -1009,6 +1133,238 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateNewIP(t *testing.T) {
 
 			got, resp, err := c.VirtualMachineNetworkInterfaces.AllocateNewIP(
 				tt.args.ctx, tt.args.vmnet, tt.args.ipVer,
+			)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
+	t *testing.T,
+) {
+	taskResponseBody := undent.Bytes(`
+		{
+			"task": {
+				"id": "task_bdhDJgeDWM0SPskh",
+				"name": "Change network interface speed profile",
+				"status": "completed"
+			}
+		}`,
+	)
+
+	type args struct {
+		ctx          context.Context
+		vmnet        *VirtualMachineNetworkInterface
+		speedProfile *NetworkSpeedProfile
+	}
+	tests := []struct {
+		name        string
+		args        args
+		wantReqBody *virtualMachineNetworkInterfaceUpdateSpeedProfileRequest
+		want        *Task
+		errStr      string
+		errResp     *ResponseError
+		respStatus  int
+		respBody    []byte
+	}{
+		{
+			name: "by NetworkSpeedProfile ID",
+			args: args{
+				ctx: context.Background(),
+				vmnet: &VirtualMachineNetworkInterface{
+					ID: "vmnet_olNAz8ThH0emHvdr",
+				},
+				speedProfile: &NetworkSpeedProfile{
+					ID:                  "nsp_CReSzkaCt01kWoi7",
+					Name:                "1 Gbps",
+					UploadSpeedInMbit:   100,
+					DownloadSpeedInMbit: 1000,
+					Permalink:           "1gbps",
+				},
+			},
+			//nolint:lll
+			wantReqBody: &virtualMachineNetworkInterfaceUpdateSpeedProfileRequest{
+				VirtualMachineNetworkInterface: &VirtualMachineNetworkInterface{
+					ID: "vmnet_olNAz8ThH0emHvdr",
+				},
+				SpeedProfile: &NetworkSpeedProfile{
+					ID: "nsp_CReSzkaCt01kWoi7",
+				},
+			},
+			want: &Task{
+				ID:     "task_bdhDJgeDWM0SPskh",
+				Name:   "Change network interface speed profile",
+				Status: "completed",
+			},
+			respStatus: http.StatusOK,
+			respBody:   taskResponseBody,
+		},
+		{
+			name: "by NetworkSpeedProfile Permalink",
+			args: args{
+				ctx: context.Background(),
+				vmnet: &VirtualMachineNetworkInterface{
+					ID: "vmnet_olNAz8ThH0emHvdr",
+				},
+				speedProfile: &NetworkSpeedProfile{
+					Name:                "1 Gbps",
+					UploadSpeedInMbit:   100,
+					DownloadSpeedInMbit: 1000,
+					Permalink:           "1gbps",
+				},
+			},
+			//nolint:lll
+			wantReqBody: &virtualMachineNetworkInterfaceUpdateSpeedProfileRequest{
+				VirtualMachineNetworkInterface: &VirtualMachineNetworkInterface{
+					ID: "vmnet_olNAz8ThH0emHvdr",
+				},
+				SpeedProfile: &NetworkSpeedProfile{
+					Permalink: "1gbps",
+				},
+			},
+			want: &Task{
+				ID:     "task_bdhDJgeDWM0SPskh",
+				Name:   "Change network interface speed profile",
+				Status: "completed",
+			},
+			respStatus: http.StatusOK,
+			respBody:   taskResponseBody,
+		},
+		{
+			name: "non-existent virtual machine network interface",
+			args: args{
+				ctx: context.Background(),
+				vmnet: &VirtualMachineNetworkInterface{
+					ID: "vmnet_nopethisbegone",
+				},
+				speedProfile: &NetworkSpeedProfile{
+					ID: "nsp_CReSzkaCt01kWoi7",
+				},
+			},
+			errStr:     fixtureVMNetworkInterfaceNotFoundErr,
+			errResp:    fixtureVMNetworkInterfaceNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody: fixture(
+				"virtual_machine_network_interface_not_found_error",
+			),
+		},
+		{
+			name: "non-existent speed profile",
+			args: args{
+				ctx: context.Background(),
+				vmnet: &VirtualMachineNetworkInterface{
+					ID: "vmnet_olNAz8ThH0emHvdr",
+				},
+				speedProfile: &NetworkSpeedProfile{
+					ID: "nsp_iRIhTnddeHCK9ZBj",
+				},
+			},
+			errStr:     fixtureNetworkSpeedProfileNotFoundErr,
+			errResp:    fixtureNetworkSpeedProfileNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("network_speed_profile_not_found_error"),
+		},
+		{
+			name: "speed profile already assigned",
+			args: args{
+				ctx: context.Background(),
+				vmnet: &VirtualMachineNetworkInterface{
+					ID: "vmnet_olNAz8ThH0emHvdr",
+				},
+				speedProfile: &NetworkSpeedProfile{
+					ID: "nsp_iRIhTnddeHCK9ZBj",
+				},
+			},
+			errStr:     fixtureSpeedProfileAlreadyAssignedNotFoundErr,
+			errResp:    fixtureSpeedProfileAlreadyAssignedNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("speed_profile_already_assigned_error"),
+		},
+		{
+			name: "task queueing error",
+			args: args{
+				ctx: context.Background(),
+				vmnet: &VirtualMachineNetworkInterface{
+					ID: "vmnet_olNAz8ThH0emHvdr",
+				},
+				speedProfile: &NetworkSpeedProfile{
+					ID: "nsp_iRIhTnddeHCK9ZBj",
+				},
+			},
+			errStr:     fixtureTaskQueueingErrorErr,
+			errResp:    fixtureTaskQueueingErrorResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("task_queueing_error"),
+		},
+		{
+			name: "nil virtual machine network interface",
+			args: args{
+				ctx:   context.Background(),
+				vmnet: nil,
+			},
+			errStr:     fixtureValidationErrorErr,
+			errResp:    fixtureValidationErrorResponseError,
+			respStatus: http.StatusUnprocessableEntity,
+			respBody:   fixture("validation_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx: nil,
+				vmnet: &VirtualMachineNetworkInterface{
+					ID: "vmnet_olNAz8ThH0emHvdr",
+				},
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, mux, _, teardown := prepareTestClient()
+			defer teardown()
+
+			mux.HandleFunc(
+				"/core/v1/virtual_machine_network_interfaces/"+
+					"_/update_speed_profile",
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "PATCH", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					if tt.wantReqBody != nil {
+						//nolint:lll
+						reqBody :=
+							&virtualMachineNetworkInterfaceUpdateSpeedProfileRequest{}
+						err := strictUmarshal(r.Body, reqBody)
+						assert.NoError(t, err)
+						assert.Equal(t, tt.wantReqBody, reqBody)
+					}
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			//nolint:lll
+			got, resp, err := c.VirtualMachineNetworkInterfaces.UpdateSpeedProfile(
+				tt.args.ctx, tt.args.vmnet, tt.args.speedProfile,
 			)
 
 			if tt.respStatus != 0 {
