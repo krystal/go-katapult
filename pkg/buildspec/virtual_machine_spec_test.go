@@ -258,6 +258,28 @@ func TestVirtualMachineSpec_ToFromJSON(t *testing.T) {
 			)
 		})
 	}
+	for _, tt := range tests {
+		t.Run(tt.name+".indented", func(t *testing.T) {
+			marshaled, err := tt.spec.JSONIndent("    ", "  ")
+			require.NoError(t, err, "failed marshaling with JSONIndent()")
+
+			if golden.Update() {
+				golden.Set(t, marshaled)
+			}
+
+			g := golden.Get(t)
+			assert.Equal(t, string(g), string(marshaled),
+				"json encoded value does not match golden",
+			)
+
+			r := bytes.NewReader(g)
+			got, err := FromJSON(r)
+			require.NoError(t, err, "json decoding golden failed")
+			assert.Equal(t, tt.spec, got,
+				"json decoding from golden does not match expected object",
+			)
+		})
+	}
 }
 
 func TestVirtualMachineSpec_WriteJSON_Error(t *testing.T) {
@@ -297,6 +319,28 @@ func TestVirtualMachineSpec_ToFromXML(t *testing.T) {
 			assert.Equal(t, string(marshaled), buf.String(),
 				"output of WriteXML() does not match that of XML()",
 			)
+
+			if golden.Update() {
+				golden.Set(t, marshaled)
+			}
+
+			g := golden.Get(t)
+			assert.Equal(t, string(g), string(marshaled),
+				"xml encoded value does not match golden",
+			)
+
+			r := bytes.NewReader(g)
+			got, err := FromXML(r)
+			require.NoError(t, err, "xml decoding golden failed")
+			assert.Equal(t, tt.spec, got,
+				"xml decoding from golden does not match expected object",
+			)
+		})
+	}
+	for _, tt := range tests {
+		t.Run(tt.name+".indented", func(t *testing.T) {
+			marshaled, err := tt.spec.XMLIndent("    ", "  ")
+			require.NoError(t, err, "failed marshaling with XMLIndent()")
 
 			if golden.Update() {
 				golden.Set(t, marshaled)
