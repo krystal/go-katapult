@@ -7,6 +7,32 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestDefaultListDuplicates(t *testing.T) {
+	defaults := []map[string][]string{DefaultAdjectives, DefaultNouns}
+	counts := map[string]int{}
+
+	for _, cat := range defaults {
+		for _, words := range cat {
+			for _, word := range words {
+				if _, ok := counts[word]; !ok {
+					counts[word] = 1
+				} else {
+					counts[word]++
+				}
+			}
+		}
+	}
+
+	dupes := []string{}
+	for w, n := range counts {
+		if n > 1 {
+			dupes = append(dupes, w)
+		}
+	}
+
+	assert.Empty(t, dupes, "words should not be repeated")
+}
+
 func TestNameGenerator_RandomHostname(t *testing.T) {
 	g := New(DefaultAdjectives, DefaultNouns)
 
