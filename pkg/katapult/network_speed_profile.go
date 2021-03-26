@@ -55,6 +55,7 @@ func (s *NetworkSpeedProfilesClient) List(
 	}
 
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	resp.Pagination = body.Pagination
 
 	return body.NetworkSpeedProfiles, resp, err
 }

@@ -131,14 +131,15 @@ func TestNetworkSpeedTestsClient_List(t *testing.T) {
 		opts *ListOptions
 	}
 	tests := []struct {
-		name       string
-		args       args
-		want       []*NetworkSpeedProfile
-		wantQuery  *url.Values
-		errStr     string
-		errResp    *ResponseError
-		respStatus int
-		respBody   []byte
+		name           string
+		args           args
+		want           []*NetworkSpeedProfile
+		wantQuery      *url.Values
+		wantPagination *Pagination
+		errStr         string
+		errResp        *ResponseError
+		respStatus     int
+		respBody       []byte
 	}{
 		{
 			name: "by organization ID",
@@ -165,6 +166,13 @@ func TestNetworkSpeedTestsClient_List(t *testing.T) {
 			},
 			wantQuery: &url.Values{
 				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
+			},
+			wantPagination: &Pagination{
+				CurrentPage: 1,
+				TotalPages:  1,
+				Total:       3,
+				PerPage:     30,
+				LargeSet:    false,
 			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("network_speed_profiles_list"),
@@ -195,6 +203,13 @@ func TestNetworkSpeedTestsClient_List(t *testing.T) {
 			wantQuery: &url.Values{
 				"organization[sub_domain]": []string{"acme"},
 			},
+			wantPagination: &Pagination{
+				CurrentPage: 1,
+				TotalPages:  1,
+				Total:       3,
+				PerPage:     30,
+				LargeSet:    false,
+			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("network_speed_profiles_list"),
 		},
@@ -222,6 +237,13 @@ func TestNetworkSpeedTestsClient_List(t *testing.T) {
 				"page":             []string{"1"},
 				"per_page":         []string{"2"},
 			},
+			wantPagination: &Pagination{
+				CurrentPage: 1,
+				TotalPages:  2,
+				Total:       3,
+				PerPage:     2,
+				LargeSet:    false,
+			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("network_speed_profiles_list_page_1"),
 		},
@@ -243,6 +265,13 @@ func TestNetworkSpeedTestsClient_List(t *testing.T) {
 				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
 				"page":             []string{"2"},
 				"per_page":         []string{"2"},
+			},
+			wantPagination: &Pagination{
+				CurrentPage: 2,
+				TotalPages:  2,
+				Total:       3,
+				PerPage:     2,
+				LargeSet:    false,
 			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("network_speed_profiles_list_page_2"),
@@ -341,6 +370,10 @@ func TestNetworkSpeedTestsClient_List(t *testing.T) {
 
 			if tt.want != nil {
 				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.wantPagination != nil {
+				assert.Equal(t, tt.wantPagination, resp.Pagination)
 			}
 
 			if tt.errResp != nil {
