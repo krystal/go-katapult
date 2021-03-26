@@ -3,6 +3,7 @@ package katapult
 import (
 	"context"
 	"net/url"
+	"strings"
 )
 
 type NetworkSpeedProfile struct {
@@ -11,6 +12,20 @@ type NetworkSpeedProfile struct {
 	UploadSpeedInMbit   int    `json:"upload_speed_in_mbit,omitempty"`
 	DownloadSpeedInMbit int    `json:"download_speed_in_mbit,omitempty"`
 	Permalink           string `json:"permalink,omitempty"`
+}
+
+// NewNetworkSpeedProfileLookup takes a string that is a NetworkSpeedProfile ID
+// or Permalink, returning a empty *NetworkSpeedProfile struct with either the
+// ID or Permalink field populated with the given value. This struct is suitable
+// as input to other methods which accept a *NetworkSpeedProfile as input.
+func NewNetworkSpeedProfileLookup(
+	idOrPermalink string,
+) (lr *NetworkSpeedProfile, f FieldName) {
+	if strings.HasPrefix(idOrPermalink, "nsp_") {
+		return &NetworkSpeedProfile{ID: idOrPermalink}, IDField
+	}
+
+	return &NetworkSpeedProfile{Permalink: idOrPermalink}, PermalinkField
 }
 
 func (s *NetworkSpeedProfile) lookupReference() *NetworkSpeedProfile {
