@@ -36,6 +36,51 @@ func TestNetworkSpeedProfile_JSONMarshaling(t *testing.T) {
 	}
 }
 
+func TestNewNetworkSpeedProfileLookup(t *testing.T) {
+	type args struct {
+		idOrPermalink string
+	}
+	tests := []struct {
+		name  string
+		args  args
+		want  *NetworkSpeedProfile
+		field FieldName
+	}{
+		{
+			name:  "empty string",
+			args:  args{idOrPermalink: ""},
+			want:  &NetworkSpeedProfile{},
+			field: PermalinkField,
+		},
+		{
+			name:  "nsp_ prefixed ID",
+			args:  args{idOrPermalink: "nsp_wEyUfJ74ZQu2KmZr"},
+			want:  &NetworkSpeedProfile{ID: "nsp_wEyUfJ74ZQu2KmZr"},
+			field: IDField,
+		},
+		{
+			name:  "permalink",
+			args:  args{idOrPermalink: "10gbps"},
+			want:  &NetworkSpeedProfile{Permalink: "10gbps"},
+			field: PermalinkField,
+		},
+		{
+			name:  "random text",
+			args:  args{idOrPermalink: "kKAvlqM1FVEn3NAG"},
+			want:  &NetworkSpeedProfile{Permalink: "kKAvlqM1FVEn3NAG"},
+			field: PermalinkField,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, field := NewNetworkSpeedProfileLookup(tt.args.idOrPermalink)
+
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.field, field)
+		})
+	}
+}
+
 func TestNetworkSpeedProfile_lookupReference(t *testing.T) {
 	tests := []struct {
 		name string
