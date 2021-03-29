@@ -40,12 +40,13 @@ func (s *VirtualMachineSpec) JSON() ([]byte, error) {
 
 // JSONIndent returns the build spec in JSON format as a byte slice.
 func (s *VirtualMachineSpec) JSONIndent(prefix, indent string) ([]byte, error) {
-	b, err := json.MarshalIndent(s, prefix, indent)
-	if err != nil {
-		return nil, err
-	}
+	buf := &bytes.Buffer{}
+	enc := json.NewEncoder(buf)
+	enc.SetIndent(prefix, indent)
 
-	return b, nil
+	err := enc.Encode(s)
+
+	return buf.Bytes(), err
 }
 
 // WriteJSON writes the build spec in JSON format to given io.Writer.
@@ -65,12 +66,13 @@ func (s *VirtualMachineSpec) XML() ([]byte, error) {
 
 // XMLIndent returns the build spec in XML format as a byte slice.
 func (s *VirtualMachineSpec) XMLIndent(prefix, indent string) ([]byte, error) {
-	b, err := xml.MarshalIndent(s, prefix, indent)
-	if err != nil {
-		return nil, err
-	}
+	buf := &bytes.Buffer{}
+	enc := xml.NewEncoder(buf)
+	enc.Indent(prefix, indent)
 
-	return b, nil
+	err := enc.Encode(s)
+
+	return buf.Bytes(), err
 }
 
 // WriteXML writes the build spec in XML format to given io.Writer.
