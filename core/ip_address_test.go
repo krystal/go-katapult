@@ -8,7 +8,6 @@ import (
 	"testing"
 
 	"github.com/krystal/go-katapult"
-
 	"github.com/stretchr/testify/assert"
 )
 
@@ -680,6 +679,7 @@ func TestIPAddressesClient_Get(t *testing.T) {
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewIPAddressesClient(rm)
+
 			mux.HandleFunc(
 				"/core/v1/ip_addresses/_",
 				func(w http.ResponseWriter, r *http.Request) {

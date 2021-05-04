@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	"github.com/krystal/go-katapult/internal/test"
-
 	"github.com/stretchr/testify/assert"
 )
 

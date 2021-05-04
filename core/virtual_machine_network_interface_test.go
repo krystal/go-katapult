@@ -8,9 +8,8 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/krystal/go-katapult"
-
 	"github.com/jimeh/undent"
+	"github.com/krystal/go-katapult"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -699,6 +698,7 @@ func TestVirtualMachineNetworkInterfacesClient_AvailableIPs(t *testing.T) {
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachineNetworkInterfacesClient(rm)
+
 			mux.HandleFunc(
 				fmt.Sprintf(
 					"/core/v1/virtual_machine_network_interfaces"+
@@ -922,6 +922,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachineNetworkInterfacesClient(rm)
+
 			mux.HandleFunc(
 				"/core/v1/virtual_machine_network_interfaces/_/allocate_ip",
 				func(w http.ResponseWriter, r *http.Request) {
@@ -1114,6 +1115,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateNewIP(t *testing.T) {
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachineNetworkInterfacesClient(rm)
+
 			mux.HandleFunc(
 				"/core/v1/virtual_machine_network_interfaces/_/allocate_new_ip",
 				func(w http.ResponseWriter, r *http.Request) {
@@ -1344,6 +1346,7 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachineNetworkInterfacesClient(rm)
+
 			mux.HandleFunc(
 				"/core/v1/virtual_machine_network_interfaces/"+
 					"_/update_speed_profile",

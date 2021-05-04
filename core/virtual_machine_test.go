@@ -9,7 +9,6 @@ import (
 
 	"github.com/krystal/go-katapult"
 	"github.com/krystal/go-katapult/internal/test"
-
 	"github.com/stretchr/testify/assert"
 )
 
@@ -571,6 +570,7 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinesClient(rm)
+
 			mux.HandleFunc(
 				"/core/v1/organizations/_/virtual_machines",
 				func(w http.ResponseWriter, r *http.Request) {
@@ -704,6 +704,7 @@ func TestVirtualMachinesClient_Get(t *testing.T) {
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinesClient(rm)
+
 			mux.HandleFunc(
 				"/core/v1/virtual_machines/_",
 				func(w http.ResponseWriter, r *http.Request) {
@@ -809,6 +810,7 @@ func TestVirtualMachinesClient_GetByID(t *testing.T) {
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinesClient(rm)
+
 			mux.HandleFunc(
 				"/core/v1/virtual_machines/_",
 				func(w http.ResponseWriter, r *http.Request) {
@@ -913,6 +915,7 @@ func TestVirtualMachinesClient_GetByFQDN(t *testing.T) {
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinesClient(rm)
+
 			mux.HandleFunc(
 				"/core/v1/virtual_machines/_",
 				func(w http.ResponseWriter, r *http.Request) {
@@ -1213,6 +1216,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinesClient(rm)
+
 			mux.HandleFunc(
 				"/core/v1/virtual_machines/_/package",
 				func(w http.ResponseWriter, r *http.Request) {
@@ -1407,6 +1411,7 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinesClient(rm)
+
 			mux.HandleFunc(
 				"/core/v1/virtual_machines/_",
 				func(w http.ResponseWriter, r *http.Request) {
@@ -1545,6 +1550,7 @@ func TestVirtualMachinesClient_Delete(t *testing.T) {
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinesClient(rm)
+
 			mux.HandleFunc(
 				"/core/v1/virtual_machines/_",
 				func(w http.ResponseWriter, r *http.Request) {
@@ -1684,6 +1690,7 @@ func TestVirtualMachinesClient_Start(t *testing.T) {
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinesClient(rm)
+
 			mux.HandleFunc(
 				"/core/v1/virtual_machines/_/start",
 				func(w http.ResponseWriter, r *http.Request) {
@@ -1821,6 +1828,7 @@ func TestVirtualMachinesClient_Stop(t *testing.T) {
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinesClient(rm)
+
 			mux.HandleFunc(
 				"/core/v1/virtual_machines/_/stop",
 				func(w http.ResponseWriter, r *http.Request) {
@@ -1958,6 +1966,7 @@ func TestVirtualMachinesClient_Shutdown(t *testing.T) {
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinesClient(rm)
+
 			mux.HandleFunc(
 				"/core/v1/virtual_machines/_/shutdown",
 				func(w http.ResponseWriter, r *http.Request) {
@@ -2095,6 +2104,7 @@ func TestVirtualMachinesClient_Reset(t *testing.T) {
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinesClient(rm)
+
 			mux.HandleFunc(
 				"/core/v1/virtual_machines/_/reset",
 				func(w http.ResponseWriter, r *http.Request) {

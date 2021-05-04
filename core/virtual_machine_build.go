@@ -6,7 +6,7 @@ import (
 	"net/url"
 
 	"github.com/krystal/go-katapult"
-	buildspec2 "github.com/krystal/go-katapult/buildspec"
+	"github.com/krystal/go-katapult/buildspec"
 
 	"github.com/augurysys/timestamp"
 )
@@ -123,7 +123,7 @@ func (s *VirtualMachineBuildsClient) Create(
 func (s *VirtualMachineBuildsClient) CreateFromSpec(
 	ctx context.Context,
 	org *Organization,
-	spec *buildspec2.VirtualMachineSpec,
+	spec *buildspec.VirtualMachineSpec,
 ) (*VirtualMachineBuild, *katapult.Response, error) {
 	specXML, _ := spec.XML()
 
