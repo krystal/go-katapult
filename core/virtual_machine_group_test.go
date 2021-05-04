@@ -411,6 +411,7 @@ func TestVirtualMachineGroupsClient_Get(t *testing.T) {
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachineGroupsClient(rm)
+
 			mux.HandleFunc(
 				fmt.Sprintf(
 					"/core/v1/virtual_machine_groups/%s",
@@ -517,6 +518,7 @@ func TestVirtualMachineGroupsClient_GetByID(t *testing.T) {
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachineGroupsClient(rm)
+
 			mux.HandleFunc(
 				fmt.Sprintf(
 					"/core/v1/virtual_machine_groups/%s",
@@ -703,6 +705,7 @@ func TestVirtualMachineGroupsClient_Create(t *testing.T) {
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachineGroupsClient(rm)
+
 			mux.HandleFunc(
 				"/core/v1/organizations/_/virtual_machine_groups",
 				func(w http.ResponseWriter, r *http.Request) {
@@ -857,6 +860,7 @@ func TestVirtualMachineGroupsClient_Update(t *testing.T) {
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachineGroupsClient(rm)
+
 			mux.HandleFunc(
 				"/core/v1/virtual_machine_groups/_",
 				func(w http.ResponseWriter, r *http.Request) {
@@ -974,6 +978,7 @@ func TestVirtualMachineGroupsClient_Delete(t *testing.T) {
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachineGroupsClient(rm)
+
 			mux.HandleFunc(
 				"/core/v1/virtual_machine_groups/_",
 				func(w http.ResponseWriter, r *http.Request) {

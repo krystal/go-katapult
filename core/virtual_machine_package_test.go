@@ -548,6 +548,7 @@ func TestVirtualMachinePackagesClient_GetByID(t *testing.T) {
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinePackagesClient(rm)
+
 			mux.HandleFunc(
 				fmt.Sprintf("/core/v1/virtual_machine_packages/%s", tt.args.id),
 				func(w http.ResponseWriter, r *http.Request) {
@@ -644,6 +645,7 @@ func TestVirtualMachinePackagesClient_GetByPermalink(t *testing.T) {
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinePackagesClient(rm)
+
 			mux.HandleFunc(
 				"/core/v1/virtual_machine_packages/_",
 				func(w http.ResponseWriter, r *http.Request) {

@@ -397,6 +397,7 @@ func TestVirtualMachineBuildsClient_GetByID(t *testing.T) {
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachineBuildsClient(rm)
+
 			mux.HandleFunc(
 				fmt.Sprintf("/core/v1/virtual_machines/builds/%s", tt.args.id),
 				func(w http.ResponseWriter, r *http.Request) {
@@ -743,6 +744,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachineBuildsClient(rm)
+
 			mux.HandleFunc(
 				"/core/v1/organizations/_/virtual_machines/build",
 				func(w http.ResponseWriter, r *http.Request) {
@@ -942,6 +944,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpec(t *testing.T) {
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachineBuildsClient(rm)
+
 			mux.HandleFunc(
 				"/core/v1/organizations/_/virtual_machines/build_from_spec",
 				func(w http.ResponseWriter, r *http.Request) {
@@ -1142,6 +1145,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpecXML(t *testing.T) {
 			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachineBuildsClient(rm)
+
 			mux.HandleFunc(
 				"/core/v1/organizations/_/virtual_machines/build_from_spec",
 				func(w http.ResponseWriter, r *http.Request) {
