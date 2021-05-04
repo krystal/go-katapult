@@ -27,7 +27,8 @@ type Client struct {
 	VirtualMachines                 *VirtualMachinesClient
 }
 
-// RequestMaker represents something that the API Clients can use to create and submit a request.
+// RequestMaker represents something that the API Clients can use to create
+// and submit a request.
 type RequestMaker interface {
 	Do(req *http.Request, v interface{}) (*katapult.Response, error)
 	NewRequestWithContext(
