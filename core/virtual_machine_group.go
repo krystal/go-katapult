@@ -5,8 +5,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/krystal/go-katapult"
 	"net/url"
+
+	"github.com/krystal/go-katapult"
 
 	"github.com/augurysys/timestamp"
 )

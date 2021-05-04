@@ -3,11 +3,11 @@ package core
 import (
 	"context"
 	"encoding/json"
-	"github.com/krystal/go-katapult"
-	"github.com/krystal/go-katapult/internal/test"
 	"net/http"
 	"net/url"
 	"testing"
+
+	"github.com/krystal/go-katapult"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -385,7 +385,7 @@ func TestTrashObjectsClient_List(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewTrashObjectsClient(rm)
 
@@ -521,7 +521,7 @@ func TestTrashObjectsClient_Get(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewTrashObjectsClient(rm)
 
@@ -628,7 +628,7 @@ func TestTrashObjectsClient_GetByID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewTrashObjectsClient(rm)
 
@@ -735,7 +735,7 @@ func TestTrashObjectsClient_GetByObjectID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewTrashObjectsClient(rm)
 
@@ -877,7 +877,7 @@ func TestTrashObjectsClient_Purge(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewTrashObjectsClient(rm)
 
@@ -1017,7 +1017,7 @@ func TestTrashObjectsClient_PurgeAll(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewTrashObjectsClient(rm)
 
@@ -1159,7 +1159,7 @@ func TestTrashObjectsClient_Restore(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewTrashObjectsClient(rm)
 

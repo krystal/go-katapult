@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/krystal/go-katapult"
+
 	"github.com/stretchr/testify/assert"
 )
 

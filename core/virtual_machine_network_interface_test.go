@@ -4,11 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/krystal/go-katapult"
-	"github.com/krystal/go-katapult/internal/test"
 	"net/http"
 	"net/url"
 	"testing"
+
+	"github.com/krystal/go-katapult"
 
 	"github.com/jimeh/undent"
 	"github.com/stretchr/testify/assert"
@@ -453,7 +453,7 @@ func TestVirtualMachineNetworkInterfacesClient_List(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachineNetworkInterfacesClient(rm)
 
@@ -557,7 +557,7 @@ func TestVirtualMachineNetworkInterfacesClient_Get(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachineNetworkInterfacesClient(rm)
 
@@ -696,7 +696,7 @@ func TestVirtualMachineNetworkInterfacesClient_AvailableIPs(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachineNetworkInterfacesClient(rm)
 			mux.HandleFunc(
@@ -919,7 +919,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachineNetworkInterfacesClient(rm)
 			mux.HandleFunc(
@@ -1111,7 +1111,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateNewIP(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachineNetworkInterfacesClient(rm)
 			mux.HandleFunc(
@@ -1341,7 +1341,7 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachineNetworkInterfacesClient(rm)
 			mux.HandleFunc(

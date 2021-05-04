@@ -4,11 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/krystal/go-katapult"
-	"github.com/krystal/go-katapult/internal/test"
 	"net/http"
 	"net/url"
 	"testing"
+
+	"github.com/krystal/go-katapult"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -343,7 +343,7 @@ func Test_dnsZoneResponseBody_JSONMarshaling(t *testing.T) {
 		{
 			name: "full",
 			obj: &dnsZoneResponseBody{
-				Pagination: &Pagination{CurrentPage: 934},
+				Pagination: &katapult.Pagination{CurrentPage: 934},
 				DNSZones:   []*DNSZone{{ID: "id1"}},
 				DNSZone:    &DNSZone{ID: "id2"},
 				VerificationDetails: &DNSZoneVerificationDetails{
@@ -405,7 +405,7 @@ func TestDNSZonesClient_List(t *testing.T) {
 			wantQuery: &url.Values{
 				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
 			},
-			wantPagination: &Pagination{
+			wantPagination: &katapult.Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
 				Total:       3,
@@ -425,7 +425,7 @@ func TestDNSZonesClient_List(t *testing.T) {
 			wantQuery: &url.Values{
 				"organization[sub_domain]": []string{"acme"},
 			},
-			wantPagination: &Pagination{
+			wantPagination: &katapult.Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
 				Total:       3,
@@ -448,7 +448,7 @@ func TestDNSZonesClient_List(t *testing.T) {
 				"page":             []string{"1"},
 				"per_page":         []string{"2"},
 			},
-			wantPagination: &Pagination{
+			wantPagination: &katapult.Pagination{
 				CurrentPage: 1,
 				TotalPages:  2,
 				Total:       3,
@@ -471,7 +471,7 @@ func TestDNSZonesClient_List(t *testing.T) {
 				"page":             []string{"2"},
 				"per_page":         []string{"2"},
 			},
-			wantPagination: &Pagination{
+			wantPagination: &katapult.Pagination{
 				CurrentPage: 2,
 				TotalPages:  2,
 				Total:       3,
@@ -547,8 +547,9 @@ func TestDNSZonesClient_List(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
+			c := NewDNSZonesClient(rm)
 
 			mux.HandleFunc(
 				"/core/v1/organizations/_/dns/zones",
@@ -569,7 +570,7 @@ func TestDNSZonesClient_List(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.DNSZones.List(
+			got, resp, err := c.List(
 				tt.args.ctx, tt.args.org, tt.args.opts,
 			)
 
@@ -661,9 +662,9 @@ func TestDNSZonesClient_Get(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
-
+			c := NewDNSZonesClient(rm)
 			path := fmt.Sprintf("dns/zones/%s", tt.args.idOrName)
 			if tt.reqPath != "" {
 				path = tt.reqPath
@@ -685,7 +686,7 @@ func TestDNSZonesClient_Get(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.DNSZones.Get(tt.args.ctx, tt.args.idOrName)
+			got, resp, err := c.Get(tt.args.ctx, tt.args.idOrName)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -754,9 +755,9 @@ func TestDNSZonesClient_GetByID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
-
+			c := NewDNSZonesClient(rm)
 			mux.HandleFunc(fmt.Sprintf("/core/v1/dns/zones/%s", tt.args.id),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
@@ -768,7 +769,7 @@ func TestDNSZonesClient_GetByID(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.DNSZones.GetByID(tt.args.ctx, tt.args.id)
+			got, resp, err := c.GetByID(tt.args.ctx, tt.args.id)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -837,9 +838,9 @@ func TestDNSZonesClient_GetByName(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
-
+			c := NewDNSZonesClient(rm)
 			mux.HandleFunc("/core/v1/dns/zones/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
@@ -854,7 +855,7 @@ func TestDNSZonesClient_GetByName(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.DNSZones.GetByName(tt.args.ctx, tt.args.name)
+			got, resp, err := c.GetByName(tt.args.ctx, tt.args.name)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -1059,9 +1060,9 @@ func TestDNSZonesClient_Create(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
-
+			c := NewDNSZonesClient(rm)
 			mux.HandleFunc(
 				"/core/v1/organizations/_/dns/zones",
 				func(w http.ResponseWriter, r *http.Request) {
@@ -1081,7 +1082,7 @@ func TestDNSZonesClient_Create(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.DNSZones.Create(
+			got, resp, err := c.Create(
 				tt.args.ctx, tt.args.org, tt.args.zoneArgs,
 			)
 
@@ -1180,9 +1181,9 @@ func TestDNSZonesClient_Delete(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
-
+			c := NewDNSZonesClient(rm)
 			mux.HandleFunc(
 				"/core/v1/dns/zones/_",
 				func(w http.ResponseWriter, r *http.Request) {
@@ -1203,7 +1204,7 @@ func TestDNSZonesClient_Delete(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.DNSZones.Delete(tt.args.ctx, tt.args.zone)
+			got, resp, err := c.Delete(tt.args.ctx, tt.args.zone)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -1336,9 +1337,9 @@ func TestDNSZonesClient_VerificationDetails(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
-
+			c := NewDNSZonesClient(rm)
 			mux.HandleFunc(
 				"/core/v1/dns/zones/_/verification_details",
 				func(w http.ResponseWriter, r *http.Request) {
@@ -1359,7 +1360,7 @@ func TestDNSZonesClient_VerificationDetails(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.DNSZones.VerificationDetails(
+			got, resp, err := c.VerificationDetails(
 				tt.args.ctx, tt.args.zone,
 			)
 
@@ -1489,9 +1490,9 @@ func TestDNSZonesClient_Verify(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
-
+			c := NewDNSZonesClient(rm)
 			mux.HandleFunc(
 				"/core/v1/dns/zones/_/verify",
 				func(w http.ResponseWriter, r *http.Request) {
@@ -1511,7 +1512,7 @@ func TestDNSZonesClient_Verify(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.DNSZones.Verify(tt.args.ctx, tt.args.zone)
+			got, resp, err := c.Verify(tt.args.ctx, tt.args.zone)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -1662,9 +1663,9 @@ func TestDNSZonesClient_UpdateTTL(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
-
+			c := NewDNSZonesClient(rm)
 			mux.HandleFunc(
 				"/core/v1/dns/zones/_/update_ttl",
 				func(w http.ResponseWriter, r *http.Request) {
@@ -1684,7 +1685,7 @@ func TestDNSZonesClient_UpdateTTL(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.DNSZones.UpdateTTL(
+			got, resp, err := c.UpdateTTL(
 				tt.args.ctx, tt.args.zone, tt.args.ttl,
 			)
 

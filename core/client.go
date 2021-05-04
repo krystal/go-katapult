@@ -2,9 +2,10 @@ package core
 
 import (
 	"context"
-	"github.com/krystal/go-katapult"
 	"net/http"
 	"net/url"
+
+	"github.com/krystal/go-katapult"
 )
 
 type Client struct {

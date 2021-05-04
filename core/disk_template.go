@@ -2,9 +2,10 @@ package core
 
 import (
 	"context"
-	"github.com/krystal/go-katapult"
 	"net/url"
 	"strings"
+
+	"github.com/krystal/go-katapult"
 )
 
 type DiskTemplate struct {

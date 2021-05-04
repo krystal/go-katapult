@@ -3,9 +3,10 @@ package core
 import (
 	"context"
 	"fmt"
+	"net/url"
+
 	"github.com/krystal/go-katapult"
 	buildspec2 "github.com/krystal/go-katapult/buildspec"
-	"net/url"
 
 	"github.com/augurysys/timestamp"
 )

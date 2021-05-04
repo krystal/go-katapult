@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"github.com/krystal/go-katapult/internal/test"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -18,9 +17,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var (
-	testDefaultBaseURL = &url.URL{Scheme: "https", Host: "api.katapult.io"}
-)
+var testDefaultBaseURL = &url.URL{Scheme: "https", Host: "api.katapult.io"}
 
 func Test_apiClient_NewRequestWithContext(t *testing.T) {
 	type testCtxKey int
@@ -253,7 +250,7 @@ func Test_apiClient_Do(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c, mux, baseURL, teardown := test.PrepareTestClient(t)
+			c, mux, baseURL, teardown := MockClient(t)
 			defer teardown()
 
 			method := "GET"

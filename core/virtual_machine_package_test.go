@@ -4,11 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/krystal/go-katapult"
-	"github.com/krystal/go-katapult/internal/test"
 	"net/http"
 	"net/url"
 	"testing"
+
+	"github.com/krystal/go-katapult"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -307,7 +307,7 @@ func TestVirtualMachinePackagesClient_List(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinePackagesClient(rm)
 
@@ -444,7 +444,7 @@ func TestVirtualMachinePackagesClient_Get(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinePackagesClient(rm)
 
@@ -546,7 +546,7 @@ func TestVirtualMachinePackagesClient_GetByID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinePackagesClient(rm)
 			mux.HandleFunc(
@@ -642,7 +642,7 @@ func TestVirtualMachinePackagesClient_GetByPermalink(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinePackagesClient(rm)
 			mux.HandleFunc(

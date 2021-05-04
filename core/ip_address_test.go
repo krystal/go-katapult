@@ -3,11 +3,11 @@ package core
 import (
 	"context"
 	"encoding/json"
-	"github.com/krystal/go-katapult"
-	"github.com/krystal/go-katapult/internal/test"
 	"net/http"
 	"net/url"
 	"testing"
+
+	"github.com/krystal/go-katapult"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -543,7 +543,7 @@ func TestIPAddressesClient_List(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewIPAddressesClient(rm)
 
@@ -677,7 +677,7 @@ func TestIPAddressesClient_Get(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewIPAddressesClient(rm)
 			mux.HandleFunc(
@@ -782,7 +782,7 @@ func TestIPAddressesClient_GetByID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewIPAddressesClient(rm)
 
@@ -888,7 +888,7 @@ func TestIPAddressesClient_GetByAddress(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewIPAddressesClient(rm)
 
@@ -1112,7 +1112,7 @@ func TestIPAddressesClient_Create(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewIPAddressesClient(rm)
 
@@ -1301,7 +1301,7 @@ func TestIPAddressesClient_Update(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewIPAddressesClient(rm)
 
@@ -1431,7 +1431,7 @@ func TestIPAddressesClient_Delete(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewIPAddressesClient(rm)
 
@@ -1556,7 +1556,7 @@ func TestIPAddressesClient_Unallocate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewIPAddressesClient(rm)
 

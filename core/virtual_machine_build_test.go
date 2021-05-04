@@ -4,11 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/krystal/go-katapult"
-	"github.com/krystal/go-katapult/buildspec"
-	"github.com/krystal/go-katapult/internal/test"
 	"net/http"
 	"testing"
+
+	"github.com/krystal/go-katapult"
+	"github.com/krystal/go-katapult/buildspec"
 
 	"github.com/jimeh/undent"
 	"github.com/stretchr/testify/assert"
@@ -289,7 +289,7 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachineBuildsClient(rm)
 
@@ -395,7 +395,7 @@ func TestVirtualMachineBuildsClient_GetByID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachineBuildsClient(rm)
 			mux.HandleFunc(
@@ -741,7 +741,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachineBuildsClient(rm)
 			mux.HandleFunc(
@@ -940,7 +940,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpec(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachineBuildsClient(rm)
 			mux.HandleFunc(
@@ -1140,7 +1140,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpecXML(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachineBuildsClient(rm)
 			mux.HandleFunc(

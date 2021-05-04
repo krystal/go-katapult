@@ -2,11 +2,11 @@ package core
 
 import (
 	"context"
-	"github.com/krystal/go-katapult"
-	"github.com/krystal/go-katapult/internal/test"
 	"net/http"
 	"net/url"
 	"testing"
+
+	"github.com/krystal/go-katapult"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -378,7 +378,7 @@ func TestNetworkSpeedTestsClient_List(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewNetworkSpeedProfilesClient(rm)
 

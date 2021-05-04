@@ -2,12 +2,13 @@ package test
 
 import (
 	"bytes"
+	"reflect"
+	"testing"
+
 	"github.com/krystal/go-katapult/internal/codec"
 	"github.com/krystal/go-katapult/internal/golden"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"reflect"
-	"testing"
 )
 
 func isNil(i interface{}) bool {

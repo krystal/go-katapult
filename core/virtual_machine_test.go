@@ -3,11 +3,12 @@ package core
 import (
 	"context"
 	"encoding/json"
-	"github.com/krystal/go-katapult"
-	"github.com/krystal/go-katapult/internal/test"
 	"net/http"
 	"net/url"
 	"testing"
+
+	"github.com/krystal/go-katapult"
+	"github.com/krystal/go-katapult/internal/test"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -567,7 +568,7 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinesClient(rm)
 			mux.HandleFunc(
@@ -700,7 +701,7 @@ func TestVirtualMachinesClient_Get(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinesClient(rm)
 			mux.HandleFunc(
@@ -805,7 +806,7 @@ func TestVirtualMachinesClient_GetByID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinesClient(rm)
 			mux.HandleFunc(
@@ -909,7 +910,7 @@ func TestVirtualMachinesClient_GetByFQDN(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinesClient(rm)
 			mux.HandleFunc(
@@ -1209,7 +1210,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinesClient(rm)
 			mux.HandleFunc(
@@ -1403,7 +1404,7 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinesClient(rm)
 			mux.HandleFunc(
@@ -1541,7 +1542,7 @@ func TestVirtualMachinesClient_Delete(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinesClient(rm)
 			mux.HandleFunc(
@@ -1680,7 +1681,7 @@ func TestVirtualMachinesClient_Start(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinesClient(rm)
 			mux.HandleFunc(
@@ -1817,7 +1818,7 @@ func TestVirtualMachinesClient_Stop(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinesClient(rm)
 			mux.HandleFunc(
@@ -1954,7 +1955,7 @@ func TestVirtualMachinesClient_Shutdown(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinesClient(rm)
 			mux.HandleFunc(
@@ -2091,7 +2092,7 @@ func TestVirtualMachinesClient_Reset(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := test.PrepareTestClient(t)
+			rm, mux, _, teardown := katapult.MockClient(t)
 			defer teardown()
 			c := NewVirtualMachinesClient(rm)
 			mux.HandleFunc(

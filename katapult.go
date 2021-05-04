@@ -2,10 +2,11 @@ package katapult
 
 import (
 	"fmt"
-	"github.com/krystal/go-katapult/internal/codec"
 	"net/http"
 	"net/url"
 	"time"
+
+	"github.com/krystal/go-katapult/internal/codec"
 )
 
 const (
@@ -16,6 +17,7 @@ const (
 func WithTimeout(t time.Duration) Opt {
 	return func(c *Client) error {
 		c.HTTPClient.Timeout = t
+
 		return nil
 	}
 }
@@ -23,6 +25,7 @@ func WithTimeout(t time.Duration) Opt {
 func WithUserAgent(ua string) Opt {
 	return func(c *Client) error {
 		c.UserAgent = ua
+
 		return nil
 	}
 }
@@ -30,6 +33,7 @@ func WithUserAgent(ua string) Opt {
 func WithHTTPClient(h *http.Client) Opt {
 	return func(c *Client) error {
 		c.HTTPClient = h
+
 		return nil
 	}
 }

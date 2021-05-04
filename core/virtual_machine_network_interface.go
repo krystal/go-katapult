@@ -3,8 +3,9 @@ package core
 import (
 	"context"
 	"fmt"
-	"github.com/krystal/go-katapult"
 	"net/url"
+
+	"github.com/krystal/go-katapult"
 )
 
 type VirtualMachineNetworkInterface struct {

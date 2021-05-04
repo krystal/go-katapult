@@ -3,11 +3,12 @@ package core
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
+	"testing"
+
 	"github.com/krystal/go-katapult"
 	"github.com/krystal/go-katapult/internal/test"
 	"github.com/stretchr/testify/assert"
-	"net/http"
-	"testing"
 )
 
 var (

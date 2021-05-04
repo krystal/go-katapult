@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/krystal/go-katapult/internal/test"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -30,7 +32,7 @@ func TestPagination_JSONMarshaling(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			testJSONMarshaling(t, tt.obj)
+			test.CustomJSONMarshaling(t, tt.obj, nil)
 		})
 	}
 }
@@ -55,7 +57,7 @@ func TestResponseError_JSONMarshaling(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			testJSONMarshaling(t, tt.obj)
+			test.CustomJSONMarshaling(t, tt.obj, nil)
 		})
 	}
 }
@@ -78,7 +80,7 @@ func Test_responseErrorBody_JSONMarshaling(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			testJSONMarshaling(t, tt.obj)
+			test.CustomJSONMarshaling(t, tt.obj, nil)
 		})
 	}
 }

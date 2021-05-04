@@ -2,6 +2,7 @@ package buildspec_test
 
 import (
 	"fmt"
+
 	"github.com/krystal/go-katapult/buildspec"
 )
 

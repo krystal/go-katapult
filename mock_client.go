@@ -1,24 +1,20 @@
-package test
+package katapult
 
 import (
 	"fmt"
-	"github.com/krystal/go-katapult"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"os"
 	"testing"
+
+	"github.com/krystal/go-katapult/internal/test"
 )
 
-var (
-	APIKey    = "9d7831d8-03f1-4b4c-a1c3-97272ddefe6a"
-	UserAgent = "go-katapult/test"
-)
-
-// PrepareTestClient creates a test HTTP server for mock API responses, and
+// MockClient creates a test HTTP server for mock API responses, and
 // creates a Katapult client configured to talk to the mock server.
-func PrepareTestClient(t *testing.T) (
-	client *katapult.Client,
+func MockClient(t *testing.T) (
+	client *Client,
 	mux *http.ServeMux,
 	serverURL string,
 	teardown func(),
@@ -43,10 +39,10 @@ func PrepareTestClient(t *testing.T) (
 		t.Fatalf("test failed, invalid URL: %s", err.Error())
 	}
 
-	rm, err := katapult.New(
-		katapult.WithAPIKey(APIKey),
-		katapult.WithBaseURL(url),
-		katapult.WithUserAgent(UserAgent),
+	rm, err := New(
+		WithAPIKey(test.APIKey),
+		WithBaseURL(url),
+		WithUserAgent(test.UserAgent),
 	)
 	if err != nil {
 		t.Fatalf("failed to setup katapult client: %s", err)
