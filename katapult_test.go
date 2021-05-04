@@ -391,6 +391,7 @@ func TestNew(t *testing.T) {
 			c, err := New(tt.opts...)
 			if tt.wantErr != "" {
 				assert.EqualError(t, err, tt.wantErr)
+
 				return
 			}
 
@@ -433,21 +434,21 @@ func TestWithBaseURL(t *testing.T) {
 	tests := []struct {
 		name    string
 		wantErr string
-		baseUrl *url.URL
+		baseURL *url.URL
 	}{
 		{
 			name:    "nil causes error",
-			baseUrl: nil,
+			baseURL: nil,
 			wantErr: "katapult: base URL cannot be nil",
 		},
 		{
 			name:    "empty scheme causes error",
-			baseUrl: &url.URL{Scheme: "", Host: "google.com"},
+			baseURL: &url.URL{Scheme: "", Host: "google.com"},
 			wantErr: "katapult: base URL scheme is empty",
 		},
 		{
 			name:    "empty host causes error",
-			baseUrl: &url.URL{Scheme: "https", Host: ""},
+			baseURL: &url.URL{Scheme: "https", Host: ""},
 			wantErr: "katapult: base URL host is empty",
 		},
 	}
@@ -455,14 +456,15 @@ func TestWithBaseURL(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &Client{}
-			err := WithBaseURL(tt.baseUrl)(c)
+			err := WithBaseURL(tt.baseURL)(c)
 			if tt.wantErr != "" {
 				assert.EqualError(t, err, tt.wantErr)
+
 				return
 			}
 
 			assert.NotNil(t, c)
-			assert.Equal(t, tt.baseUrl, c.BaseURL)
+			assert.Equal(t, tt.baseURL, c.BaseURL)
 		})
 	}
 }

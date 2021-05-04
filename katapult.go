@@ -19,9 +19,7 @@ const (
 	DefaultTimeout   = time.Second * 60
 )
 
-var (
-	DefaultURL = &url.URL{Scheme: "https", Host: "api.katapult.io"}
-)
+var DefaultURL = &url.URL{Scheme: "https", Host: "api.katapult.io"}
 
 func WithTimeout(t time.Duration) Opt {
 	return func(c *Client) error {
