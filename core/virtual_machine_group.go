@@ -7,9 +7,8 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/krystal/go-katapult"
-
 	"github.com/augurysys/timestamp"
+	"github.com/krystal/go-katapult"
 )
 
 var (

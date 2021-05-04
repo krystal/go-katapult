@@ -7,10 +7,9 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/jimeh/undent"
 	"github.com/krystal/go-katapult"
 	"github.com/krystal/go-katapult/buildspec"
-
-	"github.com/jimeh/undent"
 	"github.com/stretchr/testify/assert"
 )
 

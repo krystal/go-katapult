@@ -9,10 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/krystal/go-katapult/internal/test"
-
 	"github.com/augurysys/timestamp"
 	"github.com/krystal/go-katapult/internal/golden"
+	"github.com/krystal/go-katapult/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

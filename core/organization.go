@@ -6,9 +6,8 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/krystal/go-katapult"
-
 	"github.com/augurysys/timestamp"
+	"github.com/krystal/go-katapult"
 )
 
 type Organization struct {

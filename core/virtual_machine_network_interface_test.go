@@ -8,9 +8,8 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/krystal/go-katapult"
-
 	"github.com/jimeh/undent"
+	"github.com/krystal/go-katapult"
 	"github.com/stretchr/testify/assert"
 )
 
