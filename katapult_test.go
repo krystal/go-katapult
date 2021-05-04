@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -33,8 +34,10 @@ func Test_apiClient_NewRequestWithContext(t *testing.T) {
 	tests := []struct {
 		name       string
 		args       args
+		apiKey     string
 		baseURL    *url.URL
 		codec      *codec.JSON
+		wantedAuth string
 		wantedBody string
 		errStr     string
 	}{
@@ -47,6 +50,18 @@ func Test_apiClient_NewRequestWithContext(t *testing.T) {
 				method: "GET",
 				url:    &url.URL{Path: "v1/data_centers"},
 			},
+		},
+		{
+			name: "request with auth",
+			args: args{
+				ctx: context.WithValue(
+					context.Background(), testCtxKey(0), "bar",
+				),
+				method: "GET",
+				url:    &url.URL{Path: "v1/data_centers"},
+			},
+			apiKey:     "xyzzy",
+			wantedAuth: "Bearer xyzzy",
 		},
 		{
 			name: "request with body",
@@ -100,7 +115,11 @@ func Test_apiClient_NewRequestWithContext(t *testing.T) {
 				tt.codec = &codec.JSON{}
 			}
 
-			c := &Client{BaseURL: tt.baseURL, Codec: tt.codec}
+			c := &Client{
+				BaseURL: tt.baseURL,
+				Codec:   tt.codec,
+				APIKey:  tt.apiKey,
+			}
 
 			got, err := c.NewRequestWithContext(
 				tt.args.ctx, tt.args.method, tt.args.url, tt.args.body,
@@ -122,6 +141,10 @@ func Test_apiClient_NewRequestWithContext(t *testing.T) {
 				assert.Equal(t,
 					c.Codec.Accept(),
 					got.Header.Get("Accept"),
+				)
+				assert.Equal(t,
+					tt.wantedAuth,
+					got.Header.Get("Authorization"),
 				)
 
 				if tt.args.body != nil {
@@ -319,6 +342,127 @@ func Test_apiClient_Do(t *testing.T) {
 					assert.Equal(t, tt.want, tt.v)
 				}
 			}
+		})
+	}
+}
+
+func TestNew(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name          string
+		opts          []Opt
+		wantAPIKey    string
+		wantUserAgent string
+		wantBaseURL   *url.URL
+		wantTimeout   time.Duration
+		wantErr       string
+	}{
+		{
+			name:          "defaults",
+			wantAPIKey:    "",
+			wantUserAgent: DefaultUserAgent,
+			wantBaseURL:   DefaultURL,
+			wantTimeout:   DefaultTimeout,
+		},
+		{
+			name: "options specified",
+			opts: []Opt{
+				WithAPIKey("xyzzy"),
+				WithUserAgent("skynet"),
+			},
+			wantAPIKey:    "xyzzy",
+			wantUserAgent: "skynet",
+			wantBaseURL:   DefaultURL,
+			wantTimeout:   DefaultTimeout,
+		},
+		{
+			name: "err propagates",
+			opts: []Opt{
+				func(c *Client) error {
+					return errors.New("tribbles in the vents")
+				},
+			},
+			wantErr: "tribbles in the vents",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, err := New(tt.opts...)
+			if tt.wantErr != "" {
+				assert.EqualError(t, err, tt.wantErr)
+				return
+			}
+
+			assert.NoError(t, err)
+			require.NotNil(t, c)
+
+			assert.Equal(t, tt.wantAPIKey, c.APIKey)
+			assert.Equal(t, tt.wantUserAgent, c.UserAgent)
+			assert.Equal(t, tt.wantBaseURL, c.BaseURL)
+			assert.Equal(t, tt.wantTimeout, c.HTTPClient.Timeout)
+		})
+	}
+}
+
+func TestWithTimeout(t *testing.T) {
+	c := &Client{HTTPClient: http.DefaultClient}
+	timeout := 42 * time.Second
+	err := WithTimeout(timeout)(c)
+	assert.NoError(t, err)
+	assert.Equal(t, timeout, c.HTTPClient.Timeout)
+}
+
+func TestWithUserAgent(t *testing.T) {
+	c := &Client{}
+	ua := "roger_moore/0.0.7"
+	err := WithUserAgent(ua)(c)
+	assert.NoError(t, err)
+	assert.Equal(t, ua, c.UserAgent)
+}
+
+func TestWithAPIKey(t *testing.T) {
+	c := &Client{}
+	key := "extremely_very_secret_secret"
+	err := WithAPIKey(key)(c)
+	assert.NoError(t, err)
+	assert.Equal(t, key, c.APIKey)
+}
+
+func TestWithBaseURL(t *testing.T) {
+	tests := []struct {
+		name    string
+		wantErr string
+		baseUrl *url.URL
+	}{
+		{
+			name:    "nil causes error",
+			baseUrl: nil,
+			wantErr: "katapult: base URL cannot be nil",
+		},
+		{
+			name:    "empty scheme causes error",
+			baseUrl: &url.URL{Scheme: "", Host: "google.com"},
+			wantErr: "katapult: base URL scheme is empty",
+		},
+		{
+			name:    "empty host causes error",
+			baseUrl: &url.URL{Scheme: "https", Host: ""},
+			wantErr: "katapult: base URL host is empty",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &Client{}
+			err := WithBaseURL(tt.baseUrl)(c)
+			if tt.wantErr != "" {
+				assert.EqualError(t, err, tt.wantErr)
+				return
+			}
+
+			assert.NotNil(t, c)
+			assert.Equal(t, tt.baseUrl, c.BaseURL)
 		})
 	}
 }
