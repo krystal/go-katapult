@@ -22,6 +22,8 @@ type Client struct {
 	BaseURL   *url.URL
 }
 
+// NewRequestWithContext returns a new http.Request setup for sending to the
+// API.
 func (c *Client) NewRequestWithContext(
 	ctx context.Context,
 	method string,
