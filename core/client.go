@@ -39,7 +39,7 @@ type RequestMaker interface {
 	) (*http.Request, error)
 }
 
-func New(rm RequestMaker) (*Client, error) {
+func New(rm RequestMaker) *Client {
 	//nolint:lll
 	c := &Client{
 		Certificates:                    NewCertificatesClient(rm),
@@ -60,5 +60,5 @@ func New(rm RequestMaker) (*Client, error) {
 		VirtualMachines:                 NewVirtualMachinesClient(rm),
 	}
 
-	return c, nil
+	return c
 }

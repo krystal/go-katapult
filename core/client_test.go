@@ -1,9 +1,11 @@
 package core
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"testing"
 
 	"github.com/krystal/go-katapult"
@@ -92,4 +94,47 @@ func assertCustomAuthorization(t *testing.T, r *http.Request, apiKey string) {
 
 func assertAuthorization(t *testing.T, r *http.Request) {
 	assertCustomAuthorization(t, r, test.APIKey)
+}
+
+// TODO: Flesh this out for use for unit testing
+// Perhaps consider golden/testdata integration for generating request/response
+// data.
+type fakeRequestMaker struct {
+}
+
+func (frm *fakeRequestMaker) Do(req *http.Request, val interface{}) (*katapult.Response, error) {
+	return nil, nil
+}
+
+func (frm *fakeRequestMaker) NewRequestWithContext(
+	ctx context.Context,
+	method string,
+	u *url.URL,
+	body interface{},
+) (*http.Request, error) {
+	return nil, nil
+}
+
+func TestNew(t *testing.T) {
+	t.Parallel()
+
+	frm := &fakeRequestMaker{}
+	c := New(frm)
+
+	assert.Equal(t, frm, c.Certificates.client)
+	assert.Equal(t, frm, c.DNSZones.client)
+	assert.Equal(t, frm, c.DataCenters.client)
+	assert.Equal(t, frm, c.DiskTemplates.client)
+	assert.Equal(t, frm, c.IPAddresses.client)
+	assert.Equal(t, frm, c.LoadBalancers.client)
+	assert.Equal(t, frm, c.NetworkSpeedProfiles.client)
+	assert.Equal(t, frm, c.Networks.client)
+	assert.Equal(t, frm, c.Organizations.client)
+	assert.Equal(t, frm, c.Tasks.client)
+	assert.Equal(t, frm, c.TrashObjects.client)
+	assert.Equal(t, frm, c.VirtualMachineBuilds.client)
+	assert.Equal(t, frm, c.VirtualMachineGroups.client)
+	assert.Equal(t, frm, c.VirtualMachineNetworkInterfaces.client)
+	assert.Equal(t, frm, c.VirtualMachinePackages.client)
+	assert.Equal(t, frm, c.VirtualMachines.client)
 }
