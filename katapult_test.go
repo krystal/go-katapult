@@ -21,7 +21,7 @@ import (
 
 var testDefaultBaseURL = &url.URL{Scheme: "https", Host: "api.katapult.io"}
 
-func Test_Client_NewRequestWithContext(t *testing.T) {
+func TestClient_NewRequestWithContext(t *testing.T) {
 	type testCtxKey int
 	type reqBody struct {
 		Name string `json:"name"`
@@ -166,7 +166,7 @@ func Test_Client_NewRequestWithContext(t *testing.T) {
 	}
 }
 
-func Test_Client_Do(t *testing.T) {
+func TestClient_Do(t *testing.T) {
 	type respBody struct {
 		ID   string `json:"id"`
 		Name string `json:"name"`
