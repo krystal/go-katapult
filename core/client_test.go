@@ -99,8 +99,7 @@ func assertAuthorization(t *testing.T, r *http.Request) {
 // TODO: Flesh this out for use for unit testing
 // Perhaps consider golden/testdata integration for generating request/response
 // data.
-type fakeRequestMaker struct {
-}
+type fakeRequestMaker struct{}
 
 func (frm *fakeRequestMaker) Do(
 	req *http.Request,

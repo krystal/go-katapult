@@ -7,6 +7,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"net/http/httptest"
 	"net/url"
 	"strings"
 	"testing"
@@ -20,7 +21,7 @@ import (
 
 var testDefaultBaseURL = &url.URL{Scheme: "https", Host: "api.katapult.io"}
 
-func Test_apiClient_NewRequestWithContext(t *testing.T) {
+func Test_Client_NewRequestWithContext(t *testing.T) {
 	type testCtxKey int
 	type reqBody struct {
 		Name string `json:"name"`
@@ -165,7 +166,7 @@ func Test_apiClient_NewRequestWithContext(t *testing.T) {
 	}
 }
 
-func Test_apiClient_Do(t *testing.T) {
+func Test_Client_Do(t *testing.T) {
 	type respBody struct {
 		ID   string `json:"id"`
 		Name string `json:"name"`
@@ -273,8 +274,21 @@ func Test_apiClient_Do(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c, mux, baseURL, teardown := MockClient(t)
-			defer teardown()
+			m := http.NewServeMux()
+			server := httptest.NewServer(m)
+			defer server.Close()
+
+			url, err := url.Parse(server.URL)
+			if err != nil {
+				t.Fatalf("test failed, invalid URL: %s", err.Error())
+			}
+
+			c, err := New(
+				WithBaseURL(url),
+			)
+			if err != nil {
+				t.Fatalf("failed to setup katapult client: %s", err)
+			}
 
 			method := "GET"
 			ctx := context.Background()
@@ -294,7 +308,7 @@ func Test_apiClient_Do(t *testing.T) {
 				defer cancel()
 			}
 
-			mux.HandleFunc("/bar",
+			m.HandleFunc("/bar",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, method, r.Method)
 
@@ -326,7 +340,7 @@ func Test_apiClient_Do(t *testing.T) {
 
 			if tt.errStr != "" {
 				tt.errStr = strings.ReplaceAll(
-					tt.errStr, "{{baseURL}}", baseURL,
+					tt.errStr, "{{baseURL}}", server.URL,
 				)
 				assert.EqualError(t, err, tt.errStr)
 				if tt.want != nil {

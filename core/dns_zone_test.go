@@ -546,7 +546,7 @@ func TestDNSZonesClient_List(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := katapult.MockClient(t)
+			rm, mux, _, teardown := prepareTestClient(t)
 			defer teardown()
 			c := NewDNSZonesClient(rm)
 
@@ -661,7 +661,7 @@ func TestDNSZonesClient_Get(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := katapult.MockClient(t)
+			rm, mux, _, teardown := prepareTestClient(t)
 			defer teardown()
 			c := NewDNSZonesClient(rm)
 
@@ -755,7 +755,7 @@ func TestDNSZonesClient_GetByID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := katapult.MockClient(t)
+			rm, mux, _, teardown := prepareTestClient(t)
 			defer teardown()
 			c := NewDNSZonesClient(rm)
 
@@ -839,7 +839,7 @@ func TestDNSZonesClient_GetByName(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := katapult.MockClient(t)
+			rm, mux, _, teardown := prepareTestClient(t)
 			defer teardown()
 			c := NewDNSZonesClient(rm)
 
@@ -1062,7 +1062,7 @@ func TestDNSZonesClient_Create(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := katapult.MockClient(t)
+			rm, mux, _, teardown := prepareTestClient(t)
 			defer teardown()
 			c := NewDNSZonesClient(rm)
 
@@ -1184,7 +1184,7 @@ func TestDNSZonesClient_Delete(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := katapult.MockClient(t)
+			rm, mux, _, teardown := prepareTestClient(t)
 			defer teardown()
 			c := NewDNSZonesClient(rm)
 
@@ -1341,7 +1341,7 @@ func TestDNSZonesClient_VerificationDetails(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := katapult.MockClient(t)
+			rm, mux, _, teardown := prepareTestClient(t)
 			defer teardown()
 			c := NewDNSZonesClient(rm)
 
@@ -1495,7 +1495,7 @@ func TestDNSZonesClient_Verify(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := katapult.MockClient(t)
+			rm, mux, _, teardown := prepareTestClient(t)
 			defer teardown()
 			c := NewDNSZonesClient(rm)
 
@@ -1669,7 +1669,7 @@ func TestDNSZonesClient_UpdateTTL(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := katapult.MockClient(t)
+			rm, mux, _, teardown := prepareTestClient(t)
 			defer teardown()
 			c := NewDNSZonesClient(rm)
 

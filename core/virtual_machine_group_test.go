@@ -297,7 +297,7 @@ func TestVirtualMachineGroupsClient_List(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := katapult.MockClient(t)
+			rm, mux, _, teardown := prepareTestClient(t)
 			defer teardown()
 			c := NewVirtualMachineGroupsClient(rm)
 
@@ -408,7 +408,7 @@ func TestVirtualMachineGroupsClient_Get(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := katapult.MockClient(t)
+			rm, mux, _, teardown := prepareTestClient(t)
 			defer teardown()
 			c := NewVirtualMachineGroupsClient(rm)
 
@@ -515,7 +515,7 @@ func TestVirtualMachineGroupsClient_GetByID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := katapult.MockClient(t)
+			rm, mux, _, teardown := prepareTestClient(t)
 			defer teardown()
 			c := NewVirtualMachineGroupsClient(rm)
 
@@ -702,7 +702,7 @@ func TestVirtualMachineGroupsClient_Create(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := katapult.MockClient(t)
+			rm, mux, _, teardown := prepareTestClient(t)
 			defer teardown()
 			c := NewVirtualMachineGroupsClient(rm)
 
@@ -857,7 +857,7 @@ func TestVirtualMachineGroupsClient_Update(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := katapult.MockClient(t)
+			rm, mux, _, teardown := prepareTestClient(t)
 			defer teardown()
 			c := NewVirtualMachineGroupsClient(rm)
 
@@ -975,7 +975,7 @@ func TestVirtualMachineGroupsClient_Delete(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := katapult.MockClient(t)
+			rm, mux, _, teardown := prepareTestClient(t)
 			defer teardown()
 			c := NewVirtualMachineGroupsClient(rm)
 

@@ -452,7 +452,7 @@ func TestVirtualMachineNetworkInterfacesClient_List(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := katapult.MockClient(t)
+			rm, mux, _, teardown := prepareTestClient(t)
 			defer teardown()
 			c := NewVirtualMachineNetworkInterfacesClient(rm)
 
@@ -556,7 +556,7 @@ func TestVirtualMachineNetworkInterfacesClient_Get(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := katapult.MockClient(t)
+			rm, mux, _, teardown := prepareTestClient(t)
 			defer teardown()
 			c := NewVirtualMachineNetworkInterfacesClient(rm)
 
@@ -695,7 +695,7 @@ func TestVirtualMachineNetworkInterfacesClient_AvailableIPs(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := katapult.MockClient(t)
+			rm, mux, _, teardown := prepareTestClient(t)
 			defer teardown()
 			c := NewVirtualMachineNetworkInterfacesClient(rm)
 
@@ -919,7 +919,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := katapult.MockClient(t)
+			rm, mux, _, teardown := prepareTestClient(t)
 			defer teardown()
 			c := NewVirtualMachineNetworkInterfacesClient(rm)
 
@@ -1112,7 +1112,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateNewIP(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := katapult.MockClient(t)
+			rm, mux, _, teardown := prepareTestClient(t)
 			defer teardown()
 			c := NewVirtualMachineNetworkInterfacesClient(rm)
 
@@ -1343,7 +1343,7 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := katapult.MockClient(t)
+			rm, mux, _, teardown := prepareTestClient(t)
 			defer teardown()
 			c := NewVirtualMachineNetworkInterfacesClient(rm)
 
