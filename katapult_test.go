@@ -5,9 +5,14 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"github.com/gorilla/mux"
+	"github.com/krystal/go-katapult/internal/test"
 	"io/ioutil"
 	"net/http"
+	"net/http/httptest"
 	"net/url"
+	"os"
 	"strings"
 	"testing"
 	"time"
@@ -273,8 +278,21 @@ func Test_apiClient_Do(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c, mux, baseURL, teardown := MockClient(t)
-			defer teardown()
+			m := http.NewServeMux()
+			server := httptest.NewServer(m)
+			defer server.Close()
+
+			url, err := url.Parse(server.URL)
+			if err != nil {
+				t.Fatalf("test failed, invalid URL: %s", err.Error())
+			}
+
+			c, err := New(
+				WithBaseURL(url),
+			)
+			if err != nil {
+				t.Fatalf("failed to setup katapult client: %s", err)
+			}
 
 			method := "GET"
 			ctx := context.Background()
@@ -294,7 +312,7 @@ func Test_apiClient_Do(t *testing.T) {
 				defer cancel()
 			}
 
-			mux.HandleFunc("/bar",
+			m.HandleFunc("/bar",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, method, r.Method)
 
@@ -326,7 +344,7 @@ func Test_apiClient_Do(t *testing.T) {
 
 			if tt.errStr != "" {
 				tt.errStr = strings.ReplaceAll(
-					tt.errStr, "{{baseURL}}", baseURL,
+					tt.errStr, "{{baseURL}}", server.URL,
 				)
 				assert.EqualError(t, err, tt.errStr)
 				if tt.want != nil {

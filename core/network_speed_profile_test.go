@@ -377,7 +377,7 @@ func TestNetworkSpeedTestsClient_List(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := katapult.MockClient(t)
+			rm, mux, _, teardown := prepareTestClient(t)
 			defer teardown()
 			c := NewNetworkSpeedProfilesClient(rm)
 

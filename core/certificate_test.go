@@ -239,7 +239,7 @@ func TestCertificatesClient_List(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := katapult.MockClient(t)
+			rm, mux, _, teardown := prepareTestClient(t)
 			defer teardown()
 			c := NewCertificatesClient(rm)
 
@@ -348,7 +348,7 @@ func TestCertificatesClient_Get(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := katapult.MockClient(t)
+			rm, mux, _, teardown := prepareTestClient(t)
 			defer teardown()
 
 			c := NewCertificatesClient(rm)
@@ -444,7 +444,7 @@ func TestCertificatesClient_GetByID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := katapult.MockClient(t)
+			rm, mux, _, teardown := prepareTestClient(t)
 			defer teardown()
 			c := NewCertificatesClient(rm)
 
