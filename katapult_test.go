@@ -5,14 +5,10 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
-	"github.com/gorilla/mux"
-	"github.com/krystal/go-katapult/internal/test"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
-	"os"
 	"strings"
 	"testing"
 	"time"
@@ -25,7 +21,7 @@ import (
 
 var testDefaultBaseURL = &url.URL{Scheme: "https", Host: "api.katapult.io"}
 
-func Test_apiClient_NewRequestWithContext(t *testing.T) {
+func Test_Client_NewRequestWithContext(t *testing.T) {
 	type testCtxKey int
 	type reqBody struct {
 		Name string `json:"name"`
@@ -170,7 +166,7 @@ func Test_apiClient_NewRequestWithContext(t *testing.T) {
 	}
 }
 
-func Test_apiClient_Do(t *testing.T) {
+func Test_Client_Do(t *testing.T) {
 	type respBody struct {
 		ID   string `json:"id"`
 		Name string `json:"name"`
