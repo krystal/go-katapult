@@ -102,7 +102,10 @@ func assertAuthorization(t *testing.T, r *http.Request) {
 type fakeRequestMaker struct {
 }
 
-func (frm *fakeRequestMaker) Do(req *http.Request, val interface{}) (*katapult.Response, error) {
+func (frm *fakeRequestMaker) Do(
+	req *http.Request,
+	val interface{},
+) (*katapult.Response, error) {
 	return nil, nil
 }
 
