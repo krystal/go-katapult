@@ -40,6 +40,12 @@ var (
 	}
 )
 
+func TestClient_DNSZones(t *testing.T) {
+	c := New(&fakeRequestMaker{})
+
+	assert.IsType(t, &DNSZonesClient{}, c.DNSZones)
+}
+
 func TestDNSZone_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string

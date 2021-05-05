@@ -44,6 +44,12 @@ var (
 	}
 )
 
+func TestClient_Organizations(t *testing.T) {
+	c := New(&fakeRequestMaker{})
+
+	assert.IsType(t, &OrganizationsClient{}, c.Organizations)
+}
+
 func TestOrganization_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string

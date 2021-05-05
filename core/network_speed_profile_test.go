@@ -10,6 +10,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestClient_NetworkSpeedProfiles(t *testing.T) {
+	c := New(&fakeRequestMaker{})
+
+	assert.IsType(t, &NetworkSpeedProfilesClient{}, c.NetworkSpeedProfiles)
+}
+
 func TestNetworkSpeedProfile_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string

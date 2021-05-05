@@ -23,6 +23,12 @@ var (
 	}
 )
 
+func TestClient_DataCenters(t *testing.T) {
+	c := New(&fakeRequestMaker{})
+
+	assert.IsType(t, &DataCentersClient{}, c.DataCenters)
+}
+
 func TestDataCenter_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string

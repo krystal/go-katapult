@@ -38,6 +38,12 @@ var (
 	}
 )
 
+func TestClient_VirtualMachineBuilds(t *testing.T) {
+	c := New(&fakeRequestMaker{})
+
+	assert.IsType(t, &VirtualMachineBuildsClient{}, c.VirtualMachineBuilds)
+}
+
 func TestVirtualMachineBuild_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string

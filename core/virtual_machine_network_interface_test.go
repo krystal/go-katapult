@@ -13,6 +13,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestClient_VirtualMachineNetworkInterfaces(t *testing.T) {
+	c := New(&fakeRequestMaker{})
+
+	assert.IsType(t,
+		&VirtualMachineNetworkInterfacesClient{},
+		c.VirtualMachineNetworkInterfaces,
+	)
+}
+
 //nolint:lll
 var (
 	fixtureVMNetworkInterfaceNotFoundErr = "virtual_machine_network_interface_not_found: " +
