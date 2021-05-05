@@ -96,6 +96,10 @@ func assertAuthorization(t *testing.T, r *http.Request) {
 	assertCustomAuthorization(t, r, test.APIKey)
 }
 
+func TestClientImplementsRequestMaker(t *testing.T) {
+	assert.Implements(t, (*RequestMaker)(nil), new(katapult.Client))
+}
+
 // TODO: Flesh this out for use for unit testing
 // Perhaps consider golden/testdata integration for generating request/response
 // data.
