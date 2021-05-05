@@ -15,7 +15,7 @@
   <a href="https://codeclimate.com/github/krystal/go-katapult">
     <img src="https://img.shields.io/codeclimate/coverage/krystal/go-katapult.svg?logo=code%20climate" alt="Coverage">
   </a>
-  <a href="https://github.com/krystal/go-katapult/commits/master">
+  <a href="https://github.com/krystal/go-katapult/commits/main">
     <img src="https://img.shields.io/github/last-commit/krystal/go-katapult.svg?style=flat&logo=github&logoColor=white"
 alt="GitHub last commit">
   </a>
@@ -26,7 +26,7 @@ alt="GitHub issues">
   <a href="https://github.com/krystal/go-katapult/pulls">
     <img src="https://img.shields.io/github/issues-pr-raw/krystal/go-katapult.svg?style=flat&logo=github&logoColor=white" alt="GitHub pull requests">
   </a>
-  <a href="https://github.com/krystal/go-katapult/blob/master/LICENSE">
+  <a href="https://github.com/krystal/go-katapult/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/krystal/go-katapult.svg?style=flat" alt="License Status">
   </a>
 </p>
