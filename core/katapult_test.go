@@ -3,7 +3,6 @@ package core
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/krystal/go-katapult"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -12,6 +11,8 @@ import (
 	"os"
 	"testing"
 	"time"
+
+	"github.com/krystal/go-katapult"
 
 	"github.com/augurysys/timestamp"
 	"github.com/krystal/go-katapult/internal/golden"
