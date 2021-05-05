@@ -48,6 +48,12 @@ var (
 	}
 )
 
+func TestClient_DiskTemplates(t *testing.T) {
+	c := New(&fakeRequestMaker{})
+
+	assert.IsType(t, &DiskTemplatesClient{}, c.DiskTemplates)
+}
+
 func TestDiskTemplate_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string

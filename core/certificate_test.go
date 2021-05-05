@@ -12,6 +12,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestClient_Certificates(t *testing.T) {
+	c := New(&fakeRequestMaker{})
+
+	assert.IsType(t, &CertificatesClient{}, c.Certificates)
+}
+
 func TestCertificate_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string

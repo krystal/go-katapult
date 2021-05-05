@@ -38,6 +38,12 @@ var (
 	}
 )
 
+func TestClient_Networks(t *testing.T) {
+	c := New(&fakeRequestMaker{})
+
+	assert.IsType(t, &NetworksClient{}, c.Networks)
+}
+
 func TestNetwork_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string

@@ -23,6 +23,12 @@ var (
 	}
 )
 
+func TestClient_VirtualMachinePackages(t *testing.T) {
+	c := New(&fakeRequestMaker{})
+
+	assert.IsType(t, &VirtualMachinePackagesClient{}, c.VirtualMachinePackages)
+}
+
 func TestVirtualMachinePackage_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string

@@ -24,6 +24,12 @@ var (
 	}
 )
 
+func TestClient_LoadBalancers(t *testing.T) {
+	c := New(&fakeRequestMaker{})
+
+	assert.IsType(t, &LoadBalancersClient{}, c.LoadBalancers)
+}
+
 func TestLoadBalancer_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string

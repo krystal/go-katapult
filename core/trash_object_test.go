@@ -38,6 +38,12 @@ var (
 	}
 )
 
+func TestClient_TrashObjects(t *testing.T) {
+	c := New(&fakeRequestMaker{})
+
+	assert.IsType(t, &TrashObjectsClient{}, c.TrashObjects)
+}
+
 func TestTrashObject_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string

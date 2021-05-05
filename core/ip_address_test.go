@@ -73,6 +73,12 @@ var (
 	}
 )
 
+func TestClient_IPAddresses(t *testing.T) {
+	c := New(&fakeRequestMaker{})
+
+	assert.IsType(t, &IPAddressesClient{}, c.IPAddresses)
+}
+
 func TestIPAddress_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string
