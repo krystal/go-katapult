@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1620232918850,
+  "lastUpdate": 1620288225279,
   "repoUrl": "https://github.com/krystal/go-katapult",
   "entries": {
     "Benchmark": [
@@ -2028,6 +2028,60 @@ window.BENCHMARK_DATA = {
             "value": 3312,
             "unit": "ns/op",
             "extra": "366758 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "noah@noahstride.co.uk",
+            "name": "Noah Stride",
+            "username": "strideynet"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "04e5ede56f9d83ae8dc9e515288f2a09bb44a9ae",
+          "message": "Refactor to match API structure (#90)\n\n* refactor: restructure repository to remove pkg/\r\n\r\nchore: correct go imports as per linter\r\n\r\nrefactor: undo editor renaming mishap\r\n\r\nrefactor: undo renamed package by editor\r\n\r\nrefactor: make some progress refactoring\r\n\r\ntests: fixed prepareTestClient\r\n\r\ntests: move client mocking to own package\r\n\r\ntests: scope tests to test cert client, not all client\r\n\r\ntests: add test helper client\r\n\r\nchore: some renaming suggested by jim\r\n\r\nrefactor: start moving references to top level Request/Response\r\n\r\nrefactor: convert rest of groups to new structure\r\n\r\n* test: reorganise test files for root\r\n\r\ntests: fix some broken tests with import loop\r\n\r\ntest: add internal test helper values\r\n\r\ntests: correct broken test\r\n\r\nfix: poorly formatted files\r\n\r\n* docs: improve comment on exported func\r\n\r\n* style(core): address linter complaint\r\n\r\n* tests: add tests for new options to increase coverage\r\n\r\n* style: appease linter\r\n\r\n* chore(deps): fix typo in package import\r\n\r\n* chore(deps): group/order imports consistently across all files\r\n\r\n* style(test): add whitespace to keep test body consistent across all tests\r\n\r\n* tests: cover client creation function\r\n\r\n* style: appease linter line length\r\n\r\n* tests: move test client to core package\r\n\r\n* chore: update test names to match new struct name\r\n\r\n* style: run linter\r\n\r\n* tests: add test to ensure client implements request maker\r\n\r\n* chore: update test anmes\r\n\r\n* test(core): Client struct fields are assigned to the right structs\r\n\r\n* refactor: restructure repository to remove pkg/\r\n\r\nchore: correct go imports as per linter\r\n\r\nrefactor: undo editor renaming mishap\r\n\r\nrefactor: undo renamed package by editor\r\n\r\nrefactor: make some progress refactoring\r\n\r\ntests: fixed prepareTestClient\r\n\r\ntests: move client mocking to own package\r\n\r\ntests: scope tests to test cert client, not all client\r\n\r\ntests: add test helper client\r\n\r\nchore: some renaming suggested by jim\r\n\r\nrefactor: start moving references to top level Request/Response\r\n\r\nrefactor: convert rest of groups to new structure\r\n\r\ntest: reorganise test files for root\r\n\r\ntests: fix some broken tests with import loop\r\n\r\ntest: add internal test helper values\r\n\r\ntests: correct broken test\r\n\r\nfix: poorly formatted files\r\n\r\ndocs: improve comment on exported func\r\n\r\nstyle(core): address linter complaint\r\n\r\n* tests: add tests for new options to increase coverage\r\n\r\nstyle: appease linter\r\n\r\nchore(deps): fix typo in package import\r\n\r\nchore(deps): group/order imports consistently across all files\r\n\r\nstyle(test): add whitespace to keep test body consistent across all tests\r\n\r\n* tests: cover client creation function\r\n\r\nstyle: appease linter line length\r\n\r\n* tests: move test client to core package\r\n\r\nchore: update test names to match new struct name\r\n\r\nstyle: run linter\r\n\r\n* tests: add test to ensure client implements request maker\r\n\r\nchore: update test anmes\r\n\r\nCo-authored-by: Jim Myhrberg <contact@jimeh.me>",
+          "timestamp": "2021-05-06T09:03:00+01:00",
+          "tree_id": "0f586c2b1fbb531c4ed4a174554286f576fa61a0",
+          "url": "https://github.com/krystal/go-katapult/commit/04e5ede56f9d83ae8dc9e515288f2a09bb44a9ae"
+        },
+        "date": 1620288224210,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkNameGenerator_RandomHostname",
+            "value": 4832,
+            "unit": "ns/op",
+            "extra": "222544 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_NoPrefix",
+            "value": 3735,
+            "unit": "ns/op",
+            "extra": "368667 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_OnePrefix",
+            "value": 3733,
+            "unit": "ns/op",
+            "extra": "326571 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_TwoPrefixes",
+            "value": 4024,
+            "unit": "ns/op",
+            "extra": "327480 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_ThreePrefixes",
+            "value": 3858,
+            "unit": "ns/op",
+            "extra": "345259 times\n2 procs"
           }
         ]
       }
