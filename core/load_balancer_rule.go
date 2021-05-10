@@ -42,9 +42,6 @@ type LoadBalancerRule struct {
 	CheckTimeout    int                       `json:"check_timeout,omitempty"`
 }
 
-type LoadBalancerRuleCreateArguments struct {
-}
-
 type loadBalancerRulesResponseBody struct {
 	Pagination        *katapult.Pagination `json:"pagination,omitempty"`
 	LoadBalancerRule  *LoadBalancerRule    `json:"load_balancer_rule,omitempty"`
@@ -81,6 +78,60 @@ func (s *LoadBalancerRulesClient) List(
 	resp.Pagination = body.Pagination
 
 	return body.LoadBalancerRules, resp, err
+}
+
+type LoadBalancerRuleCreateArguments struct {
+}
+type loadBalancerRuleCreateRequest struct {
+	Properties LoadBalancerRuleCreateArguments
+}
+
+func (s *LoadBalancerRulesClient) Create(
+	ctx context.Context,
+	loadBalancerID string,
+	args LoadBalancerRuleCreateArguments,
+) (*LoadBalancerRule, *katapult.Response, error) {
+	u := &url.URL{Path: fmt.Sprintf("load_balancers/%s/rules", loadBalancerID)}
+	reqBody := &loadBalancerRuleCreateRequest{
+		Properties: args,
+	}
+
+	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
+
+	return body.LoadBalancerRule, resp, err
+}
+
+type LoadBalancerRuleUpdateArguments struct {
+}
+type loadBalancerRuleUpdateRequest struct {
+	Properties LoadBalancerRuleUpdateArguments
+}
+
+func (s *LoadBalancerRulesClient) Update(
+	ctx context.Context,
+	ruleID string,
+	args LoadBalancerRuleUpdateArguments,
+) (*LoadBalancerRule, *katapult.Response, error) {
+	u := &url.URL{Path: fmt.Sprintf("load_balancers/rules/%s", ruleID)}
+	reqBody := &loadBalancerRuleUpdateRequest{
+		Properties: args,
+	}
+
+	body, resp, err := s.doRequest(ctx, "PATCH", u, reqBody)
+
+	return body.LoadBalancerRule, resp, err
+}
+
+func (s *LoadBalancerRulesClient) Delete(
+	ctx context.Context,
+	ruleID string,
+) (*katapult.Response, error) {
+	u := &url.URL{
+		Path: fmt.Sprintf("load_balancers/rules/%s", ruleID),
+	}
+	_, resp, err := s.doRequest(ctx, "DELETE", u, nil)
+
+	return resp, err
 }
 
 func (s *LoadBalancerRulesClient) doRequest(
