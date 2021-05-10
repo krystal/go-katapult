@@ -1,5 +1,12 @@
 package core
 
+import (
+	"context"
+	"fmt"
+	"github.com/krystal/go-katapult"
+	"net/url"
+)
+
 type LoadBalancerRule struct {
 	ID              string     `json:"id,omitempty"`
 	Algorithm       string     `json:"algorithm,omitempty"` // TODO: replace with constrained type?
@@ -19,4 +26,60 @@ type LoadBalancerRule struct {
 }
 
 type LoadBalancerRuleCreateArguments struct {
+}
+
+type loadBalancerRulesResponseBody struct {
+	Pagination        *katapult.Pagination `json:"pagination,omitempty"`
+	LoadBalancerRule  *LoadBalancerRule    `json:"load_balancer_rule,omitempty"`
+	LoadBalancerRules []LoadBalancerRule   `json:"load_balancer_rules,omitempty"`
+}
+
+type LoadBalancerRulesClient struct {
+	client   RequestMaker
+	basePath *url.URL
+}
+
+// NewLoadBalancerRulesClient returns a new LoadBalancerRulesClient for
+// interacting with LoadBalancer Rules.
+func NewLoadBalancerRulesClient(rm RequestMaker) *LoadBalancerRulesClient {
+	return &LoadBalancerRulesClient{
+		client:   rm,
+		basePath: &url.URL{Path: "/core/v1/"},
+	}
+}
+
+// List returns LoadBalancer Rules for the specified LoadBalancer.
+func (s *LoadBalancerRulesClient) List(
+	ctx context.Context,
+	loadBalancerID string,
+	opts *ListOptions,
+) ([]LoadBalancerRule, *katapult.Response, error) {
+	qs := queryValues(opts)
+	u := &url.URL{
+		Path:     fmt.Sprintf("load_balancers/%s/rules", loadBalancerID),
+		RawQuery: qs.Encode(),
+	}
+
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	resp.Pagination = body.Pagination
+
+	return body.LoadBalancerRules, resp, err
+}
+
+func (s *LoadBalancerRulesClient) doRequest(
+	ctx context.Context,
+	method string,
+	u *url.URL,
+	body interface{},
+) (*loadBalancerRulesResponseBody, *katapult.Response, error) {
+	u = s.basePath.ResolveReference(u)
+	respBody := &loadBalancerRulesResponseBody{}
+	resp := katapult.NewResponse(nil)
+
+	req, err := s.client.NewRequestWithContext(ctx, method, u, body)
+	if err == nil {
+		resp, err = s.client.Do(req, respBody)
+	}
+
+	return respBody, resp, err
 }
