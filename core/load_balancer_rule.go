@@ -30,9 +30,26 @@ type LoadBalancerRule struct {
 	DestinationPort int                       `json:"destination_port,omitempty"`
 	ListenPort      int                       `json:"listen_port,omitempty"`
 	Protocol        Protocol                  `json:"protocol,omitempty"`
+	ProxyProtocol   bool                      `json:"proxy_protocol,omitempty"`
 	Certificates    []Certificate             `json:"certificates,omitempty"`
 	BackendSSL      bool                      `json:"backend_ssl,omitempty"`
 	PassthroughSSL  bool                      `json:"passthrough_ssl,omitempty"`
+	CheckEnabled    bool                      `json:"check_enabled,omitempty"`
+	CheckFall       int                       `json:"check_fall,omitempty"`
+	CheckInterval   int                       `json:"check_interval,omitempty"`
+	CheckPath       string                    `json:"check_path,omitempty"`
+	CheckProtocol   Protocol                  `json:"check_protocol,omitempty"`
+	CheckRise       int                       `json:"check_rise,omitempty"`
+	CheckTimeout    int                       `json:"check_timeout,omitempty"`
+}
+
+type LoadBalancerRuleArguments struct {
+	Algorithm       LoadBalancerRuleAlgorithm `json:"algorithm,omitempty"`
+	DestinationPort int                       `json:"destination_port,omitempty"`
+	ListenPort      int                       `json:"listen_port,omitempty"`
+	Protocol        Protocol                  `json:"protocol,omitempty"`
+	ProxyProtocol   bool                      `json:"proxy_protocol,omitempty"`
+	Certificates    []Certificate             `json:"certificates,omitempty"` // TODO: is this actually a certificate lookuop?
 	CheckEnabled    bool                      `json:"check_enabled,omitempty"`
 	CheckFall       int                       `json:"check_fall,omitempty"`
 	CheckInterval   int                       `json:"check_interval,omitempty"`
@@ -80,16 +97,14 @@ func (s *LoadBalancerRulesClient) List(
 	return body.LoadBalancerRules, resp, err
 }
 
-type LoadBalancerRuleCreateArguments struct {
-}
 type loadBalancerRuleCreateRequest struct {
-	Properties LoadBalancerRuleCreateArguments
+	Properties LoadBalancerRuleArguments `json:"properties"`
 }
 
 func (s *LoadBalancerRulesClient) Create(
 	ctx context.Context,
 	loadBalancerID string,
-	args LoadBalancerRuleCreateArguments,
+	args LoadBalancerRuleArguments,
 ) (*LoadBalancerRule, *katapult.Response, error) {
 	u := &url.URL{Path: fmt.Sprintf("load_balancers/%s/rules", loadBalancerID)}
 	reqBody := &loadBalancerRuleCreateRequest{
@@ -101,16 +116,14 @@ func (s *LoadBalancerRulesClient) Create(
 	return body.LoadBalancerRule, resp, err
 }
 
-type LoadBalancerRuleUpdateArguments struct {
-}
 type loadBalancerRuleUpdateRequest struct {
-	Properties LoadBalancerRuleUpdateArguments
+	Properties LoadBalancerRuleArguments `json:"properties"`
 }
 
 func (s *LoadBalancerRulesClient) Update(
 	ctx context.Context,
 	ruleID string,
-	args LoadBalancerRuleUpdateArguments,
+	args LoadBalancerRuleArguments,
 ) (*LoadBalancerRule, *katapult.Response, error) {
 	u := &url.URL{Path: fmt.Sprintf("load_balancers/rules/%s", ruleID)}
 	reqBody := &loadBalancerRuleUpdateRequest{
