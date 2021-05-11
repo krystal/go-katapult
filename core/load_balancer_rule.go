@@ -50,7 +50,7 @@ type LoadBalancerRuleArguments struct {
 	ListenPort      int                       `json:"listen_port,omitempty"`
 	Protocol        Protocol                  `json:"protocol,omitempty"`
 	ProxyProtocol   bool                      `json:"proxy_protocol,omitempty"`
-	Certificates    []Certificate             `json:"certificates,omitempty"` // TODO: is this actually a certificate lookuop?
+	Certificates    []Certificate             `json:"certificates,omitempty"`
 	CheckEnabled    bool                      `json:"check_enabled,omitempty"`
 	CheckFall       int                       `json:"check_fall,omitempty"`
 	CheckInterval   int                       `json:"check_interval,omitempty"`
@@ -139,13 +139,13 @@ func (s *LoadBalancerRulesClient) Update(
 func (s *LoadBalancerRulesClient) Delete(
 	ctx context.Context,
 	ruleID string,
-) (*katapult.Response, error) {
+) (*LoadBalancerRule, *katapult.Response, error) {
 	u := &url.URL{
 		Path: fmt.Sprintf("load_balancers/rules/%s", ruleID),
 	}
-	_, resp, err := s.doRequest(ctx, "DELETE", u, nil)
+	body, resp, err := s.doRequest(ctx, "DELETE", u, nil)
 
-	return resp, err
+	return body.LoadBalancerRule, resp, err
 }
 
 func (s *LoadBalancerRulesClient) doRequest(
