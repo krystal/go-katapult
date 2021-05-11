@@ -93,6 +93,10 @@ func (s *LoadBalancerRulesClient) List(
 	}
 
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	if err != nil {
+		return nil, resp, err
+	}
+
 	resp.Pagination = body.Pagination
 
 	return body.LoadBalancerRules, resp, err
@@ -113,8 +117,11 @@ func (s *LoadBalancerRulesClient) Create(
 	}
 
 	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
+	if err != nil {
+		return nil, resp, err
+	}
 
-	return body.LoadBalancerRule, resp, err
+	return body.LoadBalancerRule, resp, nil
 }
 
 type loadBalancerRuleUpdateRequest struct {
@@ -132,8 +139,11 @@ func (s *LoadBalancerRulesClient) Update(
 	}
 
 	body, resp, err := s.doRequest(ctx, "PATCH", u, reqBody)
+	if err != nil {
+		return nil, resp, err
+	}
 
-	return body.LoadBalancerRule, resp, err
+	return body.LoadBalancerRule, resp, nil
 }
 
 func (s *LoadBalancerRulesClient) Delete(
@@ -144,8 +154,11 @@ func (s *LoadBalancerRulesClient) Delete(
 		Path: fmt.Sprintf("load_balancers/rules/%s", ruleID),
 	}
 	body, resp, err := s.doRequest(ctx, "DELETE", u, nil)
+	if err != nil {
+		return nil, resp, err
+	}
 
-	return body.LoadBalancerRule, resp, err
+	return body.LoadBalancerRule, resp, nil
 }
 
 func (s *LoadBalancerRulesClient) doRequest(
@@ -155,14 +168,17 @@ func (s *LoadBalancerRulesClient) doRequest(
 	body interface{},
 ) (*loadBalancerRulesResponseBody, *katapult.Response, error) {
 	u = s.basePath.ResolveReference(u)
-	respBody := &loadBalancerRulesResponseBody{}
-	resp := katapult.NewResponse(nil)
 
 	req, err := s.client.NewRequestWithContext(ctx, method, u, body)
 	if err != nil {
-		return respBody, resp, err
+		return nil, nil, err
 	}
-	resp, err = s.client.Do(req, respBody)
 
-	return respBody, resp, err
+	respBody := &loadBalancerRulesResponseBody{}
+	resp, err := s.client.Do(req, respBody)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return respBody, resp, nil
 }

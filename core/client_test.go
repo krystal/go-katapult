@@ -130,7 +130,7 @@ func (frm *fakeRequestMaker) Do(
 	if frm.args.doResponseBody != nil {
 		// Assert that the passed in interface is a not nil ptr
 		rv := reflect.ValueOf(val)
-		assert.Equal(frm.t, reflect.Ptr, rv.Type())
+		assert.True(frm.t, rv.Kind() == reflect.Ptr)
 		assert.NotNil(frm.t, val)
 		// Set value!
 		rv.Elem().Set(reflect.ValueOf(frm.args.doResponseBody).Elem())

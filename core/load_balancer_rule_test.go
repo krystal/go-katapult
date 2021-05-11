@@ -3,9 +3,7 @@ package core
 import (
 	"context"
 	"fmt"
-	"github.com/krystal/go-katapult"
 	"github.com/stretchr/testify/assert"
-	"net/http"
 	"testing"
 )
 
@@ -102,68 +100,59 @@ func TestLoadBalancerRulesClient_Delete(t *testing.T) {
 	type args struct {
 		ruleID string
 	}
+	lbr := LoadBalancerRule{
+		ID:              "abc",
+		DestinationPort: 55,
+	}
 	tests := []struct {
-		name       string
-		args       args
-		want       *LoadBalancerRule
-		errStr     string
-		errResp    *katapult.ResponseError
-		respStatus int
-		respBody   []byte
+		name string
+		args args
+		frm  fakeRequestMakerArgs
+
+		want    *LoadBalancerRule
+		wantErr string
 	}{
 		{
-			name: "by ID",
+			name: "success",
 			args: args{
 				ruleID: "123",
 			},
-			want: &LoadBalancerRule{
-				ID: "123",
+			want: &lbr,
+			frm: fakeRequestMakerArgs{
+				wantPath:       "/core/v1/load_balancers/rules/123",
+				wantMethod:     "DELETE",
+				wantBody:       nil,
+				doResponseBody: &loadBalancerRulesResponseBody{LoadBalancerRule: &lbr},
 			},
-			respStatus: http.StatusOK,
-			respBody:   []byte(`{"load_balancer_rule": {"ID": "123"}}`),
 		},
 		{
-			name: "non-existent load balancer rule",
+			name: "new request fails",
 			args: args{
 				ruleID: "123",
 			},
-			errStr:     fixtureLoadBalancerNotFoundErr,
-			errResp:    fixtureLoadBalancerNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("load_balancer_not_found_error"),
+			frm: fakeRequestMakerArgs{
+				wantPath:   "/core/v1/load_balancers/rules/123",
+				wantMethod: "DELETE",
+				newReqErr:  fmt.Errorf("rats chewed cables"),
+			},
+			wantErr: "rats chewed cables",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rm, mux, _, teardown := prepareTestClient(t)
-			defer teardown()
-			c := NewLoadBalancerRulesClient(rm)
-
-			mux.HandleFunc(
-				fmt.Sprintf("/core/v1/load_balancers_rules/%s", tt.args.ruleID),
-				func(w http.ResponseWriter, r *http.Request) {
-					assert.Equal(t, "DELETE", r.Method)
-
-					w.WriteHeader(tt.respStatus)
-					_, _ = w.Write(tt.respBody)
-				},
-			)
+			c := NewLoadBalancerRulesClient(&fakeRequestMaker{t: t, args: tt.frm})
 
 			got, resp, err := c.Delete(context.Background(), tt.args.ruleID)
-			assert.Equal(t, tt.respStatus, resp.StatusCode)
+			assert.NotNil(t, resp)
 
-			if tt.errStr == "" {
+			if tt.wantErr == "" {
 				assert.NoError(t, err)
 			} else {
-				assert.EqualError(t, err, tt.errStr)
+				assert.EqualError(t, err, tt.wantErr)
 			}
 
 			if tt.want != nil {
 				assert.Equal(t, tt.want, got)
-			}
-
-			if tt.errResp != nil {
-				assert.Equal(t, tt.errResp, resp.Error)
 			}
 		})
 	}
