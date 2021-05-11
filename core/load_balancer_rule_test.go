@@ -3,9 +3,10 @@ package core
 import (
 	"context"
 	"fmt"
+	"testing"
+
 	"github.com/krystal/go-katapult"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestClient_LoadBalancerRules(t *testing.T) {

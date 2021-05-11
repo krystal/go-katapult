@@ -117,14 +117,16 @@ type fakeRequestMakerArgs struct {
 }
 
 type fakeRequestMaker struct {
-	t    *testing.T
-	args fakeRequestMakerArgs
+	t                    *testing.T
+	newRequestBeenCalled bool
+	args                 fakeRequestMakerArgs
 }
 
 func (frm *fakeRequestMaker) Do(
 	req *http.Request,
 	val interface{},
 ) (*katapult.Response, error) {
+	assert.True(frm.t, frm.newRequestBeenCalled)
 	assert.NotNil(frm.t, req)
 
 	if frm.args.doErr != nil {
@@ -151,6 +153,7 @@ func (frm *fakeRequestMaker) NewRequestWithContext(
 	u *url.URL,
 	body interface{},
 ) (*http.Request, error) {
+	frm.newRequestBeenCalled = true
 	assert.NotNil(frm.t, ctx)
 	assert.Equal(frm.t, frm.args.wantPath, u.String())
 	assert.Equal(frm.t, frm.args.wantMethod, method)
