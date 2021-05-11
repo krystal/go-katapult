@@ -3,6 +3,7 @@ package core
 import (
 	"context"
 	"fmt"
+	"github.com/krystal/go-katapult"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -109,8 +110,9 @@ func TestLoadBalancerRulesClient_Delete(t *testing.T) {
 		args args
 		frm  fakeRequestMakerArgs
 
-		want    *LoadBalancerRule
-		wantErr string
+		want         *LoadBalancerRule
+		wantErr      string
+		wantResponse bool
 	}{
 		{
 			name: "success",
@@ -123,6 +125,7 @@ func TestLoadBalancerRulesClient_Delete(t *testing.T) {
 				wantMethod:     "DELETE",
 				wantBody:       nil,
 				doResponseBody: &loadBalancerRulesResponseBody{LoadBalancerRule: &lbr},
+				doResp:         &katapult.Response{},
 			},
 		},
 		{
@@ -137,13 +140,27 @@ func TestLoadBalancerRulesClient_Delete(t *testing.T) {
 			},
 			wantErr: "rats chewed cables",
 		},
+		{
+			name: "http do fails",
+			args: args{
+				ruleID: "123",
+			},
+			frm: fakeRequestMakerArgs{
+				wantPath:   "/core/v1/load_balancers/rules/123",
+				wantMethod: "DELETE",
+				wantBody:   nil,
+				doErr:      fmt.Errorf("flux capacitor undercharged"),
+				doResp:     &katapult.Response{},
+			},
+			wantErr: "flux capacitor undercharged",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c := NewLoadBalancerRulesClient(&fakeRequestMaker{t: t, args: tt.frm})
 
 			got, resp, err := c.Delete(context.Background(), tt.args.ruleID)
-			assert.NotNil(t, resp)
+			assert.Equal(t, tt.frm.doResp, resp)
 
 			if tt.wantErr == "" {
 				assert.NoError(t, err)
@@ -151,9 +168,7 @@ func TestLoadBalancerRulesClient_Delete(t *testing.T) {
 				assert.EqualError(t, err, tt.wantErr)
 			}
 
-			if tt.want != nil {
-				assert.Equal(t, tt.want, got)
-			}
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

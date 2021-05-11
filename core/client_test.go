@@ -127,6 +127,10 @@ func (frm *fakeRequestMaker) Do(
 ) (*katapult.Response, error) {
 	assert.NotNil(frm.t, req)
 
+	if frm.args.doErr != nil {
+		return frm.args.doResp, frm.args.doErr
+	}
+
 	if frm.args.doResponseBody != nil {
 		// Assert that the passed in interface is a not nil ptr
 		rv := reflect.ValueOf(val)
@@ -138,7 +142,7 @@ func (frm *fakeRequestMaker) Do(
 		assert.Nil(frm.t, val)
 	}
 
-	return frm.args.doResp, frm.args.doErr
+	return frm.args.doResp, nil
 }
 
 func (frm *fakeRequestMaker) NewRequestWithContext(
