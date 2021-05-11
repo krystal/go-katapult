@@ -159,9 +159,10 @@ func (s *LoadBalancerRulesClient) doRequest(
 	resp := katapult.NewResponse(nil)
 
 	req, err := s.client.NewRequestWithContext(ctx, method, u, body)
-	if err == nil {
-		resp, err = s.client.Do(req, respBody)
+	if err != nil {
+		return respBody, resp, err
 	}
+	resp, err = s.client.Do(req, respBody)
 
 	return respBody, resp, err
 }
