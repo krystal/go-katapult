@@ -59,6 +59,7 @@ func TestLoadBalancerRule_JSONMarshalling(t *testing.T) {
 }
 
 func TestLoadBalancerRuleArguments_JSONMarshalling(t *testing.T) {
+	falsy := false
 	tests := []struct {
 		name string
 		obj  *LoadBalancerRuleArguments
@@ -74,13 +75,13 @@ func TestLoadBalancerRuleArguments_JSONMarshalling(t *testing.T) {
 				DestinationPort: 1024,
 				ListenPort:      1337,
 				Protocol:        HTTPProtocol,
-				ProxyProtocol:   true,
+				ProxyProtocol:   &falsy,
 				Certificates: []Certificate{
 					{
 						ID: "another abitrary string",
 					},
 				},
-				CheckEnabled:  true,
+				CheckEnabled:  &falsy,
 				CheckFall:     3,
 				CheckInterval: 50,
 				CheckPath:     "/healthz",

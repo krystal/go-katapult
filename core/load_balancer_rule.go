@@ -49,9 +49,9 @@ type LoadBalancerRuleArguments struct {
 	DestinationPort int                       `json:"destination_port,omitempty"`
 	ListenPort      int                       `json:"listen_port,omitempty"`
 	Protocol        Protocol                  `json:"protocol,omitempty"`
-	ProxyProtocol   bool                      `json:"proxy_protocol,omitempty"`
+	ProxyProtocol   *bool                     `json:"proxy_protocol,omitempty"`
 	Certificates    []Certificate             `json:"certificates,omitempty"`
-	CheckEnabled    bool                      `json:"check_enabled,omitempty"`
+	CheckEnabled    *bool                     `json:"check_enabled,omitempty"`
 	CheckFall       int                       `json:"check_fall,omitempty"`
 	CheckInterval   int                       `json:"check_interval,omitempty"`
 	CheckPath       string                    `json:"check_path,omitempty"`
@@ -83,12 +83,12 @@ func NewLoadBalancerRulesClient(rm RequestMaker) *LoadBalancerRulesClient {
 // List returns LoadBalancer Rules for the specified LoadBalancer.
 func (s *LoadBalancerRulesClient) List(
 	ctx context.Context,
-	loadBalancerID string,
+	lb LoadBalancer,
 	opts *ListOptions,
 ) ([]LoadBalancerRule, *katapult.Response, error) {
 	qs := queryValues(opts)
 	u := &url.URL{
-		Path:     fmt.Sprintf("load_balancers/%s/rules", loadBalancerID),
+		Path:     fmt.Sprintf("load_balancers/%s/rules", lb.ID),
 		RawQuery: qs.Encode(),
 	}
 
@@ -108,10 +108,10 @@ type loadBalancerRuleCreateRequest struct {
 
 func (s *LoadBalancerRulesClient) Create(
 	ctx context.Context,
-	loadBalancerID string,
+	lb LoadBalancer,
 	args LoadBalancerRuleArguments,
 ) (*LoadBalancerRule, *katapult.Response, error) {
-	u := &url.URL{Path: fmt.Sprintf("load_balancers/%s/rules", loadBalancerID)}
+	u := &url.URL{Path: fmt.Sprintf("load_balancers/%s/rules", lb.ID)}
 	reqBody := &loadBalancerRuleCreateRequest{
 		Properties: args,
 	}
