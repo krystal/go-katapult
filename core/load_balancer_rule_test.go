@@ -60,7 +60,6 @@ func TestLoadBalancerRule_JSONMarshalling(t *testing.T) {
 }
 
 func TestLoadBalancerRuleArguments_JSONMarshalling(t *testing.T) {
-	falsy := false
 	tests := []struct {
 		name string
 		obj  *LoadBalancerRuleArguments
@@ -76,13 +75,13 @@ func TestLoadBalancerRuleArguments_JSONMarshalling(t *testing.T) {
 				DestinationPort: 1024,
 				ListenPort:      1337,
 				Protocol:        HTTPProtocol,
-				ProxyProtocol:   &falsy,
+				ProxyProtocol:   boolPtr(false),
 				Certificates: []Certificate{
 					{
 						ID: "another abitrary string",
 					},
 				},
-				CheckEnabled:  &falsy,
+				CheckEnabled:  boolPtr(false),
 				CheckFall:     3,
 				CheckInterval: 50,
 				CheckPath:     "/healthz",
@@ -180,6 +179,91 @@ func Test_loadBalancerRuleUpdateRequest_JSONMarshalling(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
+func TestLoadBalancerRulesClient_Get(t *testing.T) {
+	type args struct {
+		id string
+	}
+	tests := []struct {
+		name    string
+		frm     fakeRequestMakerArgs
+		args    args
+		want    *LoadBalancerRule
+		wantErr string
+	}{
+		{
+			name: "success",
+			args: args{
+				id: "123",
+			},
+			want: &LoadBalancerRule{
+				ID:         "123",
+				ListenPort: 132,
+			},
+			frm: fakeRequestMakerArgs{
+				wantPath:   "/core/v1/load_balancers/rules/123",
+				wantMethod: "GET",
+				wantBody:   nil,
+				doResponseBody: &loadBalancerRulesResponseBody{
+					LoadBalancerRule: &LoadBalancerRule{
+						ID:         "123",
+						ListenPort: 132,
+					},
+				},
+				doResp: &katapult.Response{},
+			},
+		},
+		{
+			name: "new request fails",
+			args: args{
+				id: "123",
+			},
+			frm: fakeRequestMakerArgs{
+				wantPath:   "/core/v1/load_balancers/rules/123",
+				wantMethod: "GET",
+				wantBody:   nil,
+				newReqErr:  fmt.Errorf("rats chewed cables"),
+			},
+			wantErr: "rats chewed cables",
+		},
+		{
+			name: "http do fails",
+			args: args{
+				id: "123",
+			},
+			frm: fakeRequestMakerArgs{
+				wantPath:   "/core/v1/load_balancers/rules/123",
+				wantMethod: "GET",
+				wantBody:   nil,
+				doErr:      fmt.Errorf("flux capacitor undercharged"),
+				doResp:     &katapult.Response{},
+			},
+			wantErr: "flux capacitor undercharged",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := NewLoadBalancerRulesClient(&fakeRequestMaker{
+				t:    t,
+				args: tt.frm,
+			})
+
+			got, resp, err := c.Get(
+				context.Background(),
+				tt.args.id,
+			)
+			assert.Equal(t, tt.frm.doResp, resp)
+
+			if tt.wantErr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.wantErr)
+			}
+
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
