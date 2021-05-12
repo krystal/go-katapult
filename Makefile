@@ -61,7 +61,6 @@ tools: $(TOOLS)
 # Development
 #
 
-TEST ?= $$(go list ./... | grep -v 'vendor')
 BENCH ?= .
 
 .PHONY: clean
@@ -76,7 +75,7 @@ clean-golden:
 
 .PHONY: test
 test:
-	go test $(V) -count=1 -race $(TESTARGS) $(TEST)
+	go test $(V) -count=1 -race $(TESTARGS) ./...
 
 .PHONY: test-update-golden
 test-update-golden:
@@ -100,7 +99,7 @@ format: gofumports
 .SILENT: bench
 .PHONY: bench
 bench:
-	go test $(V) -count=1 -bench=$(BENCH) $(TESTARGS) $(TEST)
+	go test $(V) -count=1 -bench=$(BENCH) $(TESTARGS) ./...
 
 #
 # Coverage

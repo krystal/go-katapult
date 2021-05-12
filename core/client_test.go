@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"reflect"
 	"testing"
 
 	"github.com/krystal/go-katapult"
@@ -100,16 +101,54 @@ func TestClientImplementsRequestMaker(t *testing.T) {
 	assert.Implements(t, (*RequestMaker)(nil), new(katapult.Client))
 }
 
-// TODO: Flesh this out for use for unit testing
 // Perhaps consider golden/testdata integration for generating request/response
 // data.
-type fakeRequestMaker struct{}
+
+type fakeRequestMakerArgs struct {
+	wantPath   string
+	wantValues url.Values
+	wantMethod string
+	wantBody   interface{}
+	newReqErr  error
+
+	doResp *katapult.Response
+	// doResponseBody should be a pointer to a type :)
+	doResponseBody interface{}
+	doErr          error
+}
+
+type fakeRequestMaker struct {
+	t                    *testing.T
+	newRequestBeenCalled bool
+	args                 fakeRequestMakerArgs
+}
 
 func (frm *fakeRequestMaker) Do(
 	req *http.Request,
 	val interface{},
 ) (*katapult.Response, error) {
-	return nil, nil
+	assert.True(frm.t, frm.newRequestBeenCalled)
+	assert.NotNil(frm.t, req)
+	assert.Equal(frm.t, frm.args.wantPath, req.URL.Path)
+	assert.Equal(frm.t, frm.args.wantMethod, req.Method)
+	assert.Equal(frm.t, frm.args.wantValues, req.URL.Query())
+
+	if frm.args.doErr != nil {
+		return frm.args.doResp, frm.args.doErr
+	}
+
+	if frm.args.doResponseBody != nil {
+		// Assert that the passed in interface is a not nil ptr
+		rv := reflect.ValueOf(val)
+		assert.True(frm.t, rv.Kind() == reflect.Ptr)
+		assert.NotNil(frm.t, val)
+		// Set value!
+		rv.Elem().Set(reflect.ValueOf(frm.args.doResponseBody).Elem())
+	} else {
+		assert.Nil(frm.t, val)
+	}
+
+	return frm.args.doResp, nil
 }
 
 func (frm *fakeRequestMaker) NewRequestWithContext(
@@ -118,13 +157,33 @@ func (frm *fakeRequestMaker) NewRequestWithContext(
 	u *url.URL,
 	body interface{},
 ) (*http.Request, error) {
-	return nil, nil
+	frm.newRequestBeenCalled = true
+	assert.NotNil(frm.t, ctx)
+	assert.Equal(frm.t, frm.args.wantPath, u.Path)
+	assert.Equal(frm.t, frm.args.wantMethod, method)
+
+	if frm.args.wantValues == nil {
+		frm.args.wantValues = url.Values{}
+	}
+	assert.Equal(frm.t, frm.args.wantValues, u.Query())
+	assert.Equal(frm.t, frm.args.wantBody, body)
+
+	if frm.args.newReqErr != nil {
+		return nil, frm.args.newReqErr
+	}
+
+	return &http.Request{
+		URL:    u,
+		Method: method,
+	}, nil
 }
 
 func TestNew(t *testing.T) {
 	t.Parallel()
 
-	frm := &fakeRequestMaker{}
+	frm := &fakeRequestMaker{
+		t: t,
+	}
 	c := New(frm)
 
 	assert.Equal(t, frm, c.Certificates.client)

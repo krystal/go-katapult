@@ -15,6 +15,7 @@ type Client struct {
 	DiskTemplates                   *DiskTemplatesClient
 	IPAddresses                     *IPAddressesClient
 	LoadBalancers                   *LoadBalancersClient
+	LoadBalancerRules               *LoadBalancerRulesClient
 	NetworkSpeedProfiles            *NetworkSpeedProfilesClient
 	Networks                        *NetworksClient
 	Organizations                   *OrganizationsClient
@@ -48,6 +49,7 @@ func New(rm RequestMaker) *Client {
 		DiskTemplates:                   NewDiskTemplatesClient(rm),
 		IPAddresses:                     NewIPAddressesClient(rm),
 		LoadBalancers:                   NewLoadBalancersClient(rm),
+		LoadBalancerRules:               NewLoadBalancerRulesClient(rm),
 		NetworkSpeedProfiles:            NewNetworkSpeedProfilesClient(rm),
 		Networks:                        NewNetworksClient(rm),
 		Organizations:                   NewOrganizationsClient(rm),
