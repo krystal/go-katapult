@@ -184,7 +184,13 @@ func TestLoadBalancerCreateArguments_JSONMarshaling(t *testing.T) {
 				Name:          "helper",
 				ResourceType:  TagsResourceType,
 				ResourceIDs:   &[]string{"id1", "id2"},
-				HTTPSRedirect: true,
+				HTTPSRedirect: truePtr,
+			},
+		},
+		{
+			name: "false HTTPSRedirect",
+			obj: &LoadBalancerCreateArguments{
+				HTTPSRedirect: falsePtr,
 			},
 		},
 		{
@@ -304,12 +310,18 @@ func TestLoadBalancerUpdateArguments_JSONMarshaling(t *testing.T) {
 				Name:          "helper",
 				ResourceType:  TagsResourceType,
 				ResourceIDs:   &[]string{"id1", "id2"},
-				HTTPSRedirect: true,
+				HTTPSRedirect: truePtr,
 			},
 		},
 		{
 			name: "empty ResourceIDs",
 			obj:  &LoadBalancerUpdateArguments{ResourceIDs: &[]string{}},
+		},
+		{
+			name: "false HTTPSRedirect",
+			obj: &LoadBalancerUpdateArguments{
+				HTTPSRedirect: falsePtr,
+			},
 		},
 	}
 	for _, tt := range tests {
