@@ -83,7 +83,7 @@ func NewLoadBalancerRulesClient(rm RequestMaker) *LoadBalancerRulesClient {
 // List returns LoadBalancer Rules for the specified LoadBalancer.
 func (s *LoadBalancerRulesClient) List(
 	ctx context.Context,
-	lb LoadBalancer,
+	lb *LoadBalancer,
 	opts *ListOptions,
 ) ([]LoadBalancerRule, *katapult.Response, error) {
 	qs := queryValues(opts)
@@ -108,7 +108,7 @@ type loadBalancerRuleCreateRequest struct {
 
 func (s *LoadBalancerRulesClient) Create(
 	ctx context.Context,
-	lb LoadBalancer,
+	lb *LoadBalancer,
 	args LoadBalancerRuleArguments,
 ) (*LoadBalancerRule, *katapult.Response, error) {
 	u := &url.URL{Path: fmt.Sprintf("load_balancers/%s/rules", lb.ID)}
@@ -130,10 +130,10 @@ type loadBalancerRuleUpdateRequest struct {
 
 func (s *LoadBalancerRulesClient) Update(
 	ctx context.Context,
-	ruleID string,
+	rule *LoadBalancerRule,
 	args LoadBalancerRuleArguments,
 ) (*LoadBalancerRule, *katapult.Response, error) {
-	u := &url.URL{Path: fmt.Sprintf("load_balancers/rules/%s", ruleID)}
+	u := &url.URL{Path: fmt.Sprintf("load_balancers/rules/%s", rule.ID)}
 	reqBody := &loadBalancerRuleUpdateRequest{
 		Properties: args,
 	}
@@ -148,10 +148,10 @@ func (s *LoadBalancerRulesClient) Update(
 
 func (s *LoadBalancerRulesClient) Delete(
 	ctx context.Context,
-	ruleID string,
+	rule *LoadBalancerRule,
 ) (*LoadBalancerRule, *katapult.Response, error) {
 	u := &url.URL{
-		Path: fmt.Sprintf("load_balancers/rules/%s", ruleID),
+		Path: fmt.Sprintf("load_balancers/rules/%s", rule.ID),
 	}
 	body, resp, err := s.doRequest(ctx, "DELETE", u, nil)
 	if err != nil {
