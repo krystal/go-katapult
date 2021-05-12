@@ -43,7 +43,7 @@ type LoadBalancerCreateArguments struct {
 	Name          string       `json:"name,omitempty"`
 	ResourceType  ResourceType `json:"resource_type,omitempty"`
 	ResourceIDs   *[]string    `json:"resource_ids,omitempty"`
-	HTTPSRedirect bool         `json:"https_redirect,omitempty"`
+	HTTPSRedirect *bool        `json:"https_redirect,omitempty"`
 }
 
 func (
@@ -63,7 +63,7 @@ type LoadBalancerUpdateArguments struct {
 	Name          string       `json:"name,omitempty"`
 	ResourceType  ResourceType `json:"resource_type,omitempty"`
 	ResourceIDs   *[]string    `json:"resource_ids,omitempty"`
-	HTTPSRedirect bool         `json:"https_redirect,omitempty"`
+	HTTPSRedirect *bool        `json:"https_redirect,omitempty"`
 }
 
 type loadBalancerCreateRequest struct {
