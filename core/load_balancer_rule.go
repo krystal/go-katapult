@@ -10,9 +10,9 @@ import (
 
 type LoadBalancerRuleAlgorithm string
 
+//nolint:lll
 const (
-	RoundRobinRuleAlgorithm LoadBalancerRuleAlgorithm = "round_robin"
-	//nolint:lll
+	RoundRobinRuleAlgorithm       LoadBalancerRuleAlgorithm = "round_robin"
 	LeastConnectionsRuleAlgorithm LoadBalancerRuleAlgorithm = "least_connections"
 	StickyRuleAlgorithm           LoadBalancerRuleAlgorithm = "sticky"
 )
