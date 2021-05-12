@@ -3,6 +3,7 @@ package core
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"testing"
 
 	"github.com/krystal/go-katapult"
@@ -182,21 +183,29 @@ func Test_loadBalancerRuleUpdateRequest_JSONMarshalling(t *testing.T) {
 		})
 	}
 }
-func TestLoadBalancerRulesClient_List(t *testing.T) {
-	tests := []struct {
-		name string
-		frm  fakeRequestMakerArgs
 
+func TestLoadBalancerRulesClient_List(t *testing.T) {
+	type args struct {
 		loadBalancerID string
 		listOptions    *ListOptions
-
+	}
+	tests := []struct {
+		name     string
+		frm      fakeRequestMakerArgs
+		args     args
 		want     []LoadBalancerRule
 		wantResp *katapult.Response
 		wantErr  string
 	}{
 		{
-			name:           "success",
-			loadBalancerID: "xyzzy",
+			name: "success",
+			args: args{
+				loadBalancerID: "xyzzy",
+				listOptions: &ListOptions{
+					Page:    5,
+					PerPage: 32,
+				},
+			},
 			want: []LoadBalancerRule{{
 				ID:              "abc",
 				DestinationPort: 666,
@@ -204,14 +213,14 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 			wantResp: &katapult.Response{
 				Pagination: &katapult.Pagination{Total: 333},
 			},
-			listOptions: &ListOptions{
-				Page:    5,
-				PerPage: 32,
-			},
 			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/load_balancers/xyzzy/rules?page=5&per_page=32", //nolint:lll
+				wantPath:   "/core/v1/load_balancers/xyzzy/rules",
 				wantMethod: "GET",
 				wantBody:   nil,
+				wantValues: url.Values{
+					"page":     []string{"5"},
+					"per_page": []string{"32"},
+				},
 				doResponseBody: &loadBalancerRulesResponseBody{
 					LoadBalancerRules: []LoadBalancerRule{
 						{ID: "abc", DestinationPort: 666},
@@ -222,13 +231,16 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 			},
 		},
 		{
-			name:           "success with nil options",
-			loadBalancerID: "xyzzy",
+			name: "success with nil options",
+			args: args{
+				loadBalancerID: "xyzzy",
+				listOptions:    nil,
+			},
+
 			want: []LoadBalancerRule{{
 				ID: "cbd",
 			}},
-			wantResp:    &katapult.Response{},
-			listOptions: nil,
+			wantResp: &katapult.Response{},
 			frm: fakeRequestMakerArgs{
 				wantPath:   "/core/v1/load_balancers/xyzzy/rules",
 				wantMethod: "GET",
@@ -242,8 +254,10 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 			},
 		},
 		{
-			name:           "new request fails",
-			loadBalancerID: "xyzzy",
+			name: "new request fails",
+			args: args{
+				loadBalancerID: "xyzzy",
+			},
 			frm: fakeRequestMakerArgs{
 				wantPath:   "/core/v1/load_balancers/xyzzy/rules",
 				wantMethod: "GET",
@@ -253,8 +267,10 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 			wantErr: "rats chewed cables",
 		},
 		{
-			name:           "http do fails",
-			loadBalancerID: "xyzzy",
+			name: "http do fails",
+			args: args{
+				loadBalancerID: "xyzzy",
+			},
 			frm: fakeRequestMakerArgs{
 				wantPath:   "/core/v1/load_balancers/xyzzy/rules",
 				wantMethod: "GET",
@@ -275,8 +291,8 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 
 			got, resp, err := c.List(
 				context.Background(),
-				&LoadBalancer{ID: tt.loadBalancerID},
-				tt.listOptions,
+				&LoadBalancer{ID: tt.args.loadBalancerID},
+				tt.args.listOptions,
 			)
 			assert.Equal(t, tt.wantResp, resp)
 
@@ -292,24 +308,27 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 }
 
 func TestLoadBalancerRulesClient_Create(t *testing.T) {
-	tests := []struct {
-		name string
-		frm  fakeRequestMakerArgs
-
+	type args struct {
 		loadBalancerID string
-		args           LoadBalancerRuleArguments
-
+		creationArgs   LoadBalancerRuleArguments
+	}
+	tests := []struct {
+		name    string
+		frm     fakeRequestMakerArgs
+		args    args
 		want    *LoadBalancerRule
 		wantErr string
 	}{
 		{
-			name:           "success",
-			loadBalancerID: "xyzzy",
+			name: "success",
+			args: args{
+				loadBalancerID: "xyzzy",
+				creationArgs:   LoadBalancerRuleArguments{DestinationPort: 666},
+			},
 			want: &LoadBalancerRule{
 				ID:              "abc",
 				DestinationPort: 666,
 			},
-			args: LoadBalancerRuleArguments{DestinationPort: 666},
 			frm: fakeRequestMakerArgs{
 				wantPath:   "/core/v1/load_balancers/xyzzy/rules",
 				wantMethod: "POST",
@@ -328,8 +347,10 @@ func TestLoadBalancerRulesClient_Create(t *testing.T) {
 			},
 		},
 		{
-			name:           "new request fails",
-			loadBalancerID: "xyzzy",
+			name: "new request fails",
+			args: args{
+				loadBalancerID: "xyzzy",
+			},
 			frm: fakeRequestMakerArgs{
 				wantPath:   "/core/v1/load_balancers/xyzzy/rules",
 				wantMethod: "POST",
@@ -341,8 +362,10 @@ func TestLoadBalancerRulesClient_Create(t *testing.T) {
 			wantErr: "rats chewed cables",
 		},
 		{
-			name:           "http do fails",
-			loadBalancerID: "xyzzy",
+			name: "http do fails",
+			args: args{
+				loadBalancerID: "xyzzy",
+			},
 			frm: fakeRequestMakerArgs{
 				wantPath:   "/core/v1/load_balancers/xyzzy/rules",
 				wantMethod: "POST",
@@ -364,8 +387,8 @@ func TestLoadBalancerRulesClient_Create(t *testing.T) {
 
 			got, resp, err := c.Create(
 				context.Background(),
-				&LoadBalancer{ID: tt.loadBalancerID},
-				tt.args,
+				&LoadBalancer{ID: tt.args.loadBalancerID},
+				tt.args.creationArgs,
 			)
 			assert.Equal(t, tt.frm.doResp, resp)
 
@@ -381,24 +404,27 @@ func TestLoadBalancerRulesClient_Create(t *testing.T) {
 }
 
 func TestLoadBalancerRulesClient_Update(t *testing.T) {
+	type args struct {
+		ruleID     string
+		updateArgs LoadBalancerRuleArguments
+	}
 	tests := []struct {
-		name string
-		frm  fakeRequestMakerArgs
-
-		ruleID string
-		args   LoadBalancerRuleArguments
-
+		name    string
+		frm     fakeRequestMakerArgs
+		args    args
 		want    *LoadBalancerRule
 		wantErr string
 	}{
 		{
-			name:   "success",
-			ruleID: "123",
+			name: "success",
 			want: &LoadBalancerRule{
 				ID:              "abc",
 				DestinationPort: 666,
 			},
-			args: LoadBalancerRuleArguments{DestinationPort: 666},
+			args: args{
+				updateArgs: LoadBalancerRuleArguments{DestinationPort: 666},
+				ruleID:     "123",
+			},
 			frm: fakeRequestMakerArgs{
 				wantPath:   "/core/v1/load_balancers/rules/123",
 				wantMethod: "PATCH",
@@ -417,8 +443,10 @@ func TestLoadBalancerRulesClient_Update(t *testing.T) {
 			},
 		},
 		{
-			name:   "new request fails",
-			ruleID: "123",
+			name: "new request fails",
+			args: args{
+				ruleID: "123",
+			},
 			frm: fakeRequestMakerArgs{
 				wantPath:   "/core/v1/load_balancers/rules/123",
 				wantMethod: "PATCH",
@@ -430,8 +458,10 @@ func TestLoadBalancerRulesClient_Update(t *testing.T) {
 			wantErr: "rats chewed cables",
 		},
 		{
-			name:   "http do fails",
-			ruleID: "123",
+			name: "http do fails",
+			args: args{
+				ruleID: "123",
+			},
 			frm: fakeRequestMakerArgs{
 				wantPath:   "/core/v1/load_balancers/rules/123",
 				wantMethod: "PATCH",
@@ -453,8 +483,8 @@ func TestLoadBalancerRulesClient_Update(t *testing.T) {
 
 			got, resp, err := c.Update(
 				context.Background(),
-				&LoadBalancerRule{ID: tt.ruleID},
-				tt.args,
+				&LoadBalancerRule{ID: tt.args.ruleID},
+				tt.args.updateArgs,
 			)
 			assert.Equal(t, tt.frm.doResp, resp)
 

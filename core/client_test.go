@@ -106,6 +106,7 @@ func TestClientImplementsRequestMaker(t *testing.T) {
 
 type fakeRequestMakerArgs struct {
 	wantPath   string
+	wantValues url.Values
 	wantMethod string
 	wantBody   interface{}
 	newReqErr  error
@@ -128,6 +129,9 @@ func (frm *fakeRequestMaker) Do(
 ) (*katapult.Response, error) {
 	assert.True(frm.t, frm.newRequestBeenCalled)
 	assert.NotNil(frm.t, req)
+	assert.Equal(frm.t, frm.args.wantPath, req.URL.Path)
+	assert.Equal(frm.t, frm.args.wantMethod, req.Method)
+	assert.Equal(frm.t, frm.args.wantValues, req.URL.Query())
 
 	if frm.args.doErr != nil {
 		return frm.args.doResp, frm.args.doErr
@@ -155,15 +159,23 @@ func (frm *fakeRequestMaker) NewRequestWithContext(
 ) (*http.Request, error) {
 	frm.newRequestBeenCalled = true
 	assert.NotNil(frm.t, ctx)
-	assert.Equal(frm.t, frm.args.wantPath, u.String())
+	assert.Equal(frm.t, frm.args.wantPath, u.Path)
 	assert.Equal(frm.t, frm.args.wantMethod, method)
+
+	if frm.args.wantValues == nil {
+		frm.args.wantValues = url.Values{}
+	}
+	assert.Equal(frm.t, frm.args.wantValues, u.Query())
 	assert.Equal(frm.t, frm.args.wantBody, body)
 
 	if frm.args.newReqErr != nil {
 		return nil, frm.args.newReqErr
 	}
 
-	return &http.Request{}, nil
+	return &http.Request{
+		URL:    u,
+		Method: method,
+	}, nil
 }
 
 func TestNew(t *testing.T) {
