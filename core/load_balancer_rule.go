@@ -8,11 +8,11 @@ import (
 	"github.com/krystal/go-katapult"
 )
 
-// TODO: Decide naming on this
 type LoadBalancerRuleAlgorithm string
 
 const (
-	RoundRobinRuleAlgorithm       LoadBalancerRuleAlgorithm = "round_robin"
+	RoundRobinRuleAlgorithm LoadBalancerRuleAlgorithm = "round_robin"
+	//nolint:lll
 	LeastConnectionsRuleAlgorithm LoadBalancerRuleAlgorithm = "least_connections"
 	StickyRuleAlgorithm           LoadBalancerRuleAlgorithm = "sticky"
 )

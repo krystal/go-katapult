@@ -27,7 +27,7 @@ func TestLoadBalancerRule_JSONMarshalling(t *testing.T) {
 		{
 			name: "full",
 			obj: &LoadBalancerRule{
-				ID:              "abritrary string",
+				ID:              "arbitrary string",
 				Algorithm:       StickyRuleAlgorithm,
 				DestinationPort: 1024,
 				ListenPort:      1337,
@@ -122,11 +122,13 @@ func TestLoadBalancerRulesClient_Delete(t *testing.T) {
 			},
 			want: &lbr,
 			frm: fakeRequestMakerArgs{
-				wantPath:       "/core/v1/load_balancers/rules/123",
-				wantMethod:     "DELETE",
-				wantBody:       nil,
-				doResponseBody: &loadBalancerRulesResponseBody{LoadBalancerRule: &lbr},
-				doResp:         &katapult.Response{},
+				wantPath:   "/core/v1/load_balancers/rules/123",
+				wantMethod: "DELETE",
+				wantBody:   nil,
+				doResponseBody: &loadBalancerRulesResponseBody{
+					LoadBalancerRule: &lbr,
+				},
+				doResp: &katapult.Response{},
 			},
 		},
 		{
@@ -158,9 +160,174 @@ func TestLoadBalancerRulesClient_Delete(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := NewLoadBalancerRulesClient(&fakeRequestMaker{t: t, args: tt.frm})
+			c := NewLoadBalancerRulesClient(&fakeRequestMaker{
+				t:    t,
+				args: tt.frm,
+			})
 
 			got, resp, err := c.Delete(context.Background(), tt.args.ruleID)
+			assert.Equal(t, tt.frm.doResp, resp)
+
+			if tt.wantErr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.wantErr)
+			}
+
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}
+
+func TestLoadBalancerRulesClient_Update(t *testing.T) {
+	tests := []struct {
+		name string
+		frm  fakeRequestMakerArgs
+
+		ruleID string
+		args   LoadBalancerRuleArguments
+
+		want         *LoadBalancerRule
+		wantErr      string
+		wantResponse bool
+	}{
+		{
+			name:   "success",
+			ruleID: "123",
+			want: &LoadBalancerRule{
+				ID:              "abc",
+				DestinationPort: 666,
+			},
+			args: LoadBalancerRuleArguments{DestinationPort: 666},
+			frm: fakeRequestMakerArgs{
+				wantPath:   "/core/v1/load_balancers/rules/123",
+				wantMethod: "PATCH",
+				wantBody: &loadBalancerRuleUpdateRequest{
+					Properties: LoadBalancerRuleArguments{DestinationPort: 666},
+				},
+				doResponseBody: &loadBalancerRulesResponseBody{
+					LoadBalancerRule: &LoadBalancerRule{ID: "abc", DestinationPort: 666},
+				},
+				doResp: &katapult.Response{},
+			},
+		},
+		{
+			name:   "new request fails",
+			ruleID: "123",
+			frm: fakeRequestMakerArgs{
+				wantPath:   "/core/v1/load_balancers/rules/123",
+				wantMethod: "PATCH",
+				wantBody: &loadBalancerRuleUpdateRequest{
+					Properties: LoadBalancerRuleArguments{},
+				},
+				newReqErr: fmt.Errorf("rats chewed cables"),
+			},
+			wantErr: "rats chewed cables",
+		},
+		{
+			name:   "http do fails",
+			ruleID: "123",
+			frm: fakeRequestMakerArgs{
+				wantPath:   "/core/v1/load_balancers/rules/123",
+				wantMethod: "PATCH",
+				wantBody: &loadBalancerRuleUpdateRequest{
+					Properties: LoadBalancerRuleArguments{},
+				},
+				doErr:  fmt.Errorf("flux capacitor undercharged"),
+				doResp: &katapult.Response{},
+			},
+			wantErr: "flux capacitor undercharged",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := NewLoadBalancerRulesClient(&fakeRequestMaker{
+				t:    t,
+				args: tt.frm,
+			})
+
+			got, resp, err := c.Update(context.Background(), tt.ruleID, tt.args)
+			assert.Equal(t, tt.frm.doResp, resp)
+
+			if tt.wantErr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.wantErr)
+			}
+
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}
+
+func TestLoadBalancerRulesClient_Create(t *testing.T) {
+	tests := []struct {
+		name string
+		frm  fakeRequestMakerArgs
+
+		loadBalancerID string
+		args           LoadBalancerRuleArguments
+
+		want         *LoadBalancerRule
+		wantErr      string
+		wantResponse bool
+	}{
+		{
+			name:           "success",
+			loadBalancerID: "xyzzy",
+			want: &LoadBalancerRule{
+				ID:              "abc",
+				DestinationPort: 666,
+			},
+			args: LoadBalancerRuleArguments{DestinationPort: 666},
+			frm: fakeRequestMakerArgs{
+				wantPath:   "/core/v1/load_balancers/xyzzy/rules",
+				wantMethod: "POST",
+				wantBody: &loadBalancerRuleCreateRequest{
+					Properties: LoadBalancerRuleArguments{DestinationPort: 666},
+				},
+				doResponseBody: &loadBalancerRulesResponseBody{
+					LoadBalancerRule: &LoadBalancerRule{ID: "abc", DestinationPort: 666},
+				},
+				doResp: &katapult.Response{},
+			},
+		},
+		{
+			name:           "new request fails",
+			loadBalancerID: "xyzzy",
+			frm: fakeRequestMakerArgs{
+				wantPath:   "/core/v1/load_balancers/xyzzy/rules",
+				wantMethod: "POST",
+				wantBody: &loadBalancerRuleCreateRequest{
+					Properties: LoadBalancerRuleArguments{},
+				},
+				newReqErr: fmt.Errorf("rats chewed cables"),
+			},
+			wantErr: "rats chewed cables",
+		},
+		{
+			name:           "http do fails",
+			loadBalancerID: "xyzzy",
+			frm: fakeRequestMakerArgs{
+				wantPath:   "/core/v1/load_balancers/xyzzy/rules",
+				wantMethod: "POST",
+				wantBody: &loadBalancerRuleCreateRequest{
+					Properties: LoadBalancerRuleArguments{},
+				},
+				doErr:  fmt.Errorf("flux capacitor undercharged"),
+				doResp: &katapult.Response{},
+			},
+			wantErr: "flux capacitor undercharged",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := NewLoadBalancerRulesClient(&fakeRequestMaker{
+				t:    t,
+				args: tt.frm,
+			})
+
+			got, resp, err := c.Create(context.Background(), tt.loadBalancerID, tt.args)
 			assert.Equal(t, tt.frm.doResp, resp)
 
 			if tt.wantErr == "" {
