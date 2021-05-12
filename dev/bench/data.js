@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1620828107512,
+  "lastUpdate": 1620833686730,
   "repoUrl": "https://github.com/krystal/go-katapult",
   "entries": {
     "Benchmark": [
@@ -2136,6 +2136,60 @@ window.BENCHMARK_DATA = {
             "value": 3294,
             "unit": "ns/op",
             "extra": "365847 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "noah@noahstride.co.uk",
+            "name": "Noah Stride",
+            "username": "strideynet"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5e0e4b206ac41e94526f8b4c68994b7e9b4c610e",
+          "message": "LoadBalancer Rule support (#92)\n\n* feat: introduce loadbalancer rule struct\r\n\r\n* feat: skaffold out lbr client\r\n\r\n* refactor: use type alias for enums in lbr\r\n\r\n* feat: add create, delete, update for lbr\r\n\r\n* refactor: flesh out lb rule arguments\r\n\r\n* style: run linter\r\n\r\n* refactor: restore returned value to delete call\r\n\r\n* tests: add tests for marshelling lbr\r\n\r\n* tests: flesh out new test mocker\r\n\r\n* refactor: restructure API calls to be cleaner\r\n\r\n* test: fully cover Delete operation\r\n\r\n* tests: add catch to ensure both stages of request prep are called\r\n\r\n* tests: add tests for LBR Create and Update\r\n\r\n* tests: add list test & appease linter\r\n\r\n* Update core/load_balancer_rule.go\r\n\r\nCo-authored-by: Jim Myhrberg <contact@jimeh.me>\r\n\r\n* fix: use pointers rather than bare bools for api compatability\r\n\r\n* tests: update tests according to pr feedback\r\n\r\n* tests: tidy args into arg struct\r\n\r\nCo-authored-by: Jim Myhrberg <contact@jimeh.me>",
+          "timestamp": "2021-05-12T16:34:12+01:00",
+          "tree_id": "a35c5604f888bc58847bcf5d8ef3a5fd66cfeb9c",
+          "url": "https://github.com/krystal/go-katapult/commit/5e0e4b206ac41e94526f8b4c68994b7e9b4c610e"
+        },
+        "date": 1620833685907,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkNameGenerator_RandomHostname",
+            "value": 4586,
+            "unit": "ns/op",
+            "extra": "243727 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_NoPrefix",
+            "value": 3253,
+            "unit": "ns/op",
+            "extra": "329190 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_OnePrefix",
+            "value": 3399,
+            "unit": "ns/op",
+            "extra": "354331 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_TwoPrefixes",
+            "value": 3334,
+            "unit": "ns/op",
+            "extra": "352052 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_ThreePrefixes",
+            "value": 3584,
+            "unit": "ns/op",
+            "extra": "371376 times\n2 procs"
           }
         ]
       }
