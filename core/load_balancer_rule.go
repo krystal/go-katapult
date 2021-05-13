@@ -106,6 +106,26 @@ type loadBalancerRuleCreateRequest struct {
 	Properties LoadBalancerRuleArguments `json:"properties"`
 }
 
+func (s *LoadBalancerRulesClient) Get(
+	ctx context.Context,
+	id string,
+) (*LoadBalancerRule, *katapult.Response, error) {
+	return s.GetByID(ctx, id)
+}
+
+func (s *LoadBalancerRulesClient) GetByID(
+	ctx context.Context,
+	id string,
+) (*LoadBalancerRule, *katapult.Response, error) {
+	u := &url.URL{Path: fmt.Sprintf("load_balancers/rules/%s", id)}
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return body.LoadBalancerRule, resp, err
+}
+
 func (s *LoadBalancerRulesClient) Create(
 	ctx context.Context,
 	lb *LoadBalancer,
