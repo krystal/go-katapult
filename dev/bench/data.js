@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1620835580330,
+  "lastUpdate": 1620899036855,
   "repoUrl": "https://github.com/krystal/go-katapult",
   "entries": {
     "Benchmark": [
@@ -2244,6 +2244,60 @@ window.BENCHMARK_DATA = {
             "value": 5174,
             "unit": "ns/op",
             "extra": "237902 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "noah@noahstride.co.uk",
+            "name": "Noah Stride",
+            "username": "strideynet"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "926af22ad46df97fd966bb9b03e1a4070a46c91d",
+          "message": "feat: add Get/GetByID support to LoadBalancerRule client (#97)",
+          "timestamp": "2021-05-13T10:42:58+01:00",
+          "tree_id": "6e13bb93c6b6a28faf09eae08ad333ee4dff5485",
+          "url": "https://github.com/krystal/go-katapult/commit/926af22ad46df97fd966bb9b03e1a4070a46c91d"
+        },
+        "date": 1620899035729,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkNameGenerator_RandomHostname",
+            "value": 7039,
+            "unit": "ns/op",
+            "extra": "168806 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_NoPrefix",
+            "value": 4665,
+            "unit": "ns/op",
+            "extra": "252964 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_OnePrefix",
+            "value": 4710,
+            "unit": "ns/op",
+            "extra": "254276 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_TwoPrefixes",
+            "value": 4748,
+            "unit": "ns/op",
+            "extra": "258429 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_ThreePrefixes",
+            "value": 4832,
+            "unit": "ns/op",
+            "extra": "255253 times\n2 procs"
           }
         ]
       }
