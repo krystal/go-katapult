@@ -179,7 +179,7 @@ func Test_virtualMachineBuildCreateRequest_JSONMarshaling(t *testing.T) {
 				Hostname:     "foo.example.com",
 				Organization: &Organization{ID: "org_O648YDMEYeLmqdmn"},
 				Zone:         &Zone{ID: "zone_kY2sPRG24sJVRM2U"},
-				DataCenter:   &DataCenter{ID: "dc_25d48761871e4bf"},
+				DataCenter:   DataCenterRef{ID: "dc_25d48761871e4bf"},
 				Package: &VirtualMachinePackage{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
@@ -448,10 +448,8 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			Name:      "North West",
 			Permalink: "north-west",
 		},
-		DataCenter: &DataCenter{
-			ID:        "dc_25d48761871e4bf",
-			Name:      "Woodland",
-			Permalink: "woodland",
+		DataCenter: DataCenterRef{
+			ID: "dc_25d48761871e4bf",
 		},
 		Package: &VirtualMachinePackage{
 			ID:        "vmpkg_XdNPhGXvyt1dnDts",
@@ -507,7 +505,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 				Zone: &Zone{
 					ID: "zone_kY2sPRG24sJVRM2U",
 				},
-				DataCenter: &DataCenter{
+				DataCenter: DataCenterRef{
 					ID: "dc_25d48761871e4bf",
 				},
 				Package: &VirtualMachinePackage{
@@ -544,8 +542,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 						Name:      "North West",
 						Permalink: "north-west",
 					},
-					DataCenter: &DataCenter{
-						Name:      "Woodland",
+					DataCenter: DataCenterRef{
 						Permalink: "woodland",
 					},
 					Package: &VirtualMachinePackage{
@@ -573,7 +570,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 				Zone: &Zone{
 					Permalink: "north-west",
 				},
-				DataCenter: &DataCenter{
+				DataCenter: DataCenterRef{
 					Permalink: "woodland",
 				},
 				Package: &VirtualMachinePackage{

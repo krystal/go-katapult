@@ -298,12 +298,13 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 				Pagination: &katapult.Pagination{Total: 333},
 			},
 			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/load_balancers/xyzzy/rules",
+				wantPath:   "/core/v1/load_balancers/_/rules",
 				wantMethod: "GET",
 				wantBody:   nil,
 				wantValues: url.Values{
-					"page":     []string{"5"},
-					"per_page": []string{"32"},
+					"page":              []string{"5"},
+					"per_page":          []string{"32"},
+					"load_balancer[id]": []string{"xyzzy"},
 				},
 				doResponseBody: &loadBalancerRulesResponseBody{
 					LoadBalancerRules: []LoadBalancerRule{
@@ -326,9 +327,12 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 			}},
 			wantResp: &katapult.Response{},
 			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/load_balancers/xyzzy/rules",
+				wantPath:   "/core/v1/load_balancers/_/rules",
 				wantMethod: "GET",
-				wantBody:   nil,
+				wantValues: url.Values{
+					"load_balancer[id]": []string{"xyzzy"},
+				},
+				wantBody: nil,
 				doResponseBody: &loadBalancerRulesResponseBody{
 					LoadBalancerRules: []LoadBalancerRule{
 						{ID: "cbd"},
@@ -343,10 +347,13 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 				loadBalancerID: "xyzzy",
 			},
 			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/load_balancers/xyzzy/rules",
+				wantPath:   "/core/v1/load_balancers/_/rules",
 				wantMethod: "GET",
-				wantBody:   nil,
-				newReqErr:  fmt.Errorf("rats chewed cables"),
+				wantValues: url.Values{
+					"load_balancer[id]": []string{"xyzzy"},
+				},
+				wantBody:  nil,
+				newReqErr: fmt.Errorf("rats chewed cables"),
 			},
 			wantErr: "rats chewed cables",
 		},
@@ -356,11 +363,14 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 				loadBalancerID: "xyzzy",
 			},
 			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/load_balancers/xyzzy/rules",
+				wantPath:   "/core/v1/load_balancers/_/rules",
 				wantMethod: "GET",
-				wantBody:   nil,
-				doErr:      fmt.Errorf("flux capacitor undercharged"),
-				doResp:     &katapult.Response{},
+				wantValues: url.Values{
+					"load_balancer[id]": []string{"xyzzy"},
+				},
+				wantBody: nil,
+				doErr:    fmt.Errorf("flux capacitor undercharged"),
+				doResp:   &katapult.Response{},
 			},
 			wantResp: &katapult.Response{},
 			wantErr:  "flux capacitor undercharged",
@@ -375,7 +385,7 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 
 			got, resp, err := c.List(
 				context.Background(),
-				&LoadBalancer{ID: tt.args.loadBalancerID},
+				LoadBalancerRef{ID: tt.args.loadBalancerID},
 				tt.args.listOptions,
 			)
 			assert.Equal(t, tt.wantResp, resp)
@@ -471,7 +481,7 @@ func TestLoadBalancerRulesClient_Create(t *testing.T) {
 
 			got, resp, err := c.Create(
 				context.Background(),
-				&LoadBalancer{ID: tt.args.loadBalancerID},
+				LoadBalancerRef{ID: tt.args.loadBalancerID},
 				tt.args.creationArgs,
 			)
 			assert.Equal(t, tt.frm.doResp, resp)

@@ -36,24 +36,11 @@ func (lbr LoadBalancerRef) queryValues() *url.Values {
 }
 
 type LoadBalancerCreateArguments struct {
-	DataCenter    *DataCenter  `json:"data_center,omitempty"`
-	Name          string       `json:"name,omitempty"`
-	ResourceType  ResourceType `json:"resource_type,omitempty"`
-	ResourceIDs   *[]string    `json:"resource_ids,omitempty"`
-	HTTPSRedirect *bool        `json:"https_redirect,omitempty"`
-}
-
-func (
-	s *LoadBalancerCreateArguments,
-) forRequest() *LoadBalancerCreateArguments {
-	if s == nil {
-		return nil
-	}
-
-	args := *s
-	args.DataCenter = s.DataCenter.lookupReference()
-
-	return &args
+	DataCenter    DataCenterRef `json:"data_center,omitempty"`
+	Name          string        `json:"name,omitempty"`
+	ResourceType  ResourceType  `json:"resource_type,omitempty"`
+	ResourceIDs   *[]string     `json:"resource_ids,omitempty"`
+	HTTPSRedirect *bool         `json:"https_redirect,omitempty"`
 }
 
 type LoadBalancerUpdateArguments struct {
@@ -133,7 +120,7 @@ func (s *LoadBalancersClient) Create(
 	u := &url.URL{Path: "organizations/_/load_balancers"}
 	reqBody := &loadBalancerCreateRequest{
 		Organization: org.lookupReference(),
-		Properties:   args.forRequest(),
+		Properties:   args,
 	}
 
 	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)

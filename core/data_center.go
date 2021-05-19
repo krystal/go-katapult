@@ -2,11 +2,8 @@ package core
 
 import (
 	"context"
-	"fmt"
-	"net/url"
-	"strings"
-
 	"github.com/krystal/go-katapult"
+	"net/url"
 )
 
 type DataCenter struct {
@@ -16,33 +13,27 @@ type DataCenter struct {
 	Country   *Country `json:"country,omitempty"`
 }
 
-// NewDataCenterLookup takes a string that is a DataCenter ID or Permalink,
-// returning a empty *DataCenter struct with either the ID or Permalink field
-// populated with the given value. This struct is suitable as input to other
-// methods which accept a *DataCenter as input.
-func NewDataCenterLookup(
-	idOrPermalink string,
-) (lr *DataCenter, f FieldName) {
-	// check for "dc_" and legacy "loc_" ID prefixes
-	if strings.HasPrefix(idOrPermalink, "dc_") ||
-		strings.HasPrefix(idOrPermalink, "loc_") {
-		return &DataCenter{ID: idOrPermalink}, IDField
-	}
-
-	return &DataCenter{Permalink: idOrPermalink}, PermalinkField
+func (dc *DataCenter) Ref() DataCenterRef {
+	return DataCenterRef{ID: dc.ID}
 }
 
-func (s *DataCenter) lookupReference() *DataCenter {
-	if s == nil {
-		return nil
+// DataCenterRef refers to a single data center. Only one field should be set.
+type DataCenterRef struct {
+	ID        string `json:"id,omitempty"`
+	Permalink string `json:"permalink,omitempty"`
+}
+
+func (dcr DataCenterRef) queryValues() *url.Values {
+	v := &url.Values{}
+
+	switch {
+	case dcr.ID != "":
+		v.Set("data_center[id]", dcr.ID)
+	case dcr.Permalink != "":
+		v.Set("data_center[permalink]", dcr.Permalink)
 	}
 
-	lr := &DataCenter{ID: s.ID}
-	if lr.ID == "" {
-		lr.Permalink = s.Permalink
-	}
-
-	return lr
+	return v
 }
 
 type dataCentersResponseBody struct {
@@ -73,35 +64,27 @@ func (s *DataCentersClient) List(
 
 func (s *DataCentersClient) Get(
 	ctx context.Context,
-	idOrPermalink string,
+	ref DataCenterRef,
 ) (*DataCenter, *katapult.Response, error) {
-	if _, f := NewDataCenterLookup(idOrPermalink); f == IDField {
-		return s.GetByID(ctx, idOrPermalink)
-	}
+	u := &url.URL{Path: "data_centers/_", RawQuery: ref.queryValues().Encode()}
 
-	return s.GetByPermalink(ctx, idOrPermalink)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+
+	return body.DataCenter, resp, err
 }
 
 func (s *DataCentersClient) GetByID(
 	ctx context.Context,
 	id string,
 ) (*DataCenter, *katapult.Response, error) {
-	u := &url.URL{Path: fmt.Sprintf("data_centers/%s", id)}
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
-
-	return body.DataCenter, resp, err
+	return s.Get(ctx, DataCenterRef{ID: id})
 }
 
 func (s *DataCentersClient) GetByPermalink(
 	ctx context.Context,
 	permalink string,
 ) (*DataCenter, *katapult.Response, error) {
-	qs := url.Values{"data_center[permalink]": []string{permalink}}
-	u := &url.URL{Path: "data_centers/_", RawQuery: qs.Encode()}
-
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
-
-	return body.DataCenter, resp, err
+	return s.Get(ctx, DataCenterRef{Permalink: permalink})
 }
 
 func (s *DataCentersClient) doRequest(

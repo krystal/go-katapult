@@ -88,7 +88,7 @@ func (s *LoadBalancerRulesClient) List(
 ) ([]LoadBalancerRule, *katapult.Response, error) {
 	qs := queryValues(opts, lb)
 	u := &url.URL{
-		Path:     fmt.Sprintf("load_balancers/%s/rules", lb.ID),
+		Path:     "load_balancers/_/rules",
 		RawQuery: qs.Encode(),
 	}
 
@@ -128,7 +128,7 @@ func (s *LoadBalancerRulesClient) GetByID(
 
 func (s *LoadBalancerRulesClient) Create(
 	ctx context.Context,
-	lb *LoadBalancer,
+	lb LoadBalancerRef,
 	args LoadBalancerRuleArguments,
 ) (*LoadBalancerRule, *katapult.Response, error) {
 	u := &url.URL{Path: fmt.Sprintf("load_balancers/%s/rules", lb.ID)}
