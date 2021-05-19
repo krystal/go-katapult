@@ -32,6 +32,7 @@ type LoadBalancerRef struct {
 func (lbr LoadBalancerRef) queryValues() *url.Values {
 	v := &url.Values{}
 	v.Set("load_balancer[id]", lbr.ID)
+
 	return v
 }
 

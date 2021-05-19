@@ -2,8 +2,9 @@ package core
 
 import (
 	"context"
-	"github.com/krystal/go-katapult"
 	"net/url"
+
+	"github.com/krystal/go-katapult"
 )
 
 type DataCenter struct {

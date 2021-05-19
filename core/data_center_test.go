@@ -85,12 +85,16 @@ func TestDataCenterRef_queryValues(t *testing.T) {
 		{
 			name: "id",
 			ref:  DataCenterRef{ID: "dc_25d48761871e4bf"},
-			want: &url.Values{"data_center[id]": []string{"dc_25d48761871e4bf"}},
+			want: &url.Values{
+				"data_center[id]": []string{"dc_25d48761871e4bf"},
+			},
 		},
 		{
 			name: "permalink",
 			ref:  DataCenterRef{Permalink: "central-amazon-jungle"},
-			want: &url.Values{"data_center[permalink]": []string{"central-amazon-jungle"}},
+			want: &url.Values{
+				"data_center[permalink]": []string{"central-amazon-jungle"}
+			},
 		},
 	}
 
