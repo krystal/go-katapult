@@ -83,10 +83,10 @@ func NewLoadBalancerRulesClient(rm RequestMaker) *LoadBalancerRulesClient {
 // List returns LoadBalancer Rules for the specified LoadBalancer.
 func (s *LoadBalancerRulesClient) List(
 	ctx context.Context,
-	lb *LoadBalancer,
+	lb LoadBalancerRef,
 	opts *ListOptions,
 ) ([]LoadBalancerRule, *katapult.Response, error) {
-	qs := queryValues(opts)
+	qs := queryValues(opts, lb)
 	u := &url.URL{
 		Path:     fmt.Sprintf("load_balancers/%s/rules", lb.ID),
 		RawQuery: qs.Encode(),

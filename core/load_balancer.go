@@ -20,21 +20,18 @@ type LoadBalancer struct {
 	DataCenter            *DataCenter  `json:"-"`
 }
 
-func (s *LoadBalancer) lookupReference() *LoadBalancer {
-	if s == nil {
-		return nil
-	}
-
-	return &LoadBalancer{ID: s.ID}
+func (lb LoadBalancer) Ref() LoadBalancerRef {
+	return LoadBalancerRef{ID: lb.ID}
 }
 
-func (s *LoadBalancer) queryValues() *url.Values {
+// LoadBalancerRef allows a reference to a load balancer
+type LoadBalancerRef struct {
+	ID string `json:"id,omitempty"`
+}
+
+func (lbr LoadBalancerRef) queryValues() *url.Values {
 	v := &url.Values{}
-
-	if s != nil && s.ID != "" {
-		v.Set("load_balancer[id]", s.ID)
-	}
-
+	v.Set("load_balancer[id]", lbr.ID)
 	return v
 }
 
@@ -72,7 +69,7 @@ type loadBalancerCreateRequest struct {
 }
 
 type loadBalancerUpdateRequest struct {
-	LoadBalancer *LoadBalancer                `json:"load_balancer,omitempty"`
+	LoadBalancer LoadBalancerRef              `json:"load_balancer,omitempty"`
 	Properties   *LoadBalancerUpdateArguments `json:"properties,omitempty"`
 }
 
@@ -146,12 +143,12 @@ func (s *LoadBalancersClient) Create(
 
 func (s *LoadBalancersClient) Update(
 	ctx context.Context,
-	lb *LoadBalancer,
+	lb LoadBalancerRef,
 	args *LoadBalancerUpdateArguments,
 ) (*LoadBalancer, *katapult.Response, error) {
 	u := &url.URL{Path: "load_balancers/_"}
 	reqBody := &loadBalancerUpdateRequest{
-		LoadBalancer: lb.lookupReference(),
+		LoadBalancer: lb,
 		Properties:   args,
 	}
 
@@ -162,7 +159,7 @@ func (s *LoadBalancersClient) Update(
 
 func (s *LoadBalancersClient) Delete(
 	ctx context.Context,
-	lb *LoadBalancer,
+	lb LoadBalancerRef,
 ) (*LoadBalancer, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "load_balancers/_",
