@@ -20,7 +20,7 @@ type LoadBalancer struct {
 	DataCenter            *DataCenter  `json:"-"`
 }
 
-func (lb LoadBalancer) Ref() LoadBalancerRef {
+func (lb *LoadBalancer) Ref() LoadBalancerRef {
 	return LoadBalancerRef{ID: lb.ID}
 }
 
