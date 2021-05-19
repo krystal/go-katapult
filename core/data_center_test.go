@@ -93,7 +93,7 @@ func TestDataCenterRef_queryValues(t *testing.T) {
 			name: "permalink",
 			ref:  DataCenterRef{Permalink: "central-amazon-jungle"},
 			want: &url.Values{
-				"data_center[permalink]": []string{"central-amazon-jungle"}
+				"data_center[permalink]": []string{"central-amazon-jungle"},
 			},
 		},
 	}
