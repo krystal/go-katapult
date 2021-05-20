@@ -96,6 +96,16 @@ func TestDataCenterRef_queryValues(t *testing.T) {
 				"data_center[permalink]": []string{"central-amazon-jungle"},
 			},
 		},
+		{
+			name: "priority",
+			ref: DataCenterRef{
+				ID:        "dc_25d48761871e4bf",
+				Permalink: "central-amazon-jungle",
+			},
+			want: &url.Values{
+				"data_center[id]": []string{"dc_25d48761871e4bf"},
+			},
+		},
 	}
 
 	for _, tt := range tests {
@@ -198,6 +208,112 @@ func TestDataCentersClient_List(t *testing.T) {
 			)
 
 			got, resp, err := c.List(tt.args.ctx)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestDataCentersClient_Get(t *testing.T) {
+	// Correlates to fixtures/data_center_get.json
+	dataCenter := &DataCenter{
+		ID:        "dc_a2417980b9874c0",
+		Name:      "New Town",
+		Permalink: "newtown",
+	}
+
+	type args struct {
+		ctx context.Context
+		ref DataCenterRef
+	}
+	tests := []struct {
+		name       string
+		args       args
+		reqPath    string
+		reqQuery   *url.Values
+		want       *DataCenter
+		errStr     string
+		errResp    *katapult.ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "by ID",
+			args: args{
+				ctx: context.Background(),
+				ref: DataCenterRef{ID: "dc_a2417980b9874c0"},
+			},
+			reqQuery: &url.Values{
+				"data_center[id]": []string{"dc_a2417980b9874c0"},
+			},
+			want:       dataCenter,
+			respStatus: http.StatusOK,
+			respBody:   fixture("data_center_get"),
+		},
+		{
+			name: "non-existent data center",
+			args: args{
+				ctx: context.Background(),
+				ref: DataCenterRef{ID: "dc_a2417980b9874c0"},
+			},
+			reqQuery: &url.Values{
+				"data_center[id]": []string{"dc_a2417980b9874c0"},
+			},
+			errStr:     fixtureDataCenterNotFoundErr,
+			errResp:    fixtureDataCenterNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody:   fixture("data_center_not_found_error"),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx: nil,
+				ref: DataCenterRef{ID: "dc_a2417980b9874c0"},
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			rm, mux, _, teardown := prepareTestClient(t)
+			defer teardown()
+			c := NewDataCentersClient(rm)
+
+			mux.HandleFunc(
+				"/core/v1/data_centers/_",
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "GET", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					if tt.reqQuery != nil {
+						assert.Equal(t, *tt.reqQuery, r.URL.Query())
+					}
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.Get(
+				tt.args.ctx, tt.args.ref,
+			)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
