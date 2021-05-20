@@ -76,7 +76,7 @@ type DNSZoneDetails struct {
 }
 
 type dnsZoneCreateRequest struct {
-	Organization    *Organization   `json:"organization"`
+	Organization    OrganizationRef `json:"organization"`
 	Details         *DNSZoneDetails `json:"details"`
 	SkipVerfication bool            `json:"skip_verification"`
 }
@@ -111,7 +111,7 @@ func NewDNSZonesClient(rm RequestMaker) *DNSZonesClient {
 
 func (s *DNSZonesClient) List(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 	opts *ListOptions,
 ) ([]*DNSZone, *katapult.Response, error) {
 	qs := queryValues(org, opts)
@@ -162,12 +162,12 @@ func (s *DNSZonesClient) GetByName(
 
 func (s *DNSZonesClient) Create(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 	args *DNSZoneArguments,
 ) (*DNSZone, *katapult.Response, error) {
 	u := &url.URL{Path: "organizations/_/dns/zones"}
 	reqBody := &dnsZoneCreateRequest{
-		Organization: org.lookupReference(),
+		Organization: org,
 	}
 
 	if args != nil {

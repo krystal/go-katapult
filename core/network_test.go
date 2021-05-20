@@ -242,14 +242,13 @@ func Test_networksResponseBody_JSONMarshaling(t *testing.T) {
 func TestNetworksClient_List(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		org *Organization
+		org OrganizationRef
 	}
 	tests := []struct {
 		name       string
 		args       args
 		wantNets   []*Network
 		wantVnets  []*VirtualNetwork
-		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
 		respStatus int
@@ -259,7 +258,7 @@ func TestNetworksClient_List(t *testing.T) {
 			name: "by organization ID",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			wantNets: []*Network{
 				{
@@ -276,37 +275,6 @@ func TestNetworksClient_List(t *testing.T) {
 					ID:   "vnet_1erVCx7A5Y09WknB",
 					Name: "Make-Believe Network",
 				},
-			},
-			wantQuery: &url.Values{
-				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
-			},
-			respStatus: http.StatusOK,
-			respBody:   fixture("networks_list"),
-		},
-		{
-			name: "by organization SubDomain",
-			args: args{
-				ctx: context.Background(),
-				org: &Organization{SubDomain: "acme"},
-			},
-			wantNets: []*Network{
-				{
-					ID:   "netw_zDW7KYAeqqfRfVag",
-					Name: "Public Network",
-				},
-				{
-					ID:   "netw_t7Rbyvr6ahqpDohR",
-					Name: "Private Network",
-				},
-			},
-			wantVnets: []*VirtualNetwork{
-				{
-					ID:   "vnet_1erVCx7A5Y09WknB",
-					Name: "Make-Believe Network",
-				},
-			},
-			wantQuery: &url.Values{
-				"organization[sub_domain]": []string{"acme"},
 			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("networks_list"),
@@ -315,7 +283,7 @@ func TestNetworksClient_List(t *testing.T) {
 			name: "invalid API token response",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureInvalidAPITokenErr,
 			errResp:    fixtureInvalidAPITokenResponseError,
@@ -326,7 +294,7 @@ func TestNetworksClient_List(t *testing.T) {
 			name: "non-existent organization",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_nopethisbegone"},
+				org: OrganizationRef{ID: "org_nopethisbegone"},
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
@@ -337,7 +305,7 @@ func TestNetworksClient_List(t *testing.T) {
 			name: "suspended organization",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
@@ -345,21 +313,10 @@ func TestNetworksClient_List(t *testing.T) {
 			respBody:   fixture("organization_suspended_error"),
 		},
 		{
-			name: "nil organization",
-			args: args{
-				ctx: context.Background(),
-				org: nil,
-			},
-			errStr:     fixtureOrganizationNotFoundErr,
-			errResp:    fixtureOrganizationNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("organization_not_found_error"),
-		},
-		{
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -377,13 +334,9 @@ func TestNetworksClient_List(t *testing.T) {
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
 
-					if tt.wantQuery != nil {
-						assert.Equal(t, *tt.wantQuery, r.URL.Query())
-					} else {
-						assert.Equal(t,
-							*tt.args.org.queryValues(), r.URL.Query(),
-						)
-					}
+					assert.Equal(t,
+						*tt.args.org.queryValues(), r.URL.Query(),
+					)
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)

@@ -75,7 +75,7 @@ type VirtualMachineGroupUpdateArguments struct {
 }
 
 type virtualMachineGroupCreateRequest struct {
-	Organization *Organization                       `json:"organization,omitempty"`
+	Organization OrganizationRef                     `json:"organization"`
 	Properties   *VirtualMachineGroupCreateArguments `json:"properties,omitempty"`
 }
 
@@ -105,7 +105,7 @@ func NewVirtualMachineGroupsClient(
 
 func (s *VirtualMachineGroupsClient) List(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 ) ([]*VirtualMachineGroup, *katapult.Response, error) {
 	qs := queryValues(org)
 	u := &url.URL{
@@ -140,12 +140,12 @@ func (s *VirtualMachineGroupsClient) GetByID(
 
 func (s *VirtualMachineGroupsClient) Create(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 	args *VirtualMachineGroupCreateArguments,
 ) (*VirtualMachineGroup, *katapult.Response, error) {
 	u := &url.URL{Path: "organizations/_/virtual_machine_groups"}
 	reqBody := &virtualMachineGroupCreateRequest{
-		Organization: org.lookupReference(),
+		Organization: org,
 		Properties:   args,
 	}
 

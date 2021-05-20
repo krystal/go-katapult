@@ -79,7 +79,7 @@ func NewTrashObjectsClient(rm RequestMaker) *TrashObjectsClient {
 
 func (s *TrashObjectsClient) List(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 	opts *ListOptions,
 ) ([]*TrashObject, *katapult.Response, error) {
 	qs := queryValues(org, opts)
@@ -149,7 +149,7 @@ func (s *TrashObjectsClient) Purge(
 
 func (s *TrashObjectsClient) PurgeAll(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 ) (*Task, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "organizations/_/trash_objects/purge_all",

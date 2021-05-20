@@ -235,14 +235,13 @@ func TestTrashObjectsClient_List(t *testing.T) {
 
 	type args struct {
 		ctx  context.Context
-		org  *Organization
+		org  OrganizationRef
 		opts *ListOptions
 	}
 	tests := []struct {
 		name           string
 		args           args
 		want           []*TrashObject
-		wantQuery      *url.Values
 		wantPagination *katapult.Pagination
 		errStr         string
 		errResp        *katapult.ResponseError
@@ -253,32 +252,9 @@ func TestTrashObjectsClient_List(t *testing.T) {
 			name: "by organization ID",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			want: trashObjectesList,
-			wantQuery: &url.Values{
-				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
-			},
-			wantPagination: &katapult.Pagination{
-				CurrentPage: 1,
-				TotalPages:  1,
-				Total:       3,
-				PerPage:     30,
-				LargeSet:    false,
-			},
-			respStatus: http.StatusOK,
-			respBody:   fixture("trash_objects_list"),
-		},
-		{
-			name: "by organization SubDomain",
-			args: args{
-				ctx: context.Background(),
-				org: &Organization{SubDomain: "acme"},
-			},
-			want: trashObjectesList,
-			wantQuery: &url.Values{
-				"organization[sub_domain]": []string{"acme"},
-			},
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
@@ -293,15 +269,10 @@ func TestTrashObjectsClient_List(t *testing.T) {
 			name: "page 1",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				opts: &ListOptions{Page: 1, PerPage: 2},
 			},
 			want: trashObjectesList[0:2],
-			wantQuery: &url.Values{
-				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
-				"page":             []string{"1"},
-				"per_page":         []string{"2"},
-			},
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 1,
 				TotalPages:  2,
@@ -316,15 +287,10 @@ func TestTrashObjectsClient_List(t *testing.T) {
 			name: "page 2",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				opts: &ListOptions{Page: 2, PerPage: 2},
 			},
 			want: trashObjectesList[2:],
-			wantQuery: &url.Values{
-				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
-				"page":             []string{"2"},
-				"per_page":         []string{"2"},
-			},
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 2,
 				TotalPages:  2,
@@ -339,7 +305,7 @@ func TestTrashObjectsClient_List(t *testing.T) {
 			name: "invalid API token response",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureInvalidAPITokenErr,
 			errResp:    fixtureInvalidAPITokenResponseError,
@@ -350,18 +316,7 @@ func TestTrashObjectsClient_List(t *testing.T) {
 			name: "non-existent organization",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
-			},
-			errStr:     fixtureOrganizationNotFoundErr,
-			errResp:    fixtureOrganizationNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("organization_not_found_error"),
-		},
-		{
-			name: "nil organization",
-			args: args{
-				ctx: context.Background(),
-				org: nil,
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
@@ -372,7 +327,7 @@ func TestTrashObjectsClient_List(t *testing.T) {
 			name: "suspended organization",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
@@ -383,7 +338,7 @@ func TestTrashObjectsClient_List(t *testing.T) {
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -401,12 +356,8 @@ func TestTrashObjectsClient_List(t *testing.T) {
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
 
-					if tt.wantQuery != nil {
-						assert.Equal(t, *tt.wantQuery, r.URL.Query())
-					} else {
-						qs := queryValues(tt.args.org, tt.args.opts)
-						assert.Equal(t, *qs, r.URL.Query())
-					}
+					qs := queryValues(tt.args.org, tt.args.opts)
+					assert.Equal(t, *qs, r.URL.Query())
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -932,13 +883,12 @@ func TestTrashObjectsClient_Purge(t *testing.T) {
 func TestTrashObjectsClient_PurgeAll(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		org *Organization
+		org OrganizationRef
 	}
 	tests := []struct {
 		name       string
 		args       args
 		want       *Task
-		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
 		respStatus int
@@ -948,32 +898,12 @@ func TestTrashObjectsClient_PurgeAll(t *testing.T) {
 			name: "by organization ID",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			want: &Task{
 				ID:     "task_lwZ65NKwJVB9a4E8",
 				Name:   "Purge items from trash",
 				Status: "pending",
-			},
-			wantQuery: &url.Values{
-				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
-			},
-			respStatus: http.StatusOK,
-			respBody:   fixture("trash_objects_purge_all"),
-		},
-		{
-			name: "by organization SubDomain",
-			args: args{
-				ctx: context.Background(),
-				org: &Organization{SubDomain: "acme"},
-			},
-			want: &Task{
-				ID:     "task_lwZ65NKwJVB9a4E8",
-				Name:   "Purge items from trash",
-				Status: "pending",
-			},
-			wantQuery: &url.Values{
-				"organization[sub_domain]": []string{"acme"},
 			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("trash_objects_purge_all"),
@@ -982,7 +912,7 @@ func TestTrashObjectsClient_PurgeAll(t *testing.T) {
 			name: "non-existent trash object",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
@@ -993,7 +923,7 @@ func TestTrashObjectsClient_PurgeAll(t *testing.T) {
 			name: "permission denied",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
@@ -1001,21 +931,10 @@ func TestTrashObjectsClient_PurgeAll(t *testing.T) {
 			respBody:   fixture("permission_denied_error"),
 		},
 		{
-			name: "nil organization",
-			args: args{
-				ctx: context.Background(),
-				org: nil,
-			},
-			errStr:     fixtureOrganizationNotFoundErr,
-			errResp:    fixtureOrganizationNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("organization_not_found_error"),
-		},
-		{
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -1033,13 +952,9 @@ func TestTrashObjectsClient_PurgeAll(t *testing.T) {
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
 
-					if tt.wantQuery != nil {
-						assert.Equal(t, *tt.wantQuery, r.URL.Query())
-					} else {
-						assert.Equal(t,
-							*tt.args.org.queryValues(), r.URL.Query(),
-						)
-					}
+					assert.Equal(t,
+						*tt.args.org.queryValues(), r.URL.Query(),
+					)
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)

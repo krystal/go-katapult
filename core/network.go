@@ -83,7 +83,7 @@ func NewNetworksClient(rm RequestMaker) *NetworksClient {
 
 func (s *NetworksClient) List(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 ) ([]*Network, []*VirtualNetwork, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "organizations/_/available_networks",

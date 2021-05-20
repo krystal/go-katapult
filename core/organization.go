@@ -2,9 +2,7 @@ package core
 
 import (
 	"context"
-	"fmt"
 	"net/url"
-	"strings"
 
 	"github.com/augurysys/timestamp"
 	"github.com/krystal/go-katapult"
@@ -31,48 +29,23 @@ type Organization struct {
 	CountryState         *CountryState        `json:"country_state,omitempty"`
 }
 
+func (o *Organization) Ref() OrganizationRef {
+	return OrganizationRef{ID: o.ID}
+}
+
 type OrganizationRef struct {
 	ID        string `json:"id,omitempty"`
 	SubDomain string `json:"sub_domain,omitempty"`
 }
 
-// NewOrganizationLookup takes a string that is a Organization ID or SubDomain,
-// returning a empty *Organization struct with either the ID or SubDomain field
-// populated with the given value. This struct is suitable as input to other
-// methods which accept a *Organization as input.
-func NewOrganizationLookup(
-	idOrSubDomain string,
-) (lr *Organization, f FieldName) {
-	if strings.HasPrefix(idOrSubDomain, "org_") {
-		return &Organization{ID: idOrSubDomain}, IDField
-	}
-
-	return &Organization{SubDomain: idOrSubDomain}, SubDomainField
-}
-
-func (s *Organization) lookupReference() *Organization {
-	if s == nil {
-		return nil
-	}
-
-	lr := &Organization{ID: s.ID}
-	if lr.ID == "" {
-		lr.SubDomain = s.SubDomain
-	}
-
-	return lr
-}
-
-func (s *Organization) queryValues() *url.Values {
+func (or OrganizationRef) queryValues() *url.Values {
 	v := &url.Values{}
 
-	if s != nil {
-		switch {
-		case s.ID != "":
-			v.Set("organization[id]", s.ID)
-		case s.SubDomain != "":
-			v.Set("organization[sub_domain]", s.SubDomain)
-		}
+	switch {
+	case or.ID != "":
+		v.Set("organization[id]", or.ID)
+	case or.SubDomain != "":
+		v.Set("organization[sub_domain]", or.SubDomain)
 	}
 
 	return v
@@ -84,9 +57,9 @@ type OrganizationManagedArguments struct {
 }
 
 type organizationCreateManagedRequest struct {
-	Organization *Organization `json:"organization"`
-	Name         string        `json:"name"`
-	SubDomain    string        `json:"sub_domain"`
+	Organization OrganizationRef `json:"organization"`
+	Name         string          `json:"name"`
+	SubDomain    string          `json:"sub_domain"`
 }
 
 type organizationsResponseBody struct {
@@ -117,30 +90,9 @@ func (s *OrganizationsClient) List(
 
 func (s *OrganizationsClient) Get(
 	ctx context.Context,
-	idOrSubDomain string,
+	ref OrganizationRef,
 ) (*Organization, *katapult.Response, error) {
-	if _, f := NewOrganizationLookup(idOrSubDomain); f == IDField {
-		return s.GetByID(ctx, idOrSubDomain)
-	}
-
-	return s.GetBySubDomain(ctx, idOrSubDomain)
-}
-
-func (s *OrganizationsClient) GetByID(
-	ctx context.Context,
-	id string,
-) (*Organization, *katapult.Response, error) {
-	u := &url.URL{Path: fmt.Sprintf("organizations/%s", id)}
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
-
-	return body.Organization, resp, err
-}
-
-func (s *OrganizationsClient) GetBySubDomain(
-	ctx context.Context,
-	subDomain string,
-) (*Organization, *katapult.Response, error) {
-	qs := url.Values{"organization[sub_domain]": []string{subDomain}}
+	qs := ref.queryValues()
 	u := &url.URL{Path: "organizations/_", RawQuery: qs.Encode()}
 
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
@@ -148,14 +100,28 @@ func (s *OrganizationsClient) GetBySubDomain(
 	return body.Organization, resp, err
 }
 
+func (s *OrganizationsClient) GetByID(
+	ctx context.Context,
+	id string,
+) (*Organization, *katapult.Response, error) {
+	return s.Get(ctx, OrganizationRef{ID: id})
+}
+
+func (s *OrganizationsClient) GetBySubDomain(
+	ctx context.Context,
+	subDomain string,
+) (*Organization, *katapult.Response, error) {
+	return s.Get(ctx, OrganizationRef{SubDomain: subDomain})
+}
+
 func (s *OrganizationsClient) CreateManaged(
 	ctx context.Context,
-	parent *Organization,
+	parent OrganizationRef,
 	args *OrganizationManagedArguments,
 ) (*Organization, *katapult.Response, error) {
 	u := &url.URL{Path: "organizations/_/managed"}
 	reqBody := &organizationCreateManagedRequest{
-		Organization: parent.lookupReference(),
+		Organization: parent,
 	}
 
 	if args != nil {

@@ -116,7 +116,7 @@ func NewDiskTemplatesClient(rm RequestMaker) *DiskTemplatesClient {
 
 func (s *DiskTemplatesClient) List(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 	opts *DiskTemplateListOptions,
 ) ([]*DiskTemplate, *katapult.Response, error) {
 	qs := queryValues(org, opts)

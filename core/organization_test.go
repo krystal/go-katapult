@@ -3,7 +3,6 @@ package core
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/url"
 	"testing"
@@ -90,223 +89,37 @@ func TestOrganization_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestNewOrganizationLookup(t *testing.T) {
-	type args struct {
-		idOrSubDomain string
-	}
-	tests := []struct {
-		name  string
-		args  args
-		want  *Organization
-		field FieldName
-	}{
-		{
-			name:  "empty string",
-			args:  args{idOrSubDomain: ""},
-			want:  &Organization{},
-			field: SubDomainField,
-		},
-		{
-			name:  "org_ prefixed ID",
-			args:  args{idOrSubDomain: "org_4LmWzxTJ5PRn8BZx"},
-			want:  &Organization{ID: "org_4LmWzxTJ5PRn8BZx"},
-			field: IDField,
-		},
-		{
-			name:  "subdomain",
-			args:  args{idOrSubDomain: "acme-labs"},
-			want:  &Organization{SubDomain: "acme-labs"},
-			field: SubDomainField,
-		},
-		{
-			name:  "random text",
-			args:  args{idOrSubDomain: "yz0ka92Cq92FM39l"},
-			want:  &Organization{SubDomain: "yz0ka92Cq92FM39l"},
-			field: SubDomainField,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, field := NewOrganizationLookup(tt.args.idOrSubDomain)
-
-			assert.Equal(t, tt.want, got)
-			assert.Equal(t, tt.field, field)
-		})
-	}
+func TestOrganization_Ref(t *testing.T) {
+	o := Organization{ID: "org_O648YDMEYeLmqdmn"}
+	assert.Equal(t, OrganizationRef{ID: "org_O648YDMEYeLmqdmn"}, o.Ref())
 }
 
-func TestOrganization_lookupReference(t *testing.T) {
+func TestOrganizationRef_queryValues(t *testing.T) {
 	tests := []struct {
 		name string
-		obj  *Organization
-		want *Organization
+		opts OrganizationRef
 	}{
 		{
-			name: "nil",
-			obj:  nil,
-			want: nil,
-		},
-		{
 			name: "empty",
-			obj:  &Organization{},
-			want: &Organization{},
+			opts: OrganizationRef{},
 		},
 		{
-			name: "full",
-			obj: &Organization{
-				ID:                   "org_O648YDMEYeLmqdmn",
-				Name:                 "ACME Inc.",
-				SubDomain:            "acme",
-				InfrastructureDomain: "infrastructure_domain",
-				Personal:             true,
-				CreatedAt:            timestampPtr(934933),
-				Suspended:            true,
-				Managed:              true,
-				BillingName:          "billing_name",
-				Address1:             "address1",
-				Address2:             "address2",
-				Address3:             "address3",
-				Address4:             "address4",
-				Postcode:             "postcode",
-				VatNumber:            "vat_number",
-				Currency:             &Currency{ID: "id0"},
-				Country:              &Country{ID: "id1"},
-				CountryState:         &CountryState{ID: "id2"},
-			},
-			want: &Organization{ID: "org_O648YDMEYeLmqdmn"},
-		},
-		{
-			name: "no ID",
-			obj: &Organization{
-				Name:                 "ACME Inc.",
-				SubDomain:            "acme",
-				InfrastructureDomain: "infrastructure_domain",
-				Personal:             true,
-				CreatedAt:            timestampPtr(934933),
-				Suspended:            true,
-				Managed:              true,
-				BillingName:          "billing_name",
-				Address1:             "address1",
-				Address2:             "address2",
-				Address3:             "address3",
-				Address4:             "address4",
-				Postcode:             "postcode",
-				VatNumber:            "vat_number",
-				Currency:             &Currency{ID: "id0"},
-				Country:              &Country{ID: "id1"},
-				CountryState:         &CountryState{ID: "id2"},
-			},
-			want: &Organization{SubDomain: "acme"},
-		},
-		{
-			name: "no ID or SubDomain",
-			obj: &Organization{
-				Name:                 "ACME Inc.",
-				InfrastructureDomain: "infrastructure_domain",
-				Personal:             true,
-				CreatedAt:            timestampPtr(934933),
-				Suspended:            true,
-				Managed:              true,
-				BillingName:          "billing_name",
-				Address1:             "address1",
-				Address2:             "address2",
-				Address3:             "address3",
-				Address4:             "address4",
-				Postcode:             "postcode",
-				VatNumber:            "vat_number",
-				Currency:             &Currency{ID: "id0"},
-				Country:              &Country{ID: "id1"},
-				CountryState:         &CountryState{ID: "id2"},
-			},
-			want: &Organization{},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got := tt.obj.lookupReference()
-
-			assert.Equal(t, tt.want, got)
-		})
-	}
-}
-
-func TestOrganization_queryValues(t *testing.T) {
-	tests := []struct {
-		name string
-		opts *Organization
-	}{
-		{
-			name: "nil",
-			opts: nil,
-		},
-		{
-			name: "empty",
-			opts: &Organization{},
-		},
-		{
-			name: "full",
-			opts: &Organization{
-				ID:                   "org_O648YDMEYeLmqdmn",
-				Name:                 "ACME Inc.",
-				SubDomain:            "acme",
-				InfrastructureDomain: "infrastructure_domain",
-				Personal:             true,
-				CreatedAt:            timestampPtr(934933),
-				Suspended:            true,
-				Managed:              true,
-				BillingName:          "billing_name",
-				Address1:             "address1",
-				Address2:             "address2",
-				Address3:             "address3",
-				Address4:             "address4",
-				Postcode:             "postcode",
-				VatNumber:            "vat_number",
-				Currency:             &Currency{ID: "id0"},
-				Country:              &Country{ID: "id1"},
-				CountryState:         &CountryState{ID: "id2"},
+			name: "both",
+			opts: OrganizationRef{
+				ID:        "org_O648YDMEYeLmqdmn",
+				SubDomain: "acme",
 			},
 		},
 		{
-			name: "no ID",
-			opts: &Organization{
-				Name:                 "ACME Inc.",
-				SubDomain:            "acme",
-				InfrastructureDomain: "infrastructure_domain",
-				Personal:             true,
-				CreatedAt:            timestampPtr(934933),
-				Suspended:            true,
-				Managed:              true,
-				BillingName:          "billing_name",
-				Address1:             "address1",
-				Address2:             "address2",
-				Address3:             "address3",
-				Address4:             "address4",
-				Postcode:             "postcode",
-				VatNumber:            "vat_number",
-				Currency:             &Currency{ID: "id0"},
-				Country:              &Country{ID: "id1"},
-				CountryState:         &CountryState{ID: "id2"},
+			name: "id alone",
+			opts: OrganizationRef{
+				ID: "org_O648YDMEYeLmqdmn",
 			},
 		},
 		{
-			name: "no ID or SubDomain",
-			opts: &Organization{
-				Name:                 "ACME Inc.",
-				InfrastructureDomain: "infrastructure_domain",
-				Personal:             true,
-				CreatedAt:            timestampPtr(934933),
-				Suspended:            true,
-				Managed:              true,
-				BillingName:          "billing_name",
-				Address1:             "address1",
-				Address2:             "address2",
-				Address3:             "address3",
-				Address4:             "address4",
-				Postcode:             "postcode",
-				VatNumber:            "vat_number",
-				Currency:             &Currency{ID: "id0"},
-				Country:              &Country{ID: "id1"},
-				CountryState:         &CountryState{ID: "id2"},
+			name: "subdomain alone",
+			opts: OrganizationRef{
+				SubDomain: "acme",
 			},
 		},
 	}
@@ -329,7 +142,7 @@ func Test_organizationCreateManagedRequest_JSONMarshaling(t *testing.T) {
 		{
 			name: "full",
 			obj: &organizationCreateManagedRequest{
-				Organization: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				Organization: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				Name:         "ACME Rockets Inc.",
 				SubDomain:    "acme-rockets",
 			},
@@ -459,8 +272,8 @@ func TestOrganizationsClient_List(t *testing.T) {
 
 func TestOrganizationsClient_Get(t *testing.T) {
 	type args struct {
-		ctx           context.Context
-		idOrSubDomain string
+		ctx context.Context
+		ref OrganizationRef
 	}
 	tests := []struct {
 		name       string
@@ -476,27 +289,11 @@ func TestOrganizationsClient_Get(t *testing.T) {
 		{
 			name: "by ID",
 			args: args{
-				ctx:           context.Background(),
-				idOrSubDomain: "org_O648YDMEYeLmqdmn",
+				ctx: context.Background(),
+				ref: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
-			reqPath: "organizations/org_O648YDMEYeLmqdmn",
-			want: &Organization{
-				ID:        "org_O648YDMEYeLmqdmn",
-				Name:      "ACME Inc.",
-				SubDomain: "acme",
-			},
-			respStatus: http.StatusOK,
-			respBody:   fixture("organization_get"),
-		},
-		{
-			name: "by SubDomain",
-			args: args{
-				ctx:           context.Background(),
-				idOrSubDomain: "acme",
-			},
-			reqPath: "organizations/_",
 			reqQuery: &url.Values{
-				"organization[sub_domain]": []string{"acme"},
+				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
 			},
 			want: &Organization{
 				ID:        "org_O648YDMEYeLmqdmn",
@@ -509,8 +306,11 @@ func TestOrganizationsClient_Get(t *testing.T) {
 		{
 			name: "non-existent organization",
 			args: args{
-				ctx:           context.Background(),
-				idOrSubDomain: "org_nopethisbegone",
+				ctx: context.Background(),
+				ref: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
+			},
+			reqQuery: &url.Values{
+				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
@@ -520,8 +320,11 @@ func TestOrganizationsClient_Get(t *testing.T) {
 		{
 			name: "suspended organization",
 			args: args{
-				ctx:           context.Background(),
-				idOrSubDomain: "org_O648YDMEYeLmqdmn",
+				ctx: context.Background(),
+				ref: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
+			},
+			reqQuery: &url.Values{
+				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
@@ -531,8 +334,11 @@ func TestOrganizationsClient_Get(t *testing.T) {
 		{
 			name: "not activated organization",
 			args: args{
-				ctx:           context.Background(),
-				idOrSubDomain: "org_O648YDMEYeLmqdmn",
+				ctx: context.Background(),
+				ref: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
+			},
+			reqQuery: &url.Values{
+				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureOrganizationNotActivatedErr,
 			errResp:    fixtureOrganizationNotActivatedResponseError,
@@ -542,8 +348,8 @@ func TestOrganizationsClient_Get(t *testing.T) {
 		{
 			name: "nil context",
 			args: args{
-				ctx:           nil,
-				idOrSubDomain: "org_O648YDMEYeLmqdmn",
+				ctx: nil,
+				ref: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -554,13 +360,8 @@ func TestOrganizationsClient_Get(t *testing.T) {
 			defer teardown()
 			c := NewOrganizationsClient(rm)
 
-			path := fmt.Sprintf("organizations/%s", tt.args.idOrSubDomain)
-			if tt.reqPath != "" {
-				path = tt.reqPath
-			}
-
 			mux.HandleFunc(
-				"/core/v1/"+path,
+				"/core/v1/organizations/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
@@ -576,7 +377,7 @@ func TestOrganizationsClient_Get(t *testing.T) {
 			)
 
 			got, resp, err := c.Get(
-				tt.args.ctx, tt.args.idOrSubDomain,
+				tt.args.ctx, tt.args.ref,
 			)
 
 			if tt.respStatus != 0 {
@@ -676,11 +477,15 @@ func TestOrganizationsClient_GetByID(t *testing.T) {
 			defer teardown()
 			c := NewOrganizationsClient(rm)
 
-			mux.HandleFunc(fmt.Sprintf("/core/v1/organizations/%s", tt.args.id),
+			mux.HandleFunc("/core/v1/organizations/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+
+					assert.Equal(t, url.Values{
+						"organization[id]": []string{tt.args.id},
+					}, r.URL.Query())
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -830,7 +635,7 @@ func TestOrganizationsClient_GetBySubDomain(t *testing.T) {
 func TestOrganizationsClient_CreateManaged(t *testing.T) {
 	type args struct {
 		ctx    context.Context
-		parent *Organization
+		parent OrganizationRef
 		args   *OrganizationManagedArguments
 	}
 	tests := []struct {
@@ -847,10 +652,8 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 			name: "organization",
 			args: args{
 				ctx: context.Background(),
-				parent: &Organization{
-					ID:        "org_O648YDMEYeLmqdmn",
-					Name:      "ACME Inc.",
-					SubDomain: "acme",
+				parent: OrganizationRef{
+					ID: "org_O648YDMEYeLmqdmn",
 				},
 				args: &OrganizationManagedArguments{
 					Name:      "NERV Corp.",
@@ -858,7 +661,7 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 				},
 			},
 			reqBody: &organizationCreateManagedRequest{
-				Organization: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				Organization: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				Name:         "NERV Corp.",
 				SubDomain:    "nerv",
 			},
@@ -874,8 +677,7 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 			name: "organization by SubDomain",
 			args: args{
 				ctx: context.Background(),
-				parent: &Organization{
-					Name:      "ACME Inc.",
+				parent: OrganizationRef{
 					SubDomain: "acme",
 				},
 				args: &OrganizationManagedArguments{
@@ -884,7 +686,7 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 				},
 			},
 			reqBody: &organizationCreateManagedRequest{
-				Organization: &Organization{SubDomain: "acme"},
+				Organization: OrganizationRef{SubDomain: "acme"},
 				Name:         "NERV Corp.",
 				SubDomain:    "nerv",
 			},
@@ -900,7 +702,7 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 			name: "managed org limit reached",
 			args: args{
 				ctx:    context.Background(),
-				parent: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				parent: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				args: &OrganizationManagedArguments{
 					Name:      "NERV Corp.",
 					SubDomain: "nerv",
@@ -921,7 +723,7 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 			name: "non-existent organization",
 			args: args{
 				ctx:    context.Background(),
-				parent: &Organization{ID: "org_nopewhatbye"},
+				parent: OrganizationRef{ID: "org_nopewhatbye"},
 				args: &OrganizationManagedArguments{
 					Name:      "NERV Corp.",
 					SubDomain: "nerv",
@@ -936,7 +738,7 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 			name: "suspended organization",
 			args: args{
 				ctx:    context.Background(),
-				parent: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				parent: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				args: &OrganizationManagedArguments{
 					Name:      "NERV Corp.",
 					SubDomain: "nerv",
@@ -951,7 +753,7 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 			name: "not activated organization",
 			args: args{
 				ctx:    context.Background(),
-				parent: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				parent: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				args: &OrganizationManagedArguments{
 					Name:      "NERV Corp.",
 					SubDomain: "nerv",
@@ -966,7 +768,7 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 			name: "validation error for new org details",
 			args: args{
 				ctx:    context.Background(),
-				parent: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				parent: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				args: &OrganizationManagedArguments{
 					Name:      "NERV Corp.",
 					SubDomain: "nerv",
@@ -991,25 +793,10 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 			),
 		},
 		{
-			name: "nil organization",
-			args: args{
-				ctx:    context.Background(),
-				parent: nil,
-				args: &OrganizationManagedArguments{
-					Name:      "NERV Corp.",
-					SubDomain: "nerv",
-				},
-			},
-			errStr:     fixtureOrganizationNotFoundErr,
-			errResp:    fixtureOrganizationNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("organization_not_found_error"),
-		},
-		{
 			name: "nil args",
 			args: args{
 				ctx:    context.Background(),
-				parent: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				parent: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				args:   nil,
 			},
 			errStr:     fixtureValidationErrorErr,
@@ -1021,7 +808,7 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 			name: "nil context",
 			args: args{
 				ctx:    nil,
-				parent: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				parent: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				args: &OrganizationManagedArguments{
 					Name:      "NERV Corp.",
 					SubDomain: "nerv",

@@ -41,7 +41,7 @@ type VirtualMachineBuildArguments struct {
 
 type virtualMachineBuildCreateRequest struct {
 	Hostname            string                 `json:"hostname,omitempty"`
-	Organization        *Organization          `json:"organization,omitempty"`
+	Organization        OrganizationRef        `json:"organization"`
 	Zone                *Zone                  `json:"zone,omitempty"`
 	DataCenter          DataCenterRef          `json:"data_center"`
 	Package             *VirtualMachinePackage `json:"package,omitempty"`
@@ -51,8 +51,8 @@ type virtualMachineBuildCreateRequest struct {
 }
 
 type virtualMachineBuildCreateFromSpecRequest struct {
-	Organization *Organization `json:"organization,omitempty"`
-	XML          string        `json:"xml,omitempty"`
+	Organization OrganizationRef `json:"organization"`
+	XML          string          `json:"xml,omitempty"`
 }
 
 type virtualMachineBuildsResponseBody struct {
@@ -100,13 +100,13 @@ func (s *VirtualMachineBuildsClient) GetByID(
 
 func (s *VirtualMachineBuildsClient) Create(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 	args *VirtualMachineBuildArguments,
 ) (*VirtualMachineBuild, *katapult.Response, error) {
 	u := &url.URL{Path: "organizations/_/virtual_machines/build"}
 	reqBody := &virtualMachineBuildCreateRequest{
 		Hostname:            args.Hostname,
-		Organization:        org.lookupReference(),
+		Organization:        org,
 		Zone:                args.Zone.lookupReference(),
 		DataCenter:          args.DataCenter,
 		Package:             args.Package.lookupReference(),
@@ -122,14 +122,14 @@ func (s *VirtualMachineBuildsClient) Create(
 
 func (s *VirtualMachineBuildsClient) CreateFromSpec(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 	spec *buildspec.VirtualMachineSpec,
 ) (*VirtualMachineBuild, *katapult.Response, error) {
 	specXML, _ := spec.XML()
 
 	u := &url.URL{Path: "organizations/_/virtual_machines/build_from_spec"}
 	reqBody := &virtualMachineBuildCreateFromSpecRequest{
-		Organization: org.lookupReference(),
+		Organization: org,
 		XML:          string(specXML),
 	}
 
@@ -140,12 +140,12 @@ func (s *VirtualMachineBuildsClient) CreateFromSpec(
 
 func (s *VirtualMachineBuildsClient) CreateFromSpecXML(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 	specXML string,
 ) (*VirtualMachineBuild, *katapult.Response, error) {
 	u := &url.URL{Path: "organizations/_/virtual_machines/build_from_spec"}
 	reqBody := &virtualMachineBuildCreateFromSpecRequest{
-		Organization: org.lookupReference(),
+		Organization: org,
 		XML:          specXML,
 	}
 

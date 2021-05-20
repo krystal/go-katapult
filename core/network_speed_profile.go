@@ -64,7 +64,7 @@ func NewNetworkSpeedProfilesClient(
 
 func (s *NetworkSpeedProfilesClient) List(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 	opts *ListOptions,
 ) ([]*NetworkSpeedProfile, *katapult.Response, error) {
 	qs := queryValues(org, opts)

@@ -297,7 +297,7 @@ func Test_ipAddressCreateRequest_JSONMarshaling(t *testing.T) {
 		{
 			name: "full",
 			obj: &ipAddressCreateRequest{
-				Organization: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				Organization: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				Network:      &Network{ID: "netw_zDW7KYAeqqfRfVag"},
 				Version:      IPv4,
 				VIP:          truePtr,
@@ -393,14 +393,13 @@ func TestIPAddressesClient_List(t *testing.T) {
 
 	type args struct {
 		ctx  context.Context
-		org  *Organization
+		org  OrganizationRef
 		opts *ListOptions
 	}
 	tests := []struct {
 		name           string
 		args           args
 		want           []*IPAddress
-		wantQuery      *url.Values
 		wantPagination *katapult.Pagination
 		errStr         string
 		errResp        *katapult.ResponseError
@@ -411,32 +410,9 @@ func TestIPAddressesClient_List(t *testing.T) {
 			name: "by organization ID",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			want: ipAddressesList,
-			wantQuery: &url.Values{
-				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
-			},
-			wantPagination: &katapult.Pagination{
-				CurrentPage: 1,
-				TotalPages:  1,
-				Total:       3,
-				PerPage:     30,
-				LargeSet:    false,
-			},
-			respStatus: http.StatusOK,
-			respBody:   fixture("ip_addresses_list"),
-		},
-		{
-			name: "by organization SubDomain",
-			args: args{
-				ctx: context.Background(),
-				org: &Organization{SubDomain: "acme"},
-			},
-			want: ipAddressesList,
-			wantQuery: &url.Values{
-				"organization[sub_domain]": []string{"acme"},
-			},
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
@@ -451,15 +427,10 @@ func TestIPAddressesClient_List(t *testing.T) {
 			name: "page 1",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				opts: &ListOptions{Page: 1, PerPage: 2},
 			},
 			want: ipAddressesList[0:2],
-			wantQuery: &url.Values{
-				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
-				"page":             []string{"1"},
-				"per_page":         []string{"2"},
-			},
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 1,
 				TotalPages:  2,
@@ -474,15 +445,10 @@ func TestIPAddressesClient_List(t *testing.T) {
 			name: "page 2",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				opts: &ListOptions{Page: 2, PerPage: 2},
 			},
 			want: ipAddressesList[2:],
-			wantQuery: &url.Values{
-				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
-				"page":             []string{"2"},
-				"per_page":         []string{"2"},
-			},
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 2,
 				TotalPages:  2,
@@ -497,7 +463,7 @@ func TestIPAddressesClient_List(t *testing.T) {
 			name: "invalid API token response",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureInvalidAPITokenErr,
 			errResp:    fixtureInvalidAPITokenResponseError,
@@ -508,18 +474,7 @@ func TestIPAddressesClient_List(t *testing.T) {
 			name: "non-existent organization",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
-			},
-			errStr:     fixtureOrganizationNotFoundErr,
-			errResp:    fixtureOrganizationNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("organization_not_found_error"),
-		},
-		{
-			name: "nil organization",
-			args: args{
-				ctx: context.Background(),
-				org: nil,
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
@@ -530,7 +485,7 @@ func TestIPAddressesClient_List(t *testing.T) {
 			name: "suspended organization",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
@@ -541,7 +496,7 @@ func TestIPAddressesClient_List(t *testing.T) {
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -559,12 +514,8 @@ func TestIPAddressesClient_List(t *testing.T) {
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
 
-					if tt.wantQuery != nil {
-						assert.Equal(t, *tt.wantQuery, r.URL.Query())
-					} else {
-						qs := queryValues(tt.args.org, tt.args.opts)
-						assert.Equal(t, *qs, r.URL.Query())
-					}
+					qs := queryValues(tt.args.org, tt.args.opts)
+					assert.Equal(t, *qs, r.URL.Query())
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -949,7 +900,7 @@ func TestIPAddressesClient_Create(t *testing.T) {
 
 	type args struct {
 		ctx  context.Context
-		org  *Organization
+		org  OrganizationRef
 		args *IPAddressCreateArguments
 	}
 	tests := []struct {
@@ -966,10 +917,8 @@ func TestIPAddressesClient_Create(t *testing.T) {
 			name: "IPv4 address by organization ID",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{
-					ID:        "org_O648YDMEYeLmqdmn",
-					Name:      "ACME Inc.",
-					SubDomain: "acme",
+				org: OrganizationRef{
+					ID: "org_O648YDMEYeLmqdmn",
 				},
 				args: &IPAddressCreateArguments{
 					Network: &Network{
@@ -981,7 +930,7 @@ func TestIPAddressesClient_Create(t *testing.T) {
 				},
 			},
 			reqBody: &ipAddressCreateRequest{
-				Organization: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				Organization: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				Network:      &Network{ID: "netw_zDW7KYAeqqfRfVag"},
 				Version:      IPv4,
 			},
@@ -997,8 +946,7 @@ func TestIPAddressesClient_Create(t *testing.T) {
 			name: "IPv6 address by organization SubDomain",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{
-					Name:      "ACME Inc.",
+				org: OrganizationRef{
 					SubDomain: "acme",
 				},
 				args: &IPAddressCreateArguments{
@@ -1010,7 +958,7 @@ func TestIPAddressesClient_Create(t *testing.T) {
 				},
 			},
 			reqBody: &ipAddressCreateRequest{
-				Organization: &Organization{SubDomain: "acme"},
+				Organization: OrganizationRef{SubDomain: "acme"},
 				Network:      &Network{Permalink: "public-v6"},
 				Version:      IPv6,
 			},
@@ -1026,7 +974,7 @@ func TestIPAddressesClient_Create(t *testing.T) {
 			name: "non-existent Organization",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				args: ipArgs,
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
@@ -1038,7 +986,7 @@ func TestIPAddressesClient_Create(t *testing.T) {
 			name: "suspended Organization",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				args: ipArgs,
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
@@ -1050,7 +998,7 @@ func TestIPAddressesClient_Create(t *testing.T) {
 			name: "non-existent Network",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				args: ipArgs,
 			},
 			errStr:     fixtureNetworkNotFoundErr,
@@ -1062,7 +1010,7 @@ func TestIPAddressesClient_Create(t *testing.T) {
 			name: "no available addresses",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				args: ipArgs,
 			},
 			errStr:     fixtureNoAvailableAddressesErr,
@@ -1074,7 +1022,7 @@ func TestIPAddressesClient_Create(t *testing.T) {
 			name: "permission denied",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				args: ipArgs,
 			},
 			errStr:     fixturePermissionDeniedErr,
@@ -1086,7 +1034,7 @@ func TestIPAddressesClient_Create(t *testing.T) {
 			name: "validation error",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				args: ipArgs,
 			},
 			errStr:     fixtureValidationErrorErr,
@@ -1098,7 +1046,7 @@ func TestIPAddressesClient_Create(t *testing.T) {
 			name: "nil ip address arguments",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				args: nil,
 			},
 			errStr:     fixtureValidationErrorErr,
@@ -1110,7 +1058,7 @@ func TestIPAddressesClient_Create(t *testing.T) {
 			name: "nil context",
 			args: args{
 				ctx:  nil,
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				args: ipArgs,
 			},
 			errStr: "net/http: nil Context",

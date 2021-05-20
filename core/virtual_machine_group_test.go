@@ -90,7 +90,7 @@ func Test_virtualMachineGroupCreateRequest_JSONMarshaling(t *testing.T) {
 		{
 			name: "full",
 			obj: &virtualMachineGroupCreateRequest{
-				Organization: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				Organization: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				Properties: &VirtualMachineGroupCreateArguments{
 					Name:      "vm group test",
 					Segregate: truePtr,
@@ -188,13 +188,12 @@ func TestVirtualMachineGroupsClient_List(t *testing.T) {
 
 	type args struct {
 		ctx context.Context
-		org *Organization
+		org OrganizationRef
 	}
 	tests := []struct {
 		name       string
 		args       args
 		want       []*VirtualMachineGroup
-		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
 		respStatus int
@@ -204,12 +203,9 @@ func TestVirtualMachineGroupsClient_List(t *testing.T) {
 			name: "by organization ID",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
-			want: virtualMachineGroupList,
-			wantQuery: &url.Values{
-				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
-			},
+			want:       virtualMachineGroupList,
 			respStatus: http.StatusOK,
 			respBody:   fixture("virtual_machine_groups_list"),
 		},
@@ -217,12 +213,9 @@ func TestVirtualMachineGroupsClient_List(t *testing.T) {
 			name: "by organization SubDomain",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{SubDomain: "acme"},
+				org: OrganizationRef{SubDomain: "acme"},
 			},
-			want: virtualMachineGroupList,
-			wantQuery: &url.Values{
-				"organization[sub_domain]": []string{"acme"},
-			},
+			want:       virtualMachineGroupList,
 			respStatus: http.StatusOK,
 			respBody:   fixture("virtual_machine_groups_list"),
 		},
@@ -230,7 +223,7 @@ func TestVirtualMachineGroupsClient_List(t *testing.T) {
 			name: "invalid API token response",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureInvalidAPITokenErr,
 			errResp:    fixtureInvalidAPITokenResponseError,
@@ -241,18 +234,7 @@ func TestVirtualMachineGroupsClient_List(t *testing.T) {
 			name: "non-existent organization",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
-			},
-			errStr:     fixtureOrganizationNotFoundErr,
-			errResp:    fixtureOrganizationNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("organization_not_found_error"),
-		},
-		{
-			name: "nil organization",
-			args: args{
-				ctx: context.Background(),
-				org: nil,
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
@@ -263,7 +245,7 @@ func TestVirtualMachineGroupsClient_List(t *testing.T) {
 			name: "not activated organization",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureOrganizationNotActivatedErr,
 			errResp:    fixtureOrganizationNotActivatedResponseError,
@@ -274,7 +256,7 @@ func TestVirtualMachineGroupsClient_List(t *testing.T) {
 			name: "suspended organization",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
@@ -285,7 +267,7 @@ func TestVirtualMachineGroupsClient_List(t *testing.T) {
 			name: "permission denied",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
@@ -296,7 +278,7 @@ func TestVirtualMachineGroupsClient_List(t *testing.T) {
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -314,12 +296,8 @@ func TestVirtualMachineGroupsClient_List(t *testing.T) {
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
 
-					if tt.wantQuery != nil {
-						assert.Equal(t, *tt.wantQuery, r.URL.Query())
-					} else {
-						qs := queryValues(tt.args.org)
-						assert.Equal(t, *qs, r.URL.Query())
-					}
+					qs := queryValues(tt.args.org)
+					assert.Equal(t, *qs, r.URL.Query())
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -573,7 +551,7 @@ func TestVirtualMachineGroupsClient_Create(t *testing.T) {
 
 	type args struct {
 		ctx  context.Context
-		org  *Organization
+		org  OrganizationRef
 		args *VirtualMachineGroupCreateArguments
 	}
 	tests := []struct {
@@ -590,15 +568,13 @@ func TestVirtualMachineGroupsClient_Create(t *testing.T) {
 			name: "virtual machine group by organization ID",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{
-					ID:        "org_O648YDMEYeLmqdmn",
-					Name:      "ACME Inc.",
-					SubDomain: "acme",
+				org: OrganizationRef{
+					ID: "org_O648YDMEYeLmqdmn",
 				},
 				args: vmGroupArgs,
 			},
 			reqBody: &virtualMachineGroupCreateRequest{
-				Organization: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				Organization: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				Properties: &VirtualMachineGroupCreateArguments{
 					Name:      "vm group test",
 					Segregate: falsePtr,
@@ -616,14 +592,13 @@ func TestVirtualMachineGroupsClient_Create(t *testing.T) {
 			name: "virtual machine group by organization SubDomain",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{
-					Name:      "ACME Inc.",
+				org: OrganizationRef{
 					SubDomain: "acme",
 				},
 				args: vmGroupArgs,
 			},
 			reqBody: &virtualMachineGroupCreateRequest{
-				Organization: &Organization{SubDomain: "acme"},
+				Organization: OrganizationRef{SubDomain: "acme"},
 				Properties: &VirtualMachineGroupCreateArguments{
 					Name:      "vm group test",
 					Segregate: falsePtr,
@@ -641,7 +616,7 @@ func TestVirtualMachineGroupsClient_Create(t *testing.T) {
 			name: "non-existent Organization",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				args: vmGroupArgs,
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
@@ -653,7 +628,7 @@ func TestVirtualMachineGroupsClient_Create(t *testing.T) {
 			name: "suspended Organization",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				args: vmGroupArgs,
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
@@ -665,7 +640,7 @@ func TestVirtualMachineGroupsClient_Create(t *testing.T) {
 			name: "not activated Organization",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureOrganizationNotActivatedErr,
 			errResp:    fixtureOrganizationNotActivatedResponseError,
@@ -676,7 +651,7 @@ func TestVirtualMachineGroupsClient_Create(t *testing.T) {
 			name: "permission denied",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				args: vmGroupArgs,
 			},
 			errStr:     fixturePermissionDeniedErr,
@@ -688,7 +663,7 @@ func TestVirtualMachineGroupsClient_Create(t *testing.T) {
 			name: "validation error",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				args: vmGroupArgs,
 			},
 			errStr:     fixtureValidationErrorErr,
@@ -700,7 +675,7 @@ func TestVirtualMachineGroupsClient_Create(t *testing.T) {
 			name: "nil context",
 			args: args{
 				ctx:  nil,
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				args: vmGroupArgs,
 			},
 			errStr: "net/http: nil Context",

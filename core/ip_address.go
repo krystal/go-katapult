@@ -84,11 +84,11 @@ type IPAddressUpdateArguments struct {
 }
 
 type ipAddressCreateRequest struct {
-	Organization *Organization `json:"organization,omitempty"`
-	Network      *Network      `json:"network,omitempty"`
-	Version      IPVersion     `json:"version,omitempty"`
-	VIP          *bool         `json:"vip,omitempty"`
-	Label        string        `json:"label,omitempty"`
+	Organization OrganizationRef `json:"organization,omitempty"`
+	Network      *Network        `json:"network,omitempty"`
+	Version      IPVersion       `json:"version,omitempty"`
+	VIP          *bool           `json:"vip,omitempty"`
+	Label        string          `json:"label,omitempty"`
 }
 
 type ipAddressUpdateRequest struct {
@@ -118,7 +118,7 @@ func NewIPAddressesClient(rm RequestMaker) *IPAddressesClient {
 
 func (s *IPAddressesClient) List(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 	opts *ListOptions,
 ) ([]*IPAddress, *katapult.Response, error) {
 	qs := queryValues(org, opts)
@@ -174,12 +174,12 @@ func (s *IPAddressesClient) get(
 
 func (s *IPAddressesClient) Create(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 	args *IPAddressCreateArguments,
 ) (*IPAddress, *katapult.Response, error) {
 	u := &url.URL{Path: "organizations/_/ip_addresses"}
 	reqBody := &ipAddressCreateRequest{
-		Organization: org.lookupReference(),
+		Organization: org,
 	}
 
 	if args != nil {

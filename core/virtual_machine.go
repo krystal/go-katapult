@@ -126,7 +126,7 @@ func NewVirtualMachinesClient(
 
 func (s *VirtualMachinesClient) List(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 	opts *ListOptions,
 ) ([]*VirtualMachine, *katapult.Response, error) {
 	qs := queryValues(org, opts)

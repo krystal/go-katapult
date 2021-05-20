@@ -52,7 +52,7 @@ type LoadBalancerUpdateArguments struct {
 }
 
 type loadBalancerCreateRequest struct {
-	Organization *Organization                `json:"organization,omitempty"`
+	Organization OrganizationRef              `json:"organization,omitempty"`
 	Properties   *LoadBalancerCreateArguments `json:"properties,omitempty"`
 }
 
@@ -81,7 +81,7 @@ func NewLoadBalancersClient(rm RequestMaker) *LoadBalancersClient {
 
 func (s *LoadBalancersClient) List(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 	opts *ListOptions,
 ) ([]*LoadBalancer, *katapult.Response, error) {
 	qs := queryValues(org, opts)
@@ -115,12 +115,12 @@ func (s *LoadBalancersClient) GetByID(
 
 func (s *LoadBalancersClient) Create(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 	args *LoadBalancerCreateArguments,
 ) (*LoadBalancer, *katapult.Response, error) {
 	u := &url.URL{Path: "organizations/_/load_balancers"}
 	reqBody := &loadBalancerCreateRequest{
-		Organization: org.lookupReference(),
+		Organization: org,
 		Properties:   args,
 	}
 
