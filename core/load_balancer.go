@@ -37,7 +37,7 @@ func (lbr LoadBalancerRef) queryValues() *url.Values {
 }
 
 type LoadBalancerCreateArguments struct {
-	DataCenter    DataCenterRef `json:"data_center,omitempty"`
+	DataCenter    DataCenterRef `json:"data_center"`
 	Name          string        `json:"name,omitempty"`
 	ResourceType  ResourceType  `json:"resource_type,omitempty"`
 	ResourceIDs   *[]string     `json:"resource_ids,omitempty"`

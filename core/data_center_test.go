@@ -56,7 +56,7 @@ func TestDataCenter_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestNewDataCenter_Ref(t *testing.T) {
+func TestDataCenter_Ref(t *testing.T) {
 	tests := []struct {
 		name string
 		obj  DataCenter

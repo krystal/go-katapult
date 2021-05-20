@@ -31,6 +31,11 @@ type Organization struct {
 	CountryState         *CountryState        `json:"country_state,omitempty"`
 }
 
+type OrganizationRef struct {
+	ID        string `json:"id,omitempty"`
+	SubDomain string `json:"sub_domain,omitempty"`
+}
+
 // NewOrganizationLookup takes a string that is a Organization ID or SubDomain,
 // returning a empty *Organization struct with either the ID or SubDomain field
 // populated with the given value. This struct is suitable as input to other

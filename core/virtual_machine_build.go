@@ -43,7 +43,7 @@ type virtualMachineBuildCreateRequest struct {
 	Hostname            string                 `json:"hostname,omitempty"`
 	Organization        *Organization          `json:"organization,omitempty"`
 	Zone                *Zone                  `json:"zone,omitempty"`
-	DataCenter          DataCenterRef          `json:"data_center,omitempty"`
+	DataCenter          DataCenterRef          `json:"data_center"`
 	Package             *VirtualMachinePackage `json:"package,omitempty"`
 	DiskTemplate        *DiskTemplate          `json:"disk_template,omitempty"`
 	DiskTemplateOptions []*DiskTemplateOption  `json:"disk_template_options,omitempty"`
