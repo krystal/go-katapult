@@ -2,9 +2,7 @@ package core
 
 import (
 	"context"
-	"fmt"
 	"net/url"
-	"strings"
 
 	"github.com/krystal/go-katapult"
 )
@@ -17,43 +15,23 @@ type DNSZone struct {
 	InfrastructureZone bool   `json:"infrastructure_zone,omitempty"`
 }
 
-// NewDNSZoneLookup takes a string that is a DNSZone ID or Name, returning a
-// empty *DNSZone struct with either the ID or Name field populated with the
-// given value. This struct is suitable as input to other methods which accept a
-// *DNSZone as input.
-func NewDNSZoneLookup(
-	idOrName string,
-) (lr *DNSZone, f FieldName) {
-	if strings.HasPrefix(idOrName, "dnszone_") {
-		return &DNSZone{ID: idOrName}, IDField
-	}
-
-	return &DNSZone{Name: idOrName}, NameField
+func (s *DNSZone) Ref() DNSZoneRef {
+	return DNSZoneRef{ID: s.ID}
 }
 
-func (s *DNSZone) lookupReference() *DNSZone {
-	if s == nil {
-		return nil
-	}
-
-	lr := &DNSZone{ID: s.ID}
-	if lr.ID == "" {
-		lr.Name = s.Name
-	}
-
-	return lr
+type DNSZoneRef struct {
+	ID   string `json:"id,omitempty"`
+	Name string `json:"name,omitempty"`
 }
 
-func (s *DNSZone) queryValues() *url.Values {
+func (s DNSZoneRef) queryValues() *url.Values {
 	v := &url.Values{}
 
-	if s != nil {
-		switch {
-		case s.ID != "":
-			v.Set("dns_zone[id]", s.ID)
-		case s.Name != "":
-			v.Set("dns_zone[name]", s.Name)
-		}
+	switch {
+	case s.ID != "":
+		v.Set("dns_zone[id]", s.ID)
+	case s.Name != "":
+		v.Set("dns_zone[name]", s.Name)
 	}
 
 	return v
@@ -82,12 +60,12 @@ type dnsZoneCreateRequest struct {
 }
 
 type dnsZoneVerifyRequest struct {
-	DNSZone *DNSZone `json:"dns_zone"`
+	DNSZone DNSZoneRef `json:"dns_zone"`
 }
 
 type dnsZoneUpdateTTLRequest struct {
-	DNSZone *DNSZone `json:"dns_zone"`
-	TTL     int      `json:"ttl"`
+	DNSZone DNSZoneRef `json:"dns_zone"`
+	TTL     int        `json:"ttl"`
 }
 
 type dnsZoneResponseBody struct {
@@ -129,35 +107,27 @@ func (s *DNSZonesClient) List(
 
 func (s *DNSZonesClient) Get(
 	ctx context.Context,
-	idOrName string,
+	ref DNSZoneRef,
 ) (*DNSZone, *katapult.Response, error) {
-	if _, f := NewDNSZoneLookup(idOrName); f == IDField {
-		return s.GetByID(ctx, idOrName)
-	}
+	u := &url.URL{Path: "dns/zones/_", RawQuery: ref.queryValues().Encode()}
 
-	return s.GetByName(ctx, idOrName)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+
+	return body.DNSZone, resp, err
 }
 
 func (s *DNSZonesClient) GetByID(
 	ctx context.Context,
 	id string,
 ) (*DNSZone, *katapult.Response, error) {
-	u := &url.URL{Path: fmt.Sprintf("dns/zones/%s", id)}
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
-
-	return body.DNSZone, resp, err
+	return s.Get(ctx, DNSZoneRef{ID: id})
 }
 
 func (s *DNSZonesClient) GetByName(
 	ctx context.Context,
 	name string,
 ) (*DNSZone, *katapult.Response, error) {
-	qs := url.Values{"dns_zone[name]": []string{name}}
-	u := &url.URL{Path: "dns/zones/_", RawQuery: qs.Encode()}
-
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
-
-	return body.DNSZone, resp, err
+	return s.Get(ctx, DNSZoneRef{Name: name})
 }
 
 func (s *DNSZonesClient) Create(
@@ -185,7 +155,7 @@ func (s *DNSZonesClient) Create(
 
 func (s *DNSZonesClient) Delete(
 	ctx context.Context,
-	zone *DNSZone,
+	zone DNSZoneRef,
 ) (*DNSZone, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "dns/zones/_",
@@ -198,7 +168,7 @@ func (s *DNSZonesClient) Delete(
 
 func (s *DNSZonesClient) VerificationDetails(
 	ctx context.Context,
-	zone *DNSZone,
+	zone DNSZoneRef,
 ) (*DNSZoneVerificationDetails, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "dns/zones/_/verification_details",
@@ -211,11 +181,11 @@ func (s *DNSZonesClient) VerificationDetails(
 
 func (s *DNSZonesClient) Verify(
 	ctx context.Context,
-	zone *DNSZone,
+	ref DNSZoneRef,
 ) (*DNSZone, *katapult.Response, error) {
 	u := &url.URL{Path: "dns/zones/_/verify"}
 	reqBody := &dnsZoneVerifyRequest{
-		DNSZone: zone.lookupReference(),
+		DNSZone: ref,
 	}
 	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
 
@@ -224,12 +194,12 @@ func (s *DNSZonesClient) Verify(
 
 func (s *DNSZonesClient) UpdateTTL(
 	ctx context.Context,
-	zone *DNSZone,
+	ref DNSZoneRef,
 	ttl int,
 ) (*DNSZone, *katapult.Response, error) {
 	u := &url.URL{Path: "dns/zones/_/update_ttl"}
 	reqBody := &dnsZoneUpdateTTLRequest{
-		DNSZone: zone.lookupReference(),
+		DNSZone: ref,
 		TTL:     ttl,
 	}
 	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
