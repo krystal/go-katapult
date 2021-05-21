@@ -232,7 +232,7 @@ func Test_virtualMachineBuildCreateFromSpecRequest_JSONMarshaling(
 func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		id  string
+		ref VirtualMachineBuildRef
 	}
 	tests := []struct {
 		name       string
@@ -248,7 +248,7 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 			name: "virtual machine build",
 			args: args{
 				ctx: context.Background(),
-				id:  "vmbuild_pbjJIqJ3MOMNsCr3",
+				ref: VirtualMachineBuildRef{ID: "vmbuild_pbjJIqJ3MOMNsCr3"},
 			},
 			want: &VirtualMachineBuild{
 				ID:      "vmbuild_pbjJIqJ3MOMNsCr3",
@@ -262,7 +262,7 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 			name: "virtual machine build (alt response)",
 			args: args{
 				ctx: context.Background(),
-				id:  "vmbuild_pbjJIqJ3MOMNsCr3",
+				ref: VirtualMachineBuildRef{ID: "vmbuild_pbjJIqJ3MOMNsCr3"},
 			},
 			want: &VirtualMachineBuild{
 				ID:      "vmbuild_pbjJIqJ3MOMNsCr3",
@@ -276,7 +276,7 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 			name: "non-existent virtual machine build",
 			args: args{
 				ctx: context.Background(),
-				id:  "vmbuild_nopethisbegone",
+				ref: VirtualMachineBuildRef{ID: "vmbuild_nopethisbegone"},
 			},
 			errStr:     fixtureBuildNotFoundErr,
 			errResp:    fixtureBuildNotFoundResponseError,
@@ -287,7 +287,7 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				id:  "vmbuild_pbjJIqJ3MOMNsCr3",
+				ref: VirtualMachineBuildRef{ID: "vmbuild_pbjJIqJ3MOMNsCr3"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -299,7 +299,10 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 			c := NewVirtualMachineBuildsClient(rm)
 
 			mux.HandleFunc(
-				fmt.Sprintf("/core/v1/virtual_machines/builds/%s", tt.args.id),
+				fmt.Sprintf(
+					"/core/v1/virtual_machines/builds/%s",
+					tt.args.ref.ID,
+				),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
@@ -311,7 +314,7 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 			)
 
 			got, resp, err := c.Get(
-				tt.args.ctx, tt.args.id,
+				tt.args.ctx, tt.args.ref,
 			)
 
 			if tt.respStatus != 0 {

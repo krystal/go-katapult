@@ -19,6 +19,14 @@ type VirtualMachineBuild struct {
 	CreatedAt      *timestamp.Timestamp     `json:"created_at,omitempty"`
 }
 
+func (vmb *VirtualMachineBuild) Ref() VirtualMachineBuildRef {
+	return VirtualMachineBuildRef{ID: vmb.ID}
+}
+
+type VirtualMachineBuildRef struct {
+	ID string `json:"id,omitempty"`
+}
+
 type VirtualMachineBuildState string
 
 const (
@@ -78,9 +86,9 @@ func NewVirtualMachineBuildsClient(
 
 func (s *VirtualMachineBuildsClient) Get(
 	ctx context.Context,
-	id string,
+	ref VirtualMachineBuildRef,
 ) (*VirtualMachineBuild, *katapult.Response, error) {
-	return s.GetByID(ctx, id)
+	return s.GetByID(ctx, ref.ID)
 }
 
 func (s *VirtualMachineBuildsClient) GetByID(

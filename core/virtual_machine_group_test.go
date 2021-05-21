@@ -332,7 +332,7 @@ func TestVirtualMachineGroupsClient_List(t *testing.T) {
 func TestVirtualMachineGroupsClient_Get(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		id  string
+		ref VirtualMachineGroupRef
 	}
 	tests := []struct {
 		name       string
@@ -347,7 +347,7 @@ func TestVirtualMachineGroupsClient_Get(t *testing.T) {
 			name: "by ID",
 			args: args{
 				ctx: context.Background(),
-				id:  "vmgrp_gsEUFPp3ybVQm5QQ",
+				ref: VirtualMachineGroupRef{ID: "vmgrp_gsEUFPp3ybVQm5QQ"},
 			},
 			want: &VirtualMachineGroup{
 				ID:        "vmgrp_gsEUFPp3ybVQm5QQ",
@@ -361,7 +361,7 @@ func TestVirtualMachineGroupsClient_Get(t *testing.T) {
 			name: "non-existent virtual machine group",
 			args: args{
 				ctx: context.Background(),
-				id:  "vmgrp_gsEUFPp3ybVQm5QQ",
+				ref: VirtualMachineGroupRef{ID: "vmgrp_gsEUFPp3ybVQm5QQ"},
 			},
 			errStr:     fixtureVMGroupNotFoundErr,
 			errResp:    fixtureVMGroupNotFoundResponseError,
@@ -374,7 +374,7 @@ func TestVirtualMachineGroupsClient_Get(t *testing.T) {
 			name: "permission denied",
 			args: args{
 				ctx: context.Background(),
-				id:  "vmgrp_gsEUFPp3ybVQm5QQ",
+				ref: VirtualMachineGroupRef{ID: "vmgrp_gsEUFPp3ybVQm5QQ"},
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
@@ -385,7 +385,7 @@ func TestVirtualMachineGroupsClient_Get(t *testing.T) {
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				id:  "vmgrp_gsEUFPp3ybVQm5QQ",
+				ref: VirtualMachineGroupRef{ID: "vmgrp_gsEUFPp3ybVQm5QQ"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -399,7 +399,7 @@ func TestVirtualMachineGroupsClient_Get(t *testing.T) {
 			mux.HandleFunc(
 				fmt.Sprintf(
 					"/core/v1/virtual_machine_groups/%s",
-					tt.args.id,
+					tt.args.ref.ID,
 				),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
@@ -412,7 +412,7 @@ func TestVirtualMachineGroupsClient_Get(t *testing.T) {
 			)
 
 			got, resp, err := c.Get(
-				tt.args.ctx, tt.args.id,
+				tt.args.ctx, tt.args.ref,
 			)
 
 			if tt.respStatus != 0 {
@@ -739,7 +739,7 @@ func TestVirtualMachineGroupsClient_Update(t *testing.T) {
 
 	type args struct {
 		ctx   context.Context
-		group *VirtualMachineGroup
+		group VirtualMachineGroupRef
 		args  *VirtualMachineGroupUpdateArguments
 	}
 	tests := []struct {
@@ -756,11 +756,11 @@ func TestVirtualMachineGroupsClient_Update(t *testing.T) {
 			name: "by ID",
 			args: args{
 				ctx:   context.Background(),
-				group: &VirtualMachineGroup{ID: "vmgrp_gsEUFPp3ybVQm5QQ"},
+				group: VirtualMachineGroupRef{ID: "vmgrp_gsEUFPp3ybVQm5QQ"},
 				args:  groupArgs,
 			},
 			reqBody: &virtualMachineGroupUpdateRequest{
-				VirtualMachineGroup: &VirtualMachineGroup{
+				VirtualMachineGroup: VirtualMachineGroupRef{
 					ID: "vmgrp_gsEUFPp3ybVQm5QQ",
 				},
 				Properties: &VirtualMachineGroupUpdateArguments{
@@ -780,7 +780,7 @@ func TestVirtualMachineGroupsClient_Update(t *testing.T) {
 			name: "non-existent virtual machine group",
 			args: args{
 				ctx:   context.Background(),
-				group: &VirtualMachineGroup{ID: "vmgrp_nopethisdoesnotexist"},
+				group: VirtualMachineGroupRef{ID: "vmgrp_nopethisdoesnotexist"},
 				args:  &VirtualMachineGroupUpdateArguments{},
 			},
 			errStr:     fixtureVMGroupNotFoundErr,
@@ -792,7 +792,7 @@ func TestVirtualMachineGroupsClient_Update(t *testing.T) {
 			name: "permission denied",
 			args: args{
 				ctx:   context.Background(),
-				group: &VirtualMachineGroup{ID: "vmgrp_gsEUFPp3ybVQm5QQ"},
+				group: VirtualMachineGroupRef{ID: "vmgrp_gsEUFPp3ybVQm5QQ"},
 				args:  groupArgs,
 			},
 			errStr:     fixturePermissionDeniedErr,
@@ -804,7 +804,7 @@ func TestVirtualMachineGroupsClient_Update(t *testing.T) {
 			name: "validation error",
 			args: args{
 				ctx:   context.Background(),
-				group: &VirtualMachineGroup{ID: "vmgrp_gsEUFPp3ybVQm5QQ"},
+				group: VirtualMachineGroupRef{ID: "vmgrp_gsEUFPp3ybVQm5QQ"},
 				args:  groupArgs,
 			},
 			errStr:     fixtureValidationErrorErr,
@@ -813,22 +813,10 @@ func TestVirtualMachineGroupsClient_Update(t *testing.T) {
 			respBody:   fixture("validation_error"),
 		},
 		{
-			name: "nil group",
-			args: args{
-				ctx:   context.Background(),
-				group: nil,
-				args:  groupArgs,
-			},
-			errStr:     fixtureVMGroupNotFoundErr,
-			errResp:    fixtureVMGroupNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("virtual_machine_group_not_found_error"),
-		},
-		{
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				group: &VirtualMachineGroup{
+				group: VirtualMachineGroupRef{
 					ID: "vmgrp_gsEUFPp3ybVQm5QQ",
 				},
 				args: groupArgs,
@@ -889,7 +877,7 @@ func TestVirtualMachineGroupsClient_Update(t *testing.T) {
 func TestVirtualMachineGroupsClient_Delete(t *testing.T) {
 	type args struct {
 		ctx   context.Context
-		group *VirtualMachineGroup
+		group VirtualMachineGroupRef
 	}
 	tests := []struct {
 		name       string
@@ -904,7 +892,7 @@ func TestVirtualMachineGroupsClient_Delete(t *testing.T) {
 			name: "by ID",
 			args: args{
 				ctx:   context.Background(),
-				group: &VirtualMachineGroup{ID: "vmgrp_gsEUFPp3ybVQm5QQ"},
+				group: VirtualMachineGroupRef{ID: "vmgrp_gsEUFPp3ybVQm5QQ"},
 			},
 			wantQuery: &url.Values{
 				"virtual_machine_group[id]": []string{"vmgrp_gsEUFPp3ybVQm5QQ"},
@@ -916,7 +904,7 @@ func TestVirtualMachineGroupsClient_Delete(t *testing.T) {
 			name: "non-existent virtual machine group",
 			args: args{
 				ctx:   context.Background(),
-				group: &VirtualMachineGroup{ID: "vmgrp_nopenotfound"},
+				group: VirtualMachineGroupRef{ID: "vmgrp_nopenotfound"},
 			},
 			errStr:     fixtureVMGroupNotFoundErr,
 			errResp:    fixtureVMGroupNotFoundResponseError,
@@ -927,7 +915,7 @@ func TestVirtualMachineGroupsClient_Delete(t *testing.T) {
 			name: "permission denied",
 			args: args{
 				ctx:   context.Background(),
-				group: &VirtualMachineGroup{ID: "vmgrp_gsEUFPp3ybVQm5QQ"},
+				group: VirtualMachineGroupRef{ID: "vmgrp_gsEUFPp3ybVQm5QQ"},
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
@@ -935,21 +923,10 @@ func TestVirtualMachineGroupsClient_Delete(t *testing.T) {
 			respBody:   fixture("permission_denied_error"),
 		},
 		{
-			name: "nil group",
-			args: args{
-				ctx:   context.Background(),
-				group: nil,
-			},
-			errStr:     fixtureVMGroupNotFoundErr,
-			errResp:    fixtureVMGroupNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("virtual_machine_group_not_found_error"),
-		},
-		{
 			name: "nil context",
 			args: args{
 				ctx:   nil,
-				group: &VirtualMachineGroup{ID: "vmgrp_gsEUFPp3ybVQm5QQ"},
+				group: VirtualMachineGroupRef{ID: "vmgrp_gsEUFPp3ybVQm5QQ"},
 			},
 			errStr: "net/http: nil Context",
 		},
