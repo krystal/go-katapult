@@ -59,7 +59,7 @@ type virtualMachineNetworkInterfaceAllocateNewIPRequest struct {
 
 type virtualMachineNetworkInterfaceUpdateSpeedProfileRequest struct {
 	VirtualMachineNetworkInterface *VirtualMachineNetworkInterface `json:"virtual_machine_network_interface,omitempty"`
-	SpeedProfile                   *NetworkSpeedProfile            `json:"speed_profile,omitempty"`
+	SpeedProfile                   NetworkSpeedProfileRef          `json:"speed_profile,omitempty"`
 }
 
 type VirtualMachineNetworkInterfacesClient struct {
@@ -158,14 +158,14 @@ func (s *VirtualMachineNetworkInterfacesClient) AllocateNewIP(
 func (s *VirtualMachineNetworkInterfacesClient) UpdateSpeedProfile(
 	ctx context.Context,
 	vmnet *VirtualMachineNetworkInterface,
-	speedProfile *NetworkSpeedProfile,
+	speedProfile NetworkSpeedProfileRef,
 ) (*Task, *katapult.Response, error) {
 	u := &url.URL{
 		Path: "virtual_machine_network_interfaces/_/update_speed_profile",
 	}
 	reqBody := &virtualMachineNetworkInterfaceUpdateSpeedProfileRequest{
 		VirtualMachineNetworkInterface: vmnet.lookupReference(),
-		SpeedProfile:                   speedProfile.lookupReference(),
+		SpeedProfile:                   speedProfile,
 	}
 
 	body, resp, err := s.doRequest(ctx, "PATCH", u, reqBody)

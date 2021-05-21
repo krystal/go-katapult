@@ -42,101 +42,32 @@ func TestNetworkSpeedProfile_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestNewNetworkSpeedProfileLookup(t *testing.T) {
-	type args struct {
-		idOrPermalink string
-	}
-	tests := []struct {
-		name  string
-		args  args
-		want  *NetworkSpeedProfile
-		field FieldName
-	}{
-		{
-			name:  "empty string",
-			args:  args{idOrPermalink: ""},
-			want:  &NetworkSpeedProfile{},
-			field: PermalinkField,
-		},
-		{
-			name:  "nsp_ prefixed ID",
-			args:  args{idOrPermalink: "nsp_wEyUfJ74ZQu2KmZr"},
-			want:  &NetworkSpeedProfile{ID: "nsp_wEyUfJ74ZQu2KmZr"},
-			field: IDField,
-		},
-		{
-			name:  "permalink",
-			args:  args{idOrPermalink: "10gbps"},
-			want:  &NetworkSpeedProfile{Permalink: "10gbps"},
-			field: PermalinkField,
-		},
-		{
-			name:  "random text",
-			args:  args{idOrPermalink: "kKAvlqM1FVEn3NAG"},
-			want:  &NetworkSpeedProfile{Permalink: "kKAvlqM1FVEn3NAG"},
-			field: PermalinkField,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, field := NewNetworkSpeedProfileLookup(tt.args.idOrPermalink)
-
-			assert.Equal(t, tt.want, got)
-			assert.Equal(t, tt.field, field)
-		})
-	}
-}
-
-func TestNetworkSpeedProfile_lookupReference(t *testing.T) {
+func TestNetworkSpeedProfile_Ref(t *testing.T) {
 	tests := []struct {
 		name string
-		obj  *NetworkSpeedProfile
-		want *NetworkSpeedProfile
+		obj  NetworkSpeedProfile
+		want NetworkSpeedProfileRef
 	}{
 		{
-			name: "nil",
-			obj:  nil,
-			want: nil,
-		},
-		{
 			name: "empty",
-			obj:  &NetworkSpeedProfile{},
-			want: &NetworkSpeedProfile{},
+			obj:  NetworkSpeedProfile{},
+			want: NetworkSpeedProfileRef{},
 		},
 		{
-			name: "full",
-			obj: &NetworkSpeedProfile{
+			name: "with id",
+			obj: NetworkSpeedProfile{
 				ID:                  "nsp_CReSzkaCt01kWoi7",
 				Name:                "1 Gbps",
 				UploadSpeedInMbit:   100,
 				DownloadSpeedInMbit: 1000,
 				Permalink:           "1gbps",
 			},
-			want: &NetworkSpeedProfile{ID: "nsp_CReSzkaCt01kWoi7"},
-		},
-		{
-			name: "no ID",
-			obj: &NetworkSpeedProfile{
-				Name:                "1 Gbps",
-				UploadSpeedInMbit:   100,
-				DownloadSpeedInMbit: 1000,
-				Permalink:           "1gbps",
-			},
-			want: &NetworkSpeedProfile{Permalink: "1gbps"},
-		},
-		{
-			name: "no ID or Permalink",
-			obj: &NetworkSpeedProfile{
-				Name:                "1 Gbps",
-				UploadSpeedInMbit:   100,
-				DownloadSpeedInMbit: 1000,
-			},
-			want: &NetworkSpeedProfile{},
+			want: NetworkSpeedProfileRef{ID: "nsp_CReSzkaCt01kWoi7"},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.obj.lookupReference()
+			got := tt.obj.Ref()
 
 			assert.Equal(t, tt.want, got)
 		})

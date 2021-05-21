@@ -281,7 +281,7 @@ func Test_virtualMachineNetworkInterfaceUpdateSpeedProfileRequest_JSONMarshaling
 				VirtualMachineNetworkInterface: &VirtualMachineNetworkInterface{
 					ID: "id1",
 				},
-				SpeedProfile: &NetworkSpeedProfile{
+				SpeedProfile: NetworkSpeedProfileRef{
 					ID: "id2",
 				},
 			},
@@ -1170,7 +1170,7 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 	type args struct {
 		ctx          context.Context
 		vmnet        *VirtualMachineNetworkInterface
-		speedProfile *NetworkSpeedProfile
+		speedProfile NetworkSpeedProfileRef
 	}
 	tests := []struct {
 		name        string
@@ -1189,12 +1189,8 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 				vmnet: &VirtualMachineNetworkInterface{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
-				speedProfile: &NetworkSpeedProfile{
-					ID:                  "nsp_CReSzkaCt01kWoi7",
-					Name:                "1 Gbps",
-					UploadSpeedInMbit:   100,
-					DownloadSpeedInMbit: 1000,
-					Permalink:           "1gbps",
+				speedProfile: NetworkSpeedProfileRef{
+					ID: "nsp_CReSzkaCt01kWoi7",
 				},
 			},
 			//nolint:lll
@@ -1202,7 +1198,7 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 				VirtualMachineNetworkInterface: &VirtualMachineNetworkInterface{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
-				SpeedProfile: &NetworkSpeedProfile{
+				SpeedProfile: NetworkSpeedProfileRef{
 					ID: "nsp_CReSzkaCt01kWoi7",
 				},
 			},
@@ -1221,11 +1217,8 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 				vmnet: &VirtualMachineNetworkInterface{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
-				speedProfile: &NetworkSpeedProfile{
-					Name:                "1 Gbps",
-					UploadSpeedInMbit:   100,
-					DownloadSpeedInMbit: 1000,
-					Permalink:           "1gbps",
+				speedProfile: NetworkSpeedProfileRef{
+					Permalink: "1gbps",
 				},
 			},
 			//nolint:lll
@@ -1233,7 +1226,7 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 				VirtualMachineNetworkInterface: &VirtualMachineNetworkInterface{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
-				SpeedProfile: &NetworkSpeedProfile{
+				SpeedProfile: NetworkSpeedProfileRef{
 					Permalink: "1gbps",
 				},
 			},
@@ -1252,7 +1245,7 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 				vmnet: &VirtualMachineNetworkInterface{
 					ID: "vmnet_nopethisbegone",
 				},
-				speedProfile: &NetworkSpeedProfile{
+				speedProfile: NetworkSpeedProfileRef{
 					ID: "nsp_CReSzkaCt01kWoi7",
 				},
 			},
@@ -1270,7 +1263,7 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 				vmnet: &VirtualMachineNetworkInterface{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
-				speedProfile: &NetworkSpeedProfile{
+				speedProfile: NetworkSpeedProfileRef{
 					ID: "nsp_iRIhTnddeHCK9ZBj",
 				},
 			},
@@ -1286,7 +1279,7 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 				vmnet: &VirtualMachineNetworkInterface{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
-				speedProfile: &NetworkSpeedProfile{
+				speedProfile: NetworkSpeedProfileRef{
 					ID: "nsp_iRIhTnddeHCK9ZBj",
 				},
 			},
@@ -1302,7 +1295,7 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 				vmnet: &VirtualMachineNetworkInterface{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
-				speedProfile: &NetworkSpeedProfile{
+				speedProfile: NetworkSpeedProfileRef{
 					ID: "nsp_iRIhTnddeHCK9ZBj",
 				},
 			},
