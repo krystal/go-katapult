@@ -52,12 +52,12 @@ type LoadBalancerUpdateArguments struct {
 }
 
 type loadBalancerCreateRequest struct {
-	Organization OrganizationRef              `json:"organization,omitempty"`
+	Organization OrganizationRef              `json:"organization"`
 	Properties   *LoadBalancerCreateArguments `json:"properties,omitempty"`
 }
 
 type loadBalancerUpdateRequest struct {
-	LoadBalancer LoadBalancerRef              `json:"load_balancer,omitempty"`
+	LoadBalancer LoadBalancerRef              `json:"load_balancer"`
 	Properties   *LoadBalancerUpdateArguments `json:"properties,omitempty"`
 }
 
@@ -98,9 +98,9 @@ func (s *LoadBalancersClient) List(
 
 func (s *LoadBalancersClient) Get(
 	ctx context.Context,
-	id string,
+	ref LoadBalancerRef,
 ) (*LoadBalancer, *katapult.Response, error) {
-	return s.GetByID(ctx, id)
+	return s.GetByID(ctx, ref.ID)
 }
 
 func (s *LoadBalancersClient) GetByID(

@@ -451,7 +451,7 @@ func TestLoadBalancersClient_List(t *testing.T) {
 func TestLoadBalancersClient_Get(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		id  string
+		ref LoadBalancerRef
 	}
 	tests := []struct {
 		name       string
@@ -467,7 +467,7 @@ func TestLoadBalancersClient_Get(t *testing.T) {
 			name: "load balancer",
 			args: args{
 				ctx: context.Background(),
-				id:  "lb_7vClpn0rlUegGPDS",
+				ref: LoadBalancerRef{ID: "lb_7vClpn0rlUegGPDS"},
 			},
 			want: &LoadBalancer{
 				ID:           "lb_7vClpn0rlUegGPDS",
@@ -481,7 +481,7 @@ func TestLoadBalancersClient_Get(t *testing.T) {
 			name: "non-existent load balancer",
 			args: args{
 				ctx: context.Background(),
-				id:  "lb_nopethisbegone",
+				ref: LoadBalancerRef{"lb_nopethisbegone"},
 			},
 			errStr:     fixtureLoadBalancerNotFoundErr,
 			errResp:    fixtureLoadBalancerNotFoundResponseError,
@@ -492,7 +492,7 @@ func TestLoadBalancersClient_Get(t *testing.T) {
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				id:  "lb_7vClpn0rlUegGPDS",
+				ref: LoadBalancerRef{ID: "lb_7vClpn0rlUegGPDS"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -504,7 +504,10 @@ func TestLoadBalancersClient_Get(t *testing.T) {
 			c := NewLoadBalancersClient(rm)
 
 			mux.HandleFunc(
-				fmt.Sprintf("/core/v1/load_balancers/%s", tt.args.id),
+				fmt.Sprintf(
+					"/core/v1/load_balancers/%s",
+					tt.args.ref.ID,
+				),
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
@@ -515,7 +518,7 @@ func TestLoadBalancersClient_Get(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.Get(tt.args.ctx, tt.args.id)
+			got, resp, err := c.Get(tt.args.ctx, tt.args.ref)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
