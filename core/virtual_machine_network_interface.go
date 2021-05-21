@@ -78,7 +78,7 @@ func NewVirtualMachineNetworkInterfacesClient(
 
 func (s *VirtualMachineNetworkInterfacesClient) List(
 	ctx context.Context,
-	vm *VirtualMachine,
+	vm VirtualMachineRef,
 	opts *ListOptions,
 ) ([]*VirtualMachineNetworkInterface, *katapult.Response, error) {
 	qs := queryValues(vm, opts)

@@ -313,7 +313,7 @@ func TestVirtualMachineNetworkInterfacesClient_List(t *testing.T) {
 
 	type args struct {
 		ctx  context.Context
-		vm   *VirtualMachine
+		vm   VirtualMachineRef
 		opts *ListOptions
 	}
 	tests := []struct {
@@ -331,7 +331,7 @@ func TestVirtualMachineNetworkInterfacesClient_List(t *testing.T) {
 			name: "by virtual machine ID",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{ID: "vm_i5qfOrvEI1CmNrJx"},
+				vm:  VirtualMachineRef{ID: "vm_i5qfOrvEI1CmNrJx"},
 			},
 			want: virtualMachinesList,
 			wantQuery: &url.Values{
@@ -351,7 +351,7 @@ func TestVirtualMachineNetworkInterfacesClient_List(t *testing.T) {
 			name: "by virtual machine FQDN",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{FQDN: "acme"},
+				vm:  VirtualMachineRef{FQDN: "acme"},
 			},
 			want: virtualMachinesList,
 			wantQuery: &url.Values{
@@ -371,7 +371,7 @@ func TestVirtualMachineNetworkInterfacesClient_List(t *testing.T) {
 			name: "page 1",
 			args: args{
 				ctx:  context.Background(),
-				vm:   &VirtualMachine{ID: "vm_i5qfOrvEI1CmNrJx"},
+				vm:   VirtualMachineRef{ID: "vm_i5qfOrvEI1CmNrJx"},
 				opts: &ListOptions{Page: 1, PerPage: 2},
 			},
 			want: virtualMachinesList[0:2],
@@ -396,7 +396,7 @@ func TestVirtualMachineNetworkInterfacesClient_List(t *testing.T) {
 			name: "page 2",
 			args: args{
 				ctx:  context.Background(),
-				vm:   &VirtualMachine{ID: "vm_i5qfOrvEI1CmNrJx"},
+				vm:   VirtualMachineRef{ID: "vm_i5qfOrvEI1CmNrJx"},
 				opts: &ListOptions{Page: 2, PerPage: 2},
 			},
 			want: virtualMachinesList[2:],
@@ -421,7 +421,7 @@ func TestVirtualMachineNetworkInterfacesClient_List(t *testing.T) {
 			name: "invalid API token response",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{ID: "vm_i5qfOrvEI1CmNrJx"},
+				vm:  VirtualMachineRef{ID: "vm_i5qfOrvEI1CmNrJx"},
 			},
 			errStr:     fixtureInvalidAPITokenErr,
 			errResp:    fixtureInvalidAPITokenResponseError,
@@ -432,18 +432,7 @@ func TestVirtualMachineNetworkInterfacesClient_List(t *testing.T) {
 			name: "non-existent virtual machine",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{ID: "vm_i5qfOrvEI1CmNrJx"},
-			},
-			errStr:     fixtureVirtualMachineNotFoundErr,
-			errResp:    fixtureVirtualMachineNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("virtual_machine_not_found_error"),
-		},
-		{
-			name: "nil virtual_machine",
-			args: args{
-				ctx: context.Background(),
-				vm:  nil,
+				vm:  VirtualMachineRef{ID: "vm_i5qfOrvEI1CmNrJx"},
 			},
 			errStr:     fixtureVirtualMachineNotFoundErr,
 			errResp:    fixtureVirtualMachineNotFoundResponseError,
@@ -454,7 +443,7 @@ func TestVirtualMachineNetworkInterfacesClient_List(t *testing.T) {
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				vm:  &VirtualMachine{ID: "vm_i5qfOrvEI1CmNrJx"},
+				vm:  VirtualMachineRef{ID: "vm_i5qfOrvEI1CmNrJx"},
 			},
 			errStr: "net/http: nil Context",
 		},

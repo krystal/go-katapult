@@ -3,7 +3,6 @@ package core
 import (
 	"context"
 	"net/url"
-	"strings"
 
 	"github.com/augurysys/timestamp"
 	"github.com/krystal/go-katapult"
@@ -28,43 +27,23 @@ type VirtualMachine struct {
 	IPAddresses         []*IPAddress           `json:"ip_addresses,omitempty"`
 }
 
-// NewVirtualMachineLookup takes a string that is a VirtualMachine ID or FQDN,
-// returning a empty *VirtualMachine struct with either the ID or FQDN field
-// populated with the given value. This struct is suitable as input to other
-// methods which accept a *VirtualMachine as input.
-func NewVirtualMachineLookup(
-	idOrFQDN string,
-) (lr *VirtualMachine, f FieldName) {
-	if strings.HasPrefix(idOrFQDN, "vm_") {
-		return &VirtualMachine{ID: idOrFQDN}, IDField
-	}
-
-	return &VirtualMachine{FQDN: idOrFQDN}, FQDNField
+func (s *VirtualMachine) Ref() VirtualMachineRef {
+	return VirtualMachineRef{ID: s.ID}
 }
 
-func (s *VirtualMachine) lookupReference() *VirtualMachine {
-	if s == nil {
-		return nil
-	}
-
-	lr := &VirtualMachine{ID: s.ID}
-	if lr.ID == "" {
-		lr.FQDN = s.FQDN
-	}
-
-	return lr
+type VirtualMachineRef struct {
+	ID   string `json:"id,omitempty"`
+	FQDN string `json:"fqdn,omitempty"`
 }
 
-func (s *VirtualMachine) queryValues() *url.Values {
+func (vmr VirtualMachineRef) queryValues() *url.Values {
 	v := &url.Values{}
 
-	if s != nil {
-		switch {
-		case s.ID != "":
-			v.Set("virtual_machine[id]", s.ID)
-		case s.FQDN != "":
-			v.Set("virtual_machine[fqdn]", s.FQDN)
-		}
+	switch {
+	case vmr.ID != "":
+		v.Set("virtual_machine[id]", vmr.ID)
+	case vmr.FQDN != "":
+		v.Set("virtual_machine[fqdn]", vmr.FQDN)
 	}
 
 	return v
@@ -101,12 +80,12 @@ type virtualMachinesResponseBody struct {
 }
 
 type virtualMachineChangePackageRequest struct {
-	VirtualMachine *VirtualMachine        `json:"virtual_machine,omitempty"`
+	VirtualMachine VirtualMachineRef      `json:"virtual_machine,omitempty"`
 	Package        *VirtualMachinePackage `json:"virtual_machine_package,omitempty"`
 }
 
 type virtualMachineUpdateRequest struct {
-	VirtualMachine *VirtualMachine                `json:"virtual_machine,omitempty"`
+	VirtualMachine VirtualMachineRef              `json:"virtual_machine,omitempty"`
 	Properties     *VirtualMachineUpdateArguments `json:"properties,omitempty"`
 }
 
@@ -143,36 +122,11 @@ func (s *VirtualMachinesClient) List(
 
 func (s *VirtualMachinesClient) Get(
 	ctx context.Context,
-	idOrFQDN string,
-) (*VirtualMachine, *katapult.Response, error) {
-	if _, f := NewVirtualMachineLookup(idOrFQDN); f == IDField {
-		return s.GetByID(ctx, idOrFQDN)
-	}
-
-	return s.GetByFQDN(ctx, idOrFQDN)
-}
-
-func (s *VirtualMachinesClient) GetByID(
-	ctx context.Context,
-	id string,
-) (*VirtualMachine, *katapult.Response, error) {
-	return s.get(ctx, &VirtualMachine{ID: id})
-}
-
-func (s *VirtualMachinesClient) GetByFQDN(
-	ctx context.Context,
-	fqdn string,
-) (*VirtualMachine, *katapult.Response, error) {
-	return s.get(ctx, &VirtualMachine{FQDN: fqdn})
-}
-
-func (s *VirtualMachinesClient) get(
-	ctx context.Context,
-	vm *VirtualMachine,
+	ref VirtualMachineRef,
 ) (*VirtualMachine, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "virtual_machines/_",
-		RawQuery: vm.queryValues().Encode(),
+		RawQuery: ref.queryValues().Encode(),
 	}
 
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
@@ -180,14 +134,28 @@ func (s *VirtualMachinesClient) get(
 	return body.VirtualMachine, resp, err
 }
 
+func (s *VirtualMachinesClient) GetByID(
+	ctx context.Context,
+	id string,
+) (*VirtualMachine, *katapult.Response, error) {
+	return s.Get(ctx, VirtualMachineRef{ID: id})
+}
+
+func (s *VirtualMachinesClient) GetByFQDN(
+	ctx context.Context,
+	fqdn string,
+) (*VirtualMachine, *katapult.Response, error) {
+	return s.Get(ctx, VirtualMachineRef{FQDN: fqdn})
+}
+
 func (s *VirtualMachinesClient) ChangePackage(
 	ctx context.Context,
-	vm *VirtualMachine,
+	ref VirtualMachineRef,
 	pkg *VirtualMachinePackage,
 ) (*Task, *katapult.Response, error) {
 	u := &url.URL{Path: "virtual_machines/_/package"}
 	reqBody := &virtualMachineChangePackageRequest{
-		VirtualMachine: vm.lookupReference(),
+		VirtualMachine: ref,
 		Package:        pkg.lookupReference(),
 	}
 	body, resp, err := s.doRequest(ctx, "PUT", u, reqBody)
@@ -197,12 +165,12 @@ func (s *VirtualMachinesClient) ChangePackage(
 
 func (s *VirtualMachinesClient) Update(
 	ctx context.Context,
-	vm *VirtualMachine,
+	ref VirtualMachineRef,
 	args *VirtualMachineUpdateArguments,
 ) (*VirtualMachine, *katapult.Response, error) {
 	u := &url.URL{Path: "virtual_machines/_"}
 	reqBody := &virtualMachineUpdateRequest{
-		VirtualMachine: vm.lookupReference(),
+		VirtualMachine: ref,
 		Properties:     args,
 	}
 	body, resp, err := s.doRequest(ctx, "PATCH", u, reqBody)
@@ -212,11 +180,11 @@ func (s *VirtualMachinesClient) Update(
 
 func (s *VirtualMachinesClient) Delete(
 	ctx context.Context,
-	vm *VirtualMachine,
+	ref VirtualMachineRef,
 ) (*TrashObject, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "virtual_machines/_",
-		RawQuery: vm.queryValues().Encode(),
+		RawQuery: ref.queryValues().Encode(),
 	}
 	body, resp, err := s.doRequest(ctx, "DELETE", u, nil)
 
@@ -225,11 +193,11 @@ func (s *VirtualMachinesClient) Delete(
 
 func (s *VirtualMachinesClient) Start(
 	ctx context.Context,
-	vm *VirtualMachine,
+	ref VirtualMachineRef,
 ) (*Task, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "virtual_machines/_/start",
-		RawQuery: vm.queryValues().Encode(),
+		RawQuery: ref.queryValues().Encode(),
 	}
 
 	body, resp, err := s.doRequest(ctx, "POST", u, nil)
@@ -239,11 +207,11 @@ func (s *VirtualMachinesClient) Start(
 
 func (s *VirtualMachinesClient) Stop(
 	ctx context.Context,
-	vm *VirtualMachine,
+	ref VirtualMachineRef,
 ) (*Task, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "virtual_machines/_/stop",
-		RawQuery: vm.queryValues().Encode(),
+		RawQuery: ref.queryValues().Encode(),
 	}
 
 	body, resp, err := s.doRequest(ctx, "POST", u, nil)
@@ -253,11 +221,11 @@ func (s *VirtualMachinesClient) Stop(
 
 func (s *VirtualMachinesClient) Shutdown(
 	ctx context.Context,
-	vm *VirtualMachine,
+	ref VirtualMachineRef,
 ) (*Task, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "virtual_machines/_/shutdown",
-		RawQuery: vm.queryValues().Encode(),
+		RawQuery: ref.queryValues().Encode(),
 	}
 
 	body, resp, err := s.doRequest(ctx, "POST", u, nil)
@@ -267,11 +235,11 @@ func (s *VirtualMachinesClient) Shutdown(
 
 func (s *VirtualMachinesClient) Reset(
 	ctx context.Context,
-	vm *VirtualMachine,
+	ref VirtualMachineRef,
 ) (*Task, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "virtual_machines/_/reset",
-		RawQuery: vm.queryValues().Encode(),
+		RawQuery: ref.queryValues().Encode(),
 	}
 
 	body, resp, err := s.doRequest(ctx, "POST", u, nil)
