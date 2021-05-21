@@ -909,6 +909,20 @@ func TestTrashObjectsClient_PurgeAll(t *testing.T) {
 			respBody:   fixture("trash_objects_purge_all"),
 		},
 		{
+			name: "by organization domain",
+			args: args{
+				ctx: context.Background(),
+				org: OrganizationRef{SubDomain: "acme"},
+			},
+			want: &Task{
+				ID:     "task_lwZ65NKwJVB9a4E8",
+				Name:   "Purge items from trash",
+				Status: "pending",
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("trash_objects_purge_all"),
+		},
+		{
 			name: "non-existent trash object",
 			args: args{
 				ctx: context.Background(),

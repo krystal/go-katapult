@@ -417,6 +417,23 @@ func TestDNSZonesClient_List(t *testing.T) {
 			respBody:   fixture("dns_zones_list"),
 		},
 		{
+			name: "by organization subdomain",
+			args: args{
+				ctx: context.Background(),
+				org: OrganizationRef{SubDomain: "blackmesa"},
+			},
+			want: dnsZonesList,
+			wantPagination: &katapult.Pagination{
+				CurrentPage: 1,
+				TotalPages:  1,
+				Total:       3,
+				PerPage:     30,
+				LargeSet:    false,
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("dns_zones_list"),
+		},
+		{
 			name: "page 1",
 			args: args{
 				ctx:  context.Background(),

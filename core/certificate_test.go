@@ -131,6 +131,23 @@ func TestCertificatesClient_List(t *testing.T) {
 			respBody:   fixture("certificates_list"),
 		},
 		{
+			name: "by organization domain",
+			args: args{
+				ctx: context.Background(),
+				org: OrganizationRef{SubDomain: "acme"},
+			},
+			want: certificateList,
+			wantPagination: &katapult.Pagination{
+				CurrentPage: 1,
+				TotalPages:  1,
+				Total:       3,
+				PerPage:     30,
+				LargeSet:    false,
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("certificates_list"),
+		},
+		{
 			name: "page 1",
 			args: args{
 				ctx:  context.Background(),

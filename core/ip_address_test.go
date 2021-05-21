@@ -424,6 +424,23 @@ func TestIPAddressesClient_List(t *testing.T) {
 			respBody:   fixture("ip_addresses_list"),
 		},
 		{
+			name: "by organization domain",
+			args: args{
+				ctx: context.Background(),
+				org: OrganizationRef{SubDomain: "acme"},
+			},
+			want: ipAddressesList,
+			wantPagination: &katapult.Pagination{
+				CurrentPage: 1,
+				TotalPages:  1,
+				Total:       3,
+				PerPage:     30,
+				LargeSet:    false,
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("ip_addresses_list"),
+		},
+		{
 			name: "page 1",
 			args: args{
 				ctx:  context.Background(),
