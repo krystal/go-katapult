@@ -18,15 +18,6 @@ var (
 		ObjectID:   "vm_pxrHYFpOW88ka39h",
 		ObjectType: "VirtualMachine",
 	}
-	fixtureTrashObjectNoID = &TrashObject{
-		KeepUntil:  fixtureTrashObjectFull.KeepUntil,
-		ObjectID:   fixtureTrashObjectFull.ObjectID,
-		ObjectType: fixtureTrashObjectFull.ObjectType,
-	}
-	fixtureTrashObjectNoLookupField = &TrashObject{
-		KeepUntil:  fixtureTrashObjectFull.KeepUntil,
-		ObjectType: fixtureTrashObjectFull.ObjectType,
-	}
 
 	fixtureTrashObjectNotFoundErr = "trash_object_not_found: No trash object " +
 		"was found matching any of the criteria provided in the arguments"
@@ -65,116 +56,62 @@ func TestTrashObject_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestNewTrashObjectLookup(t *testing.T) {
-	type args struct {
-		idOrObjectID string
-	}
-	tests := []struct {
-		name  string
-		args  args
-		want  *TrashObject
-		field FieldName
-	}{
-		{
-			name:  "empty string",
-			args:  args{idOrObjectID: ""},
-			want:  &TrashObject{},
-			field: ObjectIDField,
-		},
-		{
-			name:  "trsh_ prefixed ID",
-			args:  args{idOrObjectID: "trsh_vAGgmacZGf2ucIcx"},
-			want:  &TrashObject{ID: "trsh_vAGgmacZGf2ucIcx"},
-			field: IDField,
-		},
-		{
-			name:  "object ID",
-			args:  args{idOrObjectID: "vm_2yiadNK5xxJiclVq"},
-			want:  &TrashObject{ObjectID: "vm_2yiadNK5xxJiclVq"},
-			field: ObjectIDField,
-		},
-		{
-			name:  "random text",
-			args:  args{idOrObjectID: "JKeIKf2ILMw4OEaw"},
-			want:  &TrashObject{ObjectID: "JKeIKf2ILMw4OEaw"},
-			field: ObjectIDField,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, field := NewTrashObjectLookup(tt.args.idOrObjectID)
-
-			assert.Equal(t, tt.want, got)
-			assert.Equal(t, tt.field, field)
-		})
-	}
-}
-
-func TestTrashObject_lookupReference(t *testing.T) {
+func TestTrashObject_Ref(t *testing.T) {
 	tests := []struct {
 		name string
-		obj  *TrashObject
-		want *TrashObject
+		obj  TrashObject
+		want TrashObjectRef
 	}{
 		{
-			name: "nil",
-			obj:  nil,
-			want: nil,
-		},
-		{
 			name: "empty",
-			obj:  &TrashObject{},
-			want: &TrashObject{},
+			obj:  TrashObject{},
+			want: TrashObjectRef{},
 		},
 		{
 			name: "full",
-			obj:  fixtureTrashObjectFull,
-			want: &TrashObject{ID: "trsh_NRhMtSdZbNRVafj3"},
-		},
-		{
-			name: "no ID",
-			obj:  fixtureTrashObjectNoID,
-			want: &TrashObject{ObjectID: "vm_pxrHYFpOW88ka39h"},
-		},
-		{
-			name: "no ID or ObjectID",
-			obj:  fixtureTrashObjectNoLookupField,
-			want: &TrashObject{},
+			obj: TrashObject{
+				ID:       "trsh_NRhMtSdZbNRVafj3",
+				ObjectID: "vm_pxrHYFpOW88ka39h",
+			},
+			want: TrashObjectRef{ID: "trsh_NRhMtSdZbNRVafj3"},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.obj.lookupReference()
+			got := tt.obj.Ref()
 
 			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
-func TestTrashObject_queryValues(t *testing.T) {
+func TestTrashObjectRef_queryValues(t *testing.T) {
 	tests := []struct {
 		name string
-		obj  *TrashObject
+		obj  TrashObjectRef
 	}{
 		{
-			name: "nil",
-			obj:  nil,
-		},
-		{
 			name: "empty",
-			obj:  &TrashObject{},
+			obj:  TrashObjectRef{},
 		},
 		{
 			name: "full",
-			obj:  fixtureTrashObjectFull,
+			obj: TrashObjectRef{
+				ID:       "trsh_NRhMtSdZbNRVafj3",
+				ObjectID: "vm_pxrHYFpOW88ka39h",
+			},
 		},
 		{
-			name: "no ID",
-			obj:  fixtureTrashObjectNoID,
+			name: "just ID",
+			obj: TrashObjectRef{
+				ID: "trsh_NRhMtSdZbNRVafj3",
+			},
 		},
 		{
-			name: "no ID or ObjectID",
-			obj:  fixtureTrashObjectNoLookupField,
+			name: "just ObjectID",
+			obj: TrashObjectRef{
+				ObjectID: "vm_pxrHYFpOW88ka39h",
+			},
 		},
 	}
 	for _, tt := range tests {
@@ -395,8 +332,8 @@ func TestTrashObjectsClient_List(t *testing.T) {
 
 func TestTrashObjectsClient_Get(t *testing.T) {
 	type args struct {
-		ctx          context.Context
-		idOrObjectID string
+		ctx context.Context
+		ref TrashObjectRef
 	}
 	tests := []struct {
 		name       string
@@ -411,8 +348,8 @@ func TestTrashObjectsClient_Get(t *testing.T) {
 		{
 			name: "by ID",
 			args: args{
-				ctx:          context.Background(),
-				idOrObjectID: "trsh_hkW1SMq0Bn8yNrRx",
+				ctx: context.Background(),
+				ref: TrashObjectRef{ID: "trsh_hkW1SMq0Bn8yNrRx"},
 			},
 			want: &TrashObject{
 				ID:         "trsh_hkW1SMq0Bn8yNrRx",
@@ -429,8 +366,8 @@ func TestTrashObjectsClient_Get(t *testing.T) {
 		{
 			name: "by ObjectID",
 			args: args{
-				ctx:          context.Background(),
-				idOrObjectID: "vm_KTKc6pwFxLjJ40QY",
+				ctx: context.Background(),
+				ref: TrashObjectRef{ObjectID: "vm_KTKc6pwFxLjJ40QY"},
 			},
 			want: &TrashObject{
 				ID:         "trsh_hkW1SMq0Bn8yNrRx",
@@ -447,8 +384,8 @@ func TestTrashObjectsClient_Get(t *testing.T) {
 		{
 			name: "non-existent trash object",
 			args: args{
-				ctx:          context.Background(),
-				idOrObjectID: "trsh_nopethisbegone",
+				ctx: context.Background(),
+				ref: TrashObjectRef{ID: "trsh_nopethisbegone"},
 			},
 			errStr:     fixtureTrashObjectNotFoundErr,
 			errResp:    fixtureTrashObjectNotFoundResponseError,
@@ -458,8 +395,8 @@ func TestTrashObjectsClient_Get(t *testing.T) {
 		{
 			name: "empty idOrObjectID",
 			args: args{
-				ctx:          context.Background(),
-				idOrObjectID: "",
+				ctx: context.Background(),
+				ref: TrashObjectRef{},
 			},
 			errStr:     fixtureTrashObjectNotFoundErr,
 			errResp:    fixtureTrashObjectNotFoundResponseError,
@@ -469,8 +406,8 @@ func TestTrashObjectsClient_Get(t *testing.T) {
 		{
 			name: "nil context",
 			args: args{
-				ctx:          nil,
-				idOrObjectID: "trsh_hkW1SMq0Bn8yNrRx",
+				ctx: nil,
+				ref: TrashObjectRef{ID: "trsh_hkW1SMq0Bn8yNrRx"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -498,7 +435,7 @@ func TestTrashObjectsClient_Get(t *testing.T) {
 			)
 
 			got, resp, err := c.Get(
-				tt.args.ctx, tt.args.idOrObjectID,
+				tt.args.ctx, tt.args.ref,
 			)
 
 			if tt.respStatus != 0 {
@@ -742,8 +679,8 @@ func TestTrashObjectsClient_GetByObjectID(t *testing.T) {
 
 func TestTrashObjectsClient_Purge(t *testing.T) {
 	type args struct {
-		ctx  context.Context
-		trsh *TrashObject
+		ctx context.Context
+		ref TrashObjectRef
 	}
 	tests := []struct {
 		name       string
@@ -758,8 +695,8 @@ func TestTrashObjectsClient_Purge(t *testing.T) {
 		{
 			name: "by ID",
 			args: args{
-				ctx:  context.Background(),
-				trsh: &TrashObject{ID: "trsh_hkW1SMq0Bn8yNrRx"},
+				ctx: context.Background(),
+				ref: TrashObjectRef{ID: "trsh_hkW1SMq0Bn8yNrRx"},
 			},
 			want: &Task{
 				ID:     "task_Fq0vMXkSkKkGU3ut",
@@ -775,8 +712,8 @@ func TestTrashObjectsClient_Purge(t *testing.T) {
 		{
 			name: "by ObjectID",
 			args: args{
-				ctx:  context.Background(),
-				trsh: &TrashObject{ObjectID: "vm_KTKc6pwFxLjJ40QY"},
+				ctx: context.Background(),
+				ref: TrashObjectRef{ObjectID: "vm_KTKc6pwFxLjJ40QY"},
 			},
 			want: &Task{
 				ID:     "task_Fq0vMXkSkKkGU3ut",
@@ -792,8 +729,8 @@ func TestTrashObjectsClient_Purge(t *testing.T) {
 		{
 			name: "non-existent trash object",
 			args: args{
-				ctx:  context.Background(),
-				trsh: &TrashObject{ID: "trsh_nopenotfound"},
+				ctx: context.Background(),
+				ref: TrashObjectRef{ID: "trsh_nopenotfound"},
 			},
 			errStr:     fixtureTrashObjectNotFoundErr,
 			errResp:    fixtureTrashObjectNotFoundResponseError,
@@ -803,8 +740,8 @@ func TestTrashObjectsClient_Purge(t *testing.T) {
 		{
 			name: "permission denied",
 			args: args{
-				ctx:  context.Background(),
-				trsh: &TrashObject{ID: "trsh_hkW1SMq0Bn8yNrRx"},
+				ctx: context.Background(),
+				ref: TrashObjectRef{ID: "trsh_hkW1SMq0Bn8yNrRx"},
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
@@ -812,21 +749,10 @@ func TestTrashObjectsClient_Purge(t *testing.T) {
 			respBody:   fixture("permission_denied_error"),
 		},
 		{
-			name: "nil trash object",
-			args: args{
-				ctx:  context.Background(),
-				trsh: nil,
-			},
-			errStr:     fixtureTrashObjectNotFoundErr,
-			errResp:    fixtureTrashObjectNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("trash_object_not_found_error"),
-		},
-		{
 			name: "nil context",
 			args: args{
-				ctx:  nil,
-				trsh: &TrashObject{ID: "trsh_hkW1SMq0Bn8yNrRx"},
+				ctx: nil,
+				ref: TrashObjectRef{ID: "trsh_hkW1SMq0Bn8yNrRx"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -848,7 +774,7 @@ func TestTrashObjectsClient_Purge(t *testing.T) {
 						assert.Equal(t, *tt.wantQuery, r.URL.Query())
 					} else {
 						assert.Equal(t,
-							*tt.args.trsh.queryValues(), r.URL.Query(),
+							*tt.args.ref.queryValues(), r.URL.Query(),
 						)
 					}
 
@@ -857,7 +783,7 @@ func TestTrashObjectsClient_Purge(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.Purge(tt.args.ctx, tt.args.trsh)
+			got, resp, err := c.Purge(tt.args.ctx, tt.args.ref)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -1000,8 +926,8 @@ func TestTrashObjectsClient_PurgeAll(t *testing.T) {
 
 func TestTrashObjectsClient_Restore(t *testing.T) {
 	type args struct {
-		ctx  context.Context
-		trsh *TrashObject
+		ctx context.Context
+		ref TrashObjectRef
 	}
 	tests := []struct {
 		name       string
@@ -1016,8 +942,8 @@ func TestTrashObjectsClient_Restore(t *testing.T) {
 		{
 			name: "by ID",
 			args: args{
-				ctx:  context.Background(),
-				trsh: &TrashObject{ID: "trsh_hkW1SMq0Bn8yNrRx"},
+				ctx: context.Background(),
+				ref: TrashObjectRef{ID: "trsh_hkW1SMq0Bn8yNrRx"},
 			},
 			want: &TrashObject{
 				ID:         "trsh_hkW1SMq0Bn8yNrRx",
@@ -1034,8 +960,8 @@ func TestTrashObjectsClient_Restore(t *testing.T) {
 		{
 			name: "by ObjectID",
 			args: args{
-				ctx:  context.Background(),
-				trsh: &TrashObject{ObjectID: "vm_KTKc6pwFxLjJ40QY"},
+				ctx: context.Background(),
+				ref: TrashObjectRef{ObjectID: "vm_KTKc6pwFxLjJ40QY"},
 			},
 			want: &TrashObject{
 				ID:         "trsh_hkW1SMq0Bn8yNrRx",
@@ -1052,8 +978,8 @@ func TestTrashObjectsClient_Restore(t *testing.T) {
 		{
 			name: "non-existent trash object",
 			args: args{
-				ctx:  context.Background(),
-				trsh: &TrashObject{ID: "trsh_nopenotfound"},
+				ctx: context.Background(),
+				ref: TrashObjectRef{ID: "trsh_nopenotfound"},
 			},
 			errStr:     fixtureTrashObjectNotFoundErr,
 			errResp:    fixtureTrashObjectNotFoundResponseError,
@@ -1063,8 +989,8 @@ func TestTrashObjectsClient_Restore(t *testing.T) {
 		{
 			name: "permission denied",
 			args: args{
-				ctx:  context.Background(),
-				trsh: &TrashObject{ID: "trsh_hkW1SMq0Bn8yNrRx"},
+				ctx: context.Background(),
+				ref: TrashObjectRef{ID: "trsh_hkW1SMq0Bn8yNrRx"},
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
@@ -1072,21 +998,10 @@ func TestTrashObjectsClient_Restore(t *testing.T) {
 			respBody:   fixture("permission_denied_error"),
 		},
 		{
-			name: "nil trash object",
-			args: args{
-				ctx:  context.Background(),
-				trsh: nil,
-			},
-			errStr:     fixtureTrashObjectNotFoundErr,
-			errResp:    fixtureTrashObjectNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("trash_object_not_found_error"),
-		},
-		{
 			name: "nil context",
 			args: args{
-				ctx:  nil,
-				trsh: &TrashObject{ID: "trsh_hkW1SMq0Bn8yNrRx"},
+				ctx: nil,
+				ref: TrashObjectRef{ID: "trsh_hkW1SMq0Bn8yNrRx"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -1108,7 +1023,7 @@ func TestTrashObjectsClient_Restore(t *testing.T) {
 						assert.Equal(t, *tt.wantQuery, r.URL.Query())
 					} else {
 						assert.Equal(t,
-							*tt.args.trsh.queryValues(), r.URL.Query(),
+							*tt.args.ref.queryValues(), r.URL.Query(),
 						)
 					}
 
@@ -1117,7 +1032,7 @@ func TestTrashObjectsClient_Restore(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.Restore(tt.args.ctx, tt.args.trsh)
+			got, resp, err := c.Restore(tt.args.ctx, tt.args.ref)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
