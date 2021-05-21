@@ -51,7 +51,7 @@ func (ref IPAddressRef) queryValues() *url.Values {
 }
 
 type IPAddressCreateArguments struct {
-	Network *Network
+	Network NetworkRef
 	Version IPVersion
 	VIP     *bool
 	Label   string
@@ -65,7 +65,7 @@ type IPAddressUpdateArguments struct {
 
 type ipAddressCreateRequest struct {
 	Organization OrganizationRef `json:"organization,omitempty"`
-	Network      *Network        `json:"network,omitempty"`
+	Network      NetworkRef      `json:"network,omitempty"`
 	Version      IPVersion       `json:"version,omitempty"`
 	VIP          *bool           `json:"vip,omitempty"`
 	Label        string          `json:"label,omitempty"`
@@ -152,7 +152,7 @@ func (s *IPAddressesClient) Create(
 	}
 
 	if args != nil {
-		reqBody.Network = args.Network.lookupReference()
+		reqBody.Network = args.Network
 		reqBody.Version = args.Version
 		reqBody.VIP = args.VIP
 		reqBody.Label = args.Label

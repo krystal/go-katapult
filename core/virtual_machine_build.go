@@ -35,7 +35,7 @@ type VirtualMachineBuildArguments struct {
 	Package             *VirtualMachinePackage
 	DiskTemplate        DiskTemplateRef
 	DiskTemplateOptions []*DiskTemplateOption
-	Network             *Network
+	Network             NetworkRef
 	Hostname            string
 }
 
@@ -47,7 +47,7 @@ type virtualMachineBuildCreateRequest struct {
 	Package             *VirtualMachinePackage `json:"package,omitempty"`
 	DiskTemplate        DiskTemplateRef        `json:"disk_template,omitempty"`
 	DiskTemplateOptions []*DiskTemplateOption  `json:"disk_template_options,omitempty"`
-	Network             *Network               `json:"network,omitempty"`
+	Network             NetworkRef             `json:"network"`
 }
 
 type virtualMachineBuildCreateFromSpecRequest struct {
@@ -112,7 +112,7 @@ func (s *VirtualMachineBuildsClient) Create(
 		Package:             args.Package.lookupReference(),
 		DiskTemplate:        args.DiskTemplate,
 		DiskTemplateOptions: args.DiskTemplateOptions,
-		Network:             args.Network.lookupReference(),
+		Network:             args.Network,
 	}
 
 	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)

@@ -187,7 +187,7 @@ func Test_virtualMachineBuildCreateRequest_JSONMarshaling(t *testing.T) {
 				DiskTemplateOptions: []*DiskTemplateOption{
 					{Key: "foo", Value: "bar"},
 				},
-				Network: &Network{ID: "netw_zDW7KYAeqqfRfVag"},
+				Network: NetworkRef{ID: "netw_zDW7KYAeqqfRfVag"},
 			},
 		},
 	}
@@ -462,10 +462,8 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 		DiskTemplateOptions: []*DiskTemplateOption{
 			{Key: "foo", Value: "bar"},
 		},
-		Network: &Network{
-			ID:        "netw_zDW7KYAeqqfRfVag",
-			Name:      "Public Network",
-			Permalink: "public",
+		Network: NetworkRef{
+			ID: "netw_zDW7KYAeqqfRfVag",
 		},
 		Hostname: "foo.example.com",
 	}
@@ -513,7 +511,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 				DiskTemplateOptions: []*DiskTemplateOption{
 					{Key: "foo", Value: "bar"},
 				},
-				Network: &Network{
+				Network: NetworkRef{
 					ID: "netw_zDW7KYAeqqfRfVag",
 				},
 				Hostname: "foo.example.com",
@@ -550,8 +548,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 					DiskTemplateOptions: []*DiskTemplateOption{
 						{Key: "foo", Value: "bar"},
 					},
-					Network: &Network{
-						Name:      "Public Network",
+					Network: NetworkRef{
 						Permalink: "public",
 					},
 					Hostname: "foo.example.com",
@@ -576,7 +573,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 				DiskTemplateOptions: []*DiskTemplateOption{
 					{Key: "foo", Value: "bar"},
 				},
-				Network: &Network{
+				Network: NetworkRef{
 					Permalink: "public",
 				},
 				Hostname: "foo.example.com",

@@ -20,22 +20,6 @@ var (
 			"provided in the arguments",
 		Detail: json.RawMessage(`{}`),
 	}
-
-	fixtureNetworkFull = &Network{
-		ID:         "netw_zDW7KYAeqqfRfVag",
-		Name:       "Public Network",
-		Permalink:  "public",
-		DataCenter: &DataCenter{ID: "id2"},
-	}
-	fixtureNetworkNoID = &Network{
-		Name:       fixtureNetworkFull.Name,
-		Permalink:  fixtureNetworkFull.Permalink,
-		DataCenter: fixtureNetworkFull.DataCenter,
-	}
-	fixtureNetworkNoLookupField = &Network{
-		Name:       fixtureNetworkFull.Name,
-		DataCenter: fixtureNetworkFull.DataCenter,
-	}
 )
 
 func TestClient_Networks(t *testing.T) {
@@ -70,116 +54,73 @@ func TestNetwork_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestNewNetworkLookup(t *testing.T) {
-	type args struct {
-		idOrPermalink string
-	}
-	tests := []struct {
-		name  string
-		args  args
-		want  *Network
-		field FieldName
-	}{
-		{
-			name:  "empty string",
-			args:  args{idOrPermalink: ""},
-			want:  &Network{},
-			field: PermalinkField,
-		},
-		{
-			name:  "netw_ prefixed ID",
-			args:  args{idOrPermalink: "netw_UoGX2x12BlVK0CAo"},
-			want:  &Network{ID: "netw_UoGX2x12BlVK0CAo"},
-			field: IDField,
-		},
-		{
-			name:  "permalink",
-			args:  args{idOrPermalink: "country-city-1-public"},
-			want:  &Network{Permalink: "country-city-1-public"},
-			field: PermalinkField,
-		},
-		{
-			name:  "random text",
-			args:  args{idOrPermalink: "JRdJ017AgV4WYbkv"},
-			want:  &Network{Permalink: "JRdJ017AgV4WYbkv"},
-			field: PermalinkField,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, field := NewNetworkLookup(tt.args.idOrPermalink)
-
-			assert.Equal(t, tt.want, got)
-			assert.Equal(t, tt.field, field)
-		})
-	}
-}
-
-func TestNetwork_lookupReference(t *testing.T) {
+func TestNetwork_Ref(t *testing.T) {
 	tests := []struct {
 		name string
-		obj  *Network
-		want *Network
+		obj  Network
+		want NetworkRef
 	}{
 		{
-			name: "nil",
-			obj:  nil,
-			want: nil,
-		},
-		{
 			name: "empty",
-			obj:  &Network{},
-			want: &Network{},
+			obj:  Network{},
+			want: NetworkRef{},
 		},
 		{
 			name: "full",
-			obj:  fixtureNetworkFull,
-			want: &Network{ID: "netw_zDW7KYAeqqfRfVag"},
+			obj: Network{
+				ID:        "netw_zDW7KYAeqqfRfVag",
+				Permalink: "public",
+			},
+			want: NetworkRef{
+				ID: "netw_zDW7KYAeqqfRfVag",
+			},
 		},
 		{
-			name: "no ID",
-			obj:  fixtureNetworkNoID,
-			want: &Network{Permalink: "public"},
-		},
-		{
-			name: "no ID or Permalink",
-			obj:  fixtureNetworkNoLookupField,
-			want: &Network{},
+			name: "just ID",
+			obj: Network{
+				ID: "netw_zDW7KYAeqqfRfVag",
+			},
+			want: NetworkRef{
+				ID: "netw_zDW7KYAeqqfRfVag",
+			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.obj.lookupReference()
+			got := tt.obj.Ref()
 
 			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
-func TestNetwork_queryValues(t *testing.T) {
+func TestNetworkRef_queryValues(t *testing.T) {
 	tests := []struct {
 		name string
-		obj  *Network
+		obj  NetworkRef
 	}{
 		{
-			name: "nil",
-			obj:  nil,
-		},
-		{
 			name: "empty",
-			obj:  &Network{},
+			obj:  NetworkRef{},
 		},
 		{
 			name: "full",
-			obj:  fixtureNetworkFull,
+			obj: NetworkRef{
+				ID:        "netw_zDW7KYAeqqfRfVag",
+				Permalink: "public",
+			},
 		},
 		{
-			name: "no ID",
-			obj:  fixtureNetworkNoID,
+			name: "just ID",
+			obj: NetworkRef{
+				ID: "netw_zDW7KYAeqqfRfVag",
+			},
 		},
 		{
-			name: "no ID or Permalink",
-			obj:  fixtureNetworkNoLookupField,
+			name: "just Permalink",
+			obj: NetworkRef{
+				Permalink: "public",
+			},
 		},
 	}
 	for _, tt := range tests {
@@ -379,8 +320,8 @@ func TestNetworksClient_Get(t *testing.T) {
 	}
 
 	type args struct {
-		ctx           context.Context
-		idOrPermalink string
+		ctx context.Context
+		ref NetworkRef
 	}
 	tests := []struct {
 		name       string
@@ -395,8 +336,8 @@ func TestNetworksClient_Get(t *testing.T) {
 		{
 			name: "by ID",
 			args: args{
-				ctx:           context.Background(),
-				idOrPermalink: "netw_zDW7KYAeqqfRfVag",
+				ctx: context.Background(),
+				ref: NetworkRef{ID: "netw_zDW7KYAeqqfRfVag"},
 			},
 			want: network,
 			wantQuery: &url.Values{
@@ -408,8 +349,8 @@ func TestNetworksClient_Get(t *testing.T) {
 		{
 			name: "by Permalink",
 			args: args{
-				ctx:           context.Background(),
-				idOrPermalink: "public",
+				ctx: context.Background(),
+				ref: NetworkRef{Permalink: "public"},
 			},
 			want: network,
 			wantQuery: &url.Values{
@@ -421,8 +362,8 @@ func TestNetworksClient_Get(t *testing.T) {
 		{
 			name: "non-existent network by ID",
 			args: args{
-				ctx:           context.Background(),
-				idOrPermalink: "netw_nopethisbegone",
+				ctx: context.Background(),
+				ref: NetworkRef{ID: "netw_nopethisbegone"},
 			},
 			errStr:     fixtureNetworkNotFoundErr,
 			errResp:    fixtureNetworkNotFoundResponseError,
@@ -432,8 +373,8 @@ func TestNetworksClient_Get(t *testing.T) {
 		{
 			name: "non-existent network by Permalink",
 			args: args{
-				ctx:           context.Background(),
-				idOrPermalink: "public",
+				ctx: context.Background(),
+				ref: NetworkRef{Permalink: "public"},
 			},
 			errStr:     fixtureNetworkNotFoundErr,
 			errResp:    fixtureNetworkNotFoundResponseError,
@@ -443,8 +384,8 @@ func TestNetworksClient_Get(t *testing.T) {
 		{
 			name: "nil context",
 			args: args{
-				ctx:           nil,
-				idOrPermalink: "netw_zDW7KYAeqqfRfVag",
+				ctx: nil,
+				ref: NetworkRef{ID: "netw_zDW7KYAeqqfRfVag"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -472,7 +413,7 @@ func TestNetworksClient_Get(t *testing.T) {
 			)
 
 			got, resp, err := c.Get(
-				tt.args.ctx, tt.args.idOrPermalink,
+				tt.args.ctx, tt.args.ref,
 			)
 
 			if tt.respStatus != 0 {

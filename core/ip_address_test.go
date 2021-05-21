@@ -222,7 +222,7 @@ func Test_ipAddressCreateRequest_JSONMarshaling(t *testing.T) {
 			name: "full",
 			obj: &ipAddressCreateRequest{
 				Organization: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
-				Network:      &Network{ID: "netw_zDW7KYAeqqfRfVag"},
+				Network:      NetworkRef{ID: "netw_zDW7KYAeqqfRfVag"},
 				Version:      IPv4,
 				VIP:          truePtr,
 				Label:        "web-east-3",
@@ -824,7 +824,7 @@ func TestIPAddressesClient_GetByAddress(t *testing.T) {
 
 func TestIPAddressesClient_Create(t *testing.T) {
 	ipArgs := &IPAddressCreateArguments{
-		Network: &Network{ID: "netw_zDW7KYAeqqfRfVag"},
+		Network: NetworkRef{ID: "netw_zDW7KYAeqqfRfVag"},
 		Version: IPv4,
 	}
 
@@ -851,17 +851,15 @@ func TestIPAddressesClient_Create(t *testing.T) {
 					ID: "org_O648YDMEYeLmqdmn",
 				},
 				args: &IPAddressCreateArguments{
-					Network: &Network{
-						ID:        "netw_zDW7KYAeqqfRfVag",
-						Name:      "Public Network",
-						Permalink: "public",
+					Network: NetworkRef{
+						ID: "netw_zDW7KYAeqqfRfVag",
 					},
 					Version: IPv4,
 				},
 			},
 			reqBody: &ipAddressCreateRequest{
 				Organization: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
-				Network:      &Network{ID: "netw_zDW7KYAeqqfRfVag"},
+				Network:      NetworkRef{ID: "netw_zDW7KYAeqqfRfVag"},
 				Version:      IPv4,
 			},
 			want: &IPAddress{
@@ -880,8 +878,7 @@ func TestIPAddressesClient_Create(t *testing.T) {
 					SubDomain: "acme",
 				},
 				args: &IPAddressCreateArguments{
-					Network: &Network{
-						Name:      "Public IPv6 Network",
+					Network: NetworkRef{
 						Permalink: "public-v6",
 					},
 					Version: IPv6,
@@ -889,7 +886,7 @@ func TestIPAddressesClient_Create(t *testing.T) {
 			},
 			reqBody: &ipAddressCreateRequest{
 				Organization: OrganizationRef{SubDomain: "acme"},
-				Network:      &Network{Permalink: "public-v6"},
+				Network:      NetworkRef{Permalink: "public-v6"},
 				Version:      IPv6,
 			},
 			want: &IPAddress{
@@ -1000,11 +997,6 @@ func TestIPAddressesClient_Create(t *testing.T) {
 			defer teardown()
 			c := NewIPAddressesClient(rm)
 
-			var netName string
-			if tt.args.args != nil && tt.args.args.Network != nil {
-				netName = tt.args.args.Network.Name
-			}
-
 			mux.HandleFunc(
 				"/core/v1/organizations/_/ip_addresses",
 				func(w http.ResponseWriter, r *http.Request) {
@@ -1044,11 +1036,6 @@ func TestIPAddressesClient_Create(t *testing.T) {
 
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
-			}
-
-			if tt.args.args != nil && tt.args.args.Network != nil {
-				// ensure the input IPAddressCreateArguments are not modified
-				assert.Equal(t, netName, tt.args.args.Network.Name)
 			}
 		})
 	}
