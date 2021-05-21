@@ -183,7 +183,7 @@ func Test_virtualMachineBuildCreateRequest_JSONMarshaling(t *testing.T) {
 				Package: &VirtualMachinePackage{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
-				DiskTemplate: &DiskTemplate{ID: "dtpl_ytP13XD5DE1RdSL9"},
+				DiskTemplate: DiskTemplateRef{ID: "dtpl_ytP13XD5DE1RdSL9"},
 				DiskTemplateOptions: []*DiskTemplateOption{
 					{Key: "foo", Value: "bar"},
 				},
@@ -456,9 +456,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			Name:      "X-Small",
 			Permalink: "xsmall",
 		},
-		DiskTemplate: &DiskTemplate{
-			ID:        "dtpl_ytP13XD5DE1RdSL9",
-			Name:      "Ubuntu 18.04 Server",
+		DiskTemplate: DiskTemplateRef{
 			Permalink: "templates/ubuntu-18-04",
 		},
 		DiskTemplateOptions: []*DiskTemplateOption{
@@ -509,8 +507,8 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 				Package: &VirtualMachinePackage{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
-				DiskTemplate: &DiskTemplate{
-					ID: "dtpl_ytP13XD5DE1RdSL9",
+				DiskTemplate: DiskTemplateRef{
+					Permalink: "templates/ubuntu-18-04",
 				},
 				DiskTemplateOptions: []*DiskTemplateOption{
 					{Key: "foo", Value: "bar"},
@@ -546,8 +544,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 						Name:      "X-Small",
 						Permalink: "xsmall",
 					},
-					DiskTemplate: &DiskTemplate{
-						Name:      "Ubuntu 18.04 Server",
+					DiskTemplate: DiskTemplateRef{
 						Permalink: "templates/ubuntu-18-04",
 					},
 					DiskTemplateOptions: []*DiskTemplateOption{
@@ -573,7 +570,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 				Package: &VirtualMachinePackage{
 					Permalink: "xsmall",
 				},
-				DiskTemplate: &DiskTemplate{
+				DiskTemplate: DiskTemplateRef{
 					Permalink: "templates/ubuntu-18-04",
 				},
 				DiskTemplateOptions: []*DiskTemplateOption{

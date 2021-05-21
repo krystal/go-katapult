@@ -31,21 +31,6 @@ var (
 		LatestVersion:   &DiskTemplateVersion{ID: "id2"},
 		OperatingSystem: &OperatingSystem{ID: "id3"},
 	}
-	fixtureDiskTemplateNoID = &DiskTemplate{
-		Name:            fixtureDiskTemplateFull.Name,
-		Description:     fixtureDiskTemplateFull.Description,
-		Permalink:       fixtureDiskTemplateFull.Permalink,
-		Universal:       fixtureDiskTemplateFull.Universal,
-		LatestVersion:   fixtureDiskTemplateFull.LatestVersion,
-		OperatingSystem: fixtureDiskTemplateFull.OperatingSystem,
-	}
-	fixtureDiskTemplateNoLookupField = &DiskTemplate{
-		Name:            fixtureDiskTemplateFull.Name,
-		Description:     fixtureDiskTemplateFull.Description,
-		Universal:       fixtureDiskTemplateFull.Universal,
-		LatestVersion:   fixtureDiskTemplateFull.LatestVersion,
-		OperatingSystem: fixtureDiskTemplateFull.OperatingSystem,
-	}
 )
 
 func TestClient_DiskTemplates(t *testing.T) {
@@ -75,116 +60,59 @@ func TestDiskTemplate_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestNewDiskTemplateLookup(t *testing.T) {
-	type args struct {
-		idOrPermalink string
-	}
-	tests := []struct {
-		name  string
-		args  args
-		want  *DiskTemplate
-		field FieldName
-	}{
-		{
-			name:  "empty string",
-			args:  args{idOrPermalink: ""},
-			want:  &DiskTemplate{},
-			field: PermalinkField,
-		},
-		{
-			name:  "dtpl_ prefixed ID",
-			args:  args{idOrPermalink: "dtpl_xnboGWaq0xROo0Sf"},
-			want:  &DiskTemplate{ID: "dtpl_xnboGWaq0xROo0Sf"},
-			field: IDField,
-		},
-		{
-			name:  "permalink",
-			args:  args{idOrPermalink: "country-city-01"},
-			want:  &DiskTemplate{Permalink: "country-city-01"},
-			field: PermalinkField,
-		},
-		{
-			name:  "random text",
-			args:  args{idOrPermalink: "dXUt33rNLmbatuAa"},
-			want:  &DiskTemplate{Permalink: "dXUt33rNLmbatuAa"},
-			field: PermalinkField,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, field := NewDiskTemplateLookup(tt.args.idOrPermalink)
-
-			assert.Equal(t, tt.want, got)
-			assert.Equal(t, tt.field, field)
-		})
-	}
-}
-
-func TestDiskTemplate_lookupReference(t *testing.T) {
+func TestDiskTemplate_Ref(t *testing.T) {
 	tests := []struct {
 		name string
-		obj  *DiskTemplate
-		want *DiskTemplate
+		obj  DiskTemplate
+		want DiskTemplateRef
 	}{
 		{
-			name: "nil",
-			obj:  nil,
-			want: nil,
-		},
-		{
 			name: "empty",
-			obj:  &DiskTemplate{},
-			want: &DiskTemplate{},
+			obj:  DiskTemplate{},
+			want: DiskTemplateRef{},
 		},
 		{
-			name: "full",
-			obj:  fixtureDiskTemplateFull,
-			want: &DiskTemplate{ID: "dtpl_ytP13XD5DE1RdSL9"},
-		},
-		{
-			name: "no ID",
-			obj:  fixtureDiskTemplateNoID,
-			want: &DiskTemplate{Permalink: "templates/ubuntu-18-04"},
-		},
-		{
-			name: "no ID or Permalink",
-			obj:  fixtureDiskTemplateNoLookupField,
-			want: &DiskTemplate{},
+			name: "ID",
+			obj:  DiskTemplate{ID: "dtpl_ytP13XD5DE1RdSL9"},
+			want: DiskTemplateRef{ID: "dtpl_ytP13XD5DE1RdSL9"},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.obj.lookupReference()
+			got := tt.obj.Ref()
 
 			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
-func TestDiskTemplate_queryValues(t *testing.T) {
+func TestDiskTemplateRef_queryValues(t *testing.T) {
 	tests := []struct {
 		name string
-		obj  *DiskTemplate
+		obj  DiskTemplateRef
 	}{
 		{
-			name: "nil",
-			obj:  nil,
-		},
-		{
 			name: "empty",
-			obj:  &DiskTemplate{},
+			obj:  DiskTemplateRef{},
 		},
 		{
 			name: "full",
-			obj:  fixtureDiskTemplateFull,
+			obj: DiskTemplateRef{
+				ID:        "dtpl_ytP13XD5DE1RdSL9",
+				Permalink: "templates/ubuntu-18-04",
+			},
 		},
 		{
-			name: "no ID",
-			obj:  fixtureDiskTemplateNoID,
+			name: "just ID",
+			obj: DiskTemplateRef{
+				ID: "dtpl_ytP13XD5DE1RdSL9",
+			},
 		},
 		{
-			name: "no ID or Permalink",
-			obj:  fixtureDiskTemplateNoLookupField,
+			name: "just permalink",
+			obj: DiskTemplateRef{
+				Permalink: "templates/ubuntu-18-04",
+			},
 		},
 	}
 	for _, tt := range tests {
@@ -337,7 +265,6 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 		name           string
 		args           args
 		want           []*DiskTemplate
-		wantQuery      *url.Values
 		wantPagination *katapult.Pagination
 		errStr         string
 		errResp        *katapult.ResponseError
@@ -351,9 +278,23 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			want: diskTemplateList,
-			wantQuery: &url.Values{
-				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
+			wantPagination: &katapult.Pagination{
+				CurrentPage: 1,
+				TotalPages:  1,
+				Total:       3,
+				PerPage:     30,
+				LargeSet:    false,
 			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("disk_templates_list"),
+		},
+		{
+			name: "by organization subdomain",
+			args: args{
+				ctx: context.Background(),
+				org: OrganizationRef{SubDomain: "valveinc"},
+			},
+			want: diskTemplateList,
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
@@ -519,8 +460,8 @@ func TestDiskTemplatesClient_Get(t *testing.T) {
 	}
 
 	type args struct {
-		ctx           context.Context
-		idOrPermalink string
+		ctx context.Context
+		ref DiskTemplateRef
 	}
 	tests := []struct {
 		name       string
@@ -535,8 +476,8 @@ func TestDiskTemplatesClient_Get(t *testing.T) {
 		{
 			name: "by ID",
 			args: args{
-				ctx:           context.Background(),
-				idOrPermalink: "dtpl_ytP13XD5DE1RdSL9",
+				ctx: context.Background(),
+				ref: DiskTemplateRef{ID: "dtpl_ytP13XD5DE1RdSL9"},
 			},
 			want: diskTemplate,
 			wantQuery: &url.Values{
@@ -548,8 +489,8 @@ func TestDiskTemplatesClient_Get(t *testing.T) {
 		{
 			name: "by Permalink",
 			args: args{
-				ctx:           context.Background(),
-				idOrPermalink: "public",
+				ctx: context.Background(),
+				ref: DiskTemplateRef{Permalink: "public"},
 			},
 			wantQuery: &url.Values{
 				"disk_template[permalink]": []string{"public"},
@@ -561,8 +502,8 @@ func TestDiskTemplatesClient_Get(t *testing.T) {
 		{
 			name: "non-existent disk template by ID",
 			args: args{
-				ctx:           context.Background(),
-				idOrPermalink: "dtpl_nopethisbegone",
+				ctx: context.Background(),
+				ref: DiskTemplateRef{ID: "dtpl_nopethisbegone"},
 			},
 			errStr:     fixtureDiskTemplateNotFoundErr,
 			errResp:    fixtureDiskTemplateNotFoundResponseError,
@@ -572,8 +513,8 @@ func TestDiskTemplatesClient_Get(t *testing.T) {
 		{
 			name: "non-existent disk template by Permalink",
 			args: args{
-				ctx:           context.Background(),
-				idOrPermalink: "templates/darwin-11",
+				ctx: context.Background(),
+				ref: DiskTemplateRef{Permalink: "templates/darwin-11"},
 			},
 			errStr:     fixtureDiskTemplateNotFoundErr,
 			errResp:    fixtureDiskTemplateNotFoundResponseError,
@@ -583,8 +524,8 @@ func TestDiskTemplatesClient_Get(t *testing.T) {
 		{
 			name: "nil context",
 			args: args{
-				ctx:           nil,
-				idOrPermalink: "dtpl_ytP13XD5DE1RdSL9",
+				ctx: nil,
+				ref: DiskTemplateRef{ID: "dtpl_ytP13XD5DE1RdSL9"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -612,7 +553,7 @@ func TestDiskTemplatesClient_Get(t *testing.T) {
 			)
 
 			got, resp, err := c.Get(
-				tt.args.ctx, tt.args.idOrPermalink,
+				tt.args.ctx, tt.args.ref,
 			)
 
 			if tt.respStatus != 0 {

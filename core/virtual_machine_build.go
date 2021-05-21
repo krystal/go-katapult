@@ -33,7 +33,7 @@ type VirtualMachineBuildArguments struct {
 	Zone                *Zone
 	DataCenter          DataCenterRef
 	Package             *VirtualMachinePackage
-	DiskTemplate        *DiskTemplate
+	DiskTemplate        DiskTemplateRef
 	DiskTemplateOptions []*DiskTemplateOption
 	Network             *Network
 	Hostname            string
@@ -45,7 +45,7 @@ type virtualMachineBuildCreateRequest struct {
 	Zone                *Zone                  `json:"zone,omitempty"`
 	DataCenter          DataCenterRef          `json:"data_center"`
 	Package             *VirtualMachinePackage `json:"package,omitempty"`
-	DiskTemplate        *DiskTemplate          `json:"disk_template,omitempty"`
+	DiskTemplate        DiskTemplateRef        `json:"disk_template,omitempty"`
 	DiskTemplateOptions []*DiskTemplateOption  `json:"disk_template_options,omitempty"`
 	Network             *Network               `json:"network,omitempty"`
 }
@@ -110,7 +110,7 @@ func (s *VirtualMachineBuildsClient) Create(
 		Zone:                args.Zone.lookupReference(),
 		DataCenter:          args.DataCenter,
 		Package:             args.Package.lookupReference(),
-		DiskTemplate:        args.DiskTemplate.lookupReference(),
+		DiskTemplate:        args.DiskTemplate,
 		DiskTemplateOptions: args.DiskTemplateOptions,
 		Network:             args.Network.lookupReference(),
 	}
