@@ -215,7 +215,7 @@ func Test_virtualMachineNetworkInterfaceAllocateIPRequest_JSONMarshaling(
 				VirtualMachineNetworkInterface: &VirtualMachineNetworkInterface{
 					ID: "id1",
 				},
-				IPAddress: &IPAddress{ID: "id3"},
+				IPAddress: IPAddressRef{ID: "id3"},
 			},
 		},
 	}
@@ -753,7 +753,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 	type args struct {
 		ctx   context.Context
 		vmnet *VirtualMachineNetworkInterface
-		ip    *IPAddress
+		ip    IPAddressRef
 	}
 	tests := []struct {
 		name        string
@@ -773,17 +773,15 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 					ID:   "vmnet_olNAz8ThH0emHvdr",
 					Name: "Public Network on bitter-beautiful-mango",
 				},
-				ip: &IPAddress{
-					ID:         "ip_fAwrdP9NvW0Z25eE",
-					Address:    "95.135.35.113",
-					ReverseDNS: "bitter-beautiful-mango.acme.katapult.cloud",
+				ip: IPAddressRef{
+					ID: "ip_fAwrdP9NvW0Z25eE",
 				},
 			},
 			wantReqBody: &virtualMachineNetworkInterfaceAllocateIPRequest{
 				VirtualMachineNetworkInterface: &VirtualMachineNetworkInterface{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
-				IPAddress: &IPAddress{
+				IPAddress: IPAddressRef{
 					ID: "ip_fAwrdP9NvW0Z25eE",
 				},
 			},
@@ -805,16 +803,15 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 					ID:   "vmnet_olNAz8ThH0emHvdr",
 					Name: "Public Network on bitter-beautiful-mango",
 				},
-				ip: &IPAddress{
-					Address:    "95.135.35.113",
-					ReverseDNS: "bitter-beautiful-mango.acme.katapult.cloud",
+				ip: IPAddressRef{
+					Address: "95.135.35.113",
 				},
 			},
 			wantReqBody: &virtualMachineNetworkInterfaceAllocateIPRequest{
 				VirtualMachineNetworkInterface: &VirtualMachineNetworkInterface{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
-				IPAddress: &IPAddress{
+				IPAddress: IPAddressRef{
 					Address: "95.135.35.113",
 				},
 			},
@@ -835,7 +832,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 				vmnet: &VirtualMachineNetworkInterface{
 					ID: "vmnet_nopethisbegone",
 				},
-				ip: &IPAddress{ID: "ip_fAwrdP9NvW0Z25eE"},
+				ip: IPAddressRef{ID: "ip_fAwrdP9NvW0Z25eE"},
 			},
 			errStr:     fixtureVMNetworkInterfaceNotFoundErr,
 			errResp:    fixtureVMNetworkInterfaceNotFoundResponseError,
@@ -851,7 +848,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 				vmnet: &VirtualMachineNetworkInterface{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
-				ip: &IPAddress{ID: "ip_nopethisbegone"},
+				ip: IPAddressRef{ID: "ip_nopethisbegone"},
 			},
 			errStr:     fixtureIPAddressNotFoundErr,
 			errResp:    fixtureIPAddressNotFoundResponseError,
@@ -865,7 +862,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 				vmnet: &VirtualMachineNetworkInterface{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
-				ip: &IPAddress{ID: "ip_fAwrdP9NvW0Z25eE"},
+				ip: IPAddressRef{ID: "ip_fAwrdP9NvW0Z25eE"},
 			},
 			errStr:     fixtureIPAlreadyAllocatedErr,
 			errResp:    fixtureIPAlreadyAllocatedResponseError,
@@ -879,7 +876,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 				vmnet: &VirtualMachineNetworkInterface{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
-				ip: &IPAddress{ID: "ip_fAwrdP9NvW0Z25eE"},
+				ip: IPAddressRef{ID: "ip_fAwrdP9NvW0Z25eE"},
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
@@ -891,21 +888,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 			args: args{
 				ctx:   context.Background(),
 				vmnet: nil,
-				ip:    &IPAddress{ID: "ip_fAwrdP9NvW0Z25eE"},
-			},
-			errStr:     fixtureValidationErrorErr,
-			errResp:    fixtureValidationErrorResponseError,
-			respStatus: http.StatusUnprocessableEntity,
-			respBody:   fixture("validation_error"),
-		},
-		{
-			name: "nil ip address",
-			args: args{
-				ctx: context.Background(),
-				vmnet: &VirtualMachineNetworkInterface{
-					ID: "vmnet_olNAz8ThH0emHvdr",
-				},
-				ip: nil,
+				ip:    IPAddressRef{ID: "ip_fAwrdP9NvW0Z25eE"},
 			},
 			errStr:     fixtureValidationErrorErr,
 			errResp:    fixtureValidationErrorResponseError,
@@ -919,7 +902,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 				vmnet: &VirtualMachineNetworkInterface{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
-				ip: &IPAddress{
+				ip: IPAddressRef{
 					ID: "ip_fAwrdP9NvW0Z25eE",
 				},
 			},

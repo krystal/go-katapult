@@ -43,25 +43,6 @@ var (
 		AllocationID:    "vm_USg3i8oJTG5OdbQM",
 		AllocationType:  "VirtualMachine",
 	}
-	fixtureIPAddressNoID = &IPAddress{
-		Address:         fixtureIPAddressFull.Address,
-		ReverseDNS:      fixtureIPAddressFull.ReverseDNS,
-		VIP:             fixtureIPAddressFull.VIP,
-		Label:           fixtureIPAddressFull.Label,
-		AddressWithMask: fixtureIPAddressFull.AddressWithMask,
-		Network:         fixtureIPAddressFull.Network,
-		AllocationID:    fixtureIPAddressFull.AllocationID,
-		AllocationType:  fixtureIPAddressFull.AllocationType,
-	}
-	fixtureIPAddressNoLookupField = &IPAddress{
-		ReverseDNS:      fixtureIPAddressFull.ReverseDNS,
-		VIP:             fixtureIPAddressFull.VIP,
-		Label:           fixtureIPAddressFull.Label,
-		AddressWithMask: fixtureIPAddressFull.AddressWithMask,
-		Network:         fixtureIPAddressFull.Network,
-		AllocationID:    fixtureIPAddressFull.AllocationID,
-		AllocationType:  fixtureIPAddressFull.AllocationType,
-	}
 
 	fixtureIPAddressNotFoundErr = "ip_address_not_found: No IP addresses " +
 		"were found matching any of the criteria provided in the arguments"
@@ -96,51 +77,6 @@ func TestIPAddress_JSONMarshaling(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			testJSONMarshaling(t, tt.obj)
-		})
-	}
-}
-
-func TestNewIPAddressLookup(t *testing.T) {
-	type args struct {
-		idOrAddress string
-	}
-	tests := []struct {
-		name  string
-		args  args
-		want  *IPAddress
-		field FieldName
-	}{
-		{
-			name:  "empty string",
-			args:  args{idOrAddress: ""},
-			want:  &IPAddress{},
-			field: AddressField,
-		},
-		{
-			name:  "ip_ prefixed ID",
-			args:  args{idOrAddress: "ip_robwZQGtT4hnAsx4"},
-			want:  &IPAddress{ID: "ip_robwZQGtT4hnAsx4"},
-			field: IDField,
-		},
-		{
-			name:  "address",
-			args:  args{idOrAddress: "51.130.20.179"},
-			want:  &IPAddress{Address: "51.130.20.179"},
-			field: AddressField,
-		},
-		{
-			name:  "random text",
-			args:  args{idOrAddress: "oiTx8fUUh7f32GSw"},
-			want:  &IPAddress{Address: "oiTx8fUUh7f32GSw"},
-			field: AddressField,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, field := NewIPAddressLookup(tt.args.idOrAddress)
-
-			assert.Equal(t, tt.want, got)
-			assert.Equal(t, tt.field, field)
 		})
 	}
 }
@@ -211,71 +147,59 @@ func TestIPAddress_Version(t *testing.T) {
 	}
 }
 
-func TestIPAddress_lookupReference(t *testing.T) {
+func TestIPAddress_Ref(t *testing.T) {
 	tests := []struct {
 		name string
 		obj  *IPAddress
-		want *IPAddress
+		want IPAddressRef
 	}{
-		{
-			name: "nil",
-			obj:  nil,
-			want: nil,
-		},
 		{
 			name: "empty",
 			obj:  &IPAddress{},
-			want: &IPAddress{},
+			want: IPAddressRef{},
 		},
 		{
 			name: "full",
 			obj:  fixtureIPAddressFull,
-			want: &IPAddress{ID: "ip_Ru4ef2oh6STZEQkC"},
-		},
-		{
-			name: "no ID",
-			obj:  fixtureIPAddressNoID,
-			want: &IPAddress{Address: "218.205.195.217"},
-		},
-		{
-			name: "no ID or Address",
-			obj:  fixtureIPAddressNoLookupField,
-			want: &IPAddress{},
+			want: IPAddressRef{ID: "ip_Ru4ef2oh6STZEQkC"},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.obj.lookupReference()
+			got := tt.obj.Ref()
 
 			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
-func TestIPAddress_queryValues(t *testing.T) {
+func TestIPAddressRef_queryValues(t *testing.T) {
 	tests := []struct {
 		name string
-		obj  *IPAddress
+		obj  IPAddressRef
 	}{
 		{
-			name: "nil",
-			obj:  nil,
-		},
-		{
 			name: "empty",
-			obj:  &IPAddress{},
+			obj:  IPAddressRef{},
 		},
 		{
 			name: "full",
-			obj:  fixtureIPAddressFull,
+			obj: IPAddressRef{
+				ID:      "ip_Ru4ef2oh6STZEQkC",
+				Address: "182.233.199.122",
+			},
 		},
 		{
-			name: "no ID",
-			obj:  fixtureIPAddressNoID,
+			name: "just ID",
+			obj: IPAddressRef{
+				ID: "ip_Ru4ef2oh6STZEQkC",
+			},
 		},
 		{
-			name: "no ID or Address",
-			obj:  fixtureIPAddressNoLookupField,
+			name: "just Address",
+			obj: IPAddressRef{
+				Address: "182.233.199.122",
+			},
 		},
 	}
 	for _, tt := range tests {
@@ -328,7 +252,7 @@ func Test_ipAddressUpdateRequest_JSONMarshaling(t *testing.T) {
 		{
 			name: "full",
 			obj: &ipAddressUpdateRequest{
-				IPAddress:  &IPAddress{ID: "ip_Ru4ef2oh6STZEQkC"},
+				IPAddress:  IPAddressRef{ID: "ip_Ru4ef2oh6STZEQkC"},
 				VIP:        truePtr,
 				Label:      "web-east-3",
 				ReverseDNS: "web-east-3.acme.katapult.cloud",
@@ -570,8 +494,8 @@ func TestIPAddressesClient_List(t *testing.T) {
 
 func TestIPAddressesClient_Get(t *testing.T) {
 	type args struct {
-		ctx         context.Context
-		idOrAddress string
+		ctx context.Context
+		ref IPAddressRef
 	}
 	tests := []struct {
 		name       string
@@ -586,8 +510,8 @@ func TestIPAddressesClient_Get(t *testing.T) {
 		{
 			name: "by ID",
 			args: args{
-				ctx:         context.Background(),
-				idOrAddress: "ip_dZLqwQifQFtboHXW",
+				ctx: context.Background(),
+				ref: IPAddressRef{ID: "ip_dZLqwQifQFtboHXW"},
 			},
 			want: &IPAddress{
 				ID:         "ip_dZLqwQifQFtboHXW",
@@ -603,8 +527,8 @@ func TestIPAddressesClient_Get(t *testing.T) {
 		{
 			name: "by Address",
 			args: args{
-				ctx:         context.Background(),
-				idOrAddress: "169.37.118.179",
+				ctx: context.Background(),
+				ref: IPAddressRef{Address: "169.37.118.179"},
 			},
 			want: &IPAddress{
 				ID:         "ip_dZLqwQifQFtboHXW",
@@ -620,19 +544,8 @@ func TestIPAddressesClient_Get(t *testing.T) {
 		{
 			name: "non-existent IP address",
 			args: args{
-				ctx:         context.Background(),
-				idOrAddress: "ip_nopethisbegone",
-			},
-			errStr:     fixtureIPAddressNotFoundErr,
-			errResp:    fixtureIPAddressNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("ip_address_not_found_error"),
-		},
-		{
-			name: "empty idOrAddress",
-			args: args{
-				ctx:         context.Background(),
-				idOrAddress: "",
+				ctx: context.Background(),
+				ref: IPAddressRef{ID: "ip_nopethisbegone"},
 			},
 			errStr:     fixtureIPAddressNotFoundErr,
 			errResp:    fixtureIPAddressNotFoundResponseError,
@@ -642,8 +555,8 @@ func TestIPAddressesClient_Get(t *testing.T) {
 		{
 			name: "nil context",
 			args: args{
-				ctx:         nil,
-				idOrAddress: "ip_dZLqwQifQFtboHXW",
+				ctx: nil,
+				ref: IPAddressRef{ID: "ip_dZLqwQifQFtboHXW"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -671,7 +584,7 @@ func TestIPAddressesClient_Get(t *testing.T) {
 			)
 
 			got, resp, err := c.Get(
-				tt.args.ctx, tt.args.idOrAddress,
+				tt.args.ctx, tt.args.ref,
 			)
 
 			if tt.respStatus != 0 {
@@ -1150,7 +1063,7 @@ func TestIPAddressesClient_Update(t *testing.T) {
 
 	type args struct {
 		ctx  context.Context
-		ip   *IPAddress
+		ip   IPAddressRef
 		args *IPAddressUpdateArguments
 	}
 	tests := []struct {
@@ -1167,14 +1080,13 @@ func TestIPAddressesClient_Update(t *testing.T) {
 			name: "by ID",
 			args: args{
 				ctx: context.Background(),
-				ip: &IPAddress{
-					ID:      "ip_dZLqwQifQFtboHXW",
-					Address: "169.37.118.179",
+				ip: IPAddressRef{
+					ID: "ip_dZLqwQifQFtboHXW",
 				},
 				args: ipArgs,
 			},
 			reqBody: &ipAddressUpdateRequest{
-				IPAddress:  &IPAddress{ID: "ip_dZLqwQifQFtboHXW"},
+				IPAddress:  IPAddressRef{ID: "ip_dZLqwQifQFtboHXW"},
 				VIP:        truePtr,
 				Label:      "web-east-3",
 				ReverseDNS: "web-east-3.acme.katapult.cloud",
@@ -1193,11 +1105,11 @@ func TestIPAddressesClient_Update(t *testing.T) {
 			name: "by Address",
 			args: args{
 				ctx:  context.Background(),
-				ip:   &IPAddress{Address: "169.37.118.179"},
+				ip:   IPAddressRef{Address: "169.37.118.179"},
 				args: ipArgs,
 			},
 			reqBody: &ipAddressUpdateRequest{
-				IPAddress:  &IPAddress{Address: "169.37.118.179"},
+				IPAddress:  IPAddressRef{Address: "169.37.118.179"},
 				VIP:        truePtr,
 				Label:      "web-east-3",
 				ReverseDNS: "web-east-3.acme.katapult.cloud",
@@ -1216,7 +1128,7 @@ func TestIPAddressesClient_Update(t *testing.T) {
 			name: "non-existent IP address",
 			args: args{
 				ctx:  context.Background(),
-				ip:   &IPAddress{ID: "ip_nopethisdoesnotexist"},
+				ip:   IPAddressRef{ID: "ip_nopethisdoesnotexist"},
 				args: &IPAddressUpdateArguments{},
 			},
 			errStr:     fixtureIPAddressNotFoundErr,
@@ -1228,7 +1140,7 @@ func TestIPAddressesClient_Update(t *testing.T) {
 			name: "permission denied",
 			args: args{
 				ctx:  context.Background(),
-				ip:   &IPAddress{ID: "ip_dZLqwQifQFtboHXW"},
+				ip:   IPAddressRef{ID: "ip_dZLqwQifQFtboHXW"},
 				args: ipArgs,
 			},
 			errStr:     fixturePermissionDeniedErr,
@@ -1240,19 +1152,7 @@ func TestIPAddressesClient_Update(t *testing.T) {
 			name: "validation error",
 			args: args{
 				ctx:  context.Background(),
-				ip:   &IPAddress{ID: "ip_dZLqwQifQFtboHXW"},
-				args: ipArgs,
-			},
-			errStr:     fixtureValidationErrorErr,
-			errResp:    fixtureValidationErrorResponseError,
-			respStatus: http.StatusUnprocessableEntity,
-			respBody:   fixture("validation_error"),
-		},
-		{
-			name: "nil ip address",
-			args: args{
-				ctx:  context.Background(),
-				ip:   nil,
+				ip:   IPAddressRef{ID: "ip_dZLqwQifQFtboHXW"},
 				args: ipArgs,
 			},
 			errStr:     fixtureValidationErrorErr,
@@ -1264,7 +1164,7 @@ func TestIPAddressesClient_Update(t *testing.T) {
 			name: "nil context",
 			args: args{
 				ctx:  nil,
-				ip:   &IPAddress{ID: "ip_dZLqwQifQFtboHXW"},
+				ip:   IPAddressRef{ID: "ip_dZLqwQifQFtboHXW"},
 				args: ipArgs,
 			},
 			errStr: "net/http: nil Context",
@@ -1323,7 +1223,7 @@ func TestIPAddressesClient_Update(t *testing.T) {
 func TestIPAddressesClient_Delete(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		ip  *IPAddress
+		ip  IPAddressRef
 	}
 	tests := []struct {
 		name       string
@@ -1338,7 +1238,7 @@ func TestIPAddressesClient_Delete(t *testing.T) {
 			name: "by ID",
 			args: args{
 				ctx: context.Background(),
-				ip:  &IPAddress{ID: "ip_dZLqwQifQFtboHXW"},
+				ip:  IPAddressRef{ID: "ip_dZLqwQifQFtboHXW"},
 			},
 			wantQuery: &url.Values{
 				"ip_address[id]": []string{"ip_dZLqwQifQFtboHXW"},
@@ -1350,7 +1250,7 @@ func TestIPAddressesClient_Delete(t *testing.T) {
 			name: "by Address",
 			args: args{
 				ctx: context.Background(),
-				ip:  &IPAddress{Address: "169.37.118.179"},
+				ip:  IPAddressRef{Address: "169.37.118.179"},
 			},
 			wantQuery: &url.Values{
 				"ip_address[address]": []string{"169.37.118.179"},
@@ -1362,7 +1262,7 @@ func TestIPAddressesClient_Delete(t *testing.T) {
 			name: "non-existent IP address",
 			args: args{
 				ctx: context.Background(),
-				ip:  &IPAddress{ID: "ip_nopenotfound"},
+				ip:  IPAddressRef{ID: "ip_nopenotfound"},
 			},
 			errStr:     fixtureIPAddressNotFoundErr,
 			errResp:    fixtureIPAddressNotFoundResponseError,
@@ -1373,7 +1273,7 @@ func TestIPAddressesClient_Delete(t *testing.T) {
 			name: "permission denied",
 			args: args{
 				ctx: context.Background(),
-				ip:  &IPAddress{ID: "ip_dZLqwQifQFtboHXW"},
+				ip:  IPAddressRef{ID: "ip_dZLqwQifQFtboHXW"},
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
@@ -1381,21 +1281,10 @@ func TestIPAddressesClient_Delete(t *testing.T) {
 			respBody:   fixture("permission_denied_error"),
 		},
 		{
-			name: "nil IP Address",
-			args: args{
-				ctx: context.Background(),
-				ip:  nil,
-			},
-			errStr:     fixtureIPAddressNotFoundErr,
-			errResp:    fixtureIPAddressNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("ip_address_not_found_error"),
-		},
-		{
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				ip:  &IPAddress{ID: "ip_dZLqwQifQFtboHXW"},
+				ip:  IPAddressRef{ID: "ip_dZLqwQifQFtboHXW"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -1448,7 +1337,7 @@ func TestIPAddressesClient_Delete(t *testing.T) {
 func TestIPAddressesClient_Unallocate(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		ip  *IPAddress
+		ip  IPAddressRef
 	}
 	tests := []struct {
 		name       string
@@ -1463,7 +1352,7 @@ func TestIPAddressesClient_Unallocate(t *testing.T) {
 			name: "by ID",
 			args: args{
 				ctx: context.Background(),
-				ip:  &IPAddress{ID: "ip_dZLqwQifQFtboHXW"},
+				ip:  IPAddressRef{ID: "ip_dZLqwQifQFtboHXW"},
 			},
 			wantQuery: &url.Values{
 				"ip_address[id]": []string{"ip_dZLqwQifQFtboHXW"},
@@ -1475,7 +1364,7 @@ func TestIPAddressesClient_Unallocate(t *testing.T) {
 			name: "by Address",
 			args: args{
 				ctx: context.Background(),
-				ip:  &IPAddress{Address: "169.37.118.179"},
+				ip:  IPAddressRef{Address: "169.37.118.179"},
 			},
 			wantQuery: &url.Values{
 				"ip_address[address]": []string{"169.37.118.179"},
@@ -1487,7 +1376,7 @@ func TestIPAddressesClient_Unallocate(t *testing.T) {
 			name: "non-existent IP address",
 			args: args{
 				ctx: context.Background(),
-				ip:  &IPAddress{ID: "ip_nopenotfound"},
+				ip:  IPAddressRef{ID: "ip_nopenotfound"},
 			},
 			errStr:     fixtureIPAddressNotFoundErr,
 			errResp:    fixtureIPAddressNotFoundResponseError,
@@ -1498,7 +1387,7 @@ func TestIPAddressesClient_Unallocate(t *testing.T) {
 			name: "permission denied",
 			args: args{
 				ctx: context.Background(),
-				ip:  &IPAddress{ID: "ip_dZLqwQifQFtboHXW"},
+				ip:  IPAddressRef{ID: "ip_dZLqwQifQFtboHXW"},
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
@@ -1506,21 +1395,10 @@ func TestIPAddressesClient_Unallocate(t *testing.T) {
 			respBody:   fixture("permission_denied_error"),
 		},
 		{
-			name: "nil IP Address",
-			args: args{
-				ctx: context.Background(),
-				ip:  nil,
-			},
-			errStr:     fixtureIPAddressNotFoundErr,
-			errResp:    fixtureIPAddressNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("ip_address_not_found_error"),
-		},
-		{
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				ip:  &IPAddress{ID: "ip_dZLqwQifQFtboHXW"},
+				ip:  IPAddressRef{ID: "ip_dZLqwQifQFtboHXW"},
 			},
 			errStr: "net/http: nil Context",
 		},

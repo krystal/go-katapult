@@ -49,7 +49,7 @@ type virtualMachineNetworkInterfacesResponseBody struct {
 
 type virtualMachineNetworkInterfaceAllocateIPRequest struct {
 	VirtualMachineNetworkInterface *VirtualMachineNetworkInterface `json:"virtual_machine_network_interface,omitempty"`
-	IPAddress                      *IPAddress                      `json:"ip_address,omitempty"`
+	IPAddress                      IPAddressRef                    `json:"ip_address"`
 }
 
 type virtualMachineNetworkInterfaceAllocateNewIPRequest struct {
@@ -126,12 +126,12 @@ func (s *VirtualMachineNetworkInterfacesClient) AvailableIPs(
 func (s *VirtualMachineNetworkInterfacesClient) AllocateIP(
 	ctx context.Context,
 	vmnet *VirtualMachineNetworkInterface,
-	ip *IPAddress,
+	ip IPAddressRef,
 ) (*VirtualMachineNetworkInterface, *katapult.Response, error) {
 	u := &url.URL{Path: "virtual_machine_network_interfaces/_/allocate_ip"}
 	reqBody := &virtualMachineNetworkInterfaceAllocateIPRequest{
 		VirtualMachineNetworkInterface: vmnet.lookupReference(),
-		IPAddress:                      ip.lookupReference(),
+		IPAddress:                      ip,
 	}
 
 	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
