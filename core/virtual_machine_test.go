@@ -222,7 +222,7 @@ func TestVirtualMachineUpdateArguments_JSONMarshaling(t *testing.T) {
 		{
 			name: "null Group",
 			obj: &VirtualMachineUpdateArguments{
-				Group: NullVirtualMachineGroup,
+				Group: NullVirtualMachineGroupRef,
 			},
 			decoded: &VirtualMachineUpdateArguments{
 				Group: nil,

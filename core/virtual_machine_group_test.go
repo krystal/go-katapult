@@ -31,6 +31,42 @@ func TestClient_VirtualMachineGroups(t *testing.T) {
 	assert.IsType(t, &VirtualMachineGroupsClient{}, c.VirtualMachineGroups)
 }
 
+func TestVirtualMachineGroupRef_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name    string
+		obj     *VirtualMachineGroupRef
+		decoded *VirtualMachineGroupRef
+	}{
+		{
+			name: "empty",
+			obj:  &VirtualMachineGroupRef{},
+		},
+		{
+			name: "full",
+			obj: &VirtualMachineGroupRef{
+				ID: "id",
+			},
+		},
+		{
+			name: "null",
+			obj: &VirtualMachineGroupRef{
+				ID:   "id",
+				null: true,
+			},
+			decoded: NullVirtualMachineGroupRef,
+		},
+		{
+			name: "NullVirtualMachineGroupRef",
+			obj:  NullVirtualMachineGroupRef,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			test.CustomJSONMarshaling(t, tt.obj, tt.decoded)
+		})
+	}
+}
+
 func TestVirtualMachineGroup_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name    string
@@ -48,26 +84,6 @@ func TestVirtualMachineGroup_JSONMarshaling(t *testing.T) {
 				Name:      "name",
 				Segregate: true,
 				CreatedAt: timestampPtr(934834834),
-			},
-		},
-		{
-			name: "null",
-			obj: &VirtualMachineGroup{
-				ID:        "id",
-				Name:      "name",
-				Segregate: true,
-				CreatedAt: timestampPtr(934834834),
-				null:      true,
-			},
-			decoded: &VirtualMachineGroup{
-				null: true,
-			},
-		},
-		{
-			name: "NullVirtualMachineGroup",
-			obj:  NullVirtualMachineGroup,
-			decoded: &VirtualMachineGroup{
-				null: true,
 			},
 		},
 	}

@@ -12,8 +12,8 @@ import (
 )
 
 var (
-	nullBytes               = []byte("null")
-	NullVirtualMachineGroup = &VirtualMachineGroup{null: true}
+	nullBytes                  = []byte("null")
+	NullVirtualMachineGroupRef = &VirtualMachineGroupRef{null: true}
 )
 
 type VirtualMachineGroup struct {
@@ -21,18 +21,17 @@ type VirtualMachineGroup struct {
 	Name      string               `json:"name,omitempty"`
 	Segregate bool                 `json:"segregate,omitempty"`
 	CreatedAt *timestamp.Timestamp `json:"created_at,omitempty"`
-	null      bool
 }
 
 func (s *VirtualMachineGroup) Ref() VirtualMachineGroupRef {
 	return VirtualMachineGroupRef{ID: s.ID}
 }
 
-func (s *VirtualMachineGroup) UnmarshalJSON(b []byte) error {
-	type alias VirtualMachineGroup
+func (s *VirtualMachineGroupRef) UnmarshalJSON(b []byte) error {
+	type alias VirtualMachineGroupRef
 
 	if bytes.Equal(b, nullBytes) {
-		*s = VirtualMachineGroup{null: true}
+		*s = VirtualMachineGroupRef{null: true}
 
 		return nil
 	}
@@ -40,8 +39,8 @@ func (s *VirtualMachineGroup) UnmarshalJSON(b []byte) error {
 	return json.Unmarshal(b, (*alias)(s))
 }
 
-func (s *VirtualMachineGroup) MarshalJSON() ([]byte, error) {
-	type alias VirtualMachineGroup
+func (s *VirtualMachineGroupRef) MarshalJSON() ([]byte, error) {
+	type alias VirtualMachineGroupRef
 
 	if s.null {
 		return nullBytes, nil
@@ -51,7 +50,8 @@ func (s *VirtualMachineGroup) MarshalJSON() ([]byte, error) {
 }
 
 type VirtualMachineGroupRef struct {
-	ID string `json:"id,omitempty"`
+	ID   string `json:"id,omitempty"`
+	null bool
 }
 
 func (s VirtualMachineGroupRef) queryValues() *url.Values {
