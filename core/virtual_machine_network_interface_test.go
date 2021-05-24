@@ -99,36 +99,31 @@ func TestVirtualMachineNetworkInterface_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestVirtualMachineNetworkInterface_lookupReference(t *testing.T) {
+func TestVirtualMachineNetworkInterface_Ref(t *testing.T) {
 	tests := []struct {
 		name string
 		obj  *VirtualMachineNetworkInterface
-		want *VirtualMachineNetworkInterface
+		want VirtualMachineNetworkInterfaceRef
 	}{
-		{
-			name: "nil",
-			obj:  nil,
-			want: nil,
-		},
 		{
 			name: "empty",
 			obj:  &VirtualMachineNetworkInterface{},
-			want: &VirtualMachineNetworkInterface{},
+			want: VirtualMachineNetworkInterfaceRef{},
 		},
 		{
 			name: "full",
 			obj:  fixtureVirtualMachineNetworkInterfaceFull,
-			want: &VirtualMachineNetworkInterface{ID: "vmnet_Qlu34yEQgkrIlzql"},
+			want: VirtualMachineNetworkInterfaceRef{ID: "vmnet_Qlu34yEQgkrIlzql"},
 		},
 		{
 			name: "no ID",
 			obj:  fixtureVirtualMachineNetworkInterfaceNoID,
-			want: &VirtualMachineNetworkInterface{},
+			want: VirtualMachineNetworkInterfaceRef{},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.obj.lookupReference()
+			got := tt.obj.Ref()
 
 			assert.Equal(t, tt.want, got)
 		})
@@ -138,23 +133,17 @@ func TestVirtualMachineNetworkInterface_lookupReference(t *testing.T) {
 func TestVirtualMachineNetworkInterface_queryValues(t *testing.T) {
 	tests := []struct {
 		name string
-		obj  *VirtualMachineNetworkInterface
+		obj  VirtualMachineNetworkInterfaceRef
 	}{
 		{
-			name: "nil",
-			obj:  nil,
-		},
-		{
 			name: "empty",
-			obj:  &VirtualMachineNetworkInterface{},
+			obj:  VirtualMachineNetworkInterfaceRef{},
 		},
 		{
 			name: "full",
-			obj:  fixtureVirtualMachineNetworkInterfaceFull,
-		},
-		{
-			name: "no ID",
-			obj:  fixtureVirtualMachineNetworkInterfaceNoID,
+			obj: VirtualMachineNetworkInterfaceRef{
+				ID: "vmnet_Qlu34yEQgkrIlzql",
+			},
 		},
 	}
 	for _, tt := range tests {
@@ -212,7 +201,7 @@ func Test_virtualMachineNetworkInterfaceAllocateIPRequest_JSONMarshaling(
 		{
 			name: "full",
 			obj: &virtualMachineNetworkInterfaceAllocateIPRequest{
-				VirtualMachineNetworkInterface: &VirtualMachineNetworkInterface{
+				VirtualMachineNetworkInterface: VirtualMachineNetworkInterfaceRef{
 					ID: "id1",
 				},
 				IPAddress: IPAddressRef{ID: "id3"},
@@ -240,7 +229,7 @@ func Test_virtualMachineNetworkInterfaceAllocateNewIPRequest_JSONMarshaling(
 		{
 			name: "ipv4",
 			obj: &virtualMachineNetworkInterfaceAllocateNewIPRequest{
-				VirtualMachineNetworkInterface: &VirtualMachineNetworkInterface{
+				VirtualMachineNetworkInterface: VirtualMachineNetworkInterfaceRef{
 					ID: "id1",
 				},
 				AddressVersion: IPv4,
@@ -249,7 +238,7 @@ func Test_virtualMachineNetworkInterfaceAllocateNewIPRequest_JSONMarshaling(
 		{
 			name: "ipv6",
 			obj: &virtualMachineNetworkInterfaceAllocateNewIPRequest{
-				VirtualMachineNetworkInterface: &VirtualMachineNetworkInterface{
+				VirtualMachineNetworkInterface: VirtualMachineNetworkInterfaceRef{
 					ID: "id1",
 				},
 				AddressVersion: IPv6,
@@ -278,7 +267,7 @@ func Test_virtualMachineNetworkInterfaceUpdateSpeedProfileRequest_JSONMarshaling
 		{
 			name: "full",
 			obj: &virtualMachineNetworkInterfaceUpdateSpeedProfileRequest{
-				VirtualMachineNetworkInterface: &VirtualMachineNetworkInterface{
+				VirtualMachineNetworkInterface: VirtualMachineNetworkInterfaceRef{
 					ID: "id1",
 				},
 				SpeedProfile: NetworkSpeedProfileRef{
@@ -502,7 +491,7 @@ func TestVirtualMachineNetworkInterfacesClient_List(t *testing.T) {
 	}
 }
 
-func TestVirtualMachineNetworkInterfacesClient_Get(t *testing.T) {
+func TestVirtualMachineNetworkInterfacesClient_GetByID(t *testing.T) {
 	type args struct {
 		ctx context.Context
 		id  string
@@ -559,14 +548,118 @@ func TestVirtualMachineNetworkInterfacesClient_Get(t *testing.T) {
 			c := NewVirtualMachineNetworkInterfacesClient(rm)
 
 			mux.HandleFunc(
-				fmt.Sprintf(
-					"/core/v1/virtual_machine_network_interfaces/%s",
-					tt.args.id,
-				),
+				"/core/v1/virtual_machine_network_interfaces/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+
+					assert.Equal(t, url.Values{
+						"virtual_machine_network_interface[id]": []string{
+							tt.args.id,
+						},
+					}, r.URL.Query())
+
+					w.WriteHeader(tt.respStatus)
+					_, _ = w.Write(tt.respBody)
+				},
+			)
+
+			got, resp, err := c.GetByID(
+				tt.args.ctx, tt.args.id,
+			)
+
+			if tt.respStatus != 0 {
+				assert.Equal(t, tt.respStatus, resp.StatusCode)
+			}
+
+			if tt.errStr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.errStr)
+			}
+
+			if tt.want != nil {
+				assert.Equal(t, tt.want, got)
+			}
+
+			if tt.errResp != nil {
+				assert.Equal(t, tt.errResp, resp.Error)
+			}
+		})
+	}
+}
+
+func TestVirtualMachineNetworkInterfacesClient_Get(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		ref VirtualMachineNetworkInterfaceRef
+	}
+	tests := []struct {
+		name       string
+		args       args
+		want       *VirtualMachineNetworkInterface
+		errStr     string
+		errResp    *katapult.ResponseError
+		respStatus int
+		respBody   []byte
+	}{
+		{
+			name: "by ID",
+			args: args{
+				ctx: context.Background(),
+				ref: VirtualMachineNetworkInterfaceRef{
+					ID: "vmnet_olNAz8ThH0emHvdr",
+				},
+			},
+			want: &VirtualMachineNetworkInterface{
+				ID:      "vmnet_olNAz8ThH0emHvdr",
+				Name:    "Public Network on bitter-beautiful-mango",
+				Network: &Network{ID: "net_4s5J6gMQXhcwqIqs"},
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machine_network_interface_get"),
+		},
+		{
+			name: "non-existent virtual machine network interface",
+			args: args{
+				ctx: context.Background(),
+				ref: VirtualMachineNetworkInterfaceRef{
+					ID: "vmnet_nopethisbegone",
+				},
+			},
+			errStr:     fixtureVMNetworkInterfaceNotFoundErr,
+			errResp:    fixtureVMNetworkInterfaceNotFoundResponseError,
+			respStatus: http.StatusNotFound,
+			respBody: fixture(
+				"virtual_machine_network_interface_not_found_error",
+			),
+		},
+		{
+			name: "nil context",
+			args: args{
+				ctx: nil,
+				ref: VirtualMachineNetworkInterfaceRef{
+					ID: "vmnet_nopethisbegone",
+				},
+			},
+			errStr: "net/http: nil Context",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			rm, mux, _, teardown := prepareTestClient(t)
+			defer teardown()
+			c := NewVirtualMachineNetworkInterfacesClient(rm)
+
+			mux.HandleFunc(
+				"/core/v1/virtual_machine_network_interfaces/_",
+				func(w http.ResponseWriter, r *http.Request) {
+					assert.Equal(t, "GET", r.Method)
+					assertEmptyFieldSpec(t, r)
+					assertAuthorization(t, r)
+
+					assert.Equal(t, *tt.args.ref.queryValues(), r.URL.Query())
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -574,7 +667,7 @@ func TestVirtualMachineNetworkInterfacesClient_Get(t *testing.T) {
 			)
 
 			got, resp, err := c.Get(
-				tt.args.ctx, tt.args.id,
+				tt.args.ctx, tt.args.ref,
 			)
 
 			if tt.respStatus != 0 {
@@ -741,7 +834,7 @@ func TestVirtualMachineNetworkInterfacesClient_AvailableIPs(t *testing.T) {
 func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 	type args struct {
 		ctx   context.Context
-		vmnet *VirtualMachineNetworkInterface
+		vmnet VirtualMachineNetworkInterfaceRef
 		ip    IPAddressRef
 	}
 	tests := []struct {
@@ -758,16 +851,15 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 			name: "by IP address ID",
 			args: args{
 				ctx: context.Background(),
-				vmnet: &VirtualMachineNetworkInterface{
-					ID:   "vmnet_olNAz8ThH0emHvdr",
-					Name: "Public Network on bitter-beautiful-mango",
+				vmnet: VirtualMachineNetworkInterfaceRef{
+					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
 				ip: IPAddressRef{
 					ID: "ip_fAwrdP9NvW0Z25eE",
 				},
 			},
 			wantReqBody: &virtualMachineNetworkInterfaceAllocateIPRequest{
-				VirtualMachineNetworkInterface: &VirtualMachineNetworkInterface{
+				VirtualMachineNetworkInterface: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
 				IPAddress: IPAddressRef{
@@ -788,16 +880,15 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 			name: "by IP address Address",
 			args: args{
 				ctx: context.Background(),
-				vmnet: &VirtualMachineNetworkInterface{
-					ID:   "vmnet_olNAz8ThH0emHvdr",
-					Name: "Public Network on bitter-beautiful-mango",
+				vmnet: VirtualMachineNetworkInterfaceRef{
+					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
 				ip: IPAddressRef{
 					Address: "95.135.35.113",
 				},
 			},
 			wantReqBody: &virtualMachineNetworkInterfaceAllocateIPRequest{
-				VirtualMachineNetworkInterface: &VirtualMachineNetworkInterface{
+				VirtualMachineNetworkInterface: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
 				IPAddress: IPAddressRef{
@@ -818,7 +909,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 			name: "non-existent virtual machine network interface",
 			args: args{
 				ctx: context.Background(),
-				vmnet: &VirtualMachineNetworkInterface{
+				vmnet: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_nopethisbegone",
 				},
 				ip: IPAddressRef{ID: "ip_fAwrdP9NvW0Z25eE"},
@@ -834,7 +925,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 			name: "non-existent ip address",
 			args: args{
 				ctx: context.Background(),
-				vmnet: &VirtualMachineNetworkInterface{
+				vmnet: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
 				ip: IPAddressRef{ID: "ip_nopethisbegone"},
@@ -848,7 +939,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 			name: "already allocated ip address",
 			args: args{
 				ctx: context.Background(),
-				vmnet: &VirtualMachineNetworkInterface{
+				vmnet: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
 				ip: IPAddressRef{ID: "ip_fAwrdP9NvW0Z25eE"},
@@ -862,7 +953,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 			name: "permission denied",
 			args: args{
 				ctx: context.Background(),
-				vmnet: &VirtualMachineNetworkInterface{
+				vmnet: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
 				ip: IPAddressRef{ID: "ip_fAwrdP9NvW0Z25eE"},
@@ -873,22 +964,10 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 			respBody:   fixture("permission_denied_error"),
 		},
 		{
-			name: "nil virtual machine network interface",
-			args: args{
-				ctx:   context.Background(),
-				vmnet: nil,
-				ip:    IPAddressRef{ID: "ip_fAwrdP9NvW0Z25eE"},
-			},
-			errStr:     fixtureValidationErrorErr,
-			errResp:    fixtureValidationErrorResponseError,
-			respStatus: http.StatusUnprocessableEntity,
-			respBody:   fixture("validation_error"),
-		},
-		{
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				vmnet: &VirtualMachineNetworkInterface{
+				vmnet: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
 				ip: IPAddressRef{
@@ -952,7 +1031,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 func TestVirtualMachineNetworkInterfacesClient_AllocateNewIP(t *testing.T) {
 	type args struct {
 		ctx   context.Context
-		vmnet *VirtualMachineNetworkInterface
+		vmnet VirtualMachineNetworkInterfaceRef
 		ipVer IPVersion
 	}
 	tests := []struct {
@@ -969,13 +1048,13 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateNewIP(t *testing.T) {
 			name: "IPv4",
 			args: args{
 				ctx: context.Background(),
-				vmnet: &VirtualMachineNetworkInterface{
+				vmnet: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
 				ipVer: IPv4,
 			},
 			wantReqBody: &virtualMachineNetworkInterfaceAllocateNewIPRequest{
-				VirtualMachineNetworkInterface: &VirtualMachineNetworkInterface{
+				VirtualMachineNetworkInterface: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
 				AddressVersion: IPv4,
@@ -994,13 +1073,13 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateNewIP(t *testing.T) {
 			name: "IPv6",
 			args: args{
 				ctx: context.Background(),
-				vmnet: &VirtualMachineNetworkInterface{
+				vmnet: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
 				ipVer: IPv6,
 			},
 			wantReqBody: &virtualMachineNetworkInterfaceAllocateNewIPRequest{
-				VirtualMachineNetworkInterface: &VirtualMachineNetworkInterface{
+				VirtualMachineNetworkInterface: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
 				AddressVersion: IPv6,
@@ -1019,7 +1098,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateNewIP(t *testing.T) {
 			name: "non-existent virtual machine network interface",
 			args: args{
 				ctx: context.Background(),
-				vmnet: &VirtualMachineNetworkInterface{
+				vmnet: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_nopethisbegone",
 				},
 			},
@@ -1034,7 +1113,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateNewIP(t *testing.T) {
 			name: "non-existent ip address",
 			args: args{
 				ctx: context.Background(),
-				vmnet: &VirtualMachineNetworkInterface{
+				vmnet: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
 			},
@@ -1047,7 +1126,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateNewIP(t *testing.T) {
 			name: "no addresses available",
 			args: args{
 				ctx: context.Background(),
-				vmnet: &VirtualMachineNetworkInterface{
+				vmnet: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
 			},
@@ -1060,7 +1139,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateNewIP(t *testing.T) {
 			name: "permission denied",
 			args: args{
 				ctx: context.Background(),
-				vmnet: &VirtualMachineNetworkInterface{
+				vmnet: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
 			},
@@ -1070,21 +1149,10 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateNewIP(t *testing.T) {
 			respBody:   fixture("permission_denied_error"),
 		},
 		{
-			name: "nil virtual machine network interface",
-			args: args{
-				ctx:   context.Background(),
-				vmnet: nil,
-			},
-			errStr:     fixtureValidationErrorErr,
-			errResp:    fixtureValidationErrorResponseError,
-			respStatus: http.StatusUnprocessableEntity,
-			respBody:   fixture("validation_error"),
-		},
-		{
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				vmnet: &VirtualMachineNetworkInterface{
+				vmnet: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
 			},
@@ -1158,7 +1226,7 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 
 	type args struct {
 		ctx          context.Context
-		vmnet        *VirtualMachineNetworkInterface
+		vmnet        VirtualMachineNetworkInterfaceRef
 		speedProfile NetworkSpeedProfileRef
 	}
 	tests := []struct {
@@ -1175,7 +1243,7 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 			name: "by NetworkSpeedProfile ID",
 			args: args{
 				ctx: context.Background(),
-				vmnet: &VirtualMachineNetworkInterface{
+				vmnet: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
 				speedProfile: NetworkSpeedProfileRef{
@@ -1184,7 +1252,7 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 			},
 			//nolint:lll
 			wantReqBody: &virtualMachineNetworkInterfaceUpdateSpeedProfileRequest{
-				VirtualMachineNetworkInterface: &VirtualMachineNetworkInterface{
+				VirtualMachineNetworkInterface: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
 				SpeedProfile: NetworkSpeedProfileRef{
@@ -1203,7 +1271,7 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 			name: "by NetworkSpeedProfile Permalink",
 			args: args{
 				ctx: context.Background(),
-				vmnet: &VirtualMachineNetworkInterface{
+				vmnet: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
 				speedProfile: NetworkSpeedProfileRef{
@@ -1212,7 +1280,7 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 			},
 			//nolint:lll
 			wantReqBody: &virtualMachineNetworkInterfaceUpdateSpeedProfileRequest{
-				VirtualMachineNetworkInterface: &VirtualMachineNetworkInterface{
+				VirtualMachineNetworkInterface: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
 				SpeedProfile: NetworkSpeedProfileRef{
@@ -1231,7 +1299,7 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 			name: "non-existent virtual machine network interface",
 			args: args{
 				ctx: context.Background(),
-				vmnet: &VirtualMachineNetworkInterface{
+				vmnet: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_nopethisbegone",
 				},
 				speedProfile: NetworkSpeedProfileRef{
@@ -1249,7 +1317,7 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 			name: "non-existent speed profile",
 			args: args{
 				ctx: context.Background(),
-				vmnet: &VirtualMachineNetworkInterface{
+				vmnet: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
 				speedProfile: NetworkSpeedProfileRef{
@@ -1265,7 +1333,7 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 			name: "speed profile already assigned",
 			args: args{
 				ctx: context.Background(),
-				vmnet: &VirtualMachineNetworkInterface{
+				vmnet: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
 				speedProfile: NetworkSpeedProfileRef{
@@ -1281,7 +1349,7 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 			name: "task queueing error",
 			args: args{
 				ctx: context.Background(),
-				vmnet: &VirtualMachineNetworkInterface{
+				vmnet: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
 				speedProfile: NetworkSpeedProfileRef{
@@ -1294,21 +1362,10 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 			respBody:   fixture("task_queueing_error"),
 		},
 		{
-			name: "nil virtual machine network interface",
-			args: args{
-				ctx:   context.Background(),
-				vmnet: nil,
-			},
-			errStr:     fixtureValidationErrorErr,
-			errResp:    fixtureValidationErrorResponseError,
-			respStatus: http.StatusUnprocessableEntity,
-			respBody:   fixture("validation_error"),
-		},
-		{
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				vmnet: &VirtualMachineNetworkInterface{
+				vmnet: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
 			},

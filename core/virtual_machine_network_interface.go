@@ -19,21 +19,17 @@ type VirtualMachineNetworkInterface struct {
 	SpeedProfile   *NetworkSpeedProfile `json:"speed_profile,omitempty"`
 }
 
-//nolint:lll
-func (s *VirtualMachineNetworkInterface) lookupReference() *VirtualMachineNetworkInterface {
-	if s == nil {
-		return nil
-	}
-
-	return &VirtualMachineNetworkInterface{ID: s.ID}
+func (s *VirtualMachineNetworkInterface) Ref() VirtualMachineNetworkInterfaceRef {
+	return VirtualMachineNetworkInterfaceRef{ID: s.ID}
 }
 
-func (s *VirtualMachineNetworkInterface) queryValues() *url.Values {
-	v := &url.Values{}
+type VirtualMachineNetworkInterfaceRef struct {
+	ID string `json:"id,omitempty"`
+}
 
-	if s != nil {
-		v.Set("virtual_machine_network_interface[id]", s.ID)
-	}
+func (s VirtualMachineNetworkInterfaceRef) queryValues() *url.Values {
+	v := &url.Values{}
+	v.Set("virtual_machine_network_interface[id]", s.ID)
 
 	return v
 }
@@ -48,18 +44,18 @@ type virtualMachineNetworkInterfacesResponseBody struct {
 }
 
 type virtualMachineNetworkInterfaceAllocateIPRequest struct {
-	VirtualMachineNetworkInterface *VirtualMachineNetworkInterface `json:"virtual_machine_network_interface,omitempty"`
-	IPAddress                      IPAddressRef                    `json:"ip_address"`
+	VirtualMachineNetworkInterface VirtualMachineNetworkInterfaceRef `json:"virtual_machine_network_interface,omitempty"`
+	IPAddress                      IPAddressRef                      `json:"ip_address"`
 }
 
 type virtualMachineNetworkInterfaceAllocateNewIPRequest struct {
-	VirtualMachineNetworkInterface *VirtualMachineNetworkInterface `json:"virtual_machine_network_interface,omitempty"`
-	AddressVersion                 IPVersion                       `json:"address_version,omitempty"`
+	VirtualMachineNetworkInterface VirtualMachineNetworkInterfaceRef `json:"virtual_machine_network_interface,omitempty"`
+	AddressVersion                 IPVersion                         `json:"address_version,omitempty"`
 }
 
 type virtualMachineNetworkInterfaceUpdateSpeedProfileRequest struct {
-	VirtualMachineNetworkInterface *VirtualMachineNetworkInterface `json:"virtual_machine_network_interface,omitempty"`
-	SpeedProfile                   NetworkSpeedProfileRef          `json:"speed_profile,omitempty"`
+	VirtualMachineNetworkInterface VirtualMachineNetworkInterfaceRef `json:"virtual_machine_network_interface,omitempty"`
+	SpeedProfile                   NetworkSpeedProfileRef            `json:"speed_profile,omitempty"`
 }
 
 type VirtualMachineNetworkInterfacesClient struct {
@@ -93,12 +89,20 @@ func (s *VirtualMachineNetworkInterfacesClient) List(
 	return body.VirtualMachineNetworkInterfaces, resp, err
 }
 
-func (s *VirtualMachineNetworkInterfacesClient) Get(
+func (s *VirtualMachineNetworkInterfacesClient) GetByID(
 	ctx context.Context,
 	id string,
 ) (*VirtualMachineNetworkInterface, *katapult.Response, error) {
+	return s.Get(ctx, VirtualMachineNetworkInterfaceRef{ID: id})
+}
+
+func (s *VirtualMachineNetworkInterfacesClient) Get(
+	ctx context.Context,
+	ref VirtualMachineNetworkInterfaceRef,
+) (*VirtualMachineNetworkInterface, *katapult.Response, error) {
 	u := &url.URL{
-		Path: fmt.Sprintf("virtual_machine_network_interfaces/%s", id),
+		Path:     "virtual_machine_network_interfaces/_",
+		RawQuery: ref.queryValues().Encode(),
 	}
 
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
@@ -125,12 +129,12 @@ func (s *VirtualMachineNetworkInterfacesClient) AvailableIPs(
 
 func (s *VirtualMachineNetworkInterfacesClient) AllocateIP(
 	ctx context.Context,
-	vmnet *VirtualMachineNetworkInterface,
+	vmnet VirtualMachineNetworkInterfaceRef,
 	ip IPAddressRef,
 ) (*VirtualMachineNetworkInterface, *katapult.Response, error) {
 	u := &url.URL{Path: "virtual_machine_network_interfaces/_/allocate_ip"}
 	reqBody := &virtualMachineNetworkInterfaceAllocateIPRequest{
-		VirtualMachineNetworkInterface: vmnet.lookupReference(),
+		VirtualMachineNetworkInterface: vmnet,
 		IPAddress:                      ip,
 	}
 
@@ -141,12 +145,12 @@ func (s *VirtualMachineNetworkInterfacesClient) AllocateIP(
 
 func (s *VirtualMachineNetworkInterfacesClient) AllocateNewIP(
 	ctx context.Context,
-	vmnet *VirtualMachineNetworkInterface,
+	vmnet VirtualMachineNetworkInterfaceRef,
 	ipVer IPVersion,
 ) (*IPAddress, *katapult.Response, error) {
 	u := &url.URL{Path: "virtual_machine_network_interfaces/_/allocate_new_ip"}
 	reqBody := &virtualMachineNetworkInterfaceAllocateNewIPRequest{
-		VirtualMachineNetworkInterface: vmnet.lookupReference(),
+		VirtualMachineNetworkInterface: vmnet,
 		AddressVersion:                 ipVer,
 	}
 
@@ -157,14 +161,14 @@ func (s *VirtualMachineNetworkInterfacesClient) AllocateNewIP(
 
 func (s *VirtualMachineNetworkInterfacesClient) UpdateSpeedProfile(
 	ctx context.Context,
-	vmnet *VirtualMachineNetworkInterface,
+	vmnet VirtualMachineNetworkInterfaceRef,
 	speedProfile NetworkSpeedProfileRef,
 ) (*Task, *katapult.Response, error) {
 	u := &url.URL{
 		Path: "virtual_machine_network_interfaces/_/update_speed_profile",
 	}
 	reqBody := &virtualMachineNetworkInterfaceUpdateSpeedProfileRequest{
-		VirtualMachineNetworkInterface: vmnet.lookupReference(),
+		VirtualMachineNetworkInterface: vmnet,
 		SpeedProfile:                   speedProfile,
 	}
 
