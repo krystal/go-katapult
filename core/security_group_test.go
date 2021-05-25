@@ -61,7 +61,7 @@ func TestSecurityGroup_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestSecurityGroupRef_queryValues(t *testing.T) {
+func TestSecurityGroup_queryValues(t *testing.T) {
 	tests := []struct {
 		name string
 		obj  SecurityGroupRef
@@ -76,29 +76,6 @@ func TestSecurityGroupRef_queryValues(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			testQueryableEncoding(t, tt.obj)
-		})
-	}
-}
-
-func TestSecurityGroupRef_JSONMarshaling(t *testing.T) {
-	tests := []struct {
-		name string
-		obj  *SecurityGroupRef
-	}{
-		{
-			name: "empty",
-			obj:  &SecurityGroupRef{},
-		},
-		{
-			name: "full",
-			obj: &SecurityGroupRef{
-				ID: "sg_3uXbmANw4sQiF1J3",
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			testJSONMarshaling(t, tt.obj)
 		})
 	}
 }
@@ -187,7 +164,7 @@ func TestSecurityGroupUpdateArguments_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func Test_securityGroupCreateRequest_JSONMarshaling(t *testing.T) {
+func Test_SecurityGroupCreateRequest_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string
 		obj  *securityGroupCreateRequest
@@ -211,7 +188,7 @@ func Test_securityGroupCreateRequest_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func Test_securityGroupUpdateRequest_JSONMarshaling(t *testing.T) {
+func Test_SecurityGroupUpdateRequest_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string
 		obj  *securityGroupUpdateRequest
@@ -235,7 +212,7 @@ func Test_securityGroupUpdateRequest_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func Test_securityGroupsResponseBody_JSONMarshaling(t *testing.T) {
+func Test_SecurityGroupsResponseBody_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string
 		obj  *securityGroupsResponseBody
@@ -289,6 +266,7 @@ func TestSecurityGroupsClient_List(t *testing.T) {
 		name           string
 		args           args
 		want           []*SecurityGroup
+		wantQuery      *url.Values
 		wantPagination *katapult.Pagination
 		errStr         string
 		errResp        *katapult.ResponseError
@@ -302,6 +280,9 @@ func TestSecurityGroupsClient_List(t *testing.T) {
 				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			want: SecurityGroupList,
+			wantQuery: &url.Values{
+				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
+			},
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
@@ -319,6 +300,9 @@ func TestSecurityGroupsClient_List(t *testing.T) {
 				org: OrganizationRef{SubDomain: "acme"},
 			},
 			want: SecurityGroupList,
+			wantQuery: &url.Values{
+				"organization[sub_domain]": []string{"acme"},
+			},
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
@@ -337,6 +321,11 @@ func TestSecurityGroupsClient_List(t *testing.T) {
 				opts: &ListOptions{Page: 1, PerPage: 2},
 			},
 			want: SecurityGroupList[0:2],
+			wantQuery: &url.Values{
+				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
+				"page":             []string{"1"},
+				"per_page":         []string{"2"},
+			},
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 1,
 				TotalPages:  2,
@@ -355,6 +344,11 @@ func TestSecurityGroupsClient_List(t *testing.T) {
 				opts: &ListOptions{Page: 2, PerPage: 2},
 			},
 			want: SecurityGroupList[2:],
+			wantQuery: &url.Values{
+				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
+				"page":             []string{"2"},
+				"per_page":         []string{"2"},
+			},
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 2,
 				TotalPages:  2,
@@ -671,7 +665,7 @@ func TestSecurityGroupsClient_Create(t *testing.T) {
 		respBody   []byte
 	}{
 		{
-			name: "by organization ID",
+			name: "security group",
 			args: args{
 				ctx:    context.Background(),
 				org:    OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
@@ -692,7 +686,7 @@ func TestSecurityGroupsClient_Create(t *testing.T) {
 			respBody:   fixture("security_group_create"),
 		},
 		{
-			name: "by organization SubDomain",
+			name: "organization by sub-domain",
 			args: args{
 				ctx:    context.Background(),
 				org:    OrganizationRef{SubDomain: "acme"},
