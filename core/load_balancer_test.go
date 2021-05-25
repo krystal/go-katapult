@@ -3,7 +3,6 @@ package core
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/url"
 	"testing"
@@ -91,6 +90,10 @@ func TestLoadBalancerRef_queryValues(t *testing.T) {
 		name string
 		obj  LoadBalancerRef
 	}{
+		{
+			name: "empty",
+			obj:  LoadBalancerRef{},
+		},
 		{
 			name: "with id",
 			obj: LoadBalancerRef{
@@ -456,15 +459,15 @@ func TestLoadBalancersClient_Get(t *testing.T) {
 	tests := []struct {
 		name       string
 		args       args
-		id         string
 		want       *LoadBalancer
+		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
 		respStatus int
 		respBody   []byte
 	}{
 		{
-			name: "load balancer",
+			name: "by ID",
 			args: args{
 				ctx: context.Background(),
 				ref: LoadBalancerRef{ID: "lb_7vClpn0rlUegGPDS"},
@@ -473,6 +476,9 @@ func TestLoadBalancersClient_Get(t *testing.T) {
 				ID:           "lb_7vClpn0rlUegGPDS",
 				Name:         "web",
 				ResourceType: TagsResourceType,
+			},
+			wantQuery: &url.Values{
+				"load_balancer[id]": []string{"lb_7vClpn0rlUegGPDS"},
 			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("load_balancer_get"),
@@ -504,14 +510,15 @@ func TestLoadBalancersClient_Get(t *testing.T) {
 			c := NewLoadBalancersClient(rm)
 
 			mux.HandleFunc(
-				fmt.Sprintf(
-					"/core/v1/load_balancers/%s",
-					tt.args.ref.ID,
-				),
+				"/core/v1/load_balancers/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+
+					if tt.wantQuery != nil {
+						assert.Equal(t, *tt.wantQuery, r.URL.Query())
+					}
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -549,8 +556,8 @@ func TestLoadBalancersClient_GetByID(t *testing.T) {
 	tests := []struct {
 		name       string
 		args       args
-		id         string
 		want       *LoadBalancer
+		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
 		respStatus int
@@ -566,6 +573,9 @@ func TestLoadBalancersClient_GetByID(t *testing.T) {
 				ID:           "lb_7vClpn0rlUegGPDS",
 				Name:         "web",
 				ResourceType: TagsResourceType,
+			},
+			wantQuery: &url.Values{
+				"load_balancer[id]": []string{"lb_7vClpn0rlUegGPDS"},
 			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("load_balancer_get"),
@@ -597,11 +607,15 @@ func TestLoadBalancersClient_GetByID(t *testing.T) {
 			c := NewLoadBalancersClient(rm)
 
 			mux.HandleFunc(
-				fmt.Sprintf("/core/v1/load_balancers/%s", tt.args.id),
+				"/core/v1/load_balancers/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+
+					if tt.wantQuery != nil {
+						assert.Equal(t, *tt.wantQuery, r.URL.Query())
+					}
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -682,7 +696,7 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 			respBody:   fixture("load_balancer_create"),
 		},
 		{
-			name: "organization by sub-domain",
+			name: "organization by SubDomain",
 			args: args{
 				ctx: context.Background(),
 				org: OrganizationRef{
