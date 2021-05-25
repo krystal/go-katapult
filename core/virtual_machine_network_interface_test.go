@@ -113,7 +113,9 @@ func TestVirtualMachineNetworkInterface_Ref(t *testing.T) {
 		{
 			name: "full",
 			obj:  fixtureVirtualMachineNetworkInterfaceFull,
-			want: VirtualMachineNetworkInterfaceRef{ID: "vmnet_Qlu34yEQgkrIlzql"},
+			want: VirtualMachineNetworkInterfaceRef{
+				ID: "vmnet_Qlu34yEQgkrIlzql",
+			},
 		},
 		{
 			name: "no ID",
@@ -201,6 +203,7 @@ func Test_virtualMachineNetworkInterfaceAllocateIPRequest_JSONMarshaling(
 		{
 			name: "full",
 			obj: &virtualMachineNetworkInterfaceAllocateIPRequest{
+				//nolint:lll
 				VirtualMachineNetworkInterface: VirtualMachineNetworkInterfaceRef{
 					ID: "id1",
 				},
@@ -229,6 +232,7 @@ func Test_virtualMachineNetworkInterfaceAllocateNewIPRequest_JSONMarshaling(
 		{
 			name: "ipv4",
 			obj: &virtualMachineNetworkInterfaceAllocateNewIPRequest{
+				//nolint:lll
 				VirtualMachineNetworkInterface: VirtualMachineNetworkInterfaceRef{
 					ID: "id1",
 				},
@@ -238,6 +242,7 @@ func Test_virtualMachineNetworkInterfaceAllocateNewIPRequest_JSONMarshaling(
 		{
 			name: "ipv6",
 			obj: &virtualMachineNetworkInterfaceAllocateNewIPRequest{
+				//nolint:lll
 				VirtualMachineNetworkInterface: VirtualMachineNetworkInterfaceRef{
 					ID: "id1",
 				},
@@ -859,6 +864,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 				},
 			},
 			wantReqBody: &virtualMachineNetworkInterfaceAllocateIPRequest{
+				//nolint:lll
 				VirtualMachineNetworkInterface: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
@@ -888,6 +894,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 				},
 			},
 			wantReqBody: &virtualMachineNetworkInterfaceAllocateIPRequest{
+				//nolint:lll
 				VirtualMachineNetworkInterface: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
@@ -1054,6 +1061,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateNewIP(t *testing.T) {
 				ipVer: IPv4,
 			},
 			wantReqBody: &virtualMachineNetworkInterfaceAllocateNewIPRequest{
+				//nolint:lll
 				VirtualMachineNetworkInterface: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},
@@ -1079,6 +1087,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateNewIP(t *testing.T) {
 				ipVer: IPv6,
 			},
 			wantReqBody: &virtualMachineNetworkInterfaceAllocateNewIPRequest{
+				//nolint:lll
 				VirtualMachineNetworkInterface: VirtualMachineNetworkInterfaceRef{
 					ID: "vmnet_olNAz8ThH0emHvdr",
 				},

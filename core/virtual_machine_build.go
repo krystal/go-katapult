@@ -40,7 +40,7 @@ const (
 type VirtualMachineBuildArguments struct {
 	Zone                *Zone
 	DataCenter          DataCenterRef
-	Package             *VirtualMachinePackage
+	Package             VirtualMachinePackageRef
 	DiskTemplate        DiskTemplateRef
 	DiskTemplateOptions []*DiskTemplateOption
 	Network             NetworkRef
@@ -48,14 +48,14 @@ type VirtualMachineBuildArguments struct {
 }
 
 type virtualMachineBuildCreateRequest struct {
-	Hostname            string                 `json:"hostname,omitempty"`
-	Organization        OrganizationRef        `json:"organization"`
-	Zone                *Zone                  `json:"zone,omitempty"`
-	DataCenter          DataCenterRef          `json:"data_center"`
-	Package             *VirtualMachinePackage `json:"package,omitempty"`
-	DiskTemplate        DiskTemplateRef        `json:"disk_template,omitempty"`
-	DiskTemplateOptions []*DiskTemplateOption  `json:"disk_template_options,omitempty"`
-	Network             NetworkRef             `json:"network"`
+	Hostname            string                   `json:"hostname,omitempty"`
+	Organization        OrganizationRef          `json:"organization"`
+	Zone                *Zone                    `json:"zone,omitempty"`
+	DataCenter          DataCenterRef            `json:"data_center"`
+	Package             VirtualMachinePackageRef `json:"package,omitempty"`
+	DiskTemplate        DiskTemplateRef          `json:"disk_template,omitempty"`
+	DiskTemplateOptions []*DiskTemplateOption    `json:"disk_template_options,omitempty"`
+	Network             NetworkRef               `json:"network"`
 }
 
 type virtualMachineBuildCreateFromSpecRequest struct {
@@ -117,7 +117,7 @@ func (s *VirtualMachineBuildsClient) Create(
 		Organization:        org,
 		Zone:                args.Zone.lookupReference(),
 		DataCenter:          args.DataCenter,
-		Package:             args.Package.lookupReference(),
+		Package:             args.Package,
 		DiskTemplate:        args.DiskTemplate,
 		DiskTemplateOptions: args.DiskTemplateOptions,
 		Network:             args.Network,

@@ -80,8 +80,8 @@ type virtualMachinesResponseBody struct {
 }
 
 type virtualMachineChangePackageRequest struct {
-	VirtualMachine VirtualMachineRef      `json:"virtual_machine,omitempty"`
-	Package        *VirtualMachinePackage `json:"virtual_machine_package,omitempty"`
+	VirtualMachine VirtualMachineRef        `json:"virtual_machine,omitempty"`
+	Package        VirtualMachinePackageRef `json:"virtual_machine_package,omitempty"`
 }
 
 type virtualMachineUpdateRequest struct {
@@ -151,12 +151,12 @@ func (s *VirtualMachinesClient) GetByFQDN(
 func (s *VirtualMachinesClient) ChangePackage(
 	ctx context.Context,
 	ref VirtualMachineRef,
-	pkg *VirtualMachinePackage,
+	pkg VirtualMachinePackageRef,
 ) (*Task, *katapult.Response, error) {
 	u := &url.URL{Path: "virtual_machines/_/package"}
 	reqBody := &virtualMachineChangePackageRequest{
 		VirtualMachine: ref,
-		Package:        pkg.lookupReference(),
+		Package:        pkg,
 	}
 	body, resp, err := s.doRequest(ctx, "PUT", u, reqBody)
 

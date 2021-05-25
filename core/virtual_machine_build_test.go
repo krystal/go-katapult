@@ -180,7 +180,7 @@ func Test_virtualMachineBuildCreateRequest_JSONMarshaling(t *testing.T) {
 				Organization: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				Zone:         &Zone{ID: "zone_kY2sPRG24sJVRM2U"},
 				DataCenter:   DataCenterRef{ID: "dc_25d48761871e4bf"},
-				Package: &VirtualMachinePackage{
+				Package: VirtualMachinePackageRef{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
 				DiskTemplate: DiskTemplateRef{ID: "dtpl_ytP13XD5DE1RdSL9"},
@@ -454,10 +454,8 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 		DataCenter: DataCenterRef{
 			ID: "dc_25d48761871e4bf",
 		},
-		Package: &VirtualMachinePackage{
-			ID:        "vmpkg_XdNPhGXvyt1dnDts",
-			Name:      "X-Small",
-			Permalink: "xsmall",
+		Package: VirtualMachinePackageRef{
+			ID: "vmpkg_XdNPhGXvyt1dnDts",
 		},
 		DiskTemplate: DiskTemplateRef{
 			Permalink: "templates/ubuntu-18-04",
@@ -505,7 +503,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 				DataCenter: DataCenterRef{
 					ID: "dc_25d48761871e4bf",
 				},
-				Package: &VirtualMachinePackage{
+				Package: VirtualMachinePackageRef{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
 				DiskTemplate: DiskTemplateRef{
@@ -541,8 +539,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 					DataCenter: DataCenterRef{
 						Permalink: "woodland",
 					},
-					Package: &VirtualMachinePackage{
-						Name:      "X-Small",
+					Package: VirtualMachinePackageRef{
 						Permalink: "xsmall",
 					},
 					DiskTemplate: DiskTemplateRef{
@@ -567,7 +564,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 				DataCenter: DataCenterRef{
 					Permalink: "woodland",
 				},
-				Package: &VirtualMachinePackage{
+				Package: VirtualMachinePackageRef{
 					Permalink: "xsmall",
 				},
 				DiskTemplate: DiskTemplateRef{

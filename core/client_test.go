@@ -65,14 +65,6 @@ var (
 			"to run this operation.",
 		Detail: json.RawMessage(`{}`),
 	}
-
-	fixtureInvalidArgumentErr = "invalid_argument: The 'X' argument " +
-		"is invalid"
-	fixtureInvalidArgumentResponseError = &katapult.ResponseError{
-		Code:        "invalid_argument",
-		Description: "The 'X' argument is invalid",
-		Detail:      json.RawMessage(`{}`),
-	}
 )
 
 //

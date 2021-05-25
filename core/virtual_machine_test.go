@@ -274,7 +274,7 @@ func Test_virtualMachineChangePackageRequest_JSONMarshaling(t *testing.T) {
 			name: "full",
 			obj: &virtualMachineChangePackageRequest{
 				VirtualMachine: VirtualMachineRef{ID: "id1"},
-				Package:        &VirtualMachinePackage{ID: "id2"},
+				Package:        VirtualMachinePackageRef{ID: "id2"},
 			},
 		},
 	}
@@ -832,7 +832,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 	type args struct {
 		ctx context.Context
 		ref VirtualMachineRef
-		pkg *VirtualMachinePackage
+		pkg VirtualMachinePackageRef
 	}
 	tests := []struct {
 		name       string
@@ -851,7 +851,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 				ref: VirtualMachineRef{
 					ID: "vm_t8yomYsG4bccKw5D",
 				},
-				pkg: &VirtualMachinePackage{
+				pkg: VirtualMachinePackageRef{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
 			},
@@ -859,7 +859,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 				VirtualMachine: VirtualMachineRef{
 					ID: "vm_t8yomYsG4bccKw5D",
 				},
-				Package: &VirtualMachinePackage{
+				Package: VirtualMachinePackageRef{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
 			},
@@ -878,8 +878,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 				ref: VirtualMachineRef{
 					FQDN: "anvil.amce.katapult.cloud",
 				},
-				pkg: &VirtualMachinePackage{
-					Name:      "X-Small",
+				pkg: VirtualMachinePackageRef{
 					Permalink: "xsmall",
 				},
 			},
@@ -887,7 +886,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 				VirtualMachine: VirtualMachineRef{
 					FQDN: "anvil.amce.katapult.cloud",
 				},
-				Package: &VirtualMachinePackage{
+				Package: VirtualMachinePackageRef{
 					Permalink: "xsmall",
 				},
 			},
@@ -906,23 +905,15 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 				ref: VirtualMachineRef{
 					ID: "vm_t8yomYsG4bccKw5D",
 				},
-				pkg: &VirtualMachinePackage{
-					ID:            "vmpkg_XdNPhGXvyt1dnDts",
-					Name:          "X-Small",
-					Permalink:     "xsmall",
-					CPUCores:      504684,
-					IPv4Addresses: 322134,
-					MemoryInGB:    953603,
-					StorageInGB:   853121,
-					Privacy:       "priv",
-					Icon:          &Attachment{URL: "url"},
+				pkg: VirtualMachinePackageRef{
+					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
 			},
 			reqBody: &virtualMachineChangePackageRequest{
 				VirtualMachine: VirtualMachineRef{
 					ID: "vm_t8yomYsG4bccKw5D",
 				},
-				Package: &VirtualMachinePackage{
+				Package: VirtualMachinePackageRef{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
 			},
@@ -941,7 +932,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 				ref: VirtualMachineRef{
 					ID: "vm_t8yomYsG4bccKw5D",
 				},
-				pkg: &VirtualMachinePackage{
+				pkg: VirtualMachinePackageRef{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
 			},
@@ -957,7 +948,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 				ref: VirtualMachineRef{
 					ID: "vm_t8yomYsG4bccKw5D",
 				},
-				pkg: &VirtualMachinePackage{
+				pkg: VirtualMachinePackageRef{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
 			},
@@ -973,7 +964,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 				ref: VirtualMachineRef{
 					ID: "vm_t8yomYsG4bccKw5D",
 				},
-				pkg: &VirtualMachinePackage{
+				pkg: VirtualMachinePackageRef{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
 			},
@@ -989,7 +980,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 				ref: VirtualMachineRef{
 					ID: "vm_t8yomYsG4bccKw5D",
 				},
-				pkg: &VirtualMachinePackage{
+				pkg: VirtualMachinePackageRef{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
 			},
@@ -1005,7 +996,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 				ref: VirtualMachineRef{
 					ID: "vm_t8yomYsG4bccKw5D",
 				},
-				pkg: &VirtualMachinePackage{
+				pkg: VirtualMachinePackageRef{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
 			},
@@ -1015,32 +1006,13 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 			respBody:   fixture("task_queueing_error"),
 		},
 		{
-			name: "nil virtual machine package",
-			args: args{
-				ctx: context.Background(),
-				ref: VirtualMachineRef{
-					ID: "vm_t8yomYsG4bccKw5D",
-				},
-				pkg: nil,
-			},
-			reqBody: &virtualMachineChangePackageRequest{
-				VirtualMachine: VirtualMachineRef{
-					ID: "vm_t8yomYsG4bccKw5D",
-				},
-			},
-			errStr:     fixturePackageNotFoundErr,
-			errResp:    fixturePackageNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("package_not_found_error"),
-		},
-		{
 			name: "nil context",
 			args: args{
 				ctx: nil,
 				ref: VirtualMachineRef{
 					ID: "vm_t8yomYsG4bccKw5D",
 				},
-				pkg: &VirtualMachinePackage{
+				pkg: VirtualMachinePackageRef{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
 			},

@@ -19,6 +19,7 @@ type VirtualMachineNetworkInterface struct {
 	SpeedProfile   *NetworkSpeedProfile `json:"speed_profile,omitempty"`
 }
 
+//nolint:lll
 func (s *VirtualMachineNetworkInterface) Ref() VirtualMachineNetworkInterfaceRef {
 	return VirtualMachineNetworkInterfaceRef{ID: s.ID}
 }
