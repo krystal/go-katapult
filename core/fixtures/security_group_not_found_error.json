@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "security_group_not_found",
+    "description": "No security group was found matching any of the criteria provided in the arguments",
+    "detail": {}
+  }
+}

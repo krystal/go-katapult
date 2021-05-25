@@ -19,6 +19,7 @@ type Client struct {
 	NetworkSpeedProfiles            *NetworkSpeedProfilesClient
 	Networks                        *NetworksClient
 	Organizations                   *OrganizationsClient
+	SecurityGroups                  *SecurityGroupsClient
 	Tasks                           *TasksClient
 	TrashObjects                    *TrashObjectsClient
 	VirtualMachineBuilds            *VirtualMachineBuildsClient
