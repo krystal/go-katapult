@@ -72,6 +72,28 @@ func TestDNSZone_JSONMarshaling(t *testing.T) {
 	}
 }
 
+func TestDNZZone_Ref(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  DNSZone
+		want DNSZoneRef
+	}{
+		{
+			name: "with id",
+			obj: DNSZone{
+				ID: "dnszone_k75eFc4UBOgeE5Zy",
+			},
+			want: DNSZoneRef{ID: "dnszone_k75eFc4UBOgeE5Zy"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, tt.obj.Ref())
+		})
+	}
+}
+
 func TestDNSZoneRef_queryValues(t *testing.T) {
 	tests := []struct {
 		name string

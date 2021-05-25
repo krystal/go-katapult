@@ -16,6 +16,28 @@ func TestClient_LoadBalancerRules(t *testing.T) {
 	assert.IsType(t, &LoadBalancerRulesClient{}, c.LoadBalancerRules)
 }
 
+func TestLoadBalancerRule_Ref(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  LoadBalancerRule
+		want LoadBalancerRuleRef
+	}{
+		{
+			name: "with id",
+			obj: LoadBalancerRule{
+				ID: "lbr_9IToFxX2AOl7IBSY",
+			},
+			want: LoadBalancerRuleRef{ID: "lbr_9IToFxX2AOl7IBSY"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, tt.obj.Ref())
+		})
+	}
+}
+
 func TestLoadBalancerRule_JSONMarshalling(t *testing.T) {
 	tests := []struct {
 		name string

@@ -67,6 +67,28 @@ func TestVirtualMachineGroupRef_JSONMarshaling(t *testing.T) {
 	}
 }
 
+func TestVirtualMachineGroup_Ref(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  VirtualMachineGroup
+		want VirtualMachineGroupRef
+	}{
+		{
+			name: "with id",
+			obj: VirtualMachineGroup{
+				ID: "vmgrp_gsEUFPp3ybVQm5QQ",
+			},
+			want: VirtualMachineGroupRef{ID: "vmgrp_gsEUFPp3ybVQm5QQ"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, tt.obj.Ref())
+		})
+	}
+}
+
 func TestVirtualMachineGroup_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name    string

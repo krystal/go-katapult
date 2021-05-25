@@ -138,6 +138,28 @@ func TestVirtualMachineBuildStates(t *testing.T) {
 	}
 }
 
+func TestVirtualMachineBuild_Ref(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  VirtualMachineBuild
+		want VirtualMachineBuildRef
+	}{
+		{
+			name: "with id",
+			obj: VirtualMachineBuild{
+				ID: "vmbuild_pbjJIqJ3MOMNsCr3",
+			},
+			want: VirtualMachineBuildRef{ID: "vmbuild_pbjJIqJ3MOMNsCr3"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, tt.obj.Ref())
+		})
+	}
+}
+
 func Test_virtualMachineBuildResponseBody_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string
