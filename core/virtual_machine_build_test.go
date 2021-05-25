@@ -178,7 +178,7 @@ func Test_virtualMachineBuildCreateRequest_JSONMarshaling(t *testing.T) {
 			obj: &virtualMachineBuildCreateRequest{
 				Hostname:     "foo.example.com",
 				Organization: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
-				Zone:         &Zone{ID: "zone_kY2sPRG24sJVRM2U"},
+				Zone:         ZoneRef{ID: "zone_kY2sPRG24sJVRM2U"},
 				DataCenter:   DataCenterRef{ID: "dc_25d48761871e4bf"},
 				Package: VirtualMachinePackageRef{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
@@ -446,10 +446,8 @@ func TestVirtualMachineBuildsClient_GetByID(t *testing.T) {
 
 func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 	fullArgs := &VirtualMachineBuildArguments{
-		Zone: &Zone{
-			ID:        "zone_kY2sPRG24sJVRM2U",
-			Name:      "North West",
-			Permalink: "north-west",
+		Zone: ZoneRef{
+			ID: "zone_kY2sPRG24sJVRM2U",
 		},
 		DataCenter: DataCenterRef{
 			ID: "dc_25d48761871e4bf",
@@ -497,7 +495,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 				Organization: OrganizationRef{
 					ID: "org_O648YDMEYeLmqdmn",
 				},
-				Zone: &Zone{
+				Zone: ZoneRef{
 					ID: "zone_kY2sPRG24sJVRM2U",
 				},
 				DataCenter: DataCenterRef{
@@ -532,8 +530,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 					SubDomain: "acme",
 				},
 				buildArgs: &VirtualMachineBuildArguments{
-					Zone: &Zone{
-						Name:      "North West",
+					Zone: ZoneRef{
 						Permalink: "north-west",
 					},
 					DataCenter: DataCenterRef{
@@ -558,7 +555,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 				Organization: OrganizationRef{
 					SubDomain: "acme",
 				},
-				Zone: &Zone{
+				Zone: ZoneRef{
 					Permalink: "north-west",
 				},
 				DataCenter: DataCenterRef{

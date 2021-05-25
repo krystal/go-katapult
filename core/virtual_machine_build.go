@@ -38,7 +38,7 @@ const (
 )
 
 type VirtualMachineBuildArguments struct {
-	Zone                *Zone
+	Zone                ZoneRef
 	DataCenter          DataCenterRef
 	Package             VirtualMachinePackageRef
 	DiskTemplate        DiskTemplateRef
@@ -50,7 +50,7 @@ type VirtualMachineBuildArguments struct {
 type virtualMachineBuildCreateRequest struct {
 	Hostname            string                   `json:"hostname,omitempty"`
 	Organization        OrganizationRef          `json:"organization"`
-	Zone                *Zone                    `json:"zone,omitempty"`
+	Zone                ZoneRef                  `json:"zone,omitempty"`
 	DataCenter          DataCenterRef            `json:"data_center"`
 	Package             VirtualMachinePackageRef `json:"package,omitempty"`
 	DiskTemplate        DiskTemplateRef          `json:"disk_template,omitempty"`
@@ -115,7 +115,7 @@ func (s *VirtualMachineBuildsClient) Create(
 	reqBody := &virtualMachineBuildCreateRequest{
 		Hostname:            args.Hostname,
 		Organization:        org,
-		Zone:                args.Zone.lookupReference(),
+		Zone:                args.Zone,
 		DataCenter:          args.DataCenter,
 		Package:             args.Package,
 		DiskTemplate:        args.DiskTemplate,
