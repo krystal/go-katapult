@@ -362,6 +362,23 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 			respBody:   fixture("virtual_machines_list"),
 		},
 		{
+			name: "by organization SubDomain",
+			args: args{
+				ctx: context.Background(),
+				org: OrganizationRef{SubDomain: "acme"},
+			},
+			want: virtualMachinesList,
+			wantPagination: &katapult.Pagination{
+				CurrentPage: 1,
+				TotalPages:  1,
+				Total:       3,
+				PerPage:     30,
+				LargeSet:    false,
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("virtual_machines_list"),
+		},
+		{
 			name: "page 1",
 			args: args{
 				ctx:  context.Background(),

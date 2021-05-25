@@ -845,6 +845,28 @@ func TestVirtualMachineBuildsClient_CreateFromSpec(t *testing.T) {
 			respBody:   fixture("virtual_machine_build_create"),
 		},
 		{
+			name: "by organization SubDomain",
+			args: args{
+				ctx: context.Background(),
+				org: OrganizationRef{
+					SubDomain: "acme",
+				},
+				spec: spec,
+			},
+			reqBody: &virtualMachineBuildCreateFromSpecRequest{
+				Organization: OrganizationRef{
+					SubDomain: "acme",
+				},
+				XML: string(xmlSpec),
+			},
+			want: &VirtualMachineBuild{
+				ID:    "vmbuild_TEmhezUShNuAsyac",
+				State: VirtualMachineBuildPending,
+			},
+			respStatus: http.StatusCreated,
+			respBody:   fixture("virtual_machine_build_create"),
+		},
+		{
 			name: "invalid API token response",
 			args: args{
 				ctx:  context.Background(),

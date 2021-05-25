@@ -304,6 +304,23 @@ func TestOrganizationsClient_Get(t *testing.T) {
 			respBody:   fixture("organization_get"),
 		},
 		{
+			name: "by SubDomain",
+			args: args{
+				ctx: context.Background(),
+				ref: OrganizationRef{SubDomain: "acme"},
+			},
+			reqQuery: &url.Values{
+				"organization[sub_domain]": []string{"acme"},
+			},
+			want: &Organization{
+				ID:        "org_O648YDMEYeLmqdmn",
+				Name:      "ACME Inc.",
+				SubDomain: "acme",
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("organization_get"),
+		},
+		{
 			name: "non-existent organization",
 			args: args{
 				ctx: context.Background(),

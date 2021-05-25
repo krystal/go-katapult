@@ -267,6 +267,19 @@ func TestDataCentersClient_Get(t *testing.T) {
 			respBody:   fixture("data_center_get"),
 		},
 		{
+			name: "by Permalink",
+			args: args{
+				ctx: context.Background(),
+				ref: DataCenterRef{Permalink: "newtown"},
+			},
+			reqQuery: &url.Values{
+				"data_center[permalink]": []string{"newtown"},
+			},
+			want:       dataCenter,
+			respStatus: http.StatusOK,
+			respBody:   fixture("data_center_get"),
+		},
+		{
 			name: "non-existent data center",
 			args: args{
 				ctx: context.Background(),
