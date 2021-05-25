@@ -666,7 +666,7 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 		respBody   []byte
 	}{
 		{
-			name: "organization",
+			name: "by organization ID",
 			args: args{
 				ctx: context.Background(),
 				parent: OrganizationRef{
@@ -691,7 +691,7 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 			respBody:   fixture("organization_managed"),
 		},
 		{
-			name: "organization by SubDomain",
+			name: "by organization SubDomain",
 			args: args{
 				ctx: context.Background(),
 				parent: OrganizationRef{

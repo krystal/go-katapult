@@ -852,7 +852,7 @@ func TestTrashObjectsClient_PurgeAll(t *testing.T) {
 			respBody:   fixture("trash_objects_purge_all"),
 		},
 		{
-			name: "by organization domain",
+			name: "by organization SubDomain",
 			args: args{
 				ctx: context.Background(),
 				org: OrganizationRef{SubDomain: "acme"},

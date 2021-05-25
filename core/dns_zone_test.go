@@ -333,7 +333,7 @@ func TestDNSZonesClient_List(t *testing.T) {
 			respBody:   fixture("dns_zones_list"),
 		},
 		{
-			name: "by organization subdomain",
+			name: "by organization SubDomain",
 			args: args{
 				ctx: context.Background(),
 				org: OrganizationRef{SubDomain: "blackmesa"},
