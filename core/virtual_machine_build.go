@@ -44,24 +44,24 @@ const (
 )
 
 type VirtualMachineBuildArguments struct {
-	Zone                ZoneRef
-	DataCenter          DataCenterRef
+	Zone                *ZoneRef
+	DataCenter          *DataCenterRef
 	Package             VirtualMachinePackageRef
-	DiskTemplate        DiskTemplateRef
+	DiskTemplate        *DiskTemplateRef
 	DiskTemplateOptions []*DiskTemplateOption
-	Network             NetworkRef
+	Network             *NetworkRef
 	Hostname            string
 }
 
 type virtualMachineBuildCreateRequest struct {
 	Hostname            string                   `json:"hostname,omitempty"`
 	Organization        OrganizationRef          `json:"organization"`
-	Zone                ZoneRef                  `json:"zone,omitempty"`
-	DataCenter          DataCenterRef            `json:"data_center"`
-	Package             VirtualMachinePackageRef `json:"package,omitempty"`
-	DiskTemplate        DiskTemplateRef          `json:"disk_template,omitempty"`
+	Zone                *ZoneRef                 `json:"zone,omitempty"`
+	DataCenter          *DataCenterRef           `json:"data_center"`
+	Package             VirtualMachinePackageRef `json:"package"`
+	DiskTemplate        *DiskTemplateRef         `json:"disk_template,omitempty"`
 	DiskTemplateOptions []*DiskTemplateOption    `json:"disk_template_options,omitempty"`
-	Network             NetworkRef               `json:"network"`
+	Network             *NetworkRef              `json:"network,omitempty"`
 }
 
 type virtualMachineBuildCreateFromSpecRequest struct {

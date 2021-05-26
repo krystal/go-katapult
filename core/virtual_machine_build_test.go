@@ -221,16 +221,16 @@ func Test_virtualMachineBuildCreateRequest_JSONMarshaling(t *testing.T) {
 			obj: &virtualMachineBuildCreateRequest{
 				Hostname:     "foo.example.com",
 				Organization: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
-				Zone:         ZoneRef{ID: "zone_kY2sPRG24sJVRM2U"},
-				DataCenter:   DataCenterRef{ID: "dc_25d48761871e4bf"},
+				Zone:         &ZoneRef{ID: "zone_kY2sPRG24sJVRM2U"},
+				DataCenter:   &DataCenterRef{ID: "dc_25d48761871e4bf"},
 				Package: VirtualMachinePackageRef{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
-				DiskTemplate: DiskTemplateRef{ID: "dtpl_ytP13XD5DE1RdSL9"},
+				DiskTemplate: &DiskTemplateRef{ID: "dtpl_ytP13XD5DE1RdSL9"},
 				DiskTemplateOptions: []*DiskTemplateOption{
 					{Key: "foo", Value: "bar"},
 				},
-				Network: NetworkRef{ID: "netw_zDW7KYAeqqfRfVag"},
+				Network: &NetworkRef{ID: "netw_zDW7KYAeqqfRfVag"},
 			},
 		},
 	}
@@ -493,22 +493,22 @@ func TestVirtualMachineBuildsClient_GetByID(t *testing.T) {
 
 func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 	fullArgs := &VirtualMachineBuildArguments{
-		Zone: ZoneRef{
+		Zone: &ZoneRef{
 			ID: "zone_kY2sPRG24sJVRM2U",
 		},
-		DataCenter: DataCenterRef{
+		DataCenter: &DataCenterRef{
 			ID: "dc_25d48761871e4bf",
 		},
 		Package: VirtualMachinePackageRef{
 			ID: "vmpkg_XdNPhGXvyt1dnDts",
 		},
-		DiskTemplate: DiskTemplateRef{
+		DiskTemplate: &DiskTemplateRef{
 			Permalink: "templates/ubuntu-18-04",
 		},
 		DiskTemplateOptions: []*DiskTemplateOption{
 			{Key: "foo", Value: "bar"},
 		},
-		Network: NetworkRef{
+		Network: &NetworkRef{
 			ID: "netw_zDW7KYAeqqfRfVag",
 		},
 		Hostname: "foo.example.com",
@@ -542,22 +542,22 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 				Organization: OrganizationRef{
 					ID: "org_O648YDMEYeLmqdmn",
 				},
-				Zone: ZoneRef{
+				Zone: &ZoneRef{
 					ID: "zone_kY2sPRG24sJVRM2U",
 				},
-				DataCenter: DataCenterRef{
+				DataCenter: &DataCenterRef{
 					ID: "dc_25d48761871e4bf",
 				},
 				Package: VirtualMachinePackageRef{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
-				DiskTemplate: DiskTemplateRef{
+				DiskTemplate: &DiskTemplateRef{
 					Permalink: "templates/ubuntu-18-04",
 				},
 				DiskTemplateOptions: []*DiskTemplateOption{
 					{Key: "foo", Value: "bar"},
 				},
-				Network: NetworkRef{
+				Network: &NetworkRef{
 					ID: "netw_zDW7KYAeqqfRfVag",
 				},
 				Hostname: "foo.example.com",
@@ -577,22 +577,22 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 					SubDomain: "acme",
 				},
 				buildArgs: &VirtualMachineBuildArguments{
-					Zone: ZoneRef{
+					Zone: &ZoneRef{
 						Permalink: "north-west",
 					},
-					DataCenter: DataCenterRef{
+					DataCenter: &DataCenterRef{
 						Permalink: "woodland",
 					},
 					Package: VirtualMachinePackageRef{
 						Permalink: "xsmall",
 					},
-					DiskTemplate: DiskTemplateRef{
+					DiskTemplate: &DiskTemplateRef{
 						Permalink: "templates/ubuntu-18-04",
 					},
 					DiskTemplateOptions: []*DiskTemplateOption{
 						{Key: "foo", Value: "bar"},
 					},
-					Network: NetworkRef{
+					Network: &NetworkRef{
 						Permalink: "public",
 					},
 					Hostname: "foo.example.com",
@@ -602,22 +602,22 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 				Organization: OrganizationRef{
 					SubDomain: "acme",
 				},
-				Zone: ZoneRef{
+				Zone: &ZoneRef{
 					Permalink: "north-west",
 				},
-				DataCenter: DataCenterRef{
+				DataCenter: &DataCenterRef{
 					Permalink: "woodland",
 				},
 				Package: VirtualMachinePackageRef{
 					Permalink: "xsmall",
 				},
-				DiskTemplate: DiskTemplateRef{
+				DiskTemplate: &DiskTemplateRef{
 					Permalink: "templates/ubuntu-18-04",
 				},
 				DiskTemplateOptions: []*DiskTemplateOption{
 					{Key: "foo", Value: "bar"},
 				},
-				Network: NetworkRef{
+				Network: &NetworkRef{
 					Permalink: "public",
 				},
 				Hostname: "foo.example.com",
