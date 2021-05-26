@@ -2,9 +2,7 @@ package core
 
 import (
 	"context"
-	"fmt"
 	"net/url"
-	"strings"
 
 	"github.com/krystal/go-katapult"
 )
@@ -21,32 +19,25 @@ type VirtualMachinePackage struct {
 	Icon          *Attachment `json:"icon,omitempty"`
 }
 
-// NewVirtualMachinePackageLookup takes a string that is a VirtualMachinePackage
-// ID or Permalink returning, a empty *VirtualMachinePackage struct with either
-// the ID or Permalink field populated with the given value. This struct is
-// suitable as input to other methods which accept a *VirtualMachinePackage as
-// input.
-func NewVirtualMachinePackageLookup(
-	idOrPermalink string,
-) (lr *VirtualMachinePackage, f FieldName) {
-	if strings.HasPrefix(idOrPermalink, "vmpkg_") {
-		return &VirtualMachinePackage{ID: idOrPermalink}, IDField
-	}
-
-	return &VirtualMachinePackage{Permalink: idOrPermalink}, PermalinkField
+func (s *VirtualMachinePackage) Ref() VirtualMachinePackageRef {
+	return VirtualMachinePackageRef{ID: s.ID}
 }
 
-func (s *VirtualMachinePackage) lookupReference() *VirtualMachinePackage {
-	if s == nil {
-		return nil
+type VirtualMachinePackageRef struct {
+	ID        string `json:"id,omitempty"`
+	Permalink string `json:"permalink,omitempty"`
+}
+
+func (vmpf VirtualMachinePackageRef) queryValues() *url.Values {
+	v := &url.Values{}
+	switch {
+	case vmpf.ID != "":
+		v.Set("virtual_machine_package[id]", vmpf.ID)
+	case vmpf.Permalink != "":
+		v.Set("virtual_machine_package[permalink]", vmpf.Permalink)
 	}
 
-	lr := &VirtualMachinePackage{ID: s.ID}
-	if lr.ID == "" {
-		lr.Permalink = s.Permalink
-	}
-
-	return lr
+	return v
 }
 
 type virtualMachinePackagesResponseBody struct {
@@ -86,35 +77,29 @@ func (s *VirtualMachinePackagesClient) List(
 
 func (s *VirtualMachinePackagesClient) Get(
 	ctx context.Context,
-	idOrPermalink string,
+	ref VirtualMachinePackageRef,
 ) (*VirtualMachinePackage, *katapult.Response, error) {
-	if _, f := NewVirtualMachinePackageLookup(idOrPermalink); f == IDField {
-		return s.GetByID(ctx, idOrPermalink)
+	u := &url.URL{
+		Path:     "virtual_machine_packages/_",
+		RawQuery: ref.queryValues().Encode(),
 	}
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 
-	return s.GetByPermalink(ctx, idOrPermalink)
+	return body.VirtualMachinePackage, resp, err
 }
 
 func (s *VirtualMachinePackagesClient) GetByID(
 	ctx context.Context,
 	id string,
 ) (*VirtualMachinePackage, *katapult.Response, error) {
-	u := &url.URL{Path: fmt.Sprintf("virtual_machine_packages/%s", id)}
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
-
-	return body.VirtualMachinePackage, resp, err
+	return s.Get(ctx, VirtualMachinePackageRef{ID: id})
 }
 
 func (s *VirtualMachinePackagesClient) GetByPermalink(
 	ctx context.Context,
 	permalink string,
 ) (*VirtualMachinePackage, *katapult.Response, error) {
-	qs := url.Values{"virtual_machine_package[permalink]": []string{permalink}}
-	u := &url.URL{Path: "virtual_machine_packages/_", RawQuery: qs.Encode()}
-
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
-
-	return body.VirtualMachinePackage, resp, err
+	return s.Get(ctx, VirtualMachinePackageRef{Permalink: permalink})
 }
 
 func (s *VirtualMachinePackagesClient) doRequest(

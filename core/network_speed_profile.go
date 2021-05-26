@@ -3,7 +3,6 @@ package core
 import (
 	"context"
 	"net/url"
-	"strings"
 
 	"github.com/krystal/go-katapult"
 )
@@ -16,31 +15,13 @@ type NetworkSpeedProfile struct {
 	Permalink           string `json:"permalink,omitempty"`
 }
 
-// NewNetworkSpeedProfileLookup takes a string that is a NetworkSpeedProfile ID
-// or Permalink, returning a empty *NetworkSpeedProfile struct with either the
-// ID or Permalink field populated with the given value. This struct is suitable
-// as input to other methods which accept a *NetworkSpeedProfile as input.
-func NewNetworkSpeedProfileLookup(
-	idOrPermalink string,
-) (lr *NetworkSpeedProfile, f FieldName) {
-	if strings.HasPrefix(idOrPermalink, "nsp_") {
-		return &NetworkSpeedProfile{ID: idOrPermalink}, IDField
-	}
-
-	return &NetworkSpeedProfile{Permalink: idOrPermalink}, PermalinkField
+func (s *NetworkSpeedProfile) Ref() NetworkSpeedProfileRef {
+	return NetworkSpeedProfileRef{ID: s.ID}
 }
 
-func (s *NetworkSpeedProfile) lookupReference() *NetworkSpeedProfile {
-	if s == nil {
-		return nil
-	}
-
-	lr := &NetworkSpeedProfile{ID: s.ID}
-	if lr.ID == "" {
-		lr.Permalink = s.Permalink
-	}
-
-	return lr
+type NetworkSpeedProfileRef struct {
+	ID        string `json:"id,omitempty"`
+	Permalink string `json:"permalink,omitempty"`
 }
 
 type networkSpeedProfileResponseBody struct {
@@ -64,7 +45,7 @@ func NewNetworkSpeedProfilesClient(
 
 func (s *NetworkSpeedProfilesClient) List(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 	opts *ListOptions,
 ) ([]*NetworkSpeedProfile, *katapult.Response, error) {
 	qs := queryValues(org, opts)

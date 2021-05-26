@@ -3,7 +3,6 @@ package core
 import (
 	"context"
 	"net/url"
-	"strings"
 
 	"github.com/augurysys/timestamp"
 	"github.com/krystal/go-katapult"
@@ -16,43 +15,22 @@ type TrashObject struct {
 	ObjectType string               `json:"object_type,omitempty"`
 }
 
-// NewTrashObjectLookup takes a string that is a TrashObject ID or ObjectID
-// returning, a empty *TrashObject struct with either the ID or ObjectID field
-// populated with the given value. This struct is suitable as input to other
-// methods which accept a *TrashObject as input.
-func NewTrashObjectLookup(
-	idOrObjectID string,
-) (lr *TrashObject, f FieldName) {
-	if strings.HasPrefix(idOrObjectID, "trsh_") {
-		return &TrashObject{ID: idOrObjectID}, IDField
-	}
-
-	return &TrashObject{ObjectID: idOrObjectID}, ObjectIDField
+func (s *TrashObject) Ref() TrashObjectRef {
+	return TrashObjectRef{ID: s.ID}
 }
 
-func (s *TrashObject) lookupReference() *TrashObject {
-	if s == nil {
-		return nil
-	}
-
-	lr := &TrashObject{ID: s.ID}
-	if lr.ID == "" {
-		lr.ObjectID = s.ObjectID
-	}
-
-	return lr
+type TrashObjectRef struct {
+	ID       string `json:"id,omitempty"`
+	ObjectID string `json:"object_id,omitempty"`
 }
 
-func (s *TrashObject) queryValues() *url.Values {
+func (s TrashObjectRef) queryValues() *url.Values {
 	v := &url.Values{}
-
-	if s != nil {
-		switch {
-		case s.ID != "":
-			v.Set("trash_object[id]", s.ID)
-		case s.ObjectID != "":
-			v.Set("trash_object[object_id]", s.ObjectID)
-		}
+	switch {
+	case s.ID != "":
+		v.Set("trash_object[id]", s.ID)
+	case s.ObjectID != "":
+		v.Set("trash_object[object_id]", s.ObjectID)
 	}
 
 	return v
@@ -79,7 +57,7 @@ func NewTrashObjectsClient(rm RequestMaker) *TrashObjectsClient {
 
 func (s *TrashObjectsClient) List(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 	opts *ListOptions,
 ) ([]*TrashObject, *katapult.Response, error) {
 	qs := queryValues(org, opts)
@@ -96,50 +74,38 @@ func (s *TrashObjectsClient) List(
 
 func (s *TrashObjectsClient) Get(
 	ctx context.Context,
-	idOrObjectID string,
+	ref TrashObjectRef,
 ) (*TrashObject, *katapult.Response, error) {
-	if _, f := NewTrashObjectLookup(idOrObjectID); f == IDField {
-		return s.GetByID(ctx, idOrObjectID)
+	u := &url.URL{
+		Path:     "trash_objects/_",
+		RawQuery: ref.queryValues().Encode(),
 	}
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 
-	return s.GetByObjectID(ctx, idOrObjectID)
+	return body.TrashObject, resp, err
 }
 
 func (s *TrashObjectsClient) GetByID(
 	ctx context.Context,
 	id string,
 ) (*TrashObject, *katapult.Response, error) {
-	return s.get(ctx, &TrashObject{ID: id})
+	return s.Get(ctx, TrashObjectRef{ID: id})
 }
 
 func (s *TrashObjectsClient) GetByObjectID(
 	ctx context.Context,
 	objectID string,
 ) (*TrashObject, *katapult.Response, error) {
-	return s.get(ctx, &TrashObject{ObjectID: objectID})
-}
-
-func (s *TrashObjectsClient) get(
-	ctx context.Context,
-	trsh *TrashObject,
-) (*TrashObject, *katapult.Response, error) {
-	u := &url.URL{
-		Path:     "trash_objects/_",
-		RawQuery: trsh.queryValues().Encode(),
-	}
-
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
-
-	return body.TrashObject, resp, err
+	return s.Get(ctx, TrashObjectRef{ObjectID: objectID})
 }
 
 func (s *TrashObjectsClient) Purge(
 	ctx context.Context,
-	trsh *TrashObject,
+	ref TrashObjectRef,
 ) (*Task, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "trash_objects/_",
-		RawQuery: trsh.queryValues().Encode(),
+		RawQuery: ref.queryValues().Encode(),
 	}
 
 	body, resp, err := s.doRequest(ctx, "DELETE", u, nil)
@@ -149,7 +115,7 @@ func (s *TrashObjectsClient) Purge(
 
 func (s *TrashObjectsClient) PurgeAll(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 ) (*Task, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "organizations/_/trash_objects/purge_all",
@@ -163,11 +129,11 @@ func (s *TrashObjectsClient) PurgeAll(
 
 func (s *TrashObjectsClient) Restore(
 	ctx context.Context,
-	trsh *TrashObject,
+	ref TrashObjectRef,
 ) (*TrashObject, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "trash_objects/_/restore",
-		RawQuery: trsh.queryValues().Encode(),
+		RawQuery: ref.queryValues().Encode(),
 	}
 
 	body, resp, err := s.doRequest(ctx, "POST", u, nil)

@@ -3,7 +3,6 @@ package core
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/url"
 	"testing"
@@ -28,6 +27,11 @@ func TestClient_LoadBalancers(t *testing.T) {
 	c := New(&fakeRequestMaker{})
 
 	assert.IsType(t, &LoadBalancersClient{}, c.LoadBalancers)
+}
+
+func TestLoadBalancer_Ref(t *testing.T) {
+	l := LoadBalancer{ID: "lb_9IToFxX2AOl7IBSY"}
+	assert.Equal(t, LoadBalancerRef{ID: "lb_9IToFxX2AOl7IBSY"}, l.Ref())
 }
 
 func TestLoadBalancer_JSONMarshaling(t *testing.T) {
@@ -81,83 +85,19 @@ func TestLoadBalancer_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestLoadBalancer_lookupReference(t *testing.T) {
+func TestLoadBalancerRef_queryValues(t *testing.T) {
 	tests := []struct {
 		name string
-		obj  *LoadBalancer
-		want *LoadBalancer
+		obj  LoadBalancerRef
 	}{
 		{
-			name: "nil",
-			obj:  nil,
-			want: nil,
-		},
-		{
 			name: "empty",
-			obj:  &LoadBalancer{},
-			want: &LoadBalancer{},
+			obj:  LoadBalancerRef{},
 		},
 		{
-			name: "full",
-			obj: &LoadBalancer{
-				ID:                    "lb_9IToFxX2AOl7IBSY",
-				Name:                  "web-1",
-				ResourceType:          VirtualMachinesResourceType,
-				ResourceIDs:           []string{"id2", "id3"},
-				IPAddress:             &IPAddress{Address: "134.11.14.137"},
-				HTTPSRedirect:         true,
-				BackendCertificate:    "--BEGIN CERT--\n--END CERT--",
-				BackendCertificateKey: "--BEGIN KEY--\n--END KEY--",
-			},
-			want: &LoadBalancer{ID: "lb_9IToFxX2AOl7IBSY"},
-		},
-		{
-			name: "no ID",
-			obj: &LoadBalancer{
-				Name:                  "web-1",
-				ResourceType:          VirtualMachinesResourceType,
-				ResourceIDs:           []string{"id2", "id3"},
-				IPAddress:             &IPAddress{Address: "134.11.14.137"},
-				HTTPSRedirect:         true,
-				BackendCertificate:    "--BEGIN CERT--\n--END CERT--",
-				BackendCertificateKey: "--BEGIN KEY--\n--END KEY--",
-			},
-			want: &LoadBalancer{},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got := tt.obj.lookupReference()
-
-			assert.Equal(t, tt.want, got)
-		})
-	}
-}
-
-func TestLoadBalancer_queryValues(t *testing.T) {
-	tests := []struct {
-		name string
-		obj  *LoadBalancer
-	}{
-		{
-			name: "nil",
-			obj:  nil,
-		},
-		{
-			name: "empty",
-			obj:  &LoadBalancer{},
-		},
-		{
-			name: "full",
-			obj: &LoadBalancer{
-				ID:                    "lb_9IToFxX2AOl7IBSY",
-				Name:                  "web-1",
-				ResourceType:          VirtualMachinesResourceType,
-				ResourceIDs:           []string{"id2", "id3"},
-				IPAddress:             &IPAddress{Address: "134.11.14.137"},
-				HTTPSRedirect:         true,
-				BackendCertificate:    "--BEGIN CERT--\n--END CERT--",
-				BackendCertificateKey: "--BEGIN KEY--\n--END KEY--",
+			name: "with id",
+			obj: LoadBalancerRef{
+				ID: "lb_9IToFxX2AOl7IBSY",
 			},
 		},
 	}
@@ -180,7 +120,7 @@ func TestLoadBalancerCreateArguments_JSONMarshaling(t *testing.T) {
 		{
 			name: "full",
 			obj: &LoadBalancerCreateArguments{
-				DataCenter:    &DataCenter{ID: "id4"},
+				DataCenter:    DataCenterRef{ID: "id4"},
 				Name:          "helper",
 				ResourceType:  TagsResourceType,
 				ResourceIDs:   &[]string{"id1", "id2"},
@@ -201,96 +141,6 @@ func TestLoadBalancerCreateArguments_JSONMarshaling(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			testJSONMarshaling(t, tt.obj)
-		})
-	}
-}
-
-func TestLoadBalancerCreateArguments_forRequest(t *testing.T) {
-	tests := []struct {
-		name string
-		obj  *LoadBalancerCreateArguments
-		want *LoadBalancerCreateArguments
-	}{
-		{
-			name: "nil",
-			obj:  nil,
-			want: nil,
-		},
-		{
-			name: "empty",
-			obj:  &LoadBalancerCreateArguments{},
-			want: &LoadBalancerCreateArguments{},
-		},
-		{
-			name: "full",
-			obj: &LoadBalancerCreateArguments{
-				Name:         "helper",
-				ResourceType: TagsResourceType,
-				ResourceIDs:  &[]string{"id1", "id2"},
-				DataCenter: &DataCenter{
-					ID:        "dc_25d48761871e4bf",
-					Name:      "Woodland",
-					Permalink: "woodland",
-				},
-			},
-			want: &LoadBalancerCreateArguments{
-				Name:         "helper",
-				ResourceType: TagsResourceType,
-				ResourceIDs:  &[]string{"id1", "id2"},
-				DataCenter:   &DataCenter{ID: "dc_25d48761871e4bf"},
-			},
-		},
-		{
-			name: "data center by Permalink",
-			obj: &LoadBalancerCreateArguments{
-				Name:         "helper",
-				ResourceType: TagsResourceType,
-				ResourceIDs:  &[]string{"id1", "id2"},
-				DataCenter: &DataCenter{
-					Name:      "Woodland",
-					Permalink: "woodland",
-				},
-			},
-			want: &LoadBalancerCreateArguments{
-				Name:         "helper",
-				ResourceType: TagsResourceType,
-				ResourceIDs:  &[]string{"id1", "id2"},
-				DataCenter:   &DataCenter{Permalink: "woodland"},
-			},
-		},
-		{
-			name: "data center with no ID or Permalink",
-			obj: &LoadBalancerCreateArguments{
-				Name:         "helper",
-				ResourceType: TagsResourceType,
-				ResourceIDs:  &[]string{"id1", "id2"},
-				DataCenter: &DataCenter{
-					Name: "Woodland",
-				},
-			},
-			want: &LoadBalancerCreateArguments{
-				Name:         "helper",
-				ResourceType: TagsResourceType,
-				ResourceIDs:  &[]string{"id1", "id2"},
-				DataCenter:   &DataCenter{},
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			var dcName string
-			if tt.obj != nil && tt.obj.DataCenter != nil {
-				dcName = tt.obj.DataCenter.Name
-			}
-
-			got := tt.obj.forRequest()
-
-			assert.Equal(t, tt.want, got)
-
-			if dcName != "" {
-				assert.Equal(t, dcName, tt.obj.DataCenter.Name,
-					"original object was modified")
-			}
 		})
 	}
 }
@@ -343,7 +193,7 @@ func Test_loadBalancerCreateRequest_JSONMarshaling(t *testing.T) {
 		{
 			name: "full",
 			obj: &loadBalancerCreateRequest{
-				Organization: &Organization{ID: "org_rs55YZNYMw7o3jnQ"},
+				Organization: OrganizationRef{ID: "org_rs55YZNYMw7o3jnQ"},
 				Properties:   &LoadBalancerCreateArguments{Name: "web-1"},
 			},
 		},
@@ -367,7 +217,7 @@ func Test_loadBalancerUpdateRequest_JSONMarshaling(t *testing.T) {
 		{
 			name: "full",
 			obj: &loadBalancerUpdateRequest{
-				LoadBalancer: &LoadBalancer{ID: "lb_0krMCRl7DIZr0XV2"},
+				LoadBalancer: LoadBalancerRef{ID: "lb_0krMCRl7DIZr0XV2"},
 				Properties:   &LoadBalancerUpdateArguments{Name: "web-east-1"},
 			},
 		},
@@ -426,14 +276,13 @@ func TestLoadBalancersClient_List(t *testing.T) {
 
 	type args struct {
 		ctx  context.Context
-		org  *Organization
+		org  OrganizationRef
 		opts *ListOptions
 	}
 	tests := []struct {
 		name           string
 		args           args
 		want           []*LoadBalancer
-		wantQuery      *url.Values
 		wantPagination *katapult.Pagination
 		errStr         string
 		errResp        *katapult.ResponseError
@@ -444,12 +293,9 @@ func TestLoadBalancersClient_List(t *testing.T) {
 			name: "by organization ID",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			want: loadBalancerList,
-			wantQuery: &url.Values{
-				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
-			},
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
@@ -464,12 +310,9 @@ func TestLoadBalancersClient_List(t *testing.T) {
 			name: "by organization SubDomain",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{SubDomain: "acme"},
+				org: OrganizationRef{SubDomain: "acme"},
 			},
 			want: loadBalancerList,
-			wantQuery: &url.Values{
-				"organization[sub_domain]": []string{"acme"},
-			},
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
@@ -484,15 +327,10 @@ func TestLoadBalancersClient_List(t *testing.T) {
 			name: "page 1",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				opts: &ListOptions{Page: 1, PerPage: 2},
 			},
 			want: loadBalancerList[0:2],
-			wantQuery: &url.Values{
-				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
-				"page":             []string{"1"},
-				"per_page":         []string{"2"},
-			},
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 1,
 				TotalPages:  2,
@@ -507,15 +345,10 @@ func TestLoadBalancersClient_List(t *testing.T) {
 			name: "page 2",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				opts: &ListOptions{Page: 2, PerPage: 2},
 			},
 			want: loadBalancerList[2:],
-			wantQuery: &url.Values{
-				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
-				"page":             []string{"2"},
-				"per_page":         []string{"2"},
-			},
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 2,
 				TotalPages:  2,
@@ -530,7 +363,7 @@ func TestLoadBalancersClient_List(t *testing.T) {
 			name: "invalid API token response",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureInvalidAPITokenErr,
 			errResp:    fixtureInvalidAPITokenResponseError,
@@ -541,7 +374,7 @@ func TestLoadBalancersClient_List(t *testing.T) {
 			name: "non-existent organization",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
@@ -552,7 +385,7 @@ func TestLoadBalancersClient_List(t *testing.T) {
 			name: "suspended organization",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
@@ -560,21 +393,10 @@ func TestLoadBalancersClient_List(t *testing.T) {
 			respBody:   fixture("organization_suspended_error"),
 		},
 		{
-			name: "nil organization",
-			args: args{
-				ctx: context.Background(),
-				org: nil,
-			},
-			errStr:     fixtureOrganizationNotFoundErr,
-			errResp:    fixtureOrganizationNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("organization_not_found_error"),
-		},
-		{
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -592,12 +414,8 @@ func TestLoadBalancersClient_List(t *testing.T) {
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
 
-					if tt.wantQuery != nil {
-						assert.Equal(t, *tt.wantQuery, r.URL.Query())
-					} else {
-						qs := queryValues(tt.args.org, tt.args.opts)
-						assert.Equal(t, *qs, r.URL.Query())
-					}
+					qs := queryValues(tt.args.org, tt.args.opts)
+					assert.Equal(t, *qs, r.URL.Query())
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -636,28 +454,31 @@ func TestLoadBalancersClient_List(t *testing.T) {
 func TestLoadBalancersClient_Get(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		id  string
+		ref LoadBalancerRef
 	}
 	tests := []struct {
 		name       string
 		args       args
-		id         string
 		want       *LoadBalancer
+		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
 		respStatus int
 		respBody   []byte
 	}{
 		{
-			name: "load balancer",
+			name: "by ID",
 			args: args{
 				ctx: context.Background(),
-				id:  "lb_7vClpn0rlUegGPDS",
+				ref: LoadBalancerRef{ID: "lb_7vClpn0rlUegGPDS"},
 			},
 			want: &LoadBalancer{
 				ID:           "lb_7vClpn0rlUegGPDS",
 				Name:         "web",
 				ResourceType: TagsResourceType,
+			},
+			wantQuery: &url.Values{
+				"load_balancer[id]": []string{"lb_7vClpn0rlUegGPDS"},
 			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("load_balancer_get"),
@@ -666,7 +487,7 @@ func TestLoadBalancersClient_Get(t *testing.T) {
 			name: "non-existent load balancer",
 			args: args{
 				ctx: context.Background(),
-				id:  "lb_nopethisbegone",
+				ref: LoadBalancerRef{"lb_nopethisbegone"},
 			},
 			errStr:     fixtureLoadBalancerNotFoundErr,
 			errResp:    fixtureLoadBalancerNotFoundResponseError,
@@ -677,7 +498,7 @@ func TestLoadBalancersClient_Get(t *testing.T) {
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				id:  "lb_7vClpn0rlUegGPDS",
+				ref: LoadBalancerRef{ID: "lb_7vClpn0rlUegGPDS"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -689,18 +510,22 @@ func TestLoadBalancersClient_Get(t *testing.T) {
 			c := NewLoadBalancersClient(rm)
 
 			mux.HandleFunc(
-				fmt.Sprintf("/core/v1/load_balancers/%s", tt.args.id),
+				"/core/v1/load_balancers/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+
+					if tt.wantQuery != nil {
+						assert.Equal(t, *tt.wantQuery, r.URL.Query())
+					}
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
 				},
 			)
 
-			got, resp, err := c.Get(tt.args.ctx, tt.args.id)
+			got, resp, err := c.Get(tt.args.ctx, tt.args.ref)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -731,8 +556,8 @@ func TestLoadBalancersClient_GetByID(t *testing.T) {
 	tests := []struct {
 		name       string
 		args       args
-		id         string
 		want       *LoadBalancer
+		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
 		respStatus int
@@ -748,6 +573,9 @@ func TestLoadBalancersClient_GetByID(t *testing.T) {
 				ID:           "lb_7vClpn0rlUegGPDS",
 				Name:         "web",
 				ResourceType: TagsResourceType,
+			},
+			wantQuery: &url.Values{
+				"load_balancer[id]": []string{"lb_7vClpn0rlUegGPDS"},
 			},
 			respStatus: http.StatusOK,
 			respBody:   fixture("load_balancer_get"),
@@ -779,11 +607,15 @@ func TestLoadBalancersClient_GetByID(t *testing.T) {
 			c := NewLoadBalancersClient(rm)
 
 			mux.HandleFunc(
-				fmt.Sprintf("/core/v1/load_balancers/%s", tt.args.id),
+				"/core/v1/load_balancers/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+
+					if tt.wantQuery != nil {
+						assert.Equal(t, *tt.wantQuery, r.URL.Query())
+					}
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -818,18 +650,18 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 		Name:         "api-test",
 		ResourceType: VirtualMachinesResourceType,
 		ResourceIDs:  &[]string{"id2", "id3"},
-		DataCenter:   &DataCenter{ID: "id4", Name: "other"},
+		DataCenter:   DataCenterRef{ID: "id4"},
 	}
 	lbReqArgs := &LoadBalancerCreateArguments{
 		Name:         "api-test",
 		ResourceType: VirtualMachinesResourceType,
 		ResourceIDs:  &[]string{"id2", "id3"},
-		DataCenter:   &DataCenter{ID: "id4"},
+		DataCenter:   DataCenterRef{ID: "id4"},
 	}
 
 	type args struct {
 		ctx    context.Context
-		org    *Organization
+		org    OrganizationRef
 		lbArgs *LoadBalancerCreateArguments
 	}
 	tests := []struct {
@@ -846,15 +678,13 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 			name: "load balancer",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{
-					ID:        "org_O648YDMEYeLmqdmn",
-					Name:      "ACME Inc.",
-					SubDomain: "acme",
+				org: OrganizationRef{
+					ID: "org_O648YDMEYeLmqdmn",
 				},
 				lbArgs: lbArgs,
 			},
 			reqBody: &loadBalancerCreateRequest{
-				Organization: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				Organization: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				Properties:   lbReqArgs,
 			},
 			want: &LoadBalancer{
@@ -866,17 +696,16 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 			respBody:   fixture("load_balancer_create"),
 		},
 		{
-			name: "organization by sub-domain",
+			name: "organization by SubDomain",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{
-					Name:      "ACME Inc.",
+				org: OrganizationRef{
 					SubDomain: "acme",
 				},
 				lbArgs: lbArgs,
 			},
 			reqBody: &loadBalancerCreateRequest{
-				Organization: &Organization{SubDomain: "acme"},
+				Organization: OrganizationRef{SubDomain: "acme"},
 				Properties:   lbReqArgs,
 			},
 			want: &LoadBalancer{
@@ -891,7 +720,7 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 			name: "without resource IDs",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				lbArgs: &LoadBalancerCreateArguments{
 					Name:         lbArgs.Name,
 					ResourceType: lbArgs.ResourceType,
@@ -899,7 +728,7 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 				},
 			},
 			reqBody: &loadBalancerCreateRequest{
-				Organization: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				Organization: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				Properties: &LoadBalancerCreateArguments{
 					Name:         lbReqArgs.Name,
 					ResourceType: lbReqArgs.ResourceType,
@@ -918,7 +747,7 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 			name: "without data center",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				lbArgs: &LoadBalancerCreateArguments{
 					Name:         lbArgs.Name,
 					ResourceType: lbArgs.ResourceType,
@@ -934,7 +763,7 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 			name: "non-existent Organization",
 			args: args{
 				ctx:    context.Background(),
-				org:    &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:    OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				lbArgs: lbArgs,
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
@@ -946,7 +775,7 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 			name: "suspended Organization",
 			args: args{
 				ctx:    context.Background(),
-				org:    &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:    OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				lbArgs: lbArgs,
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
@@ -958,7 +787,7 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 			name: "non-existent data center",
 			args: args{
 				ctx:    context.Background(),
-				org:    &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:    OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				lbArgs: lbArgs,
 			},
 			errStr:     fixtureDataCenterNotFoundErr,
@@ -970,7 +799,7 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 			name: "permission denied",
 			args: args{
 				ctx:    context.Background(),
-				org:    &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:    OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				lbArgs: lbArgs,
 			},
 			errStr:     fixturePermissionDeniedErr,
@@ -982,7 +811,7 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 			name: "validation error",
 			args: args{
 				ctx:    context.Background(),
-				org:    &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:    OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				lbArgs: lbArgs,
 			},
 			errStr:     fixtureValidationErrorErr,
@@ -994,7 +823,7 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 			name: "nil load balancer arguments",
 			args: args{
 				ctx:    context.Background(),
-				org:    &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:    OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				lbArgs: nil,
 			},
 			errStr:     fixtureValidationErrorErr,
@@ -1006,7 +835,7 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 			name: "nil context",
 			args: args{
 				ctx:    nil,
-				org:    &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:    OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				lbArgs: lbArgs,
 			},
 			errStr: "net/http: nil Context",
@@ -1017,11 +846,6 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 			rm, mux, _, teardown := prepareTestClient(t)
 			defer teardown()
 			c := NewLoadBalancersClient(rm)
-
-			var dcName string
-			if tt.args.lbArgs != nil && tt.args.lbArgs.DataCenter != nil {
-				dcName = tt.args.lbArgs.DataCenter.Name
-			}
 
 			mux.HandleFunc(
 				"/core/v1/organizations/_/load_balancers",
@@ -1063,11 +887,6 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
-
-			if tt.args.lbArgs != nil && tt.args.lbArgs.DataCenter != nil {
-				// ensure the input LoadBalancerArguments are not modified
-				assert.Equal(t, dcName, tt.args.lbArgs.DataCenter.Name)
-			}
 		})
 	}
 }
@@ -1091,7 +910,7 @@ func TestLoadBalancersClient_Update(t *testing.T) {
 
 	type args struct {
 		ctx    context.Context
-		lb     *LoadBalancer
+		lb     LoadBalancerRef
 		lbArgs *LoadBalancerUpdateArguments
 	}
 	tests := []struct {
@@ -1108,11 +927,11 @@ func TestLoadBalancersClient_Update(t *testing.T) {
 			name: "load balancer",
 			args: args{
 				ctx:    context.Background(),
-				lb:     lb,
+				lb:     lb.Ref(),
 				lbArgs: lbArgs,
 			},
 			reqBody: &loadBalancerUpdateRequest{
-				LoadBalancer: &LoadBalancer{ID: lb.ID},
+				LoadBalancer: LoadBalancerRef{ID: lb.ID},
 				Properties:   lbArgs,
 			},
 			want: &LoadBalancer{
@@ -1128,16 +947,16 @@ func TestLoadBalancersClient_Update(t *testing.T) {
 			name: "load balancer without ID",
 			args: args{
 				ctx: context.Background(),
-				lb: &LoadBalancer{
+				lb: (&LoadBalancer{
 					Name:         lb.Name,
 					ResourceType: lb.ResourceType,
 					ResourceIDs:  lb.ResourceIDs,
 					DataCenter:   lb.DataCenter,
-				},
+				}).Ref(),
 				lbArgs: lbArgs,
 			},
 			reqBody: &loadBalancerUpdateRequest{
-				LoadBalancer: &LoadBalancer{},
+				LoadBalancer: LoadBalancerRef{},
 				Properties:   lbArgs,
 			},
 			errStr:     fixtureLoadBalancerNotFoundErr,
@@ -1149,11 +968,11 @@ func TestLoadBalancersClient_Update(t *testing.T) {
 			name: "non-existent load balancer",
 			args: args{
 				ctx:    context.Background(),
-				lb:     &LoadBalancer{ID: "lb_somethingnope"},
+				lb:     LoadBalancerRef{ID: "lb_somethingnope"},
 				lbArgs: lbArgs,
 			},
 			reqBody: &loadBalancerUpdateRequest{
-				LoadBalancer: &LoadBalancer{ID: "lb_somethingnope"},
+				LoadBalancer: LoadBalancerRef{ID: "lb_somethingnope"},
 				Properties:   lbArgs,
 			},
 			errStr:     fixtureLoadBalancerNotFoundErr,
@@ -1165,7 +984,7 @@ func TestLoadBalancersClient_Update(t *testing.T) {
 			name: "permission denied",
 			args: args{
 				ctx:    context.Background(),
-				lb:     lb,
+				lb:     lb.Ref(),
 				lbArgs: lbArgs,
 			},
 			errStr:     fixturePermissionDeniedErr,
@@ -1177,7 +996,7 @@ func TestLoadBalancersClient_Update(t *testing.T) {
 			name: "validation error",
 			args: args{
 				ctx:    context.Background(),
-				lb:     lb,
+				lb:     lb.Ref(),
 				lbArgs: lbArgs,
 			},
 			errStr:     fixtureValidationErrorErr,
@@ -1186,26 +1005,10 @@ func TestLoadBalancersClient_Update(t *testing.T) {
 			respBody:   fixture("validation_error"),
 		},
 		{
-			name: "nil load balancer argument",
-			args: args{
-				ctx:    context.Background(),
-				lb:     nil,
-				lbArgs: lbArgs,
-			},
-			reqBody: &loadBalancerUpdateRequest{
-				LoadBalancer: nil,
-				Properties:   lbArgs,
-			},
-			errStr:     fixtureLoadBalancerNotFoundErr,
-			errResp:    fixtureLoadBalancerNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("load_balancer_not_found_error"),
-		},
-		{
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				lb:  lb,
+				lb:  lb.Ref(),
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -1263,7 +1066,7 @@ func TestLoadBalancersClient_Update(t *testing.T) {
 func TestLoadBalancersClient_Delete(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		lb  *LoadBalancer
+		lb  LoadBalancerRef
 	}
 	tests := []struct {
 		name       string
@@ -1279,7 +1082,7 @@ func TestLoadBalancersClient_Delete(t *testing.T) {
 			name: "by ID",
 			args: args{
 				ctx: context.Background(),
-				lb:  &LoadBalancer{ID: "lb_7vClpn0rlUegGPDS"},
+				lb:  LoadBalancerRef{ID: "lb_7vClpn0rlUegGPDS"},
 			},
 			want: &LoadBalancer{
 				ID:           "lb_7vClpn0rlUegGPDS",
@@ -1296,18 +1099,7 @@ func TestLoadBalancersClient_Delete(t *testing.T) {
 			name: "non-existent load balancer",
 			args: args{
 				ctx: context.Background(),
-				lb:  &LoadBalancer{ID: "lb_nopenotfound"},
-			},
-			errStr:     fixtureLoadBalancerNotFoundErr,
-			errResp:    fixtureLoadBalancerNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("load_balancer_not_found_error"),
-		},
-		{
-			name: "nil load balancer",
-			args: args{
-				ctx: context.Background(),
-				lb:  nil,
+				lb:  LoadBalancerRef{ID: "lb_nopenotfound"},
 			},
 			errStr:     fixtureLoadBalancerNotFoundErr,
 			errResp:    fixtureLoadBalancerNotFoundResponseError,
@@ -1318,7 +1110,7 @@ func TestLoadBalancersClient_Delete(t *testing.T) {
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				lb:  &LoadBalancer{ID: "lb_7vClpn0rlUegGPDS"},
+				lb:  LoadBalancerRef{ID: "lb_7vClpn0rlUegGPDS"},
 			},
 			errStr: "net/http: nil Context",
 		},

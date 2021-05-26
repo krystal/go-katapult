@@ -41,39 +41,6 @@ var (
 		TagNames:            []string{"heavy"},
 		IPAddresses:         []*IPAddress{{ID: "id6"}},
 	}
-	fixtureVirtualMachineNoID = &VirtualMachine{
-		Name:                fixtureVirtualMachineFull.Name,
-		Hostname:            fixtureVirtualMachineFull.Hostname,
-		FQDN:                fixtureVirtualMachineFull.FQDN,
-		Description:         fixtureVirtualMachineFull.Description,
-		CreatedAt:           fixtureVirtualMachineFull.CreatedAt,
-		InitialRootPassword: fixtureVirtualMachineFull.InitialRootPassword,
-		State:               fixtureVirtualMachineFull.State,
-		Zone:                fixtureVirtualMachineFull.Zone,
-		Organization:        fixtureVirtualMachineFull.Organization,
-		Group:               fixtureVirtualMachineFull.Group,
-		Package:             fixtureVirtualMachineFull.Package,
-		AttachedISO:         fixtureVirtualMachineFull.AttachedISO,
-		Tags:                fixtureVirtualMachineFull.Tags,
-		TagNames:            fixtureVirtualMachineFull.TagNames,
-		IPAddresses:         fixtureVirtualMachineFull.IPAddresses,
-	}
-	fixtureVirtualMachineNoLookupField = &VirtualMachine{
-		Name:                fixtureVirtualMachineFull.Name,
-		Hostname:            fixtureVirtualMachineFull.Hostname,
-		Description:         fixtureVirtualMachineFull.Description,
-		CreatedAt:           fixtureVirtualMachineFull.CreatedAt,
-		InitialRootPassword: fixtureVirtualMachineFull.InitialRootPassword,
-		State:               fixtureVirtualMachineFull.State,
-		Zone:                fixtureVirtualMachineFull.Zone,
-		Organization:        fixtureVirtualMachineFull.Organization,
-		Group:               fixtureVirtualMachineFull.Group,
-		Package:             fixtureVirtualMachineFull.Package,
-		AttachedISO:         fixtureVirtualMachineFull.AttachedISO,
-		Tags:                fixtureVirtualMachineFull.Tags,
-		TagNames:            fixtureVirtualMachineFull.TagNames,
-		IPAddresses:         fixtureVirtualMachineFull.IPAddresses,
-	}
 )
 
 func TestClient_VirtualMachines(t *testing.T) {
@@ -103,116 +70,62 @@ func TestVirtualMachine_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestNewVirtualMachineLookup(t *testing.T) {
-	type args struct {
-		idOrFQDN string
-	}
-	tests := []struct {
-		name  string
-		args  args
-		want  *VirtualMachine
-		field FieldName
-	}{
-		{
-			name:  "empty string",
-			args:  args{idOrFQDN: ""},
-			want:  &VirtualMachine{},
-			field: FQDNField,
-		},
-		{
-			name:  "vm_ prefixed ID",
-			args:  args{idOrFQDN: "vm_rq1Zdv6aC66bvsU7"},
-			want:  &VirtualMachine{ID: "vm_rq1Zdv6aC66bvsU7"},
-			field: IDField,
-		},
-		{
-			name:  "fqdn",
-			args:  args{idOrFQDN: "noisy-pink-banana"},
-			want:  &VirtualMachine{FQDN: "noisy-pink-banana"},
-			field: FQDNField,
-		},
-		{
-			name:  "random text",
-			args:  args{idOrFQDN: "4lgGRmCPW7XhizQj"},
-			want:  &VirtualMachine{FQDN: "4lgGRmCPW7XhizQj"},
-			field: FQDNField,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, field := NewVirtualMachineLookup(tt.args.idOrFQDN)
-
-			assert.Equal(t, tt.want, got)
-			assert.Equal(t, tt.field, field)
-		})
-	}
-}
-
-func TestVirtualMachine_lookupReference(t *testing.T) {
+func TestVirtualMachine_Ref(t *testing.T) {
 	tests := []struct {
 		name string
-		obj  *VirtualMachine
-		want *VirtualMachine
+		obj  VirtualMachine
+		want VirtualMachineRef
 	}{
 		{
-			name: "nil",
-			obj:  nil,
-			want: nil,
-		},
-		{
 			name: "empty",
-			obj:  &VirtualMachine{},
-			want: &VirtualMachine{},
+			obj:  VirtualMachine{},
+			want: VirtualMachineRef{},
 		},
 		{
 			name: "full",
-			obj:  fixtureVirtualMachineFull,
-			want: &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
-		},
-		{
-			name: "no ID",
-			obj:  fixtureVirtualMachineNoID,
-			want: &VirtualMachine{FQDN: "anvil.amce.katapult.cloud"},
-		},
-		{
-			name: "no ID or FQDN",
-			obj:  fixtureVirtualMachineNoLookupField,
-			want: &VirtualMachine{},
+			obj: VirtualMachine{
+				ID:   "vm_t8yomYsG4bccKw5D",
+				FQDN: "anvil.amce.katapult.cloud",
+			},
+			want: VirtualMachineRef{ID: "vm_t8yomYsG4bccKw5D"},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.obj.lookupReference()
+			got := tt.obj.Ref()
 
 			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
-func TestVirtualMachine_queryValues(t *testing.T) {
+func TestVirtualMachineRef_queryValues(t *testing.T) {
 	tests := []struct {
 		name string
-		obj  *VirtualMachine
+		obj  VirtualMachineRef
 	}{
 		{
-			name: "nil",
-			obj:  nil,
-		},
-		{
 			name: "empty",
-			obj:  &VirtualMachine{},
+			obj:  VirtualMachineRef{},
 		},
 		{
 			name: "full",
-			obj:  fixtureVirtualMachineFull,
+			obj: VirtualMachineRef{
+				ID:   "vm_t8yomYsG4bccKw5D",
+				FQDN: "anvil.amce.katapult.cloud",
+			},
 		},
 		{
-			name: "no ID",
-			obj:  fixtureVirtualMachineNoID,
+			name: "ID",
+			obj: VirtualMachineRef{
+				ID: "vm_t8yomYsG4bccKw5D",
+			},
 		},
 		{
-			name: "no ID or FQDN",
-			obj:  fixtureVirtualMachineNoLookupField,
+			name: "FQDN",
+			obj: VirtualMachineRef{
+				FQDN: "anvil.amce.katapult.cloud",
+			},
 		},
 	}
 	for _, tt := range tests {
@@ -309,7 +222,7 @@ func TestVirtualMachineUpdateArguments_JSONMarshaling(t *testing.T) {
 		{
 			name: "null Group",
 			obj: &VirtualMachineUpdateArguments{
-				Group: NullVirtualMachineGroup,
+				Group: NullVirtualMachineGroupRef,
 			},
 			decoded: &VirtualMachineUpdateArguments{
 				Group: nil,
@@ -360,8 +273,8 @@ func Test_virtualMachineChangePackageRequest_JSONMarshaling(t *testing.T) {
 		{
 			name: "full",
 			obj: &virtualMachineChangePackageRequest{
-				VirtualMachine: &VirtualMachine{ID: "id1"},
-				Package:        &VirtualMachinePackage{ID: "id2"},
+				VirtualMachine: VirtualMachineRef{ID: "id1"},
+				Package:        VirtualMachinePackageRef{ID: "id2"},
 			},
 		},
 	}
@@ -384,7 +297,7 @@ func Test_virtualMachineUpdateRequest_JSONMarshaling(t *testing.T) {
 		{
 			name: "full",
 			obj: &virtualMachineUpdateRequest{
-				VirtualMachine: &VirtualMachine{ID: "id1"},
+				VirtualMachine: VirtualMachineRef{ID: "id1"},
 				Properties:     &VirtualMachineUpdateArguments{Name: "hi"},
 			},
 		},
@@ -418,14 +331,13 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 
 	type args struct {
 		ctx  context.Context
-		org  *Organization
+		org  OrganizationRef
 		opts *ListOptions
 	}
 	tests := []struct {
 		name           string
 		args           args
 		want           []*VirtualMachine
-		wantQuery      *url.Values
 		wantPagination *katapult.Pagination
 		errStr         string
 		errResp        *katapult.ResponseError
@@ -436,12 +348,9 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 			name: "by organization ID",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			want: virtualMachinesList,
-			wantQuery: &url.Values{
-				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
-			},
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
@@ -456,12 +365,9 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 			name: "by organization SubDomain",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{SubDomain: "acme"},
+				org: OrganizationRef{SubDomain: "acme"},
 			},
 			want: virtualMachinesList,
-			wantQuery: &url.Values{
-				"organization[sub_domain]": []string{"acme"},
-			},
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
@@ -476,15 +382,10 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 			name: "page 1",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				opts: &ListOptions{Page: 1, PerPage: 2},
 			},
 			want: virtualMachinesList[0:2],
-			wantQuery: &url.Values{
-				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
-				"page":             []string{"1"},
-				"per_page":         []string{"2"},
-			},
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 1,
 				TotalPages:  2,
@@ -499,15 +400,10 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 			name: "page 2",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				opts: &ListOptions{Page: 2, PerPage: 2},
 			},
 			want: virtualMachinesList[2:],
-			wantQuery: &url.Values{
-				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
-				"page":             []string{"2"},
-				"per_page":         []string{"2"},
-			},
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 2,
 				TotalPages:  2,
@@ -522,7 +418,7 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 			name: "invalid API token response",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureInvalidAPITokenErr,
 			errResp:    fixtureInvalidAPITokenResponseError,
@@ -533,18 +429,7 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 			name: "non-existent organization",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
-			},
-			errStr:     fixtureOrganizationNotFoundErr,
-			errResp:    fixtureOrganizationNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("organization_not_found_error"),
-		},
-		{
-			name: "nil organization",
-			args: args{
-				ctx: context.Background(),
-				org: nil,
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
@@ -555,7 +440,7 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 			name: "suspended organization",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
@@ -566,7 +451,7 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -584,12 +469,8 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
 
-					if tt.wantQuery != nil {
-						assert.Equal(t, *tt.wantQuery, r.URL.Query())
-					} else {
-						qs := queryValues(tt.args.org, tt.args.opts)
-						assert.Equal(t, *qs, r.URL.Query())
-					}
+					qs := queryValues(tt.args.org, tt.args.opts)
+					assert.Equal(t, *qs, r.URL.Query())
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -627,8 +508,8 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 
 func TestVirtualMachinesClient_Get(t *testing.T) {
 	type args struct {
-		ctx      context.Context
-		idOrFQDN string
+		ctx context.Context
+		ref VirtualMachineRef
 	}
 	tests := []struct {
 		name       string
@@ -643,8 +524,8 @@ func TestVirtualMachinesClient_Get(t *testing.T) {
 		{
 			name: "by ID",
 			args: args{
-				ctx:      context.Background(),
-				idOrFQDN: "vm_t8yomYsG4bccKw5D",
+				ctx: context.Background(),
+				ref: VirtualMachineRef{ID: "vm_t8yomYsG4bccKw5D"},
 			},
 			want: &VirtualMachine{
 				ID:       "vm_t8yomYsG4bccKw5D",
@@ -660,8 +541,8 @@ func TestVirtualMachinesClient_Get(t *testing.T) {
 		{
 			name: "by FQDN",
 			args: args{
-				ctx:      context.Background(),
-				idOrFQDN: "anvil.amce.katapult.cloud",
+				ctx: context.Background(),
+				ref: VirtualMachineRef{FQDN: "anvil.amce.katapult.cloud"},
 			},
 			want: &VirtualMachine{
 				ID:       "vm_t8yomYsG4bccKw5D",
@@ -677,8 +558,8 @@ func TestVirtualMachinesClient_Get(t *testing.T) {
 		{
 			name: "non-existent virtual machine",
 			args: args{
-				ctx:      context.Background(),
-				idOrFQDN: "vm_nopethisbegone",
+				ctx: context.Background(),
+				ref: VirtualMachineRef{ID: "vm_nopethisbegone"},
 			},
 			errStr:     fixtureVirtualMachineNotFoundErr,
 			errResp:    fixtureVirtualMachineNotFoundResponseError,
@@ -688,8 +569,8 @@ func TestVirtualMachinesClient_Get(t *testing.T) {
 		{
 			name: "virtual machine is in trash",
 			args: args{
-				ctx:      context.Background(),
-				idOrFQDN: "vm_t8yomYsG4bccKw5D",
+				ctx: context.Background(),
+				ref: VirtualMachineRef{ID: "vm_t8yomYsG4bccKw5D"},
 			},
 			errStr:     fixtureObjectInTrashErr,
 			errResp:    fixtureObjectInTrashResponseError,
@@ -699,8 +580,8 @@ func TestVirtualMachinesClient_Get(t *testing.T) {
 		{
 			name: "nil context",
 			args: args{
-				ctx:      nil,
-				idOrFQDN: "vm_t8yomYsG4bccKw5D",
+				ctx: nil,
+				ref: VirtualMachineRef{ID: "vm_t8yomYsG4bccKw5D"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -728,7 +609,7 @@ func TestVirtualMachinesClient_Get(t *testing.T) {
 			)
 
 			got, resp, err := c.Get(
-				tt.args.ctx, tt.args.idOrFQDN,
+				tt.args.ctx, tt.args.ref,
 			)
 
 			if tt.respStatus != 0 {
@@ -967,8 +848,8 @@ func TestVirtualMachinesClient_GetByFQDN(t *testing.T) {
 func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		vm  *VirtualMachine
-		pkg *VirtualMachinePackage
+		ref VirtualMachineRef
+		pkg VirtualMachinePackageRef
 	}
 	tests := []struct {
 		name       string
@@ -984,18 +865,18 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 			name: "ID fields",
 			args: args{
 				ctx: context.Background(),
-				vm: &VirtualMachine{
+				ref: VirtualMachineRef{
 					ID: "vm_t8yomYsG4bccKw5D",
 				},
-				pkg: &VirtualMachinePackage{
+				pkg: VirtualMachinePackageRef{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
 			},
 			reqBody: &virtualMachineChangePackageRequest{
-				VirtualMachine: &VirtualMachine{
+				VirtualMachine: VirtualMachineRef{
 					ID: "vm_t8yomYsG4bccKw5D",
 				},
-				Package: &VirtualMachinePackage{
+				Package: VirtualMachinePackageRef{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
 			},
@@ -1011,21 +892,18 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 			name: "alt lookup fields",
 			args: args{
 				ctx: context.Background(),
-				vm: &VirtualMachine{
-					Name:     "Anvil",
-					Hostname: "anvil",
-					FQDN:     "anvil.amce.katapult.cloud",
+				ref: VirtualMachineRef{
+					FQDN: "anvil.amce.katapult.cloud",
 				},
-				pkg: &VirtualMachinePackage{
-					Name:      "X-Small",
+				pkg: VirtualMachinePackageRef{
 					Permalink: "xsmall",
 				},
 			},
 			reqBody: &virtualMachineChangePackageRequest{
-				VirtualMachine: &VirtualMachine{
+				VirtualMachine: VirtualMachineRef{
 					FQDN: "anvil.amce.katapult.cloud",
 				},
-				Package: &VirtualMachinePackage{
+				Package: VirtualMachinePackageRef{
 					Permalink: "xsmall",
 				},
 			},
@@ -1041,39 +919,18 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 			name: "full fields",
 			args: args{
 				ctx: context.Background(),
-				vm: &VirtualMachine{
-					ID:                  "vm_t8yomYsG4bccKw5D",
-					Name:                "Anvil",
-					Hostname:            "anvil",
-					FQDN:                "anvil.amce.katapult.cloud",
-					CreatedAt:           timestampPtr(934834834),
-					InitialRootPassword: "eZNHLt8gwtDJSSd59plNMh8S0BEGJZTe",
-					State:               "Westeros",
-					Zone:                &Zone{ID: "id0"},
-					Organization:        &Organization{ID: "id1"},
-					Group:               &VirtualMachineGroup{ID: "id2"},
-					Package:             &VirtualMachinePackage{ID: "id3"},
-					AttachedISO:         &ISO{ID: "id4"},
-					Tags:                []*Tag{{ID: "id5"}},
-					IPAddresses:         []*IPAddress{{ID: "id6"}},
+				ref: VirtualMachineRef{
+					ID: "vm_t8yomYsG4bccKw5D",
 				},
-				pkg: &VirtualMachinePackage{
-					ID:            "vmpkg_XdNPhGXvyt1dnDts",
-					Name:          "X-Small",
-					Permalink:     "xsmall",
-					CPUCores:      504684,
-					IPv4Addresses: 322134,
-					MemoryInGB:    953603,
-					StorageInGB:   853121,
-					Privacy:       "priv",
-					Icon:          &Attachment{URL: "url"},
+				pkg: VirtualMachinePackageRef{
+					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
 			},
 			reqBody: &virtualMachineChangePackageRequest{
-				VirtualMachine: &VirtualMachine{
+				VirtualMachine: VirtualMachineRef{
 					ID: "vm_t8yomYsG4bccKw5D",
 				},
-				Package: &VirtualMachinePackage{
+				Package: VirtualMachinePackageRef{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
 			},
@@ -1089,10 +946,10 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 			name: "non-existent virtual machine",
 			args: args{
 				ctx: context.Background(),
-				vm: &VirtualMachine{
+				ref: VirtualMachineRef{
 					ID: "vm_t8yomYsG4bccKw5D",
 				},
-				pkg: &VirtualMachinePackage{
+				pkg: VirtualMachinePackageRef{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
 			},
@@ -1105,10 +962,10 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 			name: "virtual machine is in trash",
 			args: args{
 				ctx: context.Background(),
-				vm: &VirtualMachine{
+				ref: VirtualMachineRef{
 					ID: "vm_t8yomYsG4bccKw5D",
 				},
-				pkg: &VirtualMachinePackage{
+				pkg: VirtualMachinePackageRef{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
 			},
@@ -1121,10 +978,10 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 			name: "non-existent virtual machine package",
 			args: args{
 				ctx: context.Background(),
-				vm: &VirtualMachine{
+				ref: VirtualMachineRef{
 					ID: "vm_t8yomYsG4bccKw5D",
 				},
-				pkg: &VirtualMachinePackage{
+				pkg: VirtualMachinePackageRef{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
 			},
@@ -1137,10 +994,10 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 			name: "permission_denied",
 			args: args{
 				ctx: context.Background(),
-				vm: &VirtualMachine{
+				ref: VirtualMachineRef{
 					ID: "vm_t8yomYsG4bccKw5D",
 				},
-				pkg: &VirtualMachinePackage{
+				pkg: VirtualMachinePackageRef{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
 			},
@@ -1153,10 +1010,10 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 			name: "task_queueing_error",
 			args: args{
 				ctx: context.Background(),
-				vm: &VirtualMachine{
+				ref: VirtualMachineRef{
 					ID: "vm_t8yomYsG4bccKw5D",
 				},
-				pkg: &VirtualMachinePackage{
+				pkg: VirtualMachinePackageRef{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
 			},
@@ -1166,51 +1023,13 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 			respBody:   fixture("task_queueing_error"),
 		},
 		{
-			name: "nil virtual machine",
-			args: args{
-				ctx: context.Background(),
-				vm:  nil,
-				pkg: &VirtualMachinePackage{
-					ID: "vmpkg_XdNPhGXvyt1dnDts",
-				},
-			},
-			reqBody: &virtualMachineChangePackageRequest{
-				Package: &VirtualMachinePackage{
-					ID: "vmpkg_XdNPhGXvyt1dnDts",
-				},
-			},
-			errStr:     fixtureVirtualMachineNotFoundErr,
-			errResp:    fixtureVirtualMachineNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("virtual_machine_not_found_error"),
-		},
-		{
-			name: "nil virtual machine package",
-			args: args{
-				ctx: context.Background(),
-				vm: &VirtualMachine{
-					ID: "vm_t8yomYsG4bccKw5D",
-				},
-				pkg: nil,
-			},
-			reqBody: &virtualMachineChangePackageRequest{
-				VirtualMachine: &VirtualMachine{
-					ID: "vm_t8yomYsG4bccKw5D",
-				},
-			},
-			errStr:     fixturePackageNotFoundErr,
-			errResp:    fixturePackageNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("package_not_found_error"),
-		},
-		{
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				vm: &VirtualMachine{
+				ref: VirtualMachineRef{
 					ID: "vm_t8yomYsG4bccKw5D",
 				},
-				pkg: &VirtualMachinePackage{
+				pkg: VirtualMachinePackageRef{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
 			},
@@ -1243,7 +1062,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 			)
 
 			got, resp, err := c.ChangePackage(
-				tt.args.ctx, tt.args.vm, tt.args.pkg,
+				tt.args.ctx, tt.args.ref, tt.args.pkg,
 			)
 
 			if tt.respStatus != 0 {
@@ -1275,7 +1094,7 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 
 	type args struct {
 		ctx  context.Context
-		vm   *VirtualMachine
+		ref  VirtualMachineRef
 		args *VirtualMachineUpdateArguments
 	}
 	tests := []struct {
@@ -1291,13 +1110,15 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 		{
 			name: "by ID",
 			args: args{
-				ctx:  context.Background(),
-				vm:   fixtureVirtualMachineFull,
+				ctx: context.Background(),
+				ref: VirtualMachineRef{
+					ID: "vm_t8yomYsG4bccKw5D",
+				},
 				args: vmArgs,
 			},
 			reqBody: &virtualMachineUpdateRequest{
-				VirtualMachine: &VirtualMachine{
-					ID: fixtureVirtualMachineFull.ID,
+				VirtualMachine: VirtualMachineRef{
+					ID: "vm_t8yomYsG4bccKw5D",
 				},
 				Properties: vmArgs,
 			},
@@ -1312,13 +1133,15 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 		{
 			name: "by FQDN",
 			args: args{
-				ctx:  context.Background(),
-				vm:   fixtureVirtualMachineNoID,
+				ctx: context.Background(),
+				ref: VirtualMachineRef{
+					FQDN: "anvil.amce.katapult.cloud",
+				},
 				args: vmArgs,
 			},
 			reqBody: &virtualMachineUpdateRequest{
-				VirtualMachine: &VirtualMachine{
-					FQDN: fixtureVirtualMachineNoID.FQDN,
+				VirtualMachine: VirtualMachineRef{
+					FQDN: "anvil.amce.katapult.cloud",
 				},
 				Properties: vmArgs,
 			},
@@ -1333,8 +1156,10 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 		{
 			name: "non-existent virtual machine",
 			args: args{
-				ctx:  context.Background(),
-				vm:   fixtureVirtualMachineFull,
+				ctx: context.Background(),
+				ref: VirtualMachineRef{
+					ID: "vm_t8yomYsG4bccKw5D",
+				},
 				args: vmArgs,
 			},
 			errStr:     fixtureVirtualMachineNotFoundErr,
@@ -1345,8 +1170,10 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 		{
 			name: "virtual machine is in trash",
 			args: args{
-				ctx:  context.Background(),
-				vm:   fixtureVirtualMachineFull,
+				ctx: context.Background(),
+				ref: VirtualMachineRef{
+					ID: "vm_t8yomYsG4bccKw5D",
+				},
 				args: vmArgs,
 			},
 			errStr:     fixtureObjectInTrashErr,
@@ -1357,8 +1184,10 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 		{
 			name: "permission_denied",
 			args: args{
-				ctx:  context.Background(),
-				vm:   fixtureVirtualMachineFull,
+				ctx: context.Background(),
+				ref: VirtualMachineRef{
+					ID: "vm_t8yomYsG4bccKw5D",
+				},
 				args: vmArgs,
 			},
 			errStr:     fixturePermissionDeniedErr,
@@ -1367,29 +1196,16 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 			respBody:   fixture("permission_denied_error"),
 		},
 		{
-			name: "nil virtual machine",
-			args: args{
-				ctx:  context.Background(),
-				vm:   nil,
-				args: vmArgs,
-			},
-			reqBody: &virtualMachineUpdateRequest{
-				Properties: vmArgs,
-			},
-			errStr:     fixtureVirtualMachineNotFoundErr,
-			errResp:    fixtureVirtualMachineNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("virtual_machine_not_found_error"),
-		},
-		{
 			name: "nil virtual machine update arguments",
 			args: args{
-				ctx:  context.Background(),
-				vm:   fixtureVirtualMachineFull,
+				ctx: context.Background(),
+				ref: VirtualMachineRef{
+					ID: "vm_t8yomYsG4bccKw5D",
+				},
 				args: nil,
 			},
 			reqBody: &virtualMachineUpdateRequest{
-				VirtualMachine: &VirtualMachine{
+				VirtualMachine: VirtualMachineRef{
 					ID: "vm_t8yomYsG4bccKw5D",
 				},
 			},
@@ -1404,8 +1220,10 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 		{
 			name: "nil context",
 			args: args{
-				ctx:  nil,
-				vm:   fixtureVirtualMachineFull,
+				ctx: nil,
+				ref: VirtualMachineRef{
+					ID: "vm_t8yomYsG4bccKw5D",
+				},
 				args: vmArgs,
 			},
 
@@ -1438,7 +1256,7 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 			)
 
 			got, resp, err := c.Update(
-				tt.args.ctx, tt.args.vm, tt.args.args,
+				tt.args.ctx, tt.args.ref, tt.args.args,
 			)
 
 			if tt.respStatus != 0 {
@@ -1465,7 +1283,7 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 func TestVirtualMachinesClient_Delete(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		vm  *VirtualMachine
+		vm  VirtualMachineRef
 	}
 	tests := []struct {
 		name       string
@@ -1481,7 +1299,9 @@ func TestVirtualMachinesClient_Delete(t *testing.T) {
 			name: "by ID",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				vm: VirtualMachineRef{
+					ID: "vm_t8yomYsG4bccKw5D",
+				},
 			},
 			want: &TrashObject{
 				ID:        "trsh_AmjmS73QadkAZqoE",
@@ -1497,7 +1317,7 @@ func TestVirtualMachinesClient_Delete(t *testing.T) {
 			name: "by FQDN",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{FQDN: "anvil.amce.katapult.cloud"},
+				vm:  VirtualMachineRef{FQDN: "anvil.amce.katapult.cloud"},
 			},
 			want: &TrashObject{
 				ID:        "trsh_AmjmS73QadkAZqoE",
@@ -1513,7 +1333,7 @@ func TestVirtualMachinesClient_Delete(t *testing.T) {
 			name: "non-existent virtual machine",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				vm:  VirtualMachineRef{ID: "vm_t8yomYsG4bccKw5D"},
 			},
 			errStr:     fixtureVirtualMachineNotFoundErr,
 			errResp:    fixtureVirtualMachineNotFoundResponseError,
@@ -1524,7 +1344,7 @@ func TestVirtualMachinesClient_Delete(t *testing.T) {
 			name: "permission_denied",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				vm:  VirtualMachineRef{ID: "vm_t8yomYsG4bccKw5D"},
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
@@ -1532,21 +1352,10 @@ func TestVirtualMachinesClient_Delete(t *testing.T) {
 			respBody:   fixture("permission_denied_error"),
 		},
 		{
-			name: "nil virtual machine",
-			args: args{
-				ctx: context.Background(),
-				vm:  nil,
-			},
-			errStr:     fixtureVirtualMachineNotFoundErr,
-			errResp:    fixtureVirtualMachineNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("virtual_machine_not_found_error"),
-		},
-		{
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				vm:  VirtualMachineRef{ID: "vm_t8yomYsG4bccKw5D"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -1603,7 +1412,7 @@ func TestVirtualMachinesClient_Delete(t *testing.T) {
 func TestVirtualMachinesClient_Start(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		vm  *VirtualMachine
+		ref VirtualMachineRef
 	}
 	tests := []struct {
 		name       string
@@ -1619,7 +1428,7 @@ func TestVirtualMachinesClient_Start(t *testing.T) {
 			name: "by ID",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				ref: VirtualMachineRef{ID: "vm_t8yomYsG4bccKw5D"},
 			},
 			want: &Task{
 				ID:     "task_otL5Dkr3bi40yn9h",
@@ -1636,7 +1445,7 @@ func TestVirtualMachinesClient_Start(t *testing.T) {
 			name: "by FQDN",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{FQDN: "anvil.amce.katapult.cloud"},
+				ref: VirtualMachineRef{FQDN: "anvil.amce.katapult.cloud"},
 			},
 			want: &Task{
 				ID:     "task_otL5Dkr3bi40yn9h",
@@ -1653,7 +1462,7 @@ func TestVirtualMachinesClient_Start(t *testing.T) {
 			name: "non-existent virtual machine",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{ID: "vm_nopethisbegone"},
+				ref: VirtualMachineRef{ID: "vm_nopethisbegone"},
 			},
 			errStr:     fixtureVirtualMachineNotFoundErr,
 			errResp:    fixtureVirtualMachineNotFoundResponseError,
@@ -1664,7 +1473,7 @@ func TestVirtualMachinesClient_Start(t *testing.T) {
 			name: "virtual machine is in trash",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				ref: VirtualMachineRef{ID: "vm_t8yomYsG4bccKw5D"},
 			},
 			errStr:     fixtureObjectInTrashErr,
 			errResp:    fixtureObjectInTrashResponseError,
@@ -1675,7 +1484,7 @@ func TestVirtualMachinesClient_Start(t *testing.T) {
 			name: "error queuing task",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				ref: VirtualMachineRef{ID: "vm_t8yomYsG4bccKw5D"},
 			},
 			errStr:     fixtureTaskQueueingErrorErr,
 			errResp:    fixtureTaskQueueingErrorResponseError,
@@ -1686,7 +1495,7 @@ func TestVirtualMachinesClient_Start(t *testing.T) {
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				ref: VirtualMachineRef{ID: "vm_t8yomYsG4bccKw5D"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -1714,7 +1523,7 @@ func TestVirtualMachinesClient_Start(t *testing.T) {
 			)
 
 			got, resp, err := c.Start(
-				tt.args.ctx, tt.args.vm,
+				tt.args.ctx, tt.args.ref,
 			)
 
 			if tt.respStatus != 0 {
@@ -1741,7 +1550,7 @@ func TestVirtualMachinesClient_Start(t *testing.T) {
 func TestVirtualMachinesClient_Stop(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		vm  *VirtualMachine
+		ref VirtualMachineRef
 	}
 	tests := []struct {
 		name       string
@@ -1757,7 +1566,7 @@ func TestVirtualMachinesClient_Stop(t *testing.T) {
 			name: "by ID",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				ref: VirtualMachineRef{ID: "vm_t8yomYsG4bccKw5D"},
 			},
 			want: &Task{
 				ID:     "task_UWMEbeWyZx3qZIzK",
@@ -1774,7 +1583,7 @@ func TestVirtualMachinesClient_Stop(t *testing.T) {
 			name: "by FQDN",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{FQDN: "anvil.amce.katapult.cloud"},
+				ref: VirtualMachineRef{FQDN: "anvil.amce.katapult.cloud"},
 			},
 			want: &Task{
 				ID:     "task_UWMEbeWyZx3qZIzK",
@@ -1791,7 +1600,7 @@ func TestVirtualMachinesClient_Stop(t *testing.T) {
 			name: "non-existent virtual machine",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{ID: "vm_nopethisbegone"},
+				ref: VirtualMachineRef{ID: "vm_nopethisbegone"},
 			},
 			errStr:     fixtureVirtualMachineNotFoundErr,
 			errResp:    fixtureVirtualMachineNotFoundResponseError,
@@ -1802,7 +1611,7 @@ func TestVirtualMachinesClient_Stop(t *testing.T) {
 			name: "virtual machine is in trash",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				ref: VirtualMachineRef{ID: "vm_t8yomYsG4bccKw5D"},
 			},
 			errStr:     fixtureObjectInTrashErr,
 			errResp:    fixtureObjectInTrashResponseError,
@@ -1813,7 +1622,7 @@ func TestVirtualMachinesClient_Stop(t *testing.T) {
 			name: "error queuing task",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				ref: VirtualMachineRef{ID: "vm_t8yomYsG4bccKw5D"},
 			},
 			errStr:     fixtureTaskQueueingErrorErr,
 			errResp:    fixtureTaskQueueingErrorResponseError,
@@ -1824,7 +1633,7 @@ func TestVirtualMachinesClient_Stop(t *testing.T) {
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				ref: VirtualMachineRef{ID: "vm_t8yomYsG4bccKw5D"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -1852,7 +1661,7 @@ func TestVirtualMachinesClient_Stop(t *testing.T) {
 			)
 
 			got, resp, err := c.Stop(
-				tt.args.ctx, tt.args.vm,
+				tt.args.ctx, tt.args.ref,
 			)
 
 			if tt.respStatus != 0 {
@@ -1879,7 +1688,7 @@ func TestVirtualMachinesClient_Stop(t *testing.T) {
 func TestVirtualMachinesClient_Shutdown(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		vm  *VirtualMachine
+		ref VirtualMachineRef
 	}
 	tests := []struct {
 		name       string
@@ -1895,7 +1704,7 @@ func TestVirtualMachinesClient_Shutdown(t *testing.T) {
 			name: "by ID",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				ref: VirtualMachineRef{ID: "vm_t8yomYsG4bccKw5D"},
 			},
 			want: &Task{
 				ID:     "task_zSdnw8Ocz8QAQTZK",
@@ -1912,7 +1721,7 @@ func TestVirtualMachinesClient_Shutdown(t *testing.T) {
 			name: "by FQDN",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{FQDN: "anvil.amce.katapult.cloud"},
+				ref: VirtualMachineRef{FQDN: "anvil.amce.katapult.cloud"},
 			},
 			want: &Task{
 				ID:     "task_zSdnw8Ocz8QAQTZK",
@@ -1929,7 +1738,7 @@ func TestVirtualMachinesClient_Shutdown(t *testing.T) {
 			name: "non-existent virtual machine",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{ID: "vm_nopethisbegone"},
+				ref: VirtualMachineRef{ID: "vm_nopethisbegone"},
 			},
 			errStr:     fixtureVirtualMachineNotFoundErr,
 			errResp:    fixtureVirtualMachineNotFoundResponseError,
@@ -1940,7 +1749,7 @@ func TestVirtualMachinesClient_Shutdown(t *testing.T) {
 			name: "virtual machine is in trash",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				ref: VirtualMachineRef{ID: "vm_t8yomYsG4bccKw5D"},
 			},
 			errStr:     fixtureObjectInTrashErr,
 			errResp:    fixtureObjectInTrashResponseError,
@@ -1951,7 +1760,7 @@ func TestVirtualMachinesClient_Shutdown(t *testing.T) {
 			name: "error queuing task",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				ref: VirtualMachineRef{ID: "vm_t8yomYsG4bccKw5D"},
 			},
 			errStr:     fixtureTaskQueueingErrorErr,
 			errResp:    fixtureTaskQueueingErrorResponseError,
@@ -1962,7 +1771,7 @@ func TestVirtualMachinesClient_Shutdown(t *testing.T) {
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				ref: VirtualMachineRef{ID: "vm_t8yomYsG4bccKw5D"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -1990,7 +1799,7 @@ func TestVirtualMachinesClient_Shutdown(t *testing.T) {
 			)
 
 			got, resp, err := c.Shutdown(
-				tt.args.ctx, tt.args.vm,
+				tt.args.ctx, tt.args.ref,
 			)
 
 			if tt.respStatus != 0 {
@@ -2017,7 +1826,7 @@ func TestVirtualMachinesClient_Shutdown(t *testing.T) {
 func TestVirtualMachinesClient_Reset(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		vm  *VirtualMachine
+		ref VirtualMachineRef
 	}
 	tests := []struct {
 		name       string
@@ -2033,7 +1842,7 @@ func TestVirtualMachinesClient_Reset(t *testing.T) {
 			name: "by ID",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				ref: VirtualMachineRef{ID: "vm_t8yomYsG4bccKw5D"},
 			},
 			want: &Task{
 				ID:     "task_vZYARjrFue1Or2pt",
@@ -2050,7 +1859,7 @@ func TestVirtualMachinesClient_Reset(t *testing.T) {
 			name: "by FQDN",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{FQDN: "anvil.amce.katapult.cloud"},
+				ref: VirtualMachineRef{FQDN: "anvil.amce.katapult.cloud"},
 			},
 			want: &Task{
 				ID:     "task_vZYARjrFue1Or2pt",
@@ -2067,7 +1876,7 @@ func TestVirtualMachinesClient_Reset(t *testing.T) {
 			name: "non-existent virtual machine",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{ID: "vm_nopethisbegone"},
+				ref: VirtualMachineRef{ID: "vm_nopethisbegone"},
 			},
 			errStr:     fixtureVirtualMachineNotFoundErr,
 			errResp:    fixtureVirtualMachineNotFoundResponseError,
@@ -2078,7 +1887,7 @@ func TestVirtualMachinesClient_Reset(t *testing.T) {
 			name: "virtual machine is in trash",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				ref: VirtualMachineRef{ID: "vm_t8yomYsG4bccKw5D"},
 			},
 			errStr:     fixtureObjectInTrashErr,
 			errResp:    fixtureObjectInTrashResponseError,
@@ -2089,7 +1898,7 @@ func TestVirtualMachinesClient_Reset(t *testing.T) {
 			name: "error queuing task",
 			args: args{
 				ctx: context.Background(),
-				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				ref: VirtualMachineRef{ID: "vm_t8yomYsG4bccKw5D"},
 			},
 			errStr:     fixtureTaskQueueingErrorErr,
 			errResp:    fixtureTaskQueueingErrorResponseError,
@@ -2100,7 +1909,7 @@ func TestVirtualMachinesClient_Reset(t *testing.T) {
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				vm:  &VirtualMachine{ID: "vm_t8yomYsG4bccKw5D"},
+				ref: VirtualMachineRef{ID: "vm_t8yomYsG4bccKw5D"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -2128,7 +1937,7 @@ func TestVirtualMachinesClient_Reset(t *testing.T) {
 			)
 
 			got, resp, err := c.Reset(
-				tt.args.ctx, tt.args.vm,
+				tt.args.ctx, tt.args.ref,
 			)
 
 			if tt.respStatus != 0 {

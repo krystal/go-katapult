@@ -46,7 +46,7 @@ func NewCertificatesClient(rm RequestMaker) *CertificatesClient {
 
 func (s *CertificatesClient) List(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 	opts *ListOptions,
 ) ([]*Certificate, *katapult.Response, error) {
 	qs := queryValues(org, opts)

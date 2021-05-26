@@ -3,7 +3,6 @@ package core
 import (
 	"context"
 	"net/url"
-	"strings"
 
 	"github.com/krystal/go-katapult"
 )
@@ -18,43 +17,23 @@ type DiskTemplate struct {
 	OperatingSystem *OperatingSystem     `json:"operating_system,omitempty"`
 }
 
-// NewDiskTemplateLookup takes a string that is a DiskTemplate ID or Permalink,
-// returning a empty *DiskTemplate struct with either the ID or Permalink field
-// populated with the given value. This struct is suitable as input to other
-// methods which accept a *DiskTemplate as input.
-func NewDiskTemplateLookup(
-	idOrPermalink string,
-) (lr *DiskTemplate, f FieldName) {
-	if strings.HasPrefix(idOrPermalink, "dtpl_") {
-		return &DiskTemplate{ID: idOrPermalink}, IDField
-	}
-
-	return &DiskTemplate{Permalink: idOrPermalink}, PermalinkField
+func (dt *DiskTemplate) Ref() DiskTemplateRef {
+	return DiskTemplateRef{ID: dt.ID}
 }
 
-func (s *DiskTemplate) lookupReference() *DiskTemplate {
-	if s == nil {
-		return nil
-	}
-
-	lr := &DiskTemplate{ID: s.ID}
-	if lr.ID == "" {
-		lr.Permalink = s.Permalink
-	}
-
-	return lr
+type DiskTemplateRef struct {
+	ID        string `json:"id,omitempty"`
+	Permalink string `json:"permalink,omitempty"`
 }
 
-func (s *DiskTemplate) queryValues() *url.Values {
+func (s DiskTemplateRef) queryValues() *url.Values {
 	v := &url.Values{}
 
-	if s != nil {
-		switch {
-		case s.ID != "":
-			v.Set("disk_template[id]", s.ID)
-		case s.Permalink != "":
-			v.Set("disk_template[permalink]", s.Permalink)
-		}
+	switch {
+	case s.ID != "":
+		v.Set("disk_template[id]", s.ID)
+	case s.Permalink != "":
+		v.Set("disk_template[permalink]", s.Permalink)
 	}
 
 	return v
@@ -116,7 +95,7 @@ func NewDiskTemplatesClient(rm RequestMaker) *DiskTemplatesClient {
 
 func (s *DiskTemplatesClient) List(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 	opts *DiskTemplateListOptions,
 ) ([]*DiskTemplate, *katapult.Response, error) {
 	qs := queryValues(org, opts)
@@ -133,41 +112,30 @@ func (s *DiskTemplatesClient) List(
 
 func (s *DiskTemplatesClient) Get(
 	ctx context.Context,
-	idOrPermalink string,
+	ref DiskTemplateRef,
 ) (*DiskTemplate, *katapult.Response, error) {
-	if _, f := NewDiskTemplateLookup(idOrPermalink); f == IDField {
-		return s.GetByID(ctx, idOrPermalink)
+	u := &url.URL{
+		Path:     "disk_templates/_",
+		RawQuery: ref.queryValues().Encode(),
 	}
 
-	return s.GetByPermalink(ctx, idOrPermalink)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+
+	return body.DiskTemplate, resp, err
 }
 
 func (s *DiskTemplatesClient) GetByID(
 	ctx context.Context,
 	id string,
 ) (*DiskTemplate, *katapult.Response, error) {
-	return s.get(ctx, &DiskTemplate{ID: id})
+	return s.Get(ctx, DiskTemplateRef{ID: id})
 }
 
 func (s *DiskTemplatesClient) GetByPermalink(
 	ctx context.Context,
 	permalink string,
 ) (*DiskTemplate, *katapult.Response, error) {
-	return s.get(ctx, &DiskTemplate{Permalink: permalink})
-}
-
-func (s *DiskTemplatesClient) get(
-	ctx context.Context,
-	dt *DiskTemplate,
-) (*DiskTemplate, *katapult.Response, error) {
-	u := &url.URL{
-		Path:     "disk_templates/_",
-		RawQuery: dt.queryValues().Encode(),
-	}
-
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
-
-	return body.DiskTemplate, resp, err
+	return s.Get(ctx, DiskTemplateRef{Permalink: permalink})
 }
 
 func (s *DiskTemplatesClient) doRequest(

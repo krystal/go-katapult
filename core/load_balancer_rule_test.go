@@ -16,6 +16,28 @@ func TestClient_LoadBalancerRules(t *testing.T) {
 	assert.IsType(t, &LoadBalancerRulesClient{}, c.LoadBalancerRules)
 }
 
+func TestLoadBalancerRule_Ref(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  LoadBalancerRule
+		want LoadBalancerRuleRef
+	}{
+		{
+			name: "with id",
+			obj: LoadBalancerRule{
+				ID: "lbr_9IToFxX2AOl7IBSY",
+			},
+			want: LoadBalancerRuleRef{ID: "lbr_9IToFxX2AOl7IBSY"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, tt.obj.Ref())
+		})
+	}
+}
+
 func TestLoadBalancerRule_JSONMarshalling(t *testing.T) {
 	tests := []struct {
 		name string
@@ -185,6 +207,100 @@ func Test_loadBalancerRuleUpdateRequest_JSONMarshalling(t *testing.T) {
 
 func TestLoadBalancerRulesClient_Get(t *testing.T) {
 	type args struct {
+		ref LoadBalancerRuleRef
+	}
+	tests := []struct {
+		name    string
+		frm     fakeRequestMakerArgs
+		args    args
+		want    *LoadBalancerRule
+		wantErr string
+	}{
+		{
+			name: "success",
+			args: args{
+				ref: LoadBalancerRuleRef{ID: "123"},
+			},
+			want: &LoadBalancerRule{
+				ID:         "123",
+				ListenPort: 132,
+			},
+			frm: fakeRequestMakerArgs{
+				wantPath: "/core/v1/load_balancers/rules/_",
+				wantValues: url.Values{
+					"load_balancer_rule[id]": []string{"123"},
+				},
+				wantMethod: "GET",
+				wantBody:   nil,
+				doResponseBody: &loadBalancerRulesResponseBody{
+					LoadBalancerRule: &LoadBalancerRule{
+						ID:         "123",
+						ListenPort: 132,
+					},
+				},
+				doResp: &katapult.Response{},
+			},
+		},
+		{
+			name: "new request fails",
+			args: args{
+				ref: LoadBalancerRuleRef{ID: "123"},
+			},
+			frm: fakeRequestMakerArgs{
+				wantPath: "/core/v1/load_balancers/rules/_",
+				wantValues: url.Values{
+					"load_balancer_rule[id]": []string{"123"},
+				},
+				wantMethod: "GET",
+				wantBody:   nil,
+				newReqErr:  fmt.Errorf("rats chewed cables"),
+			},
+			wantErr: "rats chewed cables",
+		},
+		{
+			name: "http do fails",
+			args: args{
+				ref: LoadBalancerRuleRef{ID: "123"},
+			},
+			frm: fakeRequestMakerArgs{
+				wantPath: "/core/v1/load_balancers/rules/_",
+				wantValues: url.Values{
+					"load_balancer_rule[id]": []string{"123"},
+				},
+				wantMethod: "GET",
+				wantBody:   nil,
+				doErr:      fmt.Errorf("flux capacitor undercharged"),
+				doResp:     &katapult.Response{},
+			},
+			wantErr: "flux capacitor undercharged",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := NewLoadBalancerRulesClient(&fakeRequestMaker{
+				t:    t,
+				args: tt.frm,
+			})
+
+			got, resp, err := c.Get(
+				context.Background(),
+				tt.args.ref,
+			)
+			assert.Equal(t, tt.frm.doResp, resp)
+
+			if tt.wantErr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.wantErr)
+			}
+
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}
+
+func TestLoadBalancerRulesClient_GetByID(t *testing.T) {
+	type args struct {
 		id string
 	}
 	tests := []struct {
@@ -204,7 +320,10 @@ func TestLoadBalancerRulesClient_Get(t *testing.T) {
 				ListenPort: 132,
 			},
 			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/load_balancers/rules/123",
+				wantPath: "/core/v1/load_balancers/rules/_",
+				wantValues: url.Values{
+					"load_balancer_rule[id]": []string{"123"},
+				},
 				wantMethod: "GET",
 				wantBody:   nil,
 				doResponseBody: &loadBalancerRulesResponseBody{
@@ -222,7 +341,10 @@ func TestLoadBalancerRulesClient_Get(t *testing.T) {
 				id: "123",
 			},
 			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/load_balancers/rules/123",
+				wantPath: "/core/v1/load_balancers/rules/_",
+				wantValues: url.Values{
+					"load_balancer_rule[id]": []string{"123"},
+				},
 				wantMethod: "GET",
 				wantBody:   nil,
 				newReqErr:  fmt.Errorf("rats chewed cables"),
@@ -235,7 +357,10 @@ func TestLoadBalancerRulesClient_Get(t *testing.T) {
 				id: "123",
 			},
 			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/load_balancers/rules/123",
+				wantPath: "/core/v1/load_balancers/rules/_",
+				wantValues: url.Values{
+					"load_balancer_rule[id]": []string{"123"},
+				},
 				wantMethod: "GET",
 				wantBody:   nil,
 				doErr:      fmt.Errorf("flux capacitor undercharged"),
@@ -251,7 +376,7 @@ func TestLoadBalancerRulesClient_Get(t *testing.T) {
 				args: tt.frm,
 			})
 
-			got, resp, err := c.Get(
+			got, resp, err := c.GetByID(
 				context.Background(),
 				tt.args.id,
 			)
@@ -298,12 +423,13 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 				Pagination: &katapult.Pagination{Total: 333},
 			},
 			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/load_balancers/xyzzy/rules",
+				wantPath:   "/core/v1/load_balancers/_/rules",
 				wantMethod: "GET",
 				wantBody:   nil,
 				wantValues: url.Values{
-					"page":     []string{"5"},
-					"per_page": []string{"32"},
+					"page":              []string{"5"},
+					"per_page":          []string{"32"},
+					"load_balancer[id]": []string{"xyzzy"},
 				},
 				doResponseBody: &loadBalancerRulesResponseBody{
 					LoadBalancerRules: []LoadBalancerRule{
@@ -326,9 +452,12 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 			}},
 			wantResp: &katapult.Response{},
 			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/load_balancers/xyzzy/rules",
+				wantPath:   "/core/v1/load_balancers/_/rules",
 				wantMethod: "GET",
-				wantBody:   nil,
+				wantValues: url.Values{
+					"load_balancer[id]": []string{"xyzzy"},
+				},
+				wantBody: nil,
 				doResponseBody: &loadBalancerRulesResponseBody{
 					LoadBalancerRules: []LoadBalancerRule{
 						{ID: "cbd"},
@@ -343,10 +472,13 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 				loadBalancerID: "xyzzy",
 			},
 			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/load_balancers/xyzzy/rules",
+				wantPath:   "/core/v1/load_balancers/_/rules",
 				wantMethod: "GET",
-				wantBody:   nil,
-				newReqErr:  fmt.Errorf("rats chewed cables"),
+				wantValues: url.Values{
+					"load_balancer[id]": []string{"xyzzy"},
+				},
+				wantBody:  nil,
+				newReqErr: fmt.Errorf("rats chewed cables"),
 			},
 			wantErr: "rats chewed cables",
 		},
@@ -356,11 +488,14 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 				loadBalancerID: "xyzzy",
 			},
 			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/load_balancers/xyzzy/rules",
+				wantPath:   "/core/v1/load_balancers/_/rules",
 				wantMethod: "GET",
-				wantBody:   nil,
-				doErr:      fmt.Errorf("flux capacitor undercharged"),
-				doResp:     &katapult.Response{},
+				wantValues: url.Values{
+					"load_balancer[id]": []string{"xyzzy"},
+				},
+				wantBody: nil,
+				doErr:    fmt.Errorf("flux capacitor undercharged"),
+				doResp:   &katapult.Response{},
 			},
 			wantResp: &katapult.Response{},
 			wantErr:  "flux capacitor undercharged",
@@ -375,7 +510,7 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 
 			got, resp, err := c.List(
 				context.Background(),
-				&LoadBalancer{ID: tt.args.loadBalancerID},
+				LoadBalancerRef{ID: tt.args.loadBalancerID},
 				tt.args.listOptions,
 			)
 			assert.Equal(t, tt.wantResp, resp)
@@ -471,7 +606,7 @@ func TestLoadBalancerRulesClient_Create(t *testing.T) {
 
 			got, resp, err := c.Create(
 				context.Background(),
-				&LoadBalancer{ID: tt.args.loadBalancerID},
+				LoadBalancerRef{ID: tt.args.loadBalancerID},
 				tt.args.creationArgs,
 			)
 			assert.Equal(t, tt.frm.doResp, resp)
@@ -510,7 +645,10 @@ func TestLoadBalancerRulesClient_Update(t *testing.T) {
 				ruleID:     "123",
 			},
 			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/load_balancers/rules/123",
+				wantPath: "/core/v1/load_balancers/rules/_",
+				wantValues: url.Values{
+					"load_balancer_rule[id]": []string{"123"},
+				},
 				wantMethod: "PATCH",
 				wantBody: &loadBalancerRuleUpdateRequest{
 					Properties: LoadBalancerRuleArguments{
@@ -532,7 +670,10 @@ func TestLoadBalancerRulesClient_Update(t *testing.T) {
 				ruleID: "123",
 			},
 			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/load_balancers/rules/123",
+				wantPath: "/core/v1/load_balancers/rules/_",
+				wantValues: url.Values{
+					"load_balancer_rule[id]": []string{"123"},
+				},
 				wantMethod: "PATCH",
 				wantBody: &loadBalancerRuleUpdateRequest{
 					Properties: LoadBalancerRuleArguments{},
@@ -547,7 +688,10 @@ func TestLoadBalancerRulesClient_Update(t *testing.T) {
 				ruleID: "123",
 			},
 			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/load_balancers/rules/123",
+				wantPath: "/core/v1/load_balancers/rules/_",
+				wantValues: url.Values{
+					"load_balancer_rule[id]": []string{"123"},
+				},
 				wantMethod: "PATCH",
 				wantBody: &loadBalancerRuleUpdateRequest{
 					Properties: LoadBalancerRuleArguments{},
@@ -567,7 +711,7 @@ func TestLoadBalancerRulesClient_Update(t *testing.T) {
 
 			got, resp, err := c.Update(
 				context.Background(),
-				&LoadBalancerRule{ID: tt.args.ruleID},
+				LoadBalancerRuleRef{ID: tt.args.ruleID},
 				tt.args.updateArgs,
 			)
 			assert.Equal(t, tt.frm.doResp, resp)
@@ -606,7 +750,10 @@ func TestLoadBalancerRulesClient_Delete(t *testing.T) {
 			},
 			want: &lbr,
 			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/load_balancers/rules/123",
+				wantPath: "/core/v1/load_balancers/rules/_",
+				wantValues: url.Values{
+					"load_balancer_rule[id]": []string{"123"},
+				},
 				wantMethod: "DELETE",
 				wantBody:   nil,
 				doResponseBody: &loadBalancerRulesResponseBody{
@@ -621,7 +768,10 @@ func TestLoadBalancerRulesClient_Delete(t *testing.T) {
 				ruleID: "123",
 			},
 			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/load_balancers/rules/123",
+				wantPath: "/core/v1/load_balancers/rules/_",
+				wantValues: url.Values{
+					"load_balancer_rule[id]": []string{"123"},
+				},
 				wantMethod: "DELETE",
 				newReqErr:  fmt.Errorf("rats chewed cables"),
 			},
@@ -633,7 +783,10 @@ func TestLoadBalancerRulesClient_Delete(t *testing.T) {
 				ruleID: "123",
 			},
 			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/load_balancers/rules/123",
+				wantPath: "/core/v1/load_balancers/rules/_",
+				wantValues: url.Values{
+					"load_balancer_rule[id]": []string{"123"},
+				},
 				wantMethod: "DELETE",
 				wantBody:   nil,
 				doErr:      fmt.Errorf("flux capacitor undercharged"),
@@ -651,7 +804,7 @@ func TestLoadBalancerRulesClient_Delete(t *testing.T) {
 
 			got, resp, err := c.Delete(
 				context.Background(),
-				&LoadBalancerRule{ID: tt.args.ruleID},
+				LoadBalancerRuleRef{ID: tt.args.ruleID},
 			)
 			assert.Equal(t, tt.frm.doResp, resp)
 

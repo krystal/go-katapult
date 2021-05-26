@@ -2,7 +2,6 @@ package core
 
 import (
 	"context"
-	"fmt"
 	"net/url"
 
 	"github.com/krystal/go-katapult"
@@ -19,6 +18,21 @@ type VirtualMachineBuild struct {
 	CreatedAt      *timestamp.Timestamp     `json:"created_at,omitempty"`
 }
 
+func (vmb *VirtualMachineBuild) Ref() VirtualMachineBuildRef {
+	return VirtualMachineBuildRef{ID: vmb.ID}
+}
+
+type VirtualMachineBuildRef struct {
+	ID string `json:"id,omitempty"`
+}
+
+func (vmbr VirtualMachineBuildRef) queryValues() *url.Values {
+	v := &url.Values{}
+	v.Set("virtual_machine_build[id]", vmbr.ID)
+
+	return v
+}
+
 type VirtualMachineBuildState string
 
 const (
@@ -30,29 +44,29 @@ const (
 )
 
 type VirtualMachineBuildArguments struct {
-	Zone                *Zone
-	DataCenter          *DataCenter
-	Package             *VirtualMachinePackage
-	DiskTemplate        *DiskTemplate
+	Zone                *ZoneRef
+	DataCenter          *DataCenterRef
+	Package             VirtualMachinePackageRef
+	DiskTemplate        *DiskTemplateRef
 	DiskTemplateOptions []*DiskTemplateOption
-	Network             *Network
+	Network             *NetworkRef
 	Hostname            string
 }
 
 type virtualMachineBuildCreateRequest struct {
-	Hostname            string                 `json:"hostname,omitempty"`
-	Organization        *Organization          `json:"organization,omitempty"`
-	Zone                *Zone                  `json:"zone,omitempty"`
-	DataCenter          *DataCenter            `json:"data_center,omitempty"`
-	Package             *VirtualMachinePackage `json:"package,omitempty"`
-	DiskTemplate        *DiskTemplate          `json:"disk_template,omitempty"`
-	DiskTemplateOptions []*DiskTemplateOption  `json:"disk_template_options,omitempty"`
-	Network             *Network               `json:"network,omitempty"`
+	Hostname            string                   `json:"hostname,omitempty"`
+	Organization        OrganizationRef          `json:"organization"`
+	Zone                *ZoneRef                 `json:"zone,omitempty"`
+	DataCenter          *DataCenterRef           `json:"data_center,omitempty"`
+	Package             VirtualMachinePackageRef `json:"package"`
+	DiskTemplate        *DiskTemplateRef         `json:"disk_template,omitempty"`
+	DiskTemplateOptions []*DiskTemplateOption    `json:"disk_template_options,omitempty"`
+	Network             *NetworkRef              `json:"network,omitempty"`
 }
 
 type virtualMachineBuildCreateFromSpecRequest struct {
-	Organization *Organization `json:"organization,omitempty"`
-	XML          string        `json:"xml,omitempty"`
+	Organization OrganizationRef `json:"organization"`
+	XML          string          `json:"xml,omitempty"`
 }
 
 type virtualMachineBuildsResponseBody struct {
@@ -78,16 +92,12 @@ func NewVirtualMachineBuildsClient(
 
 func (s *VirtualMachineBuildsClient) Get(
 	ctx context.Context,
-	id string,
+	ref VirtualMachineBuildRef,
 ) (*VirtualMachineBuild, *katapult.Response, error) {
-	return s.GetByID(ctx, id)
-}
-
-func (s *VirtualMachineBuildsClient) GetByID(
-	ctx context.Context,
-	id string,
-) (*VirtualMachineBuild, *katapult.Response, error) {
-	u := &url.URL{Path: fmt.Sprintf("virtual_machines/builds/%s", id)}
+	u := &url.URL{
+		Path:     "virtual_machines/builds/_",
+		RawQuery: ref.queryValues().Encode(),
+	}
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 
 	build := body.VirtualMachineBuild
@@ -98,21 +108,28 @@ func (s *VirtualMachineBuildsClient) GetByID(
 	return build, resp, err
 }
 
+func (s *VirtualMachineBuildsClient) GetByID(
+	ctx context.Context,
+	id string,
+) (*VirtualMachineBuild, *katapult.Response, error) {
+	return s.Get(ctx, VirtualMachineBuildRef{ID: id})
+}
+
 func (s *VirtualMachineBuildsClient) Create(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 	args *VirtualMachineBuildArguments,
 ) (*VirtualMachineBuild, *katapult.Response, error) {
 	u := &url.URL{Path: "organizations/_/virtual_machines/build"}
 	reqBody := &virtualMachineBuildCreateRequest{
 		Hostname:            args.Hostname,
-		Organization:        org.lookupReference(),
-		Zone:                args.Zone.lookupReference(),
-		DataCenter:          args.DataCenter.lookupReference(),
-		Package:             args.Package.lookupReference(),
-		DiskTemplate:        args.DiskTemplate.lookupReference(),
+		Organization:        org,
+		Zone:                args.Zone,
+		DataCenter:          args.DataCenter,
+		Package:             args.Package,
+		DiskTemplate:        args.DiskTemplate,
 		DiskTemplateOptions: args.DiskTemplateOptions,
-		Network:             args.Network.lookupReference(),
+		Network:             args.Network,
 	}
 
 	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
@@ -122,14 +139,14 @@ func (s *VirtualMachineBuildsClient) Create(
 
 func (s *VirtualMachineBuildsClient) CreateFromSpec(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 	spec *buildspec.VirtualMachineSpec,
 ) (*VirtualMachineBuild, *katapult.Response, error) {
 	specXML, _ := spec.XML()
 
 	u := &url.URL{Path: "organizations/_/virtual_machines/build_from_spec"}
 	reqBody := &virtualMachineBuildCreateFromSpecRequest{
-		Organization: org.lookupReference(),
+		Organization: org,
 		XML:          string(specXML),
 	}
 
@@ -140,12 +157,12 @@ func (s *VirtualMachineBuildsClient) CreateFromSpec(
 
 func (s *VirtualMachineBuildsClient) CreateFromSpecXML(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 	specXML string,
 ) (*VirtualMachineBuild, *katapult.Response, error) {
 	u := &url.URL{Path: "organizations/_/virtual_machines/build_from_spec"}
 	reqBody := &virtualMachineBuildCreateFromSpecRequest{
-		Organization: org.lookupReference(),
+		Organization: org,
 		XML:          specXML,
 	}
 

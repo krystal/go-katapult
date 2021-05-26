@@ -3,7 +3,6 @@ package core
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/url"
 	"testing"
@@ -73,137 +72,54 @@ func TestDNSZone_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestNewDNSZoneLookup(t *testing.T) {
-	type args struct {
-		idOrName string
-	}
+func TestDNZZone_Ref(t *testing.T) {
 	tests := []struct {
-		name  string
-		args  args
-		want  *DNSZone
-		field FieldName
+		name string
+		obj  DNSZone
+		want DNSZoneRef
 	}{
 		{
-			name:  "empty string",
-			args:  args{idOrName: ""},
-			want:  &DNSZone{},
-			field: NameField,
-		},
-		{
-			name:  "dnszone_ prefixed ID",
-			args:  args{idOrName: "dnszone_L9t6URxo1600lM9C"},
-			want:  &DNSZone{ID: "dnszone_L9t6URxo1600lM9C"},
-			field: IDField,
-		},
-		{
-			name:  "name",
-			args:  args{idOrName: "acme-labs.katapult.cloud"},
-			want:  &DNSZone{Name: "acme-labs.katapult.cloud"},
-			field: NameField,
-		},
-		{
-			name:  "random text",
-			args:  args{idOrName: "txgi81hUaEcPYNpF"},
-			want:  &DNSZone{Name: "txgi81hUaEcPYNpF"},
-			field: NameField,
+			name: "with id",
+			obj: DNSZone{
+				ID: "dnszone_k75eFc4UBOgeE5Zy",
+			},
+			want: DNSZoneRef{ID: "dnszone_k75eFc4UBOgeE5Zy"},
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, field := NewDNSZoneLookup(tt.args.idOrName)
-
-			assert.Equal(t, tt.want, got)
-			assert.Equal(t, tt.field, field)
+			assert.Equal(t, tt.want, tt.obj.Ref())
 		})
 	}
 }
 
-func TestDNSZone_lookupReference(t *testing.T) {
+func TestDNSZoneRef_queryValues(t *testing.T) {
 	tests := []struct {
 		name string
-		obj  *DNSZone
-		want *DNSZone
+		obj  DNSZoneRef
 	}{
 		{
-			name: "nil",
-			obj:  nil,
-			want: nil,
-		},
-		{
 			name: "empty",
-			obj:  &DNSZone{},
-			want: &DNSZone{},
+			obj:  DNSZoneRef{},
 		},
 		{
 			name: "full",
-			obj: &DNSZone{
-				ID:                 "dnszone_k75eFc4UBOgeE5Zy",
-				Name:               "test1.example.com",
-				TTL:                343,
-				Verified:           true,
-				InfrastructureZone: true,
+			obj: DNSZoneRef{
+				ID:   "dnszone_k75eFc4UBOgeE5Zy",
+				Name: "test1.example.com",
 			},
-			want: &DNSZone{ID: "dnszone_k75eFc4UBOgeE5Zy"},
 		},
 		{
-			name: "no ID",
-			obj: &DNSZone{
-				Name:               "test1.example.com",
-				TTL:                343,
-				Verified:           true,
-				InfrastructureZone: true,
-			},
-			want: &DNSZone{Name: "test1.example.com"},
-		},
-		{
-			name: "no ID or Name",
-			obj: &DNSZone{
-				TTL:                343,
-				Verified:           true,
-				InfrastructureZone: true,
-			},
-			want: &DNSZone{},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got := tt.obj.lookupReference()
-
-			assert.Equal(t, tt.want, got)
-		})
-	}
-}
-
-func TestDNSZone_queryValues(t *testing.T) {
-	tests := []struct {
-		name string
-		obj  *DNSZone
-	}{
-		{
-			name: "nil",
-			obj:  nil,
-		},
-		{
-			name: "empty",
-			obj:  &DNSZone{},
-		},
-		{
-			name: "full",
-			obj: &DNSZone{
-				ID:                 "dnszone_k75eFc4UBOgeE5Zy",
-				Name:               "test1.example.com",
-				TTL:                343,
-				Verified:           true,
-				InfrastructureZone: true,
+			name: "just ID",
+			obj: DNSZoneRef{
+				ID: "dnszone_k75eFc4UBOgeE5Zy",
 			},
 		},
 		{
 			name: "no ID",
-			obj: &DNSZone{
-				Name:               "test1.example.com",
-				TTL:                343,
-				Verified:           true,
-				InfrastructureZone: true,
+			obj: DNSZoneRef{
+				Name: "test1.example.com",
 			},
 		},
 	}
@@ -299,7 +215,7 @@ func Test_dnsZoneCreateRequest_JSONMarshaling(t *testing.T) {
 		{
 			name: "full",
 			obj: &dnsZoneCreateRequest{
-				Organization:    &Organization{ID: "org_QwNl81npdQQGinmt"},
+				Organization:    OrganizationRef{ID: "org_QwNl81npdQQGinmt"},
 				Details:         &DNSZoneDetails{Name: "test1.example.com"},
 				SkipVerfication: true,
 			},
@@ -324,7 +240,7 @@ func Test_dnsZoneUpdateTTLRequest_JSONMarshaling(t *testing.T) {
 		{
 			name: "full",
 			obj: &dnsZoneUpdateTTLRequest{
-				DNSZone: &DNSZone{ID: "dnszone_gymjA0XKuxJlcQXZ"},
+				DNSZone: DNSZoneRef{ID: "dnszone_gymjA0XKuxJlcQXZ"},
 				TTL:     8384,
 			},
 		},
@@ -386,14 +302,13 @@ func TestDNSZonesClient_List(t *testing.T) {
 
 	type args struct {
 		ctx  context.Context
-		org  *Organization
+		org  OrganizationRef
 		opts *ListOptions
 	}
 	tests := []struct {
 		name           string
 		args           args
 		want           []*DNSZone
-		wantQuery      *url.Values
 		wantPagination *katapult.Pagination
 		errStr         string
 		errResp        *katapult.ResponseError
@@ -404,12 +319,9 @@ func TestDNSZonesClient_List(t *testing.T) {
 			name: "by organization ID",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			want: dnsZonesList,
-			wantQuery: &url.Values{
-				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
-			},
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
@@ -424,12 +336,9 @@ func TestDNSZonesClient_List(t *testing.T) {
 			name: "by organization SubDomain",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{SubDomain: "acme"},
+				org: OrganizationRef{SubDomain: "blackmesa"},
 			},
 			want: dnsZonesList,
-			wantQuery: &url.Values{
-				"organization[sub_domain]": []string{"acme"},
-			},
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
@@ -444,15 +353,11 @@ func TestDNSZonesClient_List(t *testing.T) {
 			name: "page 1",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				opts: &ListOptions{Page: 1, PerPage: 2},
 			},
 			want: dnsZonesList[0:2],
-			wantQuery: &url.Values{
-				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
-				"page":             []string{"1"},
-				"per_page":         []string{"2"},
-			},
+
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 1,
 				TotalPages:  2,
@@ -467,15 +372,11 @@ func TestDNSZonesClient_List(t *testing.T) {
 			name: "page 2",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				opts: &ListOptions{Page: 2, PerPage: 2},
 			},
 			want: dnsZonesList[2:],
-			wantQuery: &url.Values{
-				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
-				"page":             []string{"2"},
-				"per_page":         []string{"2"},
-			},
+
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 2,
 				TotalPages:  2,
@@ -490,7 +391,7 @@ func TestDNSZonesClient_List(t *testing.T) {
 			name: "invalid API token response",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureInvalidAPITokenErr,
 			errResp:    fixtureInvalidAPITokenResponseError,
@@ -501,7 +402,7 @@ func TestDNSZonesClient_List(t *testing.T) {
 			name: "non-existent organization",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
@@ -512,7 +413,7 @@ func TestDNSZonesClient_List(t *testing.T) {
 			name: "suspended organization",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
@@ -523,7 +424,7 @@ func TestDNSZonesClient_List(t *testing.T) {
 			name: "permission denied",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
@@ -531,21 +432,10 @@ func TestDNSZonesClient_List(t *testing.T) {
 			respBody:   fixture("permission_denied_error"),
 		},
 		{
-			name: "nil organization",
-			args: args{
-				ctx: context.Background(),
-				org: nil,
-			},
-			errStr:     fixtureOrganizationNotFoundErr,
-			errResp:    fixtureOrganizationNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("organization_not_found_error"),
-		},
-		{
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -563,12 +453,8 @@ func TestDNSZonesClient_List(t *testing.T) {
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
 
-					if tt.wantQuery != nil {
-						assert.Equal(t, *tt.wantQuery, r.URL.Query())
-					} else {
-						qs := queryValues(tt.args.org, tt.args.opts)
-						assert.Equal(t, *qs, r.URL.Query())
-					}
+					qs := queryValues(tt.args.org, tt.args.opts)
+					assert.Equal(t, *qs, r.URL.Query())
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -606,14 +492,12 @@ func TestDNSZonesClient_List(t *testing.T) {
 
 func TestDNSZonesClient_Get(t *testing.T) {
 	type args struct {
-		ctx      context.Context
-		idOrName string
+		ctx context.Context
+		ref DNSZoneRef
 	}
 	tests := []struct {
 		name       string
 		args       args
-		reqPath    string
-		reqQuery   *url.Values
 		want       *DNSZone
 		errStr     string
 		errResp    *katapult.ResponseError
@@ -623,10 +507,9 @@ func TestDNSZonesClient_Get(t *testing.T) {
 		{
 			name: "by ID",
 			args: args{
-				ctx:      context.Background(),
-				idOrName: "dnszone_k75eFc4UBOgeE5Zy",
+				ctx: context.Background(),
+				ref: DNSZoneRef{ID: "dnszone_k75eFc4UBOgeE5Zy"},
 			},
-			reqPath:    "dns/zones/dnszone_k75eFc4UBOgeE5Zy",
 			want:       fixtureDNSZone,
 			respStatus: http.StatusOK,
 			respBody:   fixture("dns_zone_get"),
@@ -634,12 +517,8 @@ func TestDNSZonesClient_Get(t *testing.T) {
 		{
 			name: "by Name",
 			args: args{
-				ctx:      context.Background(),
-				idOrName: "test1.example.com",
-			},
-			reqPath: "dns/zones/_",
-			reqQuery: &url.Values{
-				"dns_zone[name]": []string{"test1.example.com"},
+				ctx: context.Background(),
+				ref: DNSZoneRef{Name: "test1.example.com"},
 			},
 			want:       fixtureDNSZone,
 			respStatus: http.StatusOK,
@@ -648,8 +527,8 @@ func TestDNSZonesClient_Get(t *testing.T) {
 		{
 			name: "non-existent DNS zone",
 			args: args{
-				ctx:      context.Background(),
-				idOrName: "dnszone_k75eFc4UBOgeE5Zy",
+				ctx: context.Background(),
+				ref: DNSZoneRef{Name: "dnszone_k75eFc4UBOgeE5Zy"},
 			},
 			errStr:     fixtureDNSZoneNotFoundErr,
 			errResp:    fixtureDNSZoneNotFoundResponseError,
@@ -659,8 +538,8 @@ func TestDNSZonesClient_Get(t *testing.T) {
 		{
 			name: "nil context",
 			args: args{
-				ctx:      nil,
-				idOrName: "dnszone_k75eFc4UBOgeE5Zy",
+				ctx: nil,
+				ref: DNSZoneRef{ID: "dnszone_k75eFc4UBOgeE5Zy"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -671,28 +550,21 @@ func TestDNSZonesClient_Get(t *testing.T) {
 			defer teardown()
 			c := NewDNSZonesClient(rm)
 
-			path := fmt.Sprintf("dns/zones/%s", tt.args.idOrName)
-			if tt.reqPath != "" {
-				path = tt.reqPath
-			}
-
 			mux.HandleFunc(
-				"/core/v1/"+path,
+				"/core/v1/dns/zones/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
 
-					if tt.reqQuery != nil {
-						assert.Equal(t, *tt.reqQuery, r.URL.Query())
-					}
+					assert.Equal(t, *tt.args.ref.queryValues(), r.URL.Query())
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
 				},
 			)
 
-			got, resp, err := c.Get(tt.args.ctx, tt.args.idOrName)
+			got, resp, err := c.Get(tt.args.ctx, tt.args.ref)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -765,11 +637,15 @@ func TestDNSZonesClient_GetByID(t *testing.T) {
 			defer teardown()
 			c := NewDNSZonesClient(rm)
 
-			mux.HandleFunc(fmt.Sprintf("/core/v1/dns/zones/%s", tt.args.id),
+			mux.HandleFunc("/core/v1/dns/zones/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+
+					assert.Equal(t, url.Values{
+						"dns_zone[id]": []string{tt.args.id},
+					}, r.URL.Query())
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -889,7 +765,7 @@ func TestDNSZonesClient_GetByName(t *testing.T) {
 func TestDNSZonesClient_Create(t *testing.T) {
 	type args struct {
 		ctx      context.Context
-		org      *Organization
+		org      OrganizationRef
 		zoneArgs *DNSZoneArguments
 	}
 	tests := []struct {
@@ -907,14 +783,14 @@ func TestDNSZonesClient_Create(t *testing.T) {
 			name: "create a DNS zone",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				zoneArgs: &DNSZoneArguments{
 					Name: "test-1.com",
 					TTL:  1800,
 				},
 			},
 			reqBody: &dnsZoneCreateRequest{
-				Organization: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				Organization: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				Details: &DNSZoneDetails{
 					Name: "test-1.com",
 					TTL:  1800,
@@ -933,7 +809,7 @@ func TestDNSZonesClient_Create(t *testing.T) {
 			name: "skip verification",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				zoneArgs: &DNSZoneArguments{
 					Name:            "test-1.com",
 					TTL:             1800,
@@ -941,7 +817,7 @@ func TestDNSZonesClient_Create(t *testing.T) {
 				},
 			},
 			reqBody: &dnsZoneCreateRequest{
-				Organization: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				Organization: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				Details: &DNSZoneDetails{
 					Name: "test-1.com",
 					TTL:  1800,
@@ -955,11 +831,11 @@ func TestDNSZonesClient_Create(t *testing.T) {
 			name: "without TTL",
 			args: args{
 				ctx:      context.Background(),
-				org:      &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:      OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				zoneArgs: &DNSZoneArguments{Name: "test-1.com"},
 			},
 			reqBody: &dnsZoneCreateRequest{
-				Organization: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				Organization: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				Details: &DNSZoneDetails{
 					Name: "test-1.com",
 				},
@@ -971,7 +847,7 @@ func TestDNSZonesClient_Create(t *testing.T) {
 			name: "without TTL",
 			args: args{
 				ctx:      context.Background(),
-				org:      &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:      OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				zoneArgs: &DNSZoneArguments{Name: "test-1.com"},
 			},
 			respStatus: http.StatusCreated,
@@ -981,7 +857,7 @@ func TestDNSZonesClient_Create(t *testing.T) {
 			name: "non-existent Organization",
 			args: args{
 				ctx:      context.Background(),
-				org:      &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:      OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				zoneArgs: &DNSZoneArguments{Name: "test-1.com"},
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
@@ -993,7 +869,7 @@ func TestDNSZonesClient_Create(t *testing.T) {
 			name: "suspended Organization",
 			args: args{
 				ctx:      context.Background(),
-				org:      &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:      OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				zoneArgs: &DNSZoneArguments{Name: "test-1.com"},
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
@@ -1005,7 +881,7 @@ func TestDNSZonesClient_Create(t *testing.T) {
 			name: "permission denied",
 			args: args{
 				ctx:      context.Background(),
-				org:      &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:      OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				zoneArgs: &DNSZoneArguments{Name: "test-1.com"},
 			},
 			errStr:     fixturePermissionDeniedErr,
@@ -1017,7 +893,7 @@ func TestDNSZonesClient_Create(t *testing.T) {
 			name: "validation error",
 			args: args{
 				ctx:      context.Background(),
-				org:      &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:      OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				zoneArgs: &DNSZoneArguments{Name: ""},
 			},
 			errStr:     fixtureValidationErrorErr,
@@ -1026,31 +902,14 @@ func TestDNSZonesClient_Create(t *testing.T) {
 			respBody:   fixture("validation_error"),
 		},
 		{
-			name: "nil organization",
-			args: args{
-				ctx:      context.Background(),
-				org:      nil,
-				zoneArgs: &DNSZoneArguments{Name: "test-1.com"},
-			},
-			reqBody: &dnsZoneCreateRequest{
-				Details: &DNSZoneDetails{
-					Name: "test-1.com",
-				},
-			},
-			errStr:     fixtureOrganizationNotFoundErr,
-			errResp:    fixtureOrganizationNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("organization_not_found_error"),
-		},
-		{
 			name: "nil zone arguments",
 			args: args{
 				ctx:      context.Background(),
-				org:      &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:      OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				zoneArgs: nil,
 			},
 			reqBody: &dnsZoneCreateRequest{
-				Organization: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				Organization: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			}, errStr: fixtureValidationErrorErr,
 			errResp:    fixtureValidationErrorResponseError,
 			respStatus: http.StatusUnprocessableEntity,
@@ -1060,7 +919,7 @@ func TestDNSZonesClient_Create(t *testing.T) {
 			name: "nil context",
 			args: args{
 				ctx:      nil,
-				org:      &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:      OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				zoneArgs: &DNSZoneArguments{Name: "hi"},
 			},
 			errStr: "net/http: nil Context",
@@ -1119,7 +978,7 @@ func TestDNSZonesClient_Create(t *testing.T) {
 func TestDNSZonesClient_Delete(t *testing.T) {
 	type args struct {
 		ctx  context.Context
-		zone *DNSZone
+		zone DNSZoneRef
 	}
 	tests := []struct {
 		name       string
@@ -1135,7 +994,7 @@ func TestDNSZonesClient_Delete(t *testing.T) {
 			name: "by ID",
 			args: args{
 				ctx:  context.Background(),
-				zone: &DNSZone{ID: "dnszone_k75eFc4UBOgeE5Zy"},
+				zone: DNSZoneRef{ID: "dnszone_k75eFc4UBOgeE5Zy"},
 			},
 			want: fixtureDNSZone,
 			wantQuery: &url.Values{
@@ -1148,7 +1007,7 @@ func TestDNSZonesClient_Delete(t *testing.T) {
 			name: "by Name",
 			args: args{
 				ctx:  context.Background(),
-				zone: &DNSZone{Name: "test1.example.com"},
+				zone: DNSZoneRef{Name: "test1.example.com"},
 			},
 			want: fixtureDNSZone,
 			wantQuery: &url.Values{
@@ -1161,18 +1020,7 @@ func TestDNSZonesClient_Delete(t *testing.T) {
 			name: "non-existent DNS zone",
 			args: args{
 				ctx:  context.Background(),
-				zone: &DNSZone{ID: "dnszone_k75eFc4UBOgeE5Zy"},
-			},
-			errStr:     fixtureDNSZoneNotFoundErr,
-			errResp:    fixtureDNSZoneNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("dns_zone_not_found_error"),
-		},
-		{
-			name: "nil DNS zone",
-			args: args{
-				ctx:  context.Background(),
-				zone: nil,
+				zone: DNSZoneRef{ID: "dnszone_k75eFc4UBOgeE5Zy"},
 			},
 			errStr:     fixtureDNSZoneNotFoundErr,
 			errResp:    fixtureDNSZoneNotFoundResponseError,
@@ -1183,7 +1031,7 @@ func TestDNSZonesClient_Delete(t *testing.T) {
 			name: "nil context",
 			args: args{
 				ctx:  nil,
-				zone: &DNSZone{ID: "dnszone_k75eFc4UBOgeE5Zy"},
+				zone: DNSZoneRef{ID: "dnszone_k75eFc4UBOgeE5Zy"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -1240,7 +1088,7 @@ func TestDNSZonesClient_Delete(t *testing.T) {
 func TestDNSZonesClient_VerificationDetails(t *testing.T) {
 	type args struct {
 		ctx  context.Context
-		zone *DNSZone
+		zone DNSZoneRef
 	}
 	tests := []struct {
 		name       string
@@ -1256,7 +1104,7 @@ func TestDNSZonesClient_VerificationDetails(t *testing.T) {
 			name: "by ID",
 			args: args{
 				ctx:  context.Background(),
-				zone: &DNSZone{ID: "dnszone_k75eFc4UBOgeE5Zy"},
+				zone: DNSZoneRef{ID: "dnszone_k75eFc4UBOgeE5Zy"},
 			},
 			want: &DNSZoneVerificationDetails{
 				Nameservers: []string{"ns1.katapult.io", "ns2.katapult.io"},
@@ -1272,7 +1120,7 @@ func TestDNSZonesClient_VerificationDetails(t *testing.T) {
 			name: "by Name",
 			args: args{
 				ctx:  context.Background(),
-				zone: &DNSZone{Name: "test1.example.com"},
+				zone: DNSZoneRef{Name: "test1.example.com"},
 			},
 			want: &DNSZoneVerificationDetails{
 				Nameservers: []string{"ns1.katapult.io", "ns2.katapult.io"},
@@ -1288,7 +1136,7 @@ func TestDNSZonesClient_VerificationDetails(t *testing.T) {
 			name: "non-existent DNS zone",
 			args: args{
 				ctx:  context.Background(),
-				zone: &DNSZone{ID: "dnszone_k75eFc4UBOgeE5Zy"},
+				zone: DNSZoneRef{ID: "dnszone_k75eFc4UBOgeE5Zy"},
 			},
 			errStr:     fixtureDNSZoneNotFoundErr,
 			errResp:    fixtureDNSZoneNotFoundResponseError,
@@ -1299,7 +1147,7 @@ func TestDNSZonesClient_VerificationDetails(t *testing.T) {
 			name: "already verified",
 			args: args{
 				ctx:  context.Background(),
-				zone: &DNSZone{ID: "dnszone_k75eFc4UBOgeE5Zy"},
+				zone: DNSZoneRef{ID: "dnszone_k75eFc4UBOgeE5Zy"},
 			},
 			errStr: "dns_zone_already_verified: This DNS zone is already " +
 				"verified, and does not require any verification details",
@@ -1316,7 +1164,7 @@ func TestDNSZonesClient_VerificationDetails(t *testing.T) {
 			name: "infrastructure DNS zone cannot be edited",
 			args: args{
 				ctx:  context.Background(),
-				zone: &DNSZone{ID: "dnszone_k75eFc4UBOgeE5Zy"},
+				zone: DNSZoneRef{ID: "dnszone_k75eFc4UBOgeE5Zy"},
 			},
 			errStr:     fixtureDNSZoneInfraErr,
 			errResp:    fixtureDNSZoneInfraResponseError,
@@ -1326,21 +1174,10 @@ func TestDNSZonesClient_VerificationDetails(t *testing.T) {
 			),
 		},
 		{
-			name: "nil DNS zone",
-			args: args{
-				ctx:  context.Background(),
-				zone: nil,
-			},
-			errStr:     fixtureDNSZoneNotFoundErr,
-			errResp:    fixtureDNSZoneNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("dns_zone_not_found_error"),
-		},
-		{
 			name: "nil context",
 			args: args{
 				ctx:  nil,
-				zone: &DNSZone{ID: "dnszone_k75eFc4UBOgeE5Zy"},
+				zone: DNSZoneRef{ID: "dnszone_k75eFc4UBOgeE5Zy"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -1399,7 +1236,7 @@ func TestDNSZonesClient_VerificationDetails(t *testing.T) {
 func TestDNSZonesClient_Verify(t *testing.T) {
 	type args struct {
 		ctx  context.Context
-		zone *DNSZone
+		zone DNSZoneRef
 	}
 	tests := []struct {
 		name       string
@@ -1415,14 +1252,12 @@ func TestDNSZonesClient_Verify(t *testing.T) {
 			name: "by ID",
 			args: args{
 				ctx: context.Background(),
-				zone: &DNSZone{
-					ID:   "dnszone_k75eFc4UBOgeE5Zy",
-					Name: "test1.example.com",
-					TTL:  1800,
+				zone: DNSZoneRef{
+					ID: "dnszone_k75eFc4UBOgeE5Zy",
 				},
 			},
 			reqBody: &dnsZoneVerifyRequest{
-				DNSZone: &DNSZone{ID: "dnszone_k75eFc4UBOgeE5Zy"},
+				DNSZone: DNSZoneRef{ID: "dnszone_k75eFc4UBOgeE5Zy"},
 			},
 			want:       fixtureDNSZone,
 			respStatus: http.StatusOK,
@@ -1432,13 +1267,12 @@ func TestDNSZonesClient_Verify(t *testing.T) {
 			name: "by Name",
 			args: args{
 				ctx: context.Background(),
-				zone: &DNSZone{
+				zone: DNSZoneRef{
 					Name: "test1.example.com",
-					TTL:  1800,
 				},
 			},
 			reqBody: &dnsZoneVerifyRequest{
-				DNSZone: &DNSZone{Name: "test1.example.com"},
+				DNSZone: DNSZoneRef{Name: "test1.example.com"},
 			},
 			want:       fixtureDNSZone,
 			respStatus: http.StatusOK,
@@ -1448,7 +1282,7 @@ func TestDNSZonesClient_Verify(t *testing.T) {
 			name: "non-existent DNS zone",
 			args: args{
 				ctx:  context.Background(),
-				zone: &DNSZone{ID: "dnszone_k75eFc4UBOgeE5Zy"},
+				zone: DNSZoneRef{ID: "dnszone_k75eFc4UBOgeE5Zy"},
 			},
 			errStr:     fixtureDNSZoneNotFoundErr,
 			errResp:    fixtureDNSZoneNotFoundResponseError,
@@ -1459,7 +1293,7 @@ func TestDNSZonesClient_Verify(t *testing.T) {
 			name: "infrastructure DNS zone cannot be edited",
 			args: args{
 				ctx:  context.Background(),
-				zone: &DNSZone{ID: "dnszone_k75eFc4UBOgeE5Zy"},
+				zone: DNSZoneRef{ID: "dnszone_k75eFc4UBOgeE5Zy"},
 			},
 			errStr:     fixtureDNSZoneInfraErr,
 			errResp:    fixtureDNSZoneInfraResponseError,
@@ -1472,7 +1306,7 @@ func TestDNSZonesClient_Verify(t *testing.T) {
 			name: "validation error",
 			args: args{
 				ctx:  context.Background(),
-				zone: &DNSZone{ID: "dnszone_k75eFc4UBOgeE5Zy"},
+				zone: DNSZoneRef{ID: "dnszone_k75eFc4UBOgeE5Zy"},
 			},
 			errStr:     fixtureValidationErrorErr,
 			errResp:    fixtureValidationErrorResponseError,
@@ -1480,21 +1314,10 @@ func TestDNSZonesClient_Verify(t *testing.T) {
 			respBody:   fixture("validation_error"),
 		},
 		{
-			name: "nil DNS zone",
-			args: args{
-				ctx:  context.Background(),
-				zone: nil,
-			},
-			errStr:     fixtureDNSZoneNotFoundErr,
-			errResp:    fixtureDNSZoneNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("dns_zone_not_found_error"),
-		},
-		{
 			name: "nil context",
 			args: args{
 				ctx:  nil,
-				zone: &DNSZone{ID: "dnszone_k75eFc4UBOgeE5Zy"},
+				zone: DNSZoneRef{ID: "dnszone_k75eFc4UBOgeE5Zy"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -1550,7 +1373,7 @@ func TestDNSZonesClient_Verify(t *testing.T) {
 func TestDNSZonesClient_UpdateTTL(t *testing.T) {
 	type args struct {
 		ctx  context.Context
-		zone *DNSZone
+		zone DNSZoneRef
 		ttl  int
 	}
 	tests := []struct {
@@ -1567,11 +1390,11 @@ func TestDNSZonesClient_UpdateTTL(t *testing.T) {
 			name: "by ID",
 			args: args{
 				ctx:  context.Background(),
-				zone: &DNSZone{ID: "dnszone_lwz66kyviwCQyqQc"},
+				zone: DNSZoneRef{ID: "dnszone_lwz66kyviwCQyqQc"},
 				ttl:  1842,
 			},
 			reqBody: &dnsZoneUpdateTTLRequest{
-				DNSZone: &DNSZone{ID: "dnszone_lwz66kyviwCQyqQc"},
+				DNSZone: DNSZoneRef{ID: "dnszone_lwz66kyviwCQyqQc"},
 				TTL:     1842,
 			},
 			want: &DNSZone{
@@ -1586,11 +1409,11 @@ func TestDNSZonesClient_UpdateTTL(t *testing.T) {
 			name: "by Name",
 			args: args{
 				ctx:  context.Background(),
-				zone: &DNSZone{Name: "test1.example.come"},
+				zone: DNSZoneRef{Name: "test1.example.come"},
 				ttl:  1842,
 			},
 			reqBody: &dnsZoneUpdateTTLRequest{
-				DNSZone: &DNSZone{Name: "test1.example.come"},
+				DNSZone: DNSZoneRef{Name: "test1.example.come"},
 				TTL:     1842,
 			},
 			want: &DNSZone{
@@ -1605,11 +1428,11 @@ func TestDNSZonesClient_UpdateTTL(t *testing.T) {
 			name: "high TTL",
 			args: args{
 				ctx:  context.Background(),
-				zone: &DNSZone{ID: "dnszone_lwz66kyviwCQyqQc"},
+				zone: DNSZoneRef{ID: "dnszone_lwz66kyviwCQyqQc"},
 				ttl:  25200,
 			},
 			reqBody: &dnsZoneUpdateTTLRequest{
-				DNSZone: &DNSZone{ID: "dnszone_lwz66kyviwCQyqQc"},
+				DNSZone: DNSZoneRef{ID: "dnszone_lwz66kyviwCQyqQc"},
 				TTL:     25200,
 			},
 			respStatus: http.StatusCreated,
@@ -1619,7 +1442,7 @@ func TestDNSZonesClient_UpdateTTL(t *testing.T) {
 			name: "non-existent DNS zone",
 			args: args{
 				ctx:  context.Background(),
-				zone: &DNSZone{ID: "dnszone_lwz66kyviwCQyqQc"},
+				zone: DNSZoneRef{ID: "dnszone_lwz66kyviwCQyqQc"},
 				ttl:  1842,
 			},
 			errStr:     fixtureDNSZoneNotFoundErr,
@@ -1631,7 +1454,7 @@ func TestDNSZonesClient_UpdateTTL(t *testing.T) {
 			name: "permission denied",
 			args: args{
 				ctx:  context.Background(),
-				zone: &DNSZone{ID: "dnszone_lwz66kyviwCQyqQc"},
+				zone: DNSZoneRef{ID: "dnszone_lwz66kyviwCQyqQc"},
 				ttl:  600,
 			},
 			errStr:     fixturePermissionDeniedErr,
@@ -1643,7 +1466,7 @@ func TestDNSZonesClient_UpdateTTL(t *testing.T) {
 			name: "validation error",
 			args: args{
 				ctx:  context.Background(),
-				zone: &DNSZone{ID: "dnszone_lwz66kyviwCQyqQc"},
+				zone: DNSZoneRef{ID: "dnszone_lwz66kyviwCQyqQc"},
 				ttl:  600,
 			},
 			errStr:     fixtureValidationErrorErr,
@@ -1652,22 +1475,10 @@ func TestDNSZonesClient_UpdateTTL(t *testing.T) {
 			respBody:   fixture("validation_error"),
 		},
 		{
-			name: "nil DNS zone",
-			args: args{
-				ctx:  context.Background(),
-				zone: nil,
-				ttl:  1842,
-			},
-			errStr:     fixtureDNSZoneNotFoundErr,
-			errResp:    fixtureDNSZoneNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("dns_zone_not_found_error"),
-		},
-		{
 			name: "nil context",
 			args: args{
 				ctx:  nil,
-				zone: &DNSZone{ID: "dnszone_lwz66kyviwCQyqQc"},
+				zone: DNSZoneRef{ID: "dnszone_lwz66kyviwCQyqQc"},
 				ttl:  600,
 			},
 			errStr: "net/http: nil Context",

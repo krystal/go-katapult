@@ -12,8 +12,8 @@ import (
 )
 
 var (
-	nullBytes               = []byte("null")
-	NullVirtualMachineGroup = &VirtualMachineGroup{null: true}
+	nullBytes                  = []byte("null")
+	NullVirtualMachineGroupRef = &VirtualMachineGroupRef{null: true}
 )
 
 type VirtualMachineGroup struct {
@@ -21,14 +21,17 @@ type VirtualMachineGroup struct {
 	Name      string               `json:"name,omitempty"`
 	Segregate bool                 `json:"segregate,omitempty"`
 	CreatedAt *timestamp.Timestamp `json:"created_at,omitempty"`
-	null      bool
 }
 
-func (s *VirtualMachineGroup) UnmarshalJSON(b []byte) error {
-	type alias VirtualMachineGroup
+func (s *VirtualMachineGroup) Ref() VirtualMachineGroupRef {
+	return VirtualMachineGroupRef{ID: s.ID}
+}
+
+func (s *VirtualMachineGroupRef) UnmarshalJSON(b []byte) error {
+	type alias VirtualMachineGroupRef
 
 	if bytes.Equal(b, nullBytes) {
-		*s = VirtualMachineGroup{null: true}
+		*s = VirtualMachineGroupRef{null: true}
 
 		return nil
 	}
@@ -36,8 +39,8 @@ func (s *VirtualMachineGroup) UnmarshalJSON(b []byte) error {
 	return json.Unmarshal(b, (*alias)(s))
 }
 
-func (s *VirtualMachineGroup) MarshalJSON() ([]byte, error) {
-	type alias VirtualMachineGroup
+func (s *VirtualMachineGroupRef) MarshalJSON() ([]byte, error) {
+	type alias VirtualMachineGroupRef
 
 	if s.null {
 		return nullBytes, nil
@@ -46,20 +49,14 @@ func (s *VirtualMachineGroup) MarshalJSON() ([]byte, error) {
 	return json.Marshal((*alias)(s))
 }
 
-func (s *VirtualMachineGroup) lookupReference() *VirtualMachineGroup {
-	if s == nil {
-		return nil
-	}
-
-	return &VirtualMachineGroup{ID: s.ID}
+type VirtualMachineGroupRef struct {
+	ID   string `json:"id,omitempty"`
+	null bool
 }
 
-func (s *VirtualMachineGroup) queryValues() *url.Values {
+func (s VirtualMachineGroupRef) queryValues() *url.Values {
 	v := &url.Values{}
-
-	if s != nil {
-		v.Set("virtual_machine_group[id]", s.ID)
-	}
+	v.Set("virtual_machine_group[id]", s.ID)
 
 	return v
 }
@@ -75,12 +72,12 @@ type VirtualMachineGroupUpdateArguments struct {
 }
 
 type virtualMachineGroupCreateRequest struct {
-	Organization *Organization                       `json:"organization,omitempty"`
+	Organization OrganizationRef                     `json:"organization"`
 	Properties   *VirtualMachineGroupCreateArguments `json:"properties,omitempty"`
 }
 
 type virtualMachineGroupUpdateRequest struct {
-	VirtualMachineGroup *VirtualMachineGroup                `json:"virtual_machine_group,omitempty"`
+	VirtualMachineGroup VirtualMachineGroupRef              `json:"virtual_machine_group,omitempty"`
 	Properties          *VirtualMachineGroupUpdateArguments `json:"properties,omitempty"`
 }
 
@@ -105,7 +102,7 @@ func NewVirtualMachineGroupsClient(
 
 func (s *VirtualMachineGroupsClient) List(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 ) ([]*VirtualMachineGroup, *katapult.Response, error) {
 	qs := queryValues(org)
 	u := &url.URL{
@@ -120,9 +117,9 @@ func (s *VirtualMachineGroupsClient) List(
 
 func (s *VirtualMachineGroupsClient) Get(
 	ctx context.Context,
-	id string,
+	ref VirtualMachineGroupRef,
 ) (*VirtualMachineGroup, *katapult.Response, error) {
-	return s.GetByID(ctx, id)
+	return s.GetByID(ctx, ref.ID)
 }
 
 func (s *VirtualMachineGroupsClient) GetByID(
@@ -140,12 +137,12 @@ func (s *VirtualMachineGroupsClient) GetByID(
 
 func (s *VirtualMachineGroupsClient) Create(
 	ctx context.Context,
-	org *Organization,
+	org OrganizationRef,
 	args *VirtualMachineGroupCreateArguments,
 ) (*VirtualMachineGroup, *katapult.Response, error) {
 	u := &url.URL{Path: "organizations/_/virtual_machine_groups"}
 	reqBody := &virtualMachineGroupCreateRequest{
-		Organization: org.lookupReference(),
+		Organization: org,
 		Properties:   args,
 	}
 
@@ -156,12 +153,12 @@ func (s *VirtualMachineGroupsClient) Create(
 
 func (s *VirtualMachineGroupsClient) Update(
 	ctx context.Context,
-	group *VirtualMachineGroup,
+	ref VirtualMachineGroupRef,
 	args *VirtualMachineGroupUpdateArguments,
 ) (*VirtualMachineGroup, *katapult.Response, error) {
 	u := &url.URL{Path: "virtual_machine_groups/_"}
 	reqBody := &virtualMachineGroupUpdateRequest{
-		VirtualMachineGroup: group.lookupReference(),
+		VirtualMachineGroup: ref,
 		Properties:          args,
 	}
 
@@ -172,7 +169,7 @@ func (s *VirtualMachineGroupsClient) Update(
 
 func (s *VirtualMachineGroupsClient) Delete(
 	ctx context.Context,
-	group *VirtualMachineGroup,
+	group VirtualMachineGroupRef,
 ) (*katapult.Response, error) {
 	qs := queryValues(group)
 	u := &url.URL{Path: "virtual_machine_groups/_", RawQuery: qs.Encode()}

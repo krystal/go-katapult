@@ -3,7 +3,6 @@ package core
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/url"
 	"testing"
@@ -60,66 +59,16 @@ func TestVirtualMachinePackage_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestNewVirtualMachinePackageLookup(t *testing.T) {
-	type args struct {
-		idOrPermalink string
-	}
-	tests := []struct {
-		name  string
-		args  args
-		want  *VirtualMachinePackage
-		field FieldName
-	}{
-		{
-			name:  "empty string",
-			args:  args{idOrPermalink: ""},
-			want:  &VirtualMachinePackage{},
-			field: PermalinkField,
-		},
-		{
-			name:  "vmpkg_ prefixed ID",
-			args:  args{idOrPermalink: "vmpkg_bVCqY58SxSwheKV6"},
-			want:  &VirtualMachinePackage{ID: "vmpkg_bVCqY58SxSwheKV6"},
-			field: IDField,
-		},
-		{
-			name:  "permalink",
-			args:  args{idOrPermalink: "rock-3"},
-			want:  &VirtualMachinePackage{Permalink: "rock-3"},
-			field: PermalinkField,
-		},
-		{
-			name:  "random text",
-			args:  args{idOrPermalink: "Z0jCwfGCIzli3Vk5"},
-			want:  &VirtualMachinePackage{Permalink: "Z0jCwfGCIzli3Vk5"},
-			field: PermalinkField,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, field := NewVirtualMachinePackageLookup(tt.args.idOrPermalink)
-
-			assert.Equal(t, tt.want, got)
-			assert.Equal(t, tt.field, field)
-		})
-	}
-}
-
-func TestVirtualMachinePackage_lookupReference(t *testing.T) {
+func TestVirtualMachinePackage_Ref(t *testing.T) {
 	tests := []struct {
 		name string
 		obj  *VirtualMachinePackage
-		want *VirtualMachinePackage
+		want VirtualMachinePackageRef
 	}{
-		{
-			name: "nil",
-			obj:  nil,
-			want: nil,
-		},
 		{
 			name: "empty",
 			obj:  &VirtualMachinePackage{},
-			want: &VirtualMachinePackage{},
+			want: VirtualMachinePackageRef{},
 		},
 		{
 			name: "full",
@@ -134,41 +83,52 @@ func TestVirtualMachinePackage_lookupReference(t *testing.T) {
 				Privacy:       "priv",
 				Icon:          &Attachment{URL: "url"},
 			},
-			want: &VirtualMachinePackage{ID: "vmpkg_XdNPhGXvyt1dnDts"},
-		},
-		{
-			name: "no ID",
-			obj: &VirtualMachinePackage{
-				Name:          "X-Small",
-				Permalink:     "xsmall",
-				CPUCores:      504684,
-				IPv4Addresses: 322134,
-				MemoryInGB:    953603,
-				StorageInGB:   853121,
-				Privacy:       "priv",
-				Icon:          &Attachment{URL: "url"},
-			},
-			want: &VirtualMachinePackage{Permalink: "xsmall"},
-		},
-		{
-			name: "no ID or Permalink",
-			obj: &VirtualMachinePackage{
-				Name:          "X-Small",
-				CPUCores:      504684,
-				IPv4Addresses: 322134,
-				MemoryInGB:    953603,
-				StorageInGB:   853121,
-				Privacy:       "priv",
-				Icon:          &Attachment{URL: "url"},
-			},
-			want: &VirtualMachinePackage{},
+			want: VirtualMachinePackageRef{ID: "vmpkg_XdNPhGXvyt1dnDts"},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.obj.lookupReference()
+			got := tt.obj.Ref()
 
 			assert.Equal(t, tt.want, got)
+		})
+	}
+}
+
+func TestVirtualMachinePackageRef_queryValues(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  VirtualMachinePackageRef
+		want *url.Values
+	}{
+		{
+			name: "empty",
+			obj:  VirtualMachinePackageRef{},
+			want: &url.Values{},
+		},
+		{
+			name: "id and permalink",
+			obj: VirtualMachinePackageRef{
+				ID:        "vmpkg_XdNPhGXvyt1dnDts",
+				Permalink: "xl-rock",
+			},
+		},
+		{
+			name: "id",
+			obj: VirtualMachinePackageRef{
+				ID: "vmpkg_XdNPhGXvyt1dnDts",
+			},
+		},
+		{
+			name: "permalink",
+			obj: VirtualMachinePackageRef{
+				Permalink: "xl-rock",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testQueryableEncoding(t, tt.obj)
 		})
 	}
 }
@@ -366,14 +326,13 @@ func TestVirtualMachinePackagesClient_List(t *testing.T) {
 
 func TestVirtualMachinePackagesClient_Get(t *testing.T) {
 	type args struct {
-		ctx           context.Context
-		idOrPermalink string
+		ctx context.Context
+		ref VirtualMachinePackageRef
 	}
 	tests := []struct {
 		name       string
 		args       args
 		reqPath    string
-		reqQuery   *url.Values
 		want       *VirtualMachinePackage
 		errStr     string
 		errResp    *katapult.ResponseError
@@ -383,10 +342,9 @@ func TestVirtualMachinePackagesClient_Get(t *testing.T) {
 		{
 			name: "by ID",
 			args: args{
-				ctx:           context.Background(),
-				idOrPermalink: "vmpkg_YlqvfsKqZJODtvjG",
+				ctx: context.Background(),
+				ref: VirtualMachinePackageRef{ID: "vmpkg_YlqvfsKqZJODtvjG"},
 			},
-			reqPath: "virtual_machine_packages/vmpkg_YlqvfsKqZJODtvjG",
 			want: &VirtualMachinePackage{
 				ID:        "vmpkg_YlqvfsKqZJODtvjG",
 				Name:      "Small",
@@ -398,12 +356,8 @@ func TestVirtualMachinePackagesClient_Get(t *testing.T) {
 		{
 			name: "by Permalink",
 			args: args{
-				ctx:           context.Background(),
-				idOrPermalink: "small",
-			},
-			reqPath: "virtual_machine_packages/_",
-			reqQuery: &url.Values{
-				"virtual_machine_package[permalink]": []string{"small"},
+				ctx: context.Background(),
+				ref: VirtualMachinePackageRef{Permalink: "small"},
 			},
 			want: &VirtualMachinePackage{
 				ID:        "vmpkg_YlqvfsKqZJODtvjG",
@@ -416,8 +370,8 @@ func TestVirtualMachinePackagesClient_Get(t *testing.T) {
 		{
 			name: "non-existent virtual machine package",
 			args: args{
-				ctx:           context.Background(),
-				idOrPermalink: "vmpkg_nopethisbegone",
+				ctx: context.Background(),
+				ref: VirtualMachinePackageRef{ID: "vmpkg_nopethisbegone"},
 			},
 			errStr:     fixturePackageNotFoundErr,
 			errResp:    fixturePackageNotFoundResponseError,
@@ -425,24 +379,10 @@ func TestVirtualMachinePackagesClient_Get(t *testing.T) {
 			respBody:   fixture("package_not_found_error"),
 		},
 		{
-			name: "empty string",
-			args: args{
-				ctx:           context.Background(),
-				idOrPermalink: "",
-			},
-			reqPath: "virtual_machine_packages/_",
-			reqQuery: &url.Values{
-				"virtual_machine_package[permalink]": []string{""},
-			}, errStr: fixtureInvalidArgumentErr,
-			errResp:    fixtureInvalidArgumentResponseError,
-			respStatus: http.StatusBadRequest,
-			respBody:   fixture("invalid_argument_error"),
-		},
-		{
 			name: "nil context",
 			args: args{
-				ctx:           nil,
-				idOrPermalink: "vmpkg_nopethisbegone",
+				ctx: nil,
+				ref: VirtualMachinePackageRef{ID: "vmpkg_nopethisbegone"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -453,23 +393,14 @@ func TestVirtualMachinePackagesClient_Get(t *testing.T) {
 			defer teardown()
 			c := NewVirtualMachinePackagesClient(rm)
 
-			path := fmt.Sprintf(
-				"virtual_machine_packages/%s", tt.args.idOrPermalink,
-			)
-			if tt.reqPath != "" {
-				path = tt.reqPath
-			}
-
 			mux.HandleFunc(
-				"/core/v1/"+path,
+				"/core/v1/virtual_machine_packages/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
 
-					if tt.reqQuery != nil {
-						assert.Equal(t, *tt.reqQuery, r.URL.Query())
-					}
+					assert.Equal(t, *tt.args.ref.queryValues(), r.URL.Query())
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -477,7 +408,7 @@ func TestVirtualMachinePackagesClient_Get(t *testing.T) {
 			)
 
 			got, resp, err := c.Get(
-				tt.args.ctx, tt.args.idOrPermalink,
+				tt.args.ctx, tt.args.ref,
 			)
 
 			if tt.respStatus != 0 {
@@ -556,11 +487,17 @@ func TestVirtualMachinePackagesClient_GetByID(t *testing.T) {
 			c := NewVirtualMachinePackagesClient(rm)
 
 			mux.HandleFunc(
-				fmt.Sprintf("/core/v1/virtual_machine_packages/%s", tt.args.id),
+				"/core/v1/virtual_machine_packages/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+
+					assert.Equal(t, url.Values{
+						"virtual_machine_package[id]": []string{
+							tt.args.id,
+						},
+					}, r.URL.Query())
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)

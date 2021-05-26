@@ -44,6 +44,21 @@ type LoadBalancerRule struct {
 	CheckTimeout    int                       `json:"check_timeout,omitempty"`
 }
 
+func (lbr *LoadBalancerRule) Ref() LoadBalancerRuleRef {
+	return LoadBalancerRuleRef{ID: lbr.ID}
+}
+
+type LoadBalancerRuleRef struct {
+	ID string `json:"id,omitempty"`
+}
+
+func (lbr LoadBalancerRuleRef) queryValues() *url.Values {
+	v := &url.Values{}
+	v.Set("load_balancer_rule[id]", lbr.ID)
+
+	return v
+}
+
 type LoadBalancerRuleArguments struct {
 	Algorithm       LoadBalancerRuleAlgorithm `json:"algorithm,omitempty"`
 	DestinationPort int                       `json:"destination_port,omitempty"`
@@ -83,12 +98,12 @@ func NewLoadBalancerRulesClient(rm RequestMaker) *LoadBalancerRulesClient {
 // List returns LoadBalancer Rules for the specified LoadBalancer.
 func (s *LoadBalancerRulesClient) List(
 	ctx context.Context,
-	lb *LoadBalancer,
+	lb LoadBalancerRef,
 	opts *ListOptions,
 ) ([]LoadBalancerRule, *katapult.Response, error) {
-	qs := queryValues(opts)
+	qs := queryValues(opts, lb)
 	u := &url.URL{
-		Path:     fmt.Sprintf("load_balancers/%s/rules", lb.ID),
+		Path:     "load_balancers/_/rules",
 		RawQuery: qs.Encode(),
 	}
 
@@ -108,16 +123,12 @@ type loadBalancerRuleCreateRequest struct {
 
 func (s *LoadBalancerRulesClient) Get(
 	ctx context.Context,
-	id string,
+	ref LoadBalancerRuleRef,
 ) (*LoadBalancerRule, *katapult.Response, error) {
-	return s.GetByID(ctx, id)
-}
-
-func (s *LoadBalancerRulesClient) GetByID(
-	ctx context.Context,
-	id string,
-) (*LoadBalancerRule, *katapult.Response, error) {
-	u := &url.URL{Path: fmt.Sprintf("load_balancers/rules/%s", id)}
+	u := &url.URL{
+		Path:     "load_balancers/rules/_",
+		RawQuery: ref.queryValues().Encode(),
+	}
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 	if err != nil {
 		return nil, resp, err
@@ -126,9 +137,16 @@ func (s *LoadBalancerRulesClient) GetByID(
 	return body.LoadBalancerRule, resp, err
 }
 
+func (s *LoadBalancerRulesClient) GetByID(
+	ctx context.Context,
+	id string,
+) (*LoadBalancerRule, *katapult.Response, error) {
+	return s.Get(ctx, LoadBalancerRuleRef{ID: id})
+}
+
 func (s *LoadBalancerRulesClient) Create(
 	ctx context.Context,
-	lb *LoadBalancer,
+	lb LoadBalancerRef,
 	args LoadBalancerRuleArguments,
 ) (*LoadBalancerRule, *katapult.Response, error) {
 	u := &url.URL{Path: fmt.Sprintf("load_balancers/%s/rules", lb.ID)}
@@ -150,10 +168,13 @@ type loadBalancerRuleUpdateRequest struct {
 
 func (s *LoadBalancerRulesClient) Update(
 	ctx context.Context,
-	rule *LoadBalancerRule,
+	ref LoadBalancerRuleRef,
 	args LoadBalancerRuleArguments,
 ) (*LoadBalancerRule, *katapult.Response, error) {
-	u := &url.URL{Path: fmt.Sprintf("load_balancers/rules/%s", rule.ID)}
+	u := &url.URL{
+		Path:     "load_balancers/rules/_",
+		RawQuery: ref.queryValues().Encode(),
+	}
 	reqBody := &loadBalancerRuleUpdateRequest{
 		Properties: args,
 	}
@@ -168,10 +189,11 @@ func (s *LoadBalancerRulesClient) Update(
 
 func (s *LoadBalancerRulesClient) Delete(
 	ctx context.Context,
-	rule *LoadBalancerRule,
+	ref LoadBalancerRuleRef,
 ) (*LoadBalancerRule, *katapult.Response, error) {
 	u := &url.URL{
-		Path: fmt.Sprintf("load_balancers/rules/%s", rule.ID),
+		Path:     "load_balancers/rules/_",
+		RawQuery: ref.queryValues().Encode(),
 	}
 	body, resp, err := s.doRequest(ctx, "DELETE", u, nil)
 	if err != nil {

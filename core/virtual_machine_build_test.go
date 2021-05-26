@@ -3,8 +3,8 @@ package core
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
+	"net/url"
 	"testing"
 
 	"github.com/jimeh/undent"
@@ -138,6 +138,49 @@ func TestVirtualMachineBuildStates(t *testing.T) {
 	}
 }
 
+func TestVirtualMachineBuild_Ref(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  VirtualMachineBuild
+		want VirtualMachineBuildRef
+	}{
+		{
+			name: "with id",
+			obj: VirtualMachineBuild{
+				ID: "vmbuild_pbjJIqJ3MOMNsCr3",
+			},
+			want: VirtualMachineBuildRef{ID: "vmbuild_pbjJIqJ3MOMNsCr3"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, tt.obj.Ref())
+		})
+	}
+}
+
+func TestVirtualMachineBuildRef_queryValues(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  VirtualMachineBuildRef
+		want VirtualMachineBuildRef
+	}{
+		{
+			name: "with id",
+			obj: VirtualMachineBuildRef{
+				ID: "vmbuild_pbjJIqJ3MOMNsCr3",
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testQueryableEncoding(t, tt.obj)
+		})
+	}
+}
+
 func Test_virtualMachineBuildResponseBody_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string
@@ -177,17 +220,17 @@ func Test_virtualMachineBuildCreateRequest_JSONMarshaling(t *testing.T) {
 			name: "full",
 			obj: &virtualMachineBuildCreateRequest{
 				Hostname:     "foo.example.com",
-				Organization: &Organization{ID: "org_O648YDMEYeLmqdmn"},
-				Zone:         &Zone{ID: "zone_kY2sPRG24sJVRM2U"},
-				DataCenter:   &DataCenter{ID: "dc_25d48761871e4bf"},
-				Package: &VirtualMachinePackage{
+				Organization: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
+				Zone:         &ZoneRef{ID: "zone_kY2sPRG24sJVRM2U"},
+				DataCenter:   &DataCenterRef{ID: "dc_25d48761871e4bf"},
+				Package: VirtualMachinePackageRef{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
-				DiskTemplate: &DiskTemplate{ID: "dtpl_ytP13XD5DE1RdSL9"},
+				DiskTemplate: &DiskTemplateRef{ID: "dtpl_ytP13XD5DE1RdSL9"},
 				DiskTemplateOptions: []*DiskTemplateOption{
 					{Key: "foo", Value: "bar"},
 				},
-				Network: &Network{ID: "netw_zDW7KYAeqqfRfVag"},
+				Network: &NetworkRef{ID: "netw_zDW7KYAeqqfRfVag"},
 			},
 		},
 	}
@@ -212,7 +255,7 @@ func Test_virtualMachineBuildCreateFromSpecRequest_JSONMarshaling(
 		{
 			name: "full",
 			obj: &virtualMachineBuildCreateFromSpecRequest{
-				Organization: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				Organization: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				XML: undent.String(`
 					<?xml version="1.0" encoding="UTF-8"?>
 					<VirtualMachineSpec>
@@ -232,7 +275,7 @@ func Test_virtualMachineBuildCreateFromSpecRequest_JSONMarshaling(
 func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		id  string
+		ref VirtualMachineBuildRef
 	}
 	tests := []struct {
 		name       string
@@ -248,7 +291,7 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 			name: "virtual machine build",
 			args: args{
 				ctx: context.Background(),
-				id:  "vmbuild_pbjJIqJ3MOMNsCr3",
+				ref: VirtualMachineBuildRef{ID: "vmbuild_pbjJIqJ3MOMNsCr3"},
 			},
 			want: &VirtualMachineBuild{
 				ID:      "vmbuild_pbjJIqJ3MOMNsCr3",
@@ -262,7 +305,7 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 			name: "virtual machine build (alt response)",
 			args: args{
 				ctx: context.Background(),
-				id:  "vmbuild_pbjJIqJ3MOMNsCr3",
+				ref: VirtualMachineBuildRef{ID: "vmbuild_pbjJIqJ3MOMNsCr3"},
 			},
 			want: &VirtualMachineBuild{
 				ID:      "vmbuild_pbjJIqJ3MOMNsCr3",
@@ -276,7 +319,7 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 			name: "non-existent virtual machine build",
 			args: args{
 				ctx: context.Background(),
-				id:  "vmbuild_nopethisbegone",
+				ref: VirtualMachineBuildRef{ID: "vmbuild_nopethisbegone"},
 			},
 			errStr:     fixtureBuildNotFoundErr,
 			errResp:    fixtureBuildNotFoundResponseError,
@@ -287,7 +330,7 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				id:  "vmbuild_pbjJIqJ3MOMNsCr3",
+				ref: VirtualMachineBuildRef{ID: "vmbuild_pbjJIqJ3MOMNsCr3"},
 			},
 			errStr: "net/http: nil Context",
 		},
@@ -299,11 +342,12 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 			c := NewVirtualMachineBuildsClient(rm)
 
 			mux.HandleFunc(
-				fmt.Sprintf("/core/v1/virtual_machines/builds/%s", tt.args.id),
+				"/core/v1/virtual_machines/builds/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assert.Equal(t, *tt.args.ref.queryValues(), r.URL.Query())
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -311,7 +355,7 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 			)
 
 			got, resp, err := c.Get(
-				tt.args.ctx, tt.args.id,
+				tt.args.ctx, tt.args.ref,
 			)
 
 			if tt.respStatus != 0 {
@@ -405,11 +449,17 @@ func TestVirtualMachineBuildsClient_GetByID(t *testing.T) {
 			c := NewVirtualMachineBuildsClient(rm)
 
 			mux.HandleFunc(
-				fmt.Sprintf("/core/v1/virtual_machines/builds/%s", tt.args.id),
+				"/core/v1/virtual_machines/builds/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+
+					assert.Equal(t, url.Values{
+						"virtual_machine_build[id]": []string{
+							tt.args.id,
+						},
+					}, r.URL.Query())
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -443,40 +493,30 @@ func TestVirtualMachineBuildsClient_GetByID(t *testing.T) {
 
 func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 	fullArgs := &VirtualMachineBuildArguments{
-		Zone: &Zone{
-			ID:        "zone_kY2sPRG24sJVRM2U",
-			Name:      "North West",
-			Permalink: "north-west",
+		Zone: &ZoneRef{
+			ID: "zone_kY2sPRG24sJVRM2U",
 		},
-		DataCenter: &DataCenter{
-			ID:        "dc_25d48761871e4bf",
-			Name:      "Woodland",
-			Permalink: "woodland",
+		DataCenter: &DataCenterRef{
+			ID: "dc_25d48761871e4bf",
 		},
-		Package: &VirtualMachinePackage{
-			ID:        "vmpkg_XdNPhGXvyt1dnDts",
-			Name:      "X-Small",
-			Permalink: "xsmall",
+		Package: VirtualMachinePackageRef{
+			ID: "vmpkg_XdNPhGXvyt1dnDts",
 		},
-		DiskTemplate: &DiskTemplate{
-			ID:        "dtpl_ytP13XD5DE1RdSL9",
-			Name:      "Ubuntu 18.04 Server",
+		DiskTemplate: &DiskTemplateRef{
 			Permalink: "templates/ubuntu-18-04",
 		},
 		DiskTemplateOptions: []*DiskTemplateOption{
 			{Key: "foo", Value: "bar"},
 		},
-		Network: &Network{
-			ID:        "netw_zDW7KYAeqqfRfVag",
-			Name:      "Public Network",
-			Permalink: "public",
+		Network: &NetworkRef{
+			ID: "netw_zDW7KYAeqqfRfVag",
 		},
 		Hostname: "foo.example.com",
 	}
 
 	type args struct {
 		ctx       context.Context
-		org       *Organization
+		org       OrganizationRef
 		buildArgs *VirtualMachineBuildArguments
 	}
 	tests := []struct {
@@ -493,33 +533,31 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			name: "virtual machine build",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{
-					ID:        "org_O648YDMEYeLmqdmn",
-					Name:      "ACME Inc.",
-					SubDomain: "acme",
+				org: OrganizationRef{
+					ID: "org_O648YDMEYeLmqdmn",
 				},
 				buildArgs: fullArgs,
 			},
 			reqBody: &virtualMachineBuildCreateRequest{
-				Organization: &Organization{
+				Organization: OrganizationRef{
 					ID: "org_O648YDMEYeLmqdmn",
 				},
-				Zone: &Zone{
+				Zone: &ZoneRef{
 					ID: "zone_kY2sPRG24sJVRM2U",
 				},
-				DataCenter: &DataCenter{
+				DataCenter: &DataCenterRef{
 					ID: "dc_25d48761871e4bf",
 				},
-				Package: &VirtualMachinePackage{
+				Package: VirtualMachinePackageRef{
 					ID: "vmpkg_XdNPhGXvyt1dnDts",
 				},
-				DiskTemplate: &DiskTemplate{
-					ID: "dtpl_ytP13XD5DE1RdSL9",
+				DiskTemplate: &DiskTemplateRef{
+					Permalink: "templates/ubuntu-18-04",
 				},
 				DiskTemplateOptions: []*DiskTemplateOption{
 					{Key: "foo", Value: "bar"},
 				},
-				Network: &Network{
+				Network: &NetworkRef{
 					ID: "netw_zDW7KYAeqqfRfVag",
 				},
 				Hostname: "foo.example.com",
@@ -535,57 +573,51 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			name: "virtual machine build (no IDs)",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{
-					Name:      "ACME Inc.",
+				org: OrganizationRef{
 					SubDomain: "acme",
 				},
 				buildArgs: &VirtualMachineBuildArguments{
-					Zone: &Zone{
-						Name:      "North West",
+					Zone: &ZoneRef{
 						Permalink: "north-west",
 					},
-					DataCenter: &DataCenter{
-						Name:      "Woodland",
+					DataCenter: &DataCenterRef{
 						Permalink: "woodland",
 					},
-					Package: &VirtualMachinePackage{
-						Name:      "X-Small",
+					Package: VirtualMachinePackageRef{
 						Permalink: "xsmall",
 					},
-					DiskTemplate: &DiskTemplate{
-						Name:      "Ubuntu 18.04 Server",
+					DiskTemplate: &DiskTemplateRef{
 						Permalink: "templates/ubuntu-18-04",
 					},
 					DiskTemplateOptions: []*DiskTemplateOption{
 						{Key: "foo", Value: "bar"},
 					},
-					Network: &Network{
-						Name:      "Public Network",
+					Network: &NetworkRef{
 						Permalink: "public",
 					},
 					Hostname: "foo.example.com",
 				},
 			},
 			reqBody: &virtualMachineBuildCreateRequest{
-				Organization: &Organization{
+				Organization: OrganizationRef{
 					SubDomain: "acme",
 				},
-				Zone: &Zone{
+				Zone: &ZoneRef{
 					Permalink: "north-west",
 				},
-				DataCenter: &DataCenter{
+				DataCenter: &DataCenterRef{
 					Permalink: "woodland",
 				},
-				Package: &VirtualMachinePackage{
+				Package: VirtualMachinePackageRef{
 					Permalink: "xsmall",
 				},
-				DiskTemplate: &DiskTemplate{
+				DiskTemplate: &DiskTemplateRef{
 					Permalink: "templates/ubuntu-18-04",
 				},
 				DiskTemplateOptions: []*DiskTemplateOption{
 					{Key: "foo", Value: "bar"},
 				},
-				Network: &Network{
+				Network: &NetworkRef{
 					Permalink: "public",
 				},
 				Hostname: "foo.example.com",
@@ -601,7 +633,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			name: "invalid API token response",
 			args: args{
 				ctx:       context.Background(),
-				org:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:       OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				buildArgs: fullArgs,
 			},
 			errStr:     fixtureInvalidAPITokenErr,
@@ -613,7 +645,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			name: "non-existent organization",
 			args: args{
 				ctx:       context.Background(),
-				org:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:       OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				buildArgs: fullArgs,
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
@@ -625,7 +657,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			name: "suspended organization",
 			args: args{
 				ctx:       context.Background(),
-				org:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:       OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				buildArgs: fullArgs,
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
@@ -637,7 +669,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			name: "non-existent data center",
 			args: args{
 				ctx:       context.Background(),
-				org:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:       OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				buildArgs: fullArgs,
 			},
 			errStr:     fixtureDataCenterNotFoundErr,
@@ -649,7 +681,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			name: "non-existent virtual machine package",
 			args: args{
 				ctx:       context.Background(),
-				org:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:       OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				buildArgs: fullArgs,
 			},
 			errStr:     fixturePackageNotFoundErr,
@@ -661,7 +693,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			name: "non-existent disk template",
 			args: args{
 				ctx:       context.Background(),
-				org:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:       OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				buildArgs: fullArgs,
 			},
 			errStr:     fixtureDiskTemplateNotFoundErr,
@@ -673,7 +705,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			name: "non-existent zone",
 			args: args{
 				ctx:       context.Background(),
-				org:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:       OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				buildArgs: fullArgs,
 			},
 			errStr:     fixtureZoneNotFoundErr,
@@ -685,7 +717,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			name: "permission denied",
 			args: args{
 				ctx:       context.Background(),
-				org:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:       OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				buildArgs: fullArgs,
 			},
 			errStr:     fixturePermissionDeniedErr,
@@ -697,7 +729,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			name: "validation error",
 			args: args{
 				ctx:       context.Background(),
-				org:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:       OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				buildArgs: fullArgs,
 			},
 			errStr:     fixtureValidationErrorErr,
@@ -709,7 +741,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			name: "location_required error",
 			args: args{
 				ctx:       context.Background(),
-				org:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:       OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				buildArgs: fullArgs,
 			},
 			errStr: "location_required: A zone or a data_center argument " +
@@ -724,22 +756,10 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			respBody:   fixture("location_required_error"),
 		},
 		{
-			name: "nil organization",
-			args: args{
-				ctx:       context.Background(),
-				org:       nil,
-				buildArgs: fullArgs,
-			},
-			errStr:     fixtureOrganizationNotFoundErr,
-			errResp:    fixtureOrganizationNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("organization_not_found_error"),
-		},
-		{
 			name: "nil context",
 			args: args{
 				ctx:       nil,
-				org:       &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:       OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				buildArgs: fullArgs,
 			},
 			errStr: "net/http: nil Context",
@@ -814,7 +834,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpec(t *testing.T) {
 
 	type args struct {
 		ctx  context.Context
-		org  *Organization
+		org  OrganizationRef
 		spec *buildspec.VirtualMachineSpec
 	}
 	tests := []struct {
@@ -828,19 +848,39 @@ func TestVirtualMachineBuildsClient_CreateFromSpec(t *testing.T) {
 		respBody   []byte
 	}{
 		{
-			name: "virtual machine build",
+			name: "by organization ID",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{
-					ID:        "org_O648YDMEYeLmqdmn",
-					Name:      "ACME Inc.",
+				org: OrganizationRef{
+					ID: "org_O648YDMEYeLmqdmn",
+				},
+				spec: spec,
+			},
+			reqBody: &virtualMachineBuildCreateFromSpecRequest{
+				Organization: OrganizationRef{
+					ID: "org_O648YDMEYeLmqdmn",
+				},
+				XML: string(xmlSpec),
+			},
+			want: &VirtualMachineBuild{
+				ID:    "vmbuild_TEmhezUShNuAsyac",
+				State: VirtualMachineBuildPending,
+			},
+			respStatus: http.StatusCreated,
+			respBody:   fixture("virtual_machine_build_create"),
+		},
+		{
+			name: "by organization SubDomain",
+			args: args{
+				ctx: context.Background(),
+				org: OrganizationRef{
 					SubDomain: "acme",
 				},
 				spec: spec,
 			},
 			reqBody: &virtualMachineBuildCreateFromSpecRequest{
-				Organization: &Organization{
-					ID: "org_O648YDMEYeLmqdmn",
+				Organization: OrganizationRef{
+					SubDomain: "acme",
 				},
 				XML: string(xmlSpec),
 			},
@@ -855,7 +895,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpec(t *testing.T) {
 			name: "invalid API token response",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				spec: spec,
 			},
 			errStr:     fixtureInvalidAPITokenErr,
@@ -867,7 +907,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpec(t *testing.T) {
 			name: "invalid XML spec",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				spec: spec,
 			},
 			errStr:     fixtureInvalidXMLSpecErr,
@@ -879,7 +919,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpec(t *testing.T) {
 			name: "non-existent organization",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				spec: spec,
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
@@ -891,7 +931,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpec(t *testing.T) {
 			name: "suspended organization",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				spec: spec,
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
@@ -903,7 +943,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpec(t *testing.T) {
 			name: "permission denied",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				spec: spec,
 			},
 			errStr:     fixturePermissionDeniedErr,
@@ -915,7 +955,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpec(t *testing.T) {
 			name: "validation error",
 			args: args{
 				ctx:  context.Background(),
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				spec: spec,
 			},
 			errStr:     fixtureValidationErrorErr,
@@ -924,22 +964,10 @@ func TestVirtualMachineBuildsClient_CreateFromSpec(t *testing.T) {
 			respBody:   fixture("validation_error"),
 		},
 		{
-			name: "nil organization",
-			args: args{
-				ctx:  context.Background(),
-				org:  nil,
-				spec: spec,
-			},
-			errStr:     fixtureOrganizationNotFoundErr,
-			errResp:    fixtureOrganizationNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("organization_not_found_error"),
-		},
-		{
 			name: "nil context",
 			args: args{
 				ctx:  nil,
-				org:  &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				spec: spec,
 			},
 			errStr: "net/http: nil Context",
@@ -1015,7 +1043,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpecXML(t *testing.T) {
 
 	type args struct {
 		ctx context.Context
-		org *Organization
+		org OrganizationRef
 		xml string
 	}
 	tests := []struct {
@@ -1029,19 +1057,39 @@ func TestVirtualMachineBuildsClient_CreateFromSpecXML(t *testing.T) {
 		respBody   []byte
 	}{
 		{
-			name: "virtual machine build",
+			name: "by organization ID",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{
-					ID:        "org_O648YDMEYeLmqdmn",
-					Name:      "ACME Inc.",
+				org: OrganizationRef{
+					ID: "org_O648YDMEYeLmqdmn",
+				},
+				xml: specXML,
+			},
+			reqBody: &virtualMachineBuildCreateFromSpecRequest{
+				Organization: OrganizationRef{
+					ID: "org_O648YDMEYeLmqdmn",
+				},
+				XML: specXML,
+			},
+			want: &VirtualMachineBuild{
+				ID:    "vmbuild_TEmhezUShNuAsyac",
+				State: VirtualMachineBuildPending,
+			},
+			respStatus: http.StatusCreated,
+			respBody:   fixture("virtual_machine_build_create"),
+		},
+		{
+			name: "by organization SubDomain",
+			args: args{
+				ctx: context.Background(),
+				org: OrganizationRef{
 					SubDomain: "acme",
 				},
 				xml: specXML,
 			},
 			reqBody: &virtualMachineBuildCreateFromSpecRequest{
-				Organization: &Organization{
-					ID: "org_O648YDMEYeLmqdmn",
+				Organization: OrganizationRef{
+					SubDomain: "acme",
 				},
 				XML: specXML,
 			},
@@ -1056,7 +1104,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpecXML(t *testing.T) {
 			name: "invalid API token response",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				xml: specXML,
 			},
 			errStr:     fixtureInvalidAPITokenErr,
@@ -1068,7 +1116,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpecXML(t *testing.T) {
 			name: "invalid XML spec",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				xml: specXML,
 			},
 			errStr:     fixtureInvalidXMLSpecErr,
@@ -1080,7 +1128,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpecXML(t *testing.T) {
 			name: "non-existent organization",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				xml: specXML,
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
@@ -1092,7 +1140,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpecXML(t *testing.T) {
 			name: "suspended organization",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				xml: specXML,
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
@@ -1104,7 +1152,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpecXML(t *testing.T) {
 			name: "permission denied",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				xml: specXML,
 			},
 			errStr:     fixturePermissionDeniedErr,
@@ -1116,7 +1164,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpecXML(t *testing.T) {
 			name: "validation error",
 			args: args{
 				ctx: context.Background(),
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				xml: specXML,
 			},
 			errStr:     fixtureValidationErrorErr,
@@ -1125,22 +1173,10 @@ func TestVirtualMachineBuildsClient_CreateFromSpecXML(t *testing.T) {
 			respBody:   fixture("validation_error"),
 		},
 		{
-			name: "nil organization",
-			args: args{
-				ctx: context.Background(),
-				org: nil,
-				xml: specXML,
-			},
-			errStr:     fixtureOrganizationNotFoundErr,
-			errResp:    fixtureOrganizationNotFoundResponseError,
-			respStatus: http.StatusNotFound,
-			respBody:   fixture("organization_not_found_error"),
-		},
-		{
 			name: "nil context",
 			args: args{
 				ctx: nil,
-				org: &Organization{ID: "org_O648YDMEYeLmqdmn"},
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				xml: specXML,
 			},
 			errStr: "net/http: nil Context",
