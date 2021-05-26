@@ -2,7 +2,6 @@ package core
 
 import (
 	"context"
-	"fmt"
 	"net/url"
 
 	"github.com/krystal/go-katapult"
@@ -25,6 +24,13 @@ func (vmb *VirtualMachineBuild) Ref() VirtualMachineBuildRef {
 
 type VirtualMachineBuildRef struct {
 	ID string `json:"id,omitempty"`
+}
+
+func (vmbr VirtualMachineBuildRef) queryValues() *url.Values {
+	v := &url.Values{}
+	v.Set("virtual_machine_build[id]", vmbr.ID)
+
+	return v
 }
 
 type VirtualMachineBuildState string
@@ -88,14 +94,10 @@ func (s *VirtualMachineBuildsClient) Get(
 	ctx context.Context,
 	ref VirtualMachineBuildRef,
 ) (*VirtualMachineBuild, *katapult.Response, error) {
-	return s.GetByID(ctx, ref.ID)
-}
-
-func (s *VirtualMachineBuildsClient) GetByID(
-	ctx context.Context,
-	id string,
-) (*VirtualMachineBuild, *katapult.Response, error) {
-	u := &url.URL{Path: fmt.Sprintf("virtual_machines/builds/%s", id)}
+	u := &url.URL{
+		Path:     "virtual_machines/builds/_",
+		RawQuery: ref.queryValues().Encode(),
+	}
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 
 	build := body.VirtualMachineBuild
@@ -104,6 +106,13 @@ func (s *VirtualMachineBuildsClient) GetByID(
 	}
 
 	return build, resp, err
+}
+
+func (s *VirtualMachineBuildsClient) GetByID(
+	ctx context.Context,
+	id string,
+) (*VirtualMachineBuild, *katapult.Response, error) {
+	return s.Get(ctx, VirtualMachineBuildRef{ID: id})
 }
 
 func (s *VirtualMachineBuildsClient) Create(

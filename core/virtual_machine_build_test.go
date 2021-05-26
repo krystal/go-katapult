@@ -3,8 +3,8 @@ package core
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
+	"net/url"
 	"testing"
 
 	"github.com/jimeh/undent"
@@ -156,6 +156,27 @@ func TestVirtualMachineBuild_Ref(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			assert.Equal(t, tt.want, tt.obj.Ref())
+		})
+	}
+}
+
+func TestVirtualMachineBuildRef_queryValues(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  VirtualMachineBuildRef
+		want VirtualMachineBuildRef
+	}{
+		{
+			name: "with id",
+			obj: VirtualMachineBuildRef{
+				ID: "vmbuild_pbjJIqJ3MOMNsCr3",
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testQueryableEncoding(t, tt.obj)
 		})
 	}
 }
@@ -321,14 +342,12 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 			c := NewVirtualMachineBuildsClient(rm)
 
 			mux.HandleFunc(
-				fmt.Sprintf(
-					"/core/v1/virtual_machines/builds/%s",
-					tt.args.ref.ID,
-				),
+				"/core/v1/virtual_machines/builds/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assert.Equal(t, *tt.args.ref.queryValues(), r.URL.Query())
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -430,11 +449,17 @@ func TestVirtualMachineBuildsClient_GetByID(t *testing.T) {
 			c := NewVirtualMachineBuildsClient(rm)
 
 			mux.HandleFunc(
-				fmt.Sprintf("/core/v1/virtual_machines/builds/%s", tt.args.id),
+				"/core/v1/virtual_machines/builds/_",
 				func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+
+					assert.Equal(t, url.Values{
+						"virtual_machine_build[id]": []string{
+							tt.args.id,
+						},
+					}, r.URL.Query())
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
