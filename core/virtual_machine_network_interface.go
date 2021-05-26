@@ -90,13 +90,6 @@ func (s *VirtualMachineNetworkInterfacesClient) List(
 	return body.VirtualMachineNetworkInterfaces, resp, err
 }
 
-func (s *VirtualMachineNetworkInterfacesClient) GetByID(
-	ctx context.Context,
-	id string,
-) (*VirtualMachineNetworkInterface, *katapult.Response, error) {
-	return s.Get(ctx, VirtualMachineNetworkInterfaceRef{ID: id})
-}
-
 func (s *VirtualMachineNetworkInterfacesClient) Get(
 	ctx context.Context,
 	ref VirtualMachineNetworkInterfaceRef,
@@ -109,6 +102,13 @@ func (s *VirtualMachineNetworkInterfacesClient) Get(
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
 
 	return body.VirtualMachineNetworkInterface, resp, err
+}
+
+func (s *VirtualMachineNetworkInterfacesClient) GetByID(
+	ctx context.Context,
+	id string,
+) (*VirtualMachineNetworkInterface, *katapult.Response, error) {
+	return s.Get(ctx, VirtualMachineNetworkInterfaceRef{ID: id})
 }
 
 func (s *VirtualMachineNetworkInterfacesClient) AvailableIPs(
