@@ -80,21 +80,14 @@ func TestDataCenterRef_queryValues(t *testing.T) {
 	tests := []struct {
 		name string
 		ref  DataCenterRef
-		want *url.Values
 	}{
 		{
 			name: "id",
 			ref:  DataCenterRef{ID: "dc_25d48761871e4bf"},
-			want: &url.Values{
-				"data_center[id]": []string{"dc_25d48761871e4bf"},
-			},
 		},
 		{
 			name: "permalink",
 			ref:  DataCenterRef{Permalink: "central-amazon-jungle"},
-			want: &url.Values{
-				"data_center[permalink]": []string{"central-amazon-jungle"},
-			},
 		},
 		{
 			name: "priority",
@@ -102,15 +95,12 @@ func TestDataCenterRef_queryValues(t *testing.T) {
 				ID:        "dc_25d48761871e4bf",
 				Permalink: "central-amazon-jungle",
 			},
-			want: &url.Values{
-				"data_center[id]": []string{"dc_25d48761871e4bf"},
-			},
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(t.Name(), func(t *testing.T) {
-			assert.Equal(t, tt.want, tt.ref.queryValues())
+			testQueryableEncoding(t, tt.ref)
 		})
 	}
 }
