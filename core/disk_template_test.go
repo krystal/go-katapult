@@ -289,7 +289,7 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 			respBody:   fixture("disk_templates_list"),
 		},
 		{
-			name: "by organization subdomain",
+			name: "by organization SubDomain",
 			args: args{
 				ctx: context.Background(),
 				org: OrganizationRef{SubDomain: "valveinc"},

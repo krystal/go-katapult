@@ -221,6 +221,31 @@ func TestNetworksClient_List(t *testing.T) {
 			respBody:   fixture("networks_list"),
 		},
 		{
+			name: "by organization SubDomain",
+			args: args{
+				ctx: context.Background(),
+				org: OrganizationRef{SubDomain: "acme"},
+			},
+			wantNets: []*Network{
+				{
+					ID:   "netw_zDW7KYAeqqfRfVag",
+					Name: "Public Network",
+				},
+				{
+					ID:   "netw_t7Rbyvr6ahqpDohR",
+					Name: "Private Network",
+				},
+			},
+			wantVnets: []*VirtualNetwork{
+				{
+					ID:   "vnet_1erVCx7A5Y09WknB",
+					Name: "Make-Believe Network",
+				},
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("networks_list"),
+		},
+		{
 			name: "invalid API token response",
 			args: args{
 				ctx: context.Background(),

@@ -2,7 +2,6 @@ package core
 
 import (
 	"context"
-	"fmt"
 	"net/url"
 
 	"github.com/krystal/go-katapult"
@@ -100,17 +99,21 @@ func (s *LoadBalancersClient) Get(
 	ctx context.Context,
 	ref LoadBalancerRef,
 ) (*LoadBalancer, *katapult.Response, error) {
-	return s.GetByID(ctx, ref.ID)
+	u := &url.URL{
+		Path:     "load_balancers/_",
+		RawQuery: ref.queryValues().Encode(),
+	}
+
+	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+
+	return body.LoadBalancer, resp, err
 }
 
 func (s *LoadBalancersClient) GetByID(
 	ctx context.Context,
 	id string,
 ) (*LoadBalancer, *katapult.Response, error) {
-	u := &url.URL{Path: fmt.Sprintf("load_balancers/%s", id)}
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
-
-	return body.LoadBalancer, resp, err
+	return s.Get(ctx, LoadBalancerRef{ID: id})
 }
 
 func (s *LoadBalancersClient) Create(

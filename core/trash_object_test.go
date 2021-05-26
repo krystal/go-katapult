@@ -203,6 +203,23 @@ func TestTrashObjectsClient_List(t *testing.T) {
 			respBody:   fixture("trash_objects_list"),
 		},
 		{
+			name: "by organization SubDomain",
+			args: args{
+				ctx: context.Background(),
+				org: OrganizationRef{SubDomain: "acme"},
+			},
+			want: trashObjectesList,
+			wantPagination: &katapult.Pagination{
+				CurrentPage: 1,
+				TotalPages:  1,
+				Total:       3,
+				PerPage:     30,
+				LargeSet:    false,
+			},
+			respStatus: http.StatusOK,
+			respBody:   fixture("trash_objects_list"),
+		},
+		{
 			name: "page 1",
 			args: args{
 				ctx:  context.Background(),
@@ -835,7 +852,7 @@ func TestTrashObjectsClient_PurgeAll(t *testing.T) {
 			respBody:   fixture("trash_objects_purge_all"),
 		},
 		{
-			name: "by organization domain",
+			name: "by organization SubDomain",
 			args: args{
 				ctx: context.Background(),
 				org: OrganizationRef{SubDomain: "acme"},

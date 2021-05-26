@@ -823,7 +823,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpec(t *testing.T) {
 		respBody   []byte
 	}{
 		{
-			name: "virtual machine build",
+			name: "by organization ID",
 			args: args{
 				ctx: context.Background(),
 				org: OrganizationRef{
@@ -834,6 +834,28 @@ func TestVirtualMachineBuildsClient_CreateFromSpec(t *testing.T) {
 			reqBody: &virtualMachineBuildCreateFromSpecRequest{
 				Organization: OrganizationRef{
 					ID: "org_O648YDMEYeLmqdmn",
+				},
+				XML: string(xmlSpec),
+			},
+			want: &VirtualMachineBuild{
+				ID:    "vmbuild_TEmhezUShNuAsyac",
+				State: VirtualMachineBuildPending,
+			},
+			respStatus: http.StatusCreated,
+			respBody:   fixture("virtual_machine_build_create"),
+		},
+		{
+			name: "by organization SubDomain",
+			args: args{
+				ctx: context.Background(),
+				org: OrganizationRef{
+					SubDomain: "acme",
+				},
+				spec: spec,
+			},
+			reqBody: &virtualMachineBuildCreateFromSpecRequest{
+				Organization: OrganizationRef{
+					SubDomain: "acme",
 				},
 				XML: string(xmlSpec),
 			},
@@ -1010,7 +1032,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpecXML(t *testing.T) {
 		respBody   []byte
 	}{
 		{
-			name: "virtual machine build",
+			name: "by organization ID",
 			args: args{
 				ctx: context.Background(),
 				org: OrganizationRef{
@@ -1032,7 +1054,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpecXML(t *testing.T) {
 			respBody:   fixture("virtual_machine_build_create"),
 		},
 		{
-			name: "virtual machine build by org domain",
+			name: "by organization SubDomain",
 			args: args{
 				ctx: context.Background(),
 				org: OrganizationRef{

@@ -348,7 +348,7 @@ func TestIPAddressesClient_List(t *testing.T) {
 			respBody:   fixture("ip_addresses_list"),
 		},
 		{
-			name: "by organization domain",
+			name: "by organization SubDomain",
 			args: args{
 				ctx: context.Background(),
 				org: OrganizationRef{SubDomain: "acme"},
