@@ -45,18 +45,18 @@ type virtualMachineNetworkInterfacesResponseBody struct {
 }
 
 type virtualMachineNetworkInterfaceAllocateIPRequest struct {
-	VirtualMachineNetworkInterface VirtualMachineNetworkInterfaceRef `json:"virtual_machine_network_interface,omitempty"`
+	VirtualMachineNetworkInterface VirtualMachineNetworkInterfaceRef `json:"virtual_machine_network_interface"`
 	IPAddress                      IPAddressRef                      `json:"ip_address"`
 }
 
 type virtualMachineNetworkInterfaceAllocateNewIPRequest struct {
-	VirtualMachineNetworkInterface VirtualMachineNetworkInterfaceRef `json:"virtual_machine_network_interface,omitempty"`
-	AddressVersion                 IPVersion                         `json:"address_version,omitempty"`
+	VirtualMachineNetworkInterface VirtualMachineNetworkInterfaceRef `json:"virtual_machine_network_interface"`
+	AddressVersion                 IPVersion                         `json:"address_version"`
 }
 
 type virtualMachineNetworkInterfaceUpdateSpeedProfileRequest struct {
-	VirtualMachineNetworkInterface VirtualMachineNetworkInterfaceRef `json:"virtual_machine_network_interface,omitempty"`
-	SpeedProfile                   NetworkSpeedProfileRef            `json:"speed_profile,omitempty"`
+	VirtualMachineNetworkInterface VirtualMachineNetworkInterfaceRef `json:"virtual_machine_network_interface"`
+	SpeedProfile                   NetworkSpeedProfileRef            `json:"speed_profile"`
 }
 
 type VirtualMachineNetworkInterfacesClient struct {
