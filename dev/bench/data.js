@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1620899036855,
+  "lastUpdate": 1622068244440,
   "repoUrl": "https://github.com/krystal/go-katapult",
   "entries": {
     "Benchmark": [
@@ -2298,6 +2298,60 @@ window.BENCHMARK_DATA = {
             "value": 4832,
             "unit": "ns/op",
             "extra": "255253 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "noah@noahstride.co.uk",
+            "name": "Noah Stride",
+            "username": "strideynet"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c0bb65af79ea7cce565c0acc4425b387364cb896",
+          "message": "refactor: references to use specific ref type (#98)\n\n* refactor: introduce LoadBalancerRef for referring to LBs\r\n\r\n* style: use ptr reciever\r\n\r\n* refactor: DataCenterRef type introduced\r\n\r\n* style: line length adjustments\r\n\r\n* style: missing comms\r\n\r\n* chore: tidy tests and tags\r\n\r\n* tests: add back removed test\r\n\r\n* refactor: organization reference rather than whole org\r\n\r\n* tests: re-add test case covering subdomain\r\n\r\n* refactor: introduce DiskTemplateRef\r\n\r\n* refactor: introduce DNSZoneRef\r\n\r\n* refactor: introduce IPAddressRef\r\n\r\n* refactor: LB and LBR references\r\n\r\n* refactor: NetworkRef introduced\r\n\r\n* refactor: NetworkSpeedProfile ref\r\n\r\n* refactor: TrashObjectRef\r\n\r\n* refactor: VirtualMachineRef introduced\r\n\r\n* refactor: VirtualMachineGroupRef\r\n\r\n* feat: nullishness support for VirtualMachineGroupRf\r\n\r\n* feat: VirtualMachineNetworkInterfaceRef\r\n\r\n* feat: VirtualMachinePackageRef\r\n\r\n* feat: ZoneRef\r\n\r\n* tests: increase coverage\r\n\r\n* chore: minor tweaks to PR #98 (#101)\r\n\r\n* chore(test): add test cases for non-ID lookup fields\r\n\r\n* chore(test): improve test case naming consistency\r\n\r\n* refactor(load_balancer): specify load balancer lookup via query string\r\n\r\nThis keeps the code overall more consistent with most other resource\r\ntypes.\r\n\r\n* style: move method for consistency\r\n\r\n* style: remove unnecessary omitempties\r\n\r\n* chore: updatre golden files\r\n\r\n* refactor: adjust VMB to use Get() as backing method for GetByID()\r\n\r\n* chore: add goldne files for query vals\r\n\r\n* tests: use query helper for test\r\n\r\n* tests: use queryValues\r\n\r\n* refactor: use pointered references to allow optional use of params\r\n\r\n* chore: pr review\r\n\r\nCo-authored-by: Jim Myhrberg <contact@jimeh.me>",
+          "timestamp": "2021-05-26T23:30:05+01:00",
+          "tree_id": "810672441d917e0f64d07d656cd09f4bbf4a082c",
+          "url": "https://github.com/krystal/go-katapult/commit/c0bb65af79ea7cce565c0acc4425b387364cb896"
+        },
+        "date": 1622068243909,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkNameGenerator_RandomHostname",
+            "value": 8228,
+            "unit": "ns/op",
+            "extra": "149965 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_NoPrefix",
+            "value": 5638,
+            "unit": "ns/op",
+            "extra": "223952 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_OnePrefix",
+            "value": 5471,
+            "unit": "ns/op",
+            "extra": "205945 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_TwoPrefixes",
+            "value": 5445,
+            "unit": "ns/op",
+            "extra": "223419 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_ThreePrefixes",
+            "value": 5755,
+            "unit": "ns/op",
+            "extra": "220225 times\n2 procs"
           }
         ]
       }
