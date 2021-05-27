@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1622127089400,
+  "lastUpdate": 1622135518891,
   "repoUrl": "https://github.com/krystal/go-katapult",
   "entries": {
     "Benchmark": [
@@ -2514,6 +2514,60 @@ window.BENCHMARK_DATA = {
             "value": 4845,
             "unit": "ns/op",
             "extra": "240992 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "contact@jimeh.me",
+            "name": "Jim Myhrberg",
+            "username": "jimeh"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0f9a5a79ffd9e066fa0e4fca658685bd820fef43",
+          "message": "Merge pull request #107 from krystal/add-with-http-client-option\n\nfeat(client): add WithHTTPClient option",
+          "timestamp": "2021-05-27T18:11:23+01:00",
+          "tree_id": "ff2a13b406b910ea40d690c172f769150c4d33a4",
+          "url": "https://github.com/krystal/go-katapult/commit/0f9a5a79ffd9e066fa0e4fca658685bd820fef43"
+        },
+        "date": 1622135517877,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkNameGenerator_RandomHostname",
+            "value": 7376,
+            "unit": "ns/op",
+            "extra": "176991 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_NoPrefix",
+            "value": 4823,
+            "unit": "ns/op",
+            "extra": "250905 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_OnePrefix",
+            "value": 4874,
+            "unit": "ns/op",
+            "extra": "257568 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_TwoPrefixes",
+            "value": 4838,
+            "unit": "ns/op",
+            "extra": "241712 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_ThreePrefixes",
+            "value": 4921,
+            "unit": "ns/op",
+            "extra": "236437 times\n2 procs"
           }
         ]
       }
