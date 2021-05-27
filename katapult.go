@@ -29,6 +29,14 @@ func WithTimeout(t time.Duration) Opt {
 	}
 }
 
+func WithHTTPClient(hc *http.Client) Opt {
+	return func(c *Client) error {
+		c.HTTPClient = hc
+
+		return nil
+	}
+}
+
 func WithUserAgent(ua string) Opt {
 	return func(c *Client) error {
 		c.UserAgent = ua

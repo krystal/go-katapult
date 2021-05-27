@@ -428,6 +428,14 @@ func TestWithTimeout(t *testing.T) {
 	assert.Equal(t, timeout, c.HTTPClient.Timeout)
 }
 
+func TestWithHTTPClient(t *testing.T) {
+	hc := &http.Client{Timeout: 42 * time.Second}
+	c := &Client{HTTPClient: http.DefaultClient}
+	err := WithHTTPClient(hc)(c)
+	assert.NoError(t, err)
+	assert.Equal(t, hc, c.HTTPClient)
+}
+
 func TestWithUserAgent(t *testing.T) {
 	c := &Client{}
 	ua := "roger_moore/0.0.7"
