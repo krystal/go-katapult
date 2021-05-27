@@ -88,14 +88,41 @@ func (s *DataCentersClient) GetByPermalink(
 	return s.Get(ctx, DataCenterRef{Permalink: permalink})
 }
 
+func (s *DataCentersClient) DefaultNetwork(
+	ctx context.Context,
+	ref DataCenterRef,
+) (*Network, *katapult.Response, error) {
+	u := &url.URL{
+		Path:     "data_centers/_/default_network",
+		RawQuery: ref.queryValues().Encode(),
+	}
+
+	respBody := &networksResponseBody{}
+	resp, err := s.request(ctx, "GET", u, nil, respBody)
+
+	return respBody.Network, resp, err
+}
+
 func (s *DataCentersClient) doRequest(
 	ctx context.Context,
 	method string,
 	u *url.URL,
 	body interface{},
 ) (*dataCentersResponseBody, *katapult.Response, error) {
-	u = s.basePath.ResolveReference(u)
 	respBody := &dataCentersResponseBody{}
+	resp, err := s.request(ctx, method, u, body, respBody)
+
+	return respBody, resp, err
+}
+
+func (s *DataCentersClient) request(
+	ctx context.Context,
+	method string,
+	u *url.URL,
+	body interface{},
+	respBody interface{},
+) (*katapult.Response, error) {
+	u = s.basePath.ResolveReference(u)
 	resp := katapult.NewResponse(nil)
 
 	req, err := s.client.NewRequestWithContext(ctx, method, u, body)
@@ -103,5 +130,5 @@ func (s *DataCentersClient) doRequest(
 		resp, err = s.client.Do(req, respBody)
 	}
 
-	return respBody, resp, err
+	return resp, err
 }
