@@ -53,6 +53,47 @@ func TestCertificate_JSONMarshaling(t *testing.T) {
 	}
 }
 
+func TestCertificate_Ref(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  Certificate
+		want CertificateRef
+	}{
+		{
+			name: "id",
+			obj:  Certificate{ID: "cert_vChz6j7tV7ejE3FY"},
+			want: CertificateRef{ID: "cert_vChz6j7tV7ejE3FY"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.obj.Ref()
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}
+
+func TestCertificateRef_queryValues(t *testing.T) {
+	tests := []struct {
+		name string
+		ref  CertificateRef
+	}{
+		{
+			name: "empty",
+			ref:  CertificateRef{},
+		},
+		{
+			name: "id",
+			ref:  CertificateRef{ID: "cert_vChz6j7tV7ejE3FY"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testQueryableEncoding(t, tt.ref)
+		})
+	}
+}
+
 func Test_certificatesResponseBody_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string
