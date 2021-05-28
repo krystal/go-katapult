@@ -26,6 +26,18 @@ type Certificate struct {
 	PrivateKey          string               `json:"private_key,omitempty"`
 }
 
+func (c *Certificate) Ref() CertificateRef {
+	return CertificateRef{ID: c.ID}
+}
+
+type CertificateRef struct {
+	ID string `json:"id,omitempty"`
+}
+
+func (cr CertificateRef) queryValues() *url.Values {
+	return &url.Values{"certificate[id]": []string{cr.ID}}
+}
+
 type certificatesResponseBody struct {
 	Pagination   *katapult.Pagination `json:"pagination,omitempty"`
 	Certificate  *Certificate         `json:"certificate,omitempty"`

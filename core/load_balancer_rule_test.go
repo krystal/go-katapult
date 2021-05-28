@@ -58,7 +58,8 @@ func TestLoadBalancerRule_JSONMarshalling(t *testing.T) {
 				ProxyProtocol:   true,
 				Certificates: []Certificate{
 					{
-						ID: "another abitrary string",
+						ID:   "another abitrary string",
+						Name: "cluster-42",
 					},
 				},
 				BackendSSL:     true,
@@ -98,7 +99,7 @@ func TestLoadBalancerRuleArguments_JSONMarshalling(t *testing.T) {
 				ListenPort:      1337,
 				Protocol:        HTTPProtocol,
 				ProxyProtocol:   boolPtr(false),
-				Certificates: []Certificate{
+				Certificates: []CertificateRef{
 					{
 						ID: "another abitrary string",
 					},
