@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1622211785137,
+  "lastUpdate": 1622456309303,
   "repoUrl": "https://github.com/krystal/go-katapult",
   "entries": {
     "Benchmark": [
@@ -2730,6 +2730,60 @@ window.BENCHMARK_DATA = {
             "value": 4175,
             "unit": "ns/op",
             "extra": "293264 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "contact@jimeh.me",
+            "name": "Jim Myhrberg",
+            "username": "jimeh"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "42677583bee5291a50c5a55c43cfd52af7d4b792",
+          "message": "Merge pull request #109 from krystal/fix-load-balancer-rule-method-signature\n\nfix(load_balancer): use pointer to arguments struct for the sake of consistency",
+          "timestamp": "2021-05-31T11:17:54+01:00",
+          "tree_id": "e3ce32dbe9f6acd113d42991da7b2762889c8102",
+          "url": "https://github.com/krystal/go-katapult/commit/42677583bee5291a50c5a55c43cfd52af7d4b792"
+        },
+        "date": 1622456308794,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkNameGenerator_RandomHostname",
+            "value": 5971,
+            "unit": "ns/op",
+            "extra": "196527 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_NoPrefix",
+            "value": 4058,
+            "unit": "ns/op",
+            "extra": "300178 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_OnePrefix",
+            "value": 4078,
+            "unit": "ns/op",
+            "extra": "294890 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_TwoPrefixes",
+            "value": 4055,
+            "unit": "ns/op",
+            "extra": "296811 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_ThreePrefixes",
+            "value": 4119,
+            "unit": "ns/op",
+            "extra": "295268 times\n2 procs"
           }
         ]
       }
