@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.4](https://github.com/krystal/go-katapult/compare/v0.1.3...v0.1.4) (2021-05-31)
+
+
+### Bug Fixes
+
+* **load_balancer:** enable removing all certs from a rule ([788df99](https://github.com/krystal/go-katapult/commit/788df995b96f88b1c7be46bd781c82af6bac8901))
+* **load_balancer:** use pointer to arguments struct for the sake of consistency ([54b0009](https://github.com/krystal/go-katapult/commit/54b000943c0296a760545a903c78e88187c866d2))
+
 ### [0.1.3](https://github.com/krystal/go-katapult/compare/v0.1.2...v0.1.3) (2021-05-28)
 
 
