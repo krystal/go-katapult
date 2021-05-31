@@ -99,7 +99,7 @@ func TestLoadBalancerRuleArguments_JSONMarshalling(t *testing.T) {
 				ListenPort:      1337,
 				Protocol:        HTTPProtocol,
 				ProxyProtocol:   boolPtr(false),
-				Certificates: []CertificateRef{
+				Certificates: &[]CertificateRef{
 					{
 						ID: "another abitrary string",
 					},
@@ -111,6 +111,12 @@ func TestLoadBalancerRuleArguments_JSONMarshalling(t *testing.T) {
 				CheckProtocol: HTTPProtocol,
 				CheckRise:     12,
 				CheckTimeout:  3,
+			},
+		},
+		{
+			name: "remove all certificates",
+			obj: &LoadBalancerRuleArguments{
+				Certificates: &[]CertificateRef{},
 			},
 		},
 	}
