@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1622456309303,
+  "lastUpdate": 1622456661430,
   "repoUrl": "https://github.com/krystal/go-katapult",
   "entries": {
     "Benchmark": [
@@ -2784,6 +2784,60 @@ window.BENCHMARK_DATA = {
             "value": 4119,
             "unit": "ns/op",
             "extra": "295268 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "contact@jimeh.me",
+            "name": "Jim Myhrberg",
+            "username": "jimeh"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "62a0efb63e5cc18c34be3c2e3bed9883508aee61",
+          "message": "Merge pull request #110 from krystal/fix-load-balancer-rule-cert-args\n\nfix(load_balancer): enable removing all certs from a rule",
+          "timestamp": "2021-05-31T11:23:42+01:00",
+          "tree_id": "78aca09ea40e9e26ac07ac872eb824fae89d65d3",
+          "url": "https://github.com/krystal/go-katapult/commit/62a0efb63e5cc18c34be3c2e3bed9883508aee61"
+        },
+        "date": 1622456660877,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkNameGenerator_RandomHostname",
+            "value": 8175,
+            "unit": "ns/op",
+            "extra": "141820 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_NoPrefix",
+            "value": 5415,
+            "unit": "ns/op",
+            "extra": "214021 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_OnePrefix",
+            "value": 5628,
+            "unit": "ns/op",
+            "extra": "218275 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_TwoPrefixes",
+            "value": 5797,
+            "unit": "ns/op",
+            "extra": "224641 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_ThreePrefixes",
+            "value": 5453,
+            "unit": "ns/op",
+            "extra": "223998 times\n2 procs"
           }
         ]
       }
