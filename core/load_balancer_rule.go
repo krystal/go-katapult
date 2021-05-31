@@ -117,10 +117,6 @@ func (s *LoadBalancerRulesClient) List(
 	return body.LoadBalancerRules, resp, err
 }
 
-type loadBalancerRuleCreateRequest struct {
-	Properties LoadBalancerRuleArguments `json:"properties"`
-}
-
 func (s *LoadBalancerRulesClient) Get(
 	ctx context.Context,
 	ref LoadBalancerRuleRef,
@@ -144,10 +140,14 @@ func (s *LoadBalancerRulesClient) GetByID(
 	return s.Get(ctx, LoadBalancerRuleRef{ID: id})
 }
 
+type loadBalancerRuleCreateRequest struct {
+	Properties *LoadBalancerRuleArguments `json:"properties,omitempty"`
+}
+
 func (s *LoadBalancerRulesClient) Create(
 	ctx context.Context,
 	lb LoadBalancerRef,
-	args LoadBalancerRuleArguments,
+	args *LoadBalancerRuleArguments,
 ) (*LoadBalancerRule, *katapult.Response, error) {
 	u := &url.URL{Path: fmt.Sprintf("load_balancers/%s/rules", lb.ID)}
 	reqBody := &loadBalancerRuleCreateRequest{
@@ -163,13 +163,13 @@ func (s *LoadBalancerRulesClient) Create(
 }
 
 type loadBalancerRuleUpdateRequest struct {
-	Properties LoadBalancerRuleArguments `json:"properties"`
+	Properties *LoadBalancerRuleArguments `json:"properties,omitempty"`
 }
 
 func (s *LoadBalancerRulesClient) Update(
 	ctx context.Context,
 	ref LoadBalancerRuleRef,
-	args LoadBalancerRuleArguments,
+	args *LoadBalancerRuleArguments,
 ) (*LoadBalancerRule, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "load_balancers/rules/_",

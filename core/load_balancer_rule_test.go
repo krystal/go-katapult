@@ -166,7 +166,7 @@ func Test_loadBalancerRuleCreateRequest_JSONMarshalling(t *testing.T) {
 		{
 			name: "full",
 			obj: &loadBalancerRuleCreateRequest{
-				Properties: LoadBalancerRuleArguments{
+				Properties: &LoadBalancerRuleArguments{
 					Protocol: HTTPProtocol,
 				},
 			},
@@ -192,7 +192,7 @@ func Test_loadBalancerRuleUpdateRequest_JSONMarshalling(t *testing.T) {
 		{
 			name: "full",
 			obj: &loadBalancerRuleUpdateRequest{
-				Properties: LoadBalancerRuleArguments{
+				Properties: &LoadBalancerRuleArguments{
 					Protocol: TCPProtocol,
 				},
 			},
@@ -530,7 +530,7 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 func TestLoadBalancerRulesClient_Create(t *testing.T) {
 	type args struct {
 		loadBalancerID string
-		creationArgs   LoadBalancerRuleArguments
+		creationArgs   *LoadBalancerRuleArguments
 	}
 	tests := []struct {
 		name    string
@@ -543,7 +543,9 @@ func TestLoadBalancerRulesClient_Create(t *testing.T) {
 			name: "success",
 			args: args{
 				loadBalancerID: "xyzzy",
-				creationArgs:   LoadBalancerRuleArguments{DestinationPort: 666},
+				creationArgs: &LoadBalancerRuleArguments{
+					DestinationPort: 666,
+				},
 			},
 			want: &LoadBalancerRule{
 				ID:              "abc",
@@ -553,7 +555,7 @@ func TestLoadBalancerRulesClient_Create(t *testing.T) {
 				wantPath:   "/core/v1/load_balancers/xyzzy/rules",
 				wantMethod: "POST",
 				wantBody: &loadBalancerRuleCreateRequest{
-					Properties: LoadBalancerRuleArguments{
+					Properties: &LoadBalancerRuleArguments{
 						DestinationPort: 666,
 					},
 				},
@@ -574,10 +576,8 @@ func TestLoadBalancerRulesClient_Create(t *testing.T) {
 			frm: fakeRequestMakerArgs{
 				wantPath:   "/core/v1/load_balancers/xyzzy/rules",
 				wantMethod: "POST",
-				wantBody: &loadBalancerRuleCreateRequest{
-					Properties: LoadBalancerRuleArguments{},
-				},
-				newReqErr: fmt.Errorf("rats chewed cables"),
+				wantBody:   &loadBalancerRuleCreateRequest{},
+				newReqErr:  fmt.Errorf("rats chewed cables"),
 			},
 			wantErr: "rats chewed cables",
 		},
@@ -589,11 +589,9 @@ func TestLoadBalancerRulesClient_Create(t *testing.T) {
 			frm: fakeRequestMakerArgs{
 				wantPath:   "/core/v1/load_balancers/xyzzy/rules",
 				wantMethod: "POST",
-				wantBody: &loadBalancerRuleCreateRequest{
-					Properties: LoadBalancerRuleArguments{},
-				},
-				doErr:  fmt.Errorf("flux capacitor undercharged"),
-				doResp: &katapult.Response{},
+				wantBody:   &loadBalancerRuleCreateRequest{},
+				doErr:      fmt.Errorf("flux capacitor undercharged"),
+				doResp:     &katapult.Response{},
 			},
 			wantErr: "flux capacitor undercharged",
 		},
@@ -626,7 +624,7 @@ func TestLoadBalancerRulesClient_Create(t *testing.T) {
 func TestLoadBalancerRulesClient_Update(t *testing.T) {
 	type args struct {
 		ruleID     string
-		updateArgs LoadBalancerRuleArguments
+		updateArgs *LoadBalancerRuleArguments
 	}
 	tests := []struct {
 		name    string
@@ -642,7 +640,7 @@ func TestLoadBalancerRulesClient_Update(t *testing.T) {
 				DestinationPort: 666,
 			},
 			args: args{
-				updateArgs: LoadBalancerRuleArguments{DestinationPort: 666},
+				updateArgs: &LoadBalancerRuleArguments{DestinationPort: 666},
 				ruleID:     "123",
 			},
 			frm: fakeRequestMakerArgs{
@@ -652,7 +650,7 @@ func TestLoadBalancerRulesClient_Update(t *testing.T) {
 				},
 				wantMethod: "PATCH",
 				wantBody: &loadBalancerRuleUpdateRequest{
-					Properties: LoadBalancerRuleArguments{
+					Properties: &LoadBalancerRuleArguments{
 						DestinationPort: 666,
 					},
 				},
@@ -676,10 +674,8 @@ func TestLoadBalancerRulesClient_Update(t *testing.T) {
 					"load_balancer_rule[id]": []string{"123"},
 				},
 				wantMethod: "PATCH",
-				wantBody: &loadBalancerRuleUpdateRequest{
-					Properties: LoadBalancerRuleArguments{},
-				},
-				newReqErr: fmt.Errorf("rats chewed cables"),
+				wantBody:   &loadBalancerRuleUpdateRequest{},
+				newReqErr:  fmt.Errorf("rats chewed cables"),
 			},
 			wantErr: "rats chewed cables",
 		},
@@ -694,11 +690,9 @@ func TestLoadBalancerRulesClient_Update(t *testing.T) {
 					"load_balancer_rule[id]": []string{"123"},
 				},
 				wantMethod: "PATCH",
-				wantBody: &loadBalancerRuleUpdateRequest{
-					Properties: LoadBalancerRuleArguments{},
-				},
-				doErr:  fmt.Errorf("flux capacitor undercharged"),
-				doResp: &katapult.Response{},
+				wantBody:   &loadBalancerRuleUpdateRequest{},
+				doErr:      fmt.Errorf("flux capacitor undercharged"),
+				doResp:     &katapult.Response{},
 			},
 			wantErr: "flux capacitor undercharged",
 		},
