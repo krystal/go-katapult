@@ -102,7 +102,7 @@ func (s *SecurityGroupRulesClient) GetByID(
 	return s.Get(ctx, SecurityGroupRuleRef{ID: id})
 }
 
-type SecurityGroupRuleCreateRequest struct {
+type securityGroupRuleCreateRequest struct {
 	Properties *SecurityGroupRuleArguments `json:"properties,omitempty"`
 }
 
@@ -112,7 +112,7 @@ func (s *SecurityGroupRulesClient) Create(
 	args *SecurityGroupRuleArguments,
 ) (*SecurityGroupRule, *katapult.Response, error) {
 	u := &url.URL{Path: fmt.Sprintf("security_groups/%s/rules", sg.ID)}
-	reqBody := &SecurityGroupRuleCreateRequest{
+	reqBody := &securityGroupRuleCreateRequest{
 		Properties: args,
 	}
 
@@ -124,7 +124,7 @@ func (s *SecurityGroupRulesClient) Create(
 	return body.SecurityGroupRule, resp, nil
 }
 
-type SecurityGroupRuleUpdateRequest struct {
+type securityGroupRuleUpdateRequest struct {
 	Properties *SecurityGroupRuleArguments `json:"properties,omitempty"`
 }
 
@@ -137,7 +137,7 @@ func (s *SecurityGroupRulesClient) Update(
 		Path:     "security_groups/rules/_",
 		RawQuery: ref.queryValues().Encode(),
 	}
-	reqBody := &SecurityGroupRuleUpdateRequest{
+	reqBody := &securityGroupRuleUpdateRequest{
 		Properties: args,
 	}
 
