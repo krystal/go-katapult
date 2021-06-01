@@ -62,6 +62,8 @@ func TestSecurityGroupRuleRef_JSONMarshaling(t *testing.T) {
 }
 
 func TestSecurityGroupRule_JSONMarshalling(t *testing.T) {
+	port := "3000"
+	note := "My fave security group rule"
 	tests := []struct {
 		name string
 		obj  *SecurityGroupRule
@@ -76,9 +78,9 @@ func TestSecurityGroupRule_JSONMarshalling(t *testing.T) {
 				ID:        "arbitrary string",
 				Direction: "inbound",
 				Protocol:  "TCP",
-				Ports:     "3000",
-				Targets:   []string{"192.168.0.1"},
-				Notes:     "My fave security group",
+				Ports:     &port,
+				Targets:   &[]string{"192.168.0.1"},
+				Notes:     &note,
 			},
 		},
 	}
@@ -91,6 +93,9 @@ func TestSecurityGroupRule_JSONMarshalling(t *testing.T) {
 }
 
 func TestSecurityGroupRuleArguments_JSONMarshalling(t *testing.T) {
+	port := "3000"
+	note := "My fave security group rule"
+	blank := ""
 	tests := []struct {
 		name string
 		obj  *SecurityGroupRuleArguments
@@ -104,15 +109,27 @@ func TestSecurityGroupRuleArguments_JSONMarshalling(t *testing.T) {
 			obj: &SecurityGroupRuleArguments{
 				Direction: "inbound",
 				Protocol:  "TCP",
-				Ports:     "3000",
-				Targets:   []string{"192.168.0.1"},
-				Notes:     "My fave security group",
+				Ports:     &port,
+				Targets:   &[]string{"192.168.0.1"},
+				Notes:     &note,
 			},
 		},
 		{
 			name: "remove all targets",
 			obj: &SecurityGroupRuleArguments{
-				Targets: []string(nil),
+				Targets: &[]string{},
+			},
+		},
+		{
+			name: "unset ports",
+			obj: &SecurityGroupRuleArguments{
+				Ports: &blank,
+			},
+		},
+		{
+			name: "unset notes",
+			obj: &SecurityGroupRuleArguments{
+				Notes: &blank,
 			},
 		},
 	}
@@ -157,6 +174,8 @@ func Test_securityGroupRulesResponseBody_JSONMarshalling(t *testing.T) {
 }
 
 func Test_securityGroupRuleCreateRequest_JSONMarshalling(t *testing.T) {
+	port := "3000"
+	note := "My fave security group rule"
 	tests := []struct {
 		name string
 		obj  *securityGroupRuleCreateRequest
@@ -171,9 +190,9 @@ func Test_securityGroupRuleCreateRequest_JSONMarshalling(t *testing.T) {
 				Properties: &SecurityGroupRuleArguments{
 					Direction: "inbound",
 					Protocol:  "TCP",
-					Ports:     "3000",
-					Targets:   []string{"192.168.0.1"},
-					Notes:     "My fave security group",
+					Ports:     &port,
+					Targets:   &[]string{"192.168.0.1"},
+					Notes:     &note,
 				},
 			},
 		},
@@ -187,6 +206,8 @@ func Test_securityGroupRuleCreateRequest_JSONMarshalling(t *testing.T) {
 }
 
 func Test_securityGroupRuleUpdateRequest_JSONMarshalling(t *testing.T) {
+	port := "3000"
+	note := "My fave security group rule"
 	tests := []struct {
 		name string
 		obj  *securityGroupRuleUpdateRequest
@@ -201,9 +222,9 @@ func Test_securityGroupRuleUpdateRequest_JSONMarshalling(t *testing.T) {
 				Properties: &SecurityGroupRuleArguments{
 					Direction: "inbound",
 					Protocol:  "TCP",
-					Ports:     "3000",
-					Targets:   []string{"192.168.0.1"},
-					Notes:     "My fave security group",
+					Ports:     &port,
+					Targets:   &[]string{"192.168.0.1"},
+					Notes:     &note,
 				},
 			},
 		},
