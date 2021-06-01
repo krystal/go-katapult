@@ -80,6 +80,29 @@ func TestSecurityGroupRef_queryValues(t *testing.T) {
 	}
 }
 
+func TestSecurityGroupRef_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *SecurityGroupRef
+	}{
+		{
+			name: "empty",
+			obj:  &SecurityGroupRef{},
+		},
+		{
+			name: "full",
+			obj: &SecurityGroupRef{
+				ID: "sg_3uXbmANw4sQiF1J3",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
 func TestSecurityGroupCreateArguments_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string
