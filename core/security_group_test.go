@@ -665,7 +665,7 @@ func TestSecurityGroupsClient_Create(t *testing.T) {
 		respBody   []byte
 	}{
 		{
-			name: "security group",
+			name: "by organization ID",
 			args: args{
 				ctx:    context.Background(),
 				org:    OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
