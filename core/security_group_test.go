@@ -188,7 +188,7 @@ func Test_securityGroupCreateRequest_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func Test_SecurityGroupUpdateRequest_JSONMarshaling(t *testing.T) {
+func Test_securityGroupUpdateRequest_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string
 		obj  *securityGroupUpdateRequest
