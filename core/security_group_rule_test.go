@@ -10,6 +10,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var (
+	port  = "3000"
+	note  = "My fave security group rule"
+	blank = ""
+)
+
 func TestClient_SecurityGroupRules(t *testing.T) {
 	c := New(&fakeRequestMaker{})
 
@@ -62,8 +68,6 @@ func TestSecurityGroupRuleRef_JSONMarshaling(t *testing.T) {
 }
 
 func TestSecurityGroupRule_JSONMarshalling(t *testing.T) {
-	port := "3000"
-	note := "My fave security group rule"
 	tests := []struct {
 		name string
 		obj  *SecurityGroupRule
@@ -93,9 +97,6 @@ func TestSecurityGroupRule_JSONMarshalling(t *testing.T) {
 }
 
 func TestSecurityGroupRuleArguments_JSONMarshalling(t *testing.T) {
-	port := "3000"
-	note := "My fave security group rule"
-	blank := ""
 	tests := []struct {
 		name string
 		obj  *SecurityGroupRuleArguments
@@ -174,8 +175,6 @@ func Test_securityGroupRulesResponseBody_JSONMarshalling(t *testing.T) {
 }
 
 func Test_securityGroupRuleCreateRequest_JSONMarshalling(t *testing.T) {
-	port := "3000"
-	note := "My fave security group rule"
 	tests := []struct {
 		name string
 		obj  *securityGroupRuleCreateRequest
@@ -206,8 +205,6 @@ func Test_securityGroupRuleCreateRequest_JSONMarshalling(t *testing.T) {
 }
 
 func Test_securityGroupRuleUpdateRequest_JSONMarshalling(t *testing.T) {
-	port := "3000"
-	note := "My fave security group rule"
 	tests := []struct {
 		name string
 		obj  *securityGroupRuleUpdateRequest
