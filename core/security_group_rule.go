@@ -26,10 +26,7 @@ type SecurityGroupRuleRef struct {
 }
 
 func (sgr SecurityGroupRuleRef) queryValues() *url.Values {
-	v := &url.Values{}
-	v.Set("security_group_rule[id]", sgr.ID)
-
-	return v
+	return &url.Values{"security_group_rule[id]": []string{sgr.ID}}
 }
 
 type SecurityGroupRuleArguments struct {
