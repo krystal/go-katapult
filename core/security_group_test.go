@@ -61,7 +61,7 @@ func TestSecurityGroup_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestSecurityGroup_queryValues(t *testing.T) {
+func TestSecurityGroupRef_queryValues(t *testing.T) {
 	tests := []struct {
 		name string
 		obj  SecurityGroupRef
