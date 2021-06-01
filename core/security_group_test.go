@@ -266,7 +266,6 @@ func TestSecurityGroupsClient_List(t *testing.T) {
 		name           string
 		args           args
 		want           []*SecurityGroup
-		wantQuery      *url.Values
 		wantPagination *katapult.Pagination
 		errStr         string
 		errResp        *katapult.ResponseError
@@ -280,9 +279,6 @@ func TestSecurityGroupsClient_List(t *testing.T) {
 				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			want: SecurityGroupList,
-			wantQuery: &url.Values{
-				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
-			},
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
@@ -300,9 +296,6 @@ func TestSecurityGroupsClient_List(t *testing.T) {
 				org: OrganizationRef{SubDomain: "acme"},
 			},
 			want: SecurityGroupList,
-			wantQuery: &url.Values{
-				"organization[sub_domain]": []string{"acme"},
-			},
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 1,
 				TotalPages:  1,
@@ -321,11 +314,6 @@ func TestSecurityGroupsClient_List(t *testing.T) {
 				opts: &ListOptions{Page: 1, PerPage: 2},
 			},
 			want: SecurityGroupList[0:2],
-			wantQuery: &url.Values{
-				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
-				"page":             []string{"1"},
-				"per_page":         []string{"2"},
-			},
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 1,
 				TotalPages:  2,
@@ -344,11 +332,6 @@ func TestSecurityGroupsClient_List(t *testing.T) {
 				opts: &ListOptions{Page: 2, PerPage: 2},
 			},
 			want: SecurityGroupList[2:],
-			wantQuery: &url.Values{
-				"organization[id]": []string{"org_O648YDMEYeLmqdmn"},
-				"page":             []string{"2"},
-				"per_page":         []string{"2"},
-			},
 			wantPagination: &katapult.Pagination{
 				CurrentPage: 2,
 				TotalPages:  2,
