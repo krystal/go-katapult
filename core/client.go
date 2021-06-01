@@ -54,6 +54,7 @@ func New(rm RequestMaker) *Client {
 		NetworkSpeedProfiles:            NewNetworkSpeedProfilesClient(rm),
 		Networks:                        NewNetworksClient(rm),
 		Organizations:                   NewOrganizationsClient(rm),
+		SecurityGroups:                  NewSecurityGroupsClient(rm),
 		Tasks:                           NewTasksClient(rm),
 		TrashObjects:                    NewTrashObjectsClient(rm),
 		VirtualMachineBuilds:            NewVirtualMachineBuildsClient(rm),
