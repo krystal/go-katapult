@@ -1,1 +1,1 @@
-{"direction":"inbound","protocol":"TCP","ports":"3000","targets":["192.168.0.1"],"notes":"My fave security group"}
+{"direction":"inbound","protocol":"TCP","ports":"3000","targets":["192.168.0.1"],"notes":"My fave security group rule"}
