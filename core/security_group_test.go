@@ -686,7 +686,7 @@ func TestSecurityGroupsClient_Create(t *testing.T) {
 			respBody:   fixture("security_group_create"),
 		},
 		{
-			name: "organization by sub-domain",
+			name: "by organization SubDomain",
 			args: args{
 				ctx:    context.Background(),
 				org:    OrganizationRef{SubDomain: "acme"},
