@@ -9,12 +9,12 @@ import (
 )
 
 type SecurityGroupRule struct {
-	ID        string    `json:"id,omitempty"`
-	Direction string    `json:"direction,omitempty"`
-	Protocol  string    `json:"protocol,omitempty"`
-	Ports     *string   `json:"ports,omitempty"`
-	Targets   *[]string `json:"targets,omitempty"`
-	Notes     *string   `json:"notes,omitempty"`
+	ID        string   `json:"id,omitempty"`
+	Direction string   `json:"direction,omitempty"`
+	Protocol  string   `json:"protocol,omitempty"`
+	Ports     string   `json:"ports,omitempty"`
+	Targets   []string `json:"targets,omitempty"`
+	Notes     string   `json:"notes,omitempty"`
 }
 
 func (sgr *SecurityGroupRule) Ref() SecurityGroupRuleRef {
@@ -37,7 +37,7 @@ type SecurityGroupRuleArguments struct {
 	Notes     *string   `json:"notes,omitempty"`
 }
 
-type SecurityGroupRulesResponseBody struct {
+type securityGroupRulesResponseBody struct {
 	Pagination         *katapult.Pagination `json:"pagination,omitempty"`
 	SecurityGroupRule  *SecurityGroupRule   `json:"security_group_rule,omitempty"`
 	SecurityGroupRules []SecurityGroupRule  `json:"security_group_rules,omitempty"`
@@ -170,7 +170,7 @@ func (s *SecurityGroupRulesClient) doRequest(
 	method string,
 	u *url.URL,
 	body interface{},
-) (*SecurityGroupRulesResponseBody, *katapult.Response, error) {
+) (*securityGroupRulesResponseBody, *katapult.Response, error) {
 	u = s.basePath.ResolveReference(u)
 
 	req, err := s.client.NewRequestWithContext(ctx, method, u, body)
@@ -178,7 +178,7 @@ func (s *SecurityGroupRulesClient) doRequest(
 		return nil, nil, err
 	}
 
-	respBody := &SecurityGroupRulesResponseBody{}
+	respBody := &securityGroupRulesResponseBody{}
 	resp, err := s.client.Do(req, respBody)
 	if err != nil {
 		return nil, resp, err

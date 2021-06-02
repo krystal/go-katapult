@@ -82,9 +82,9 @@ func TestSecurityGroupRule_JSONMarshalling(t *testing.T) {
 				ID:        "arbitrary string",
 				Direction: "inbound",
 				Protocol:  "TCP",
-				Ports:     &port,
-				Targets:   &[]string{"192.168.0.1"},
-				Notes:     &note,
+				Ports:     port,
+				Targets:   []string{"192.168.0.1"},
+				Notes:     note,
 			},
 		},
 	}
@@ -145,15 +145,15 @@ func TestSecurityGroupRuleArguments_JSONMarshalling(t *testing.T) {
 func Test_securityGroupRulesResponseBody_JSONMarshalling(t *testing.T) {
 	tests := []struct {
 		name string
-		obj  *SecurityGroupRulesResponseBody
+		obj  *securityGroupRulesResponseBody
 	}{
 		{
 			name: "empty",
-			obj:  &SecurityGroupRulesResponseBody{},
+			obj:  &securityGroupRulesResponseBody{},
 		},
 		{
 			name: "full",
-			obj: &SecurityGroupRulesResponseBody{
+			obj: &securityGroupRulesResponseBody{
 				Pagination: &katapult.Pagination{
 					LargeSet: true,
 				},
@@ -272,7 +272,7 @@ func TestSecurityGroupRulesClient_List(t *testing.T) {
 					"per_page":           []string{"32"},
 					"security_group[id]": []string{"xyzzy"},
 				},
-				doResponseBody: &SecurityGroupRulesResponseBody{
+				doResponseBody: &securityGroupRulesResponseBody{
 					SecurityGroupRules: []SecurityGroupRule{
 						{ID: "abc", Direction: "inbound"},
 					},
@@ -299,7 +299,7 @@ func TestSecurityGroupRulesClient_List(t *testing.T) {
 					"security_group[id]": []string{"xyzzy"},
 				},
 				wantBody: nil,
-				doResponseBody: &SecurityGroupRulesResponseBody{
+				doResponseBody: &securityGroupRulesResponseBody{
 					SecurityGroupRules: []SecurityGroupRule{
 						{ID: "cbd"},
 					},
@@ -394,7 +394,7 @@ func TestSecurityGroupRulesClient_Get(t *testing.T) {
 				},
 				wantMethod: "GET",
 				wantBody:   nil,
-				doResponseBody: &SecurityGroupRulesResponseBody{
+				doResponseBody: &securityGroupRulesResponseBody{
 					SecurityGroupRule: &SecurityGroupRule{
 						ID:        "123",
 						Direction: "inbound",
@@ -488,7 +488,7 @@ func TestSecurityGroupRulesClient_GetByID(t *testing.T) {
 				},
 				wantMethod: "GET",
 				wantBody:   nil,
-				doResponseBody: &SecurityGroupRulesResponseBody{
+				doResponseBody: &securityGroupRulesResponseBody{
 					SecurityGroupRule: &SecurityGroupRule{
 						ID:        "123",
 						Direction: "inbound",
@@ -587,7 +587,7 @@ func TestSecurityGroupRulesClient_Create(t *testing.T) {
 						Direction: "inbound",
 					},
 				},
-				doResponseBody: &SecurityGroupRulesResponseBody{
+				doResponseBody: &securityGroupRulesResponseBody{
 					SecurityGroupRule: &SecurityGroupRule{
 						ID:        "abc",
 						Direction: "inbound",
@@ -682,7 +682,7 @@ func TestSecurityGroupRulesClient_Update(t *testing.T) {
 						Direction: "inbound",
 					},
 				},
-				doResponseBody: &SecurityGroupRulesResponseBody{
+				doResponseBody: &securityGroupRulesResponseBody{
 					SecurityGroupRule: &SecurityGroupRule{
 						ID:        "abc",
 						Direction: "inbound",
@@ -779,7 +779,7 @@ func TestSecurityGroupRulesClient_Delete(t *testing.T) {
 				},
 				wantMethod: "DELETE",
 				wantBody:   nil,
-				doResponseBody: &SecurityGroupRulesResponseBody{
+				doResponseBody: &securityGroupRulesResponseBody{
 					SecurityGroupRule: &sgr,
 				},
 				doResp: &katapult.Response{},
