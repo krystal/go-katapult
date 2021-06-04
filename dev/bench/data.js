@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1622808606425,
+  "lastUpdate": 1622811790614,
   "repoUrl": "https://github.com/krystal/go-katapult",
   "entries": {
     "Benchmark": [
@@ -2946,6 +2946,60 @@ window.BENCHMARK_DATA = {
             "value": 5178,
             "unit": "ns/op",
             "extra": "260551 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "ajtait.uk@gmail.com",
+            "name": "Andrew Tait",
+            "username": "andrewjtait"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0580d7a9491ea823f9c1ef5db1567cc003359c69",
+          "message": "feat(security_groups): add support for security group rules (#112)\n\n* feat(security_groups): add support for Security Groups\r\n\r\n* Update core/security_group_test.go\r\n\r\nCo-authored-by: Jim Myhrberg <contact@jimeh.me>\r\n\r\n* Update core/security_group_test.go\r\n\r\nCo-authored-by: Jim Myhrberg <contact@jimeh.me>\r\n\r\n* Update core/security_group_test.go\r\n\r\nCo-authored-by: Jim Myhrberg <contact@jimeh.me>\r\n\r\n* Update core/security_group_test.go\r\n\r\nCo-authored-by: Jim Myhrberg <contact@jimeh.me>\r\n\r\n* Update core/security_group_test.go\r\n\r\nCo-authored-by: Jim Myhrberg <contact@jimeh.me>\r\n\r\n* Update core/security_group_test.go\r\n\r\nCo-authored-by: Jim Myhrberg <contact@jimeh.me>\r\n\r\n* wip: remove unused wantQuery\r\n\r\n* wip: test for security group ref marshaling\r\n\r\n* wip: force case sensitive file update\r\n\r\n* feat(security_groups): add support for Security Group Rules\r\n\r\n* Update core/security_group_rule.go\r\n\r\nCo-authored-by: Jim Myhrberg <contact@jimeh.me>\r\n\r\n* wip: address pr feedback\r\n\r\n* wip: allow ports notes and targets to be unset\r\n\r\n* wip: set vars once\r\n\r\n* wip: change pointers and exported func\r\n\r\nCo-authored-by: Jim Myhrberg <contact@jimeh.me>",
+          "timestamp": "2021-06-04T14:02:37+01:00",
+          "tree_id": "97d04bbad900cefcadbf9a93a2722b5b74c4497d",
+          "url": "https://github.com/krystal/go-katapult/commit/0580d7a9491ea823f9c1ef5db1567cc003359c69"
+        },
+        "date": 1622811789618,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkNameGenerator_RandomHostname",
+            "value": 6613,
+            "unit": "ns/op",
+            "extra": "183777 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_NoPrefix",
+            "value": 4282,
+            "unit": "ns/op",
+            "extra": "259377 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_OnePrefix",
+            "value": 4382,
+            "unit": "ns/op",
+            "extra": "270298 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_TwoPrefixes",
+            "value": 4784,
+            "unit": "ns/op",
+            "extra": "268279 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_ThreePrefixes",
+            "value": 4688,
+            "unit": "ns/op",
+            "extra": "268047 times\n2 procs"
           }
         ]
       }
