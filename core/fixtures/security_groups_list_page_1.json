@@ -1,0 +1,25 @@
+{
+  "pagination": {
+    "current_page": 1,
+    "total_pages": 2,
+    "total": 3,
+    "per_page": 2,
+    "large_set": false
+  },
+  "security_groups": [
+    {
+      "id": "sg_3uXbmANw4sQiF1J3",
+      "name": "group-1",
+      "allow_all_inbound": false,
+      "allow_all_outbound": false,
+      "associations": []
+    },
+    {
+      "id": "sg_NFP2Ns2frZJV8gD1",
+      "name": "group-2",
+      "allow_all_inbound": false,
+      "allow_all_outbound": false,
+      "associations": []
+    }
+  ]
+}
