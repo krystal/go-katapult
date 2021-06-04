@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1622456715577,
+  "lastUpdate": 1622808606425,
   "repoUrl": "https://github.com/krystal/go-katapult",
   "entries": {
     "Benchmark": [
@@ -2892,6 +2892,60 @@ window.BENCHMARK_DATA = {
             "value": 5522,
             "unit": "ns/op",
             "extra": "200013 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "ajtait.uk@gmail.com",
+            "name": "Andrew Tait",
+            "username": "andrewjtait"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e5b1fb4da06c3d89e4d9d228ffb5cbc0d09d2daf",
+          "message": "feat: add support for katapult security groups (#103)\n\n* feat(security_groups): add support for Security Groups\r\n\r\n* Update core/security_group_test.go\r\n\r\nCo-authored-by: Jim Myhrberg <contact@jimeh.me>\r\n\r\n* Update core/security_group_test.go\r\n\r\nCo-authored-by: Jim Myhrberg <contact@jimeh.me>\r\n\r\n* Update core/security_group_test.go\r\n\r\nCo-authored-by: Jim Myhrberg <contact@jimeh.me>\r\n\r\n* Update core/security_group_test.go\r\n\r\nCo-authored-by: Jim Myhrberg <contact@jimeh.me>\r\n\r\n* Update core/security_group_test.go\r\n\r\nCo-authored-by: Jim Myhrberg <contact@jimeh.me>\r\n\r\n* Update core/security_group_test.go\r\n\r\nCo-authored-by: Jim Myhrberg <contact@jimeh.me>\r\n\r\n* wip: update golden\r\n\r\n* wip: remove unused wantQuery\r\n\r\n* wip: add security groups client\r\n\r\n* wip: test for security group ref marshaling\r\n\r\n* wip: force case sensitive file update\r\n\r\n* wip: deleted old golden files\r\n\r\nCo-authored-by: Jim Myhrberg <contact@jimeh.me>",
+          "timestamp": "2021-06-04T13:09:24+01:00",
+          "tree_id": "4305a1acd6ab63557b9e139ff7a34e443f2a345b",
+          "url": "https://github.com/krystal/go-katapult/commit/e5b1fb4da06c3d89e4d9d228ffb5cbc0d09d2daf"
+        },
+        "date": 1622808605260,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkNameGenerator_RandomHostname",
+            "value": 7391,
+            "unit": "ns/op",
+            "extra": "147394 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_NoPrefix",
+            "value": 4986,
+            "unit": "ns/op",
+            "extra": "262516 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_OnePrefix",
+            "value": 5063,
+            "unit": "ns/op",
+            "extra": "245343 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_TwoPrefixes",
+            "value": 4941,
+            "unit": "ns/op",
+            "extra": "257719 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_ThreePrefixes",
+            "value": 5178,
+            "unit": "ns/op",
+            "extra": "260551 times\n2 procs"
           }
         ]
       }
