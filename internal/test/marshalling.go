@@ -2,10 +2,10 @@ package test
 
 import (
 	"bytes"
+	"encoding/json"
 	"reflect"
 	"testing"
 
-	"github.com/krystal/go-katapult/internal/codec"
 	"github.com/krystal/go-katapult/internal/golden"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -29,10 +29,10 @@ func CustomJSONMarshaling(
 	input interface{},
 	decoded interface{},
 ) {
-	c := &codec.JSON{}
-
-	buf := &bytes.Buffer{}
-	err := c.Encode(input, buf)
+	var buf bytes.Buffer
+	enc := json.NewEncoder(&buf)
+	enc.SetEscapeHTML(false)
+	err := enc.Encode(input)
 	require.NoError(t, err, "encoding failed")
 
 	if golden.Update() {
@@ -48,7 +48,7 @@ func CustomJSONMarshaling(
 	}
 
 	got := reflect.New(reflect.TypeOf(want).Elem()).Interface()
-	err = c.Decode(bytes.NewBuffer(g), got)
+	err = json.Unmarshal(g, got)
 	require.NoError(t, err, "decoding golden failed")
 	assert.Equal(t, want, got,
 		"decoding from golden does not match expected object",

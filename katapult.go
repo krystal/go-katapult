@@ -10,8 +10,6 @@ import (
 	"net/http"
 	"net/url"
 	"time"
-
-	"github.com/krystal/go-katapult/internal/codec"
 )
 
 const (
@@ -76,7 +74,6 @@ type HTTPClient interface {
 
 type Client struct {
 	HTTPClient HTTPClient
-	Codec      codec.Codec
 
 	APIKey    string
 	UserAgent string
@@ -87,7 +84,6 @@ func New(opts ...Opt) (*Client, error) {
 	// Define default values for client
 	c := &Client{
 		HTTPClient: &http.Client{Timeout: DefaultTimeout},
-		Codec:      &codec.JSON{},
 		BaseURL:    DefaultURL,
 		UserAgent:  DefaultUserAgent,
 	}

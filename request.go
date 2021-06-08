@@ -64,11 +64,14 @@ func (r *Request) bodyContent() (string, io.Reader, error) {
 
 	if contentType == "" {
 		contentType = "application/json"
-		b, err := json.Marshal(r.Body)
+		var buf bytes.Buffer
+		enc := json.NewEncoder(&buf)
+		enc.SetEscapeHTML(false)
+		err := enc.Encode(r.Body)
 		if err != nil {
 			return "", nil, err
 		}
-		body = bytes.NewBuffer(b)
+		body = &buf
 	} else {
 		var ok bool
 		body, ok = r.Body.(io.Reader)
