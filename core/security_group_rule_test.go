@@ -7,6 +7,8 @@ import (
 	"testing"
 
 	"github.com/krystal/go-katapult"
+	"github.com/krystal/go-katapult/internal/test"
+	"github.com/krystal/go-katapult/internal/testclient"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,7 +19,7 @@ var (
 )
 
 func TestClient_SecurityGroupRules(t *testing.T) {
-	c := New(&fakeRequestMaker{})
+	c := New(&testclient.Client{})
 
 	assert.IsType(t, &SecurityGroupRulesClient{}, c.SecurityGroupRules)
 }
@@ -236,608 +238,544 @@ func Test_securityGroupRuleUpdateRequest_JSONMarshalling(t *testing.T) {
 
 func TestSecurityGroupRulesClient_List(t *testing.T) {
 	type args struct {
-		SecurityGroupID string
-		listOptions     *ListOptions
+		ctx  context.Context
+		sg   SecurityGroupRef
+		opts *ListOptions
 	}
 	tests := []struct {
-		name     string
-		frm      fakeRequestMakerArgs
-		args     args
-		want     []SecurityGroupRule
-		wantResp *katapult.Response
-		wantErr  string
+		name    string
+		args    args
+		resp    *katapult.Response
+		respErr error
+		respV   *securityGroupRulesResponseBody
+		want    []SecurityGroupRule
+		wantReq *katapult.Request
+		wantErr string
 	}{
 		{
 			name: "success",
 			args: args{
-				SecurityGroupID: "xyzzy",
-				listOptions: &ListOptions{
+				ctx: context.Background(),
+				sg:  SecurityGroupRef{ID: "sg_xw6mLJbhXQjdxfSY"},
+				opts: &ListOptions{
 					Page:    5,
 					PerPage: 32,
 				},
 			},
-			want: []SecurityGroupRule{{
-				ID:        "abc",
-				Direction: "inbound",
-			}},
-			wantResp: &katapult.Response{
+			resp: &katapult.Response{
 				Pagination: &katapult.Pagination{Total: 333},
 			},
-			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/security_groups/_/rules",
-				wantMethod: "GET",
-				wantBody:   nil,
-				wantValues: url.Values{
-					"page":               []string{"5"},
-					"per_page":           []string{"32"},
-					"security_group[id]": []string{"xyzzy"},
+			respV: &securityGroupRulesResponseBody{
+				SecurityGroupRules: []SecurityGroupRule{
+					{ID: "sgr_WbCly1EHB3jNMQNC", Direction: "inbound"},
 				},
-				doResponseBody: &securityGroupRulesResponseBody{
-					SecurityGroupRules: []SecurityGroupRule{
-						{ID: "abc", Direction: "inbound"},
-					},
-					Pagination: &katapult.Pagination{Total: 333},
+			},
+			want: []SecurityGroupRule{
+				{ID: "sgr_WbCly1EHB3jNMQNC", Direction: "inbound"},
+			},
+			wantReq: &katapult.Request{
+				Method: "GET",
+				URL: &url.URL{
+					Path: "/core/v1/security_groups/_/rules",
+					RawQuery: url.Values{
+						"page":               []string{"5"},
+						"per_page":           []string{"32"},
+						"security_group[id]": []string{"sg_xw6mLJbhXQjdxfSY"},
+					}.Encode(),
 				},
-				doResp: &katapult.Response{},
 			},
 		},
 		{
 			name: "success with nil options",
 			args: args{
-				SecurityGroupID: "xyzzy",
-				listOptions:     nil,
+				ctx:  context.Background(),
+				sg:   SecurityGroupRef{ID: "sg_xw6mLJbhXQjdxfSY"},
+				opts: nil,
 			},
-
-			want: []SecurityGroupRule{{
-				ID: "cbd",
-			}},
-			wantResp: &katapult.Response{},
-			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/security_groups/_/rules",
-				wantMethod: "GET",
-				wantValues: url.Values{
-					"security_group[id]": []string{"xyzzy"},
+			resp: &katapult.Response{
+				Pagination: &katapult.Pagination{Total: 333},
+			},
+			respV: &securityGroupRulesResponseBody{
+				SecurityGroupRules: []SecurityGroupRule{
+					{ID: "sgr_WbCly1EHB3jNMQNC", Direction: "inbound"},
 				},
-				wantBody: nil,
-				doResponseBody: &securityGroupRulesResponseBody{
-					SecurityGroupRules: []SecurityGroupRule{
-						{ID: "cbd"},
-					},
+			},
+			want: []SecurityGroupRule{
+				{ID: "sgr_WbCly1EHB3jNMQNC", Direction: "inbound"},
+			},
+			wantReq: &katapult.Request{
+				Method: "GET",
+				URL: &url.URL{
+					Path: "/core/v1/security_groups/_/rules",
+					RawQuery: url.Values{
+						"security_group[id]": []string{"sg_xw6mLJbhXQjdxfSY"},
+					}.Encode(),
 				},
-				doResp: &katapult.Response{},
 			},
-		},
-		{
-			name: "new request fails",
-			args: args{
-				SecurityGroupID: "xyzzy",
-			},
-			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/security_groups/_/rules",
-				wantMethod: "GET",
-				wantValues: url.Values{
-					"security_group[id]": []string{"xyzzy"},
-				},
-				wantBody:  nil,
-				newReqErr: fmt.Errorf("rats chewed cables"),
-			},
-			wantErr: "rats chewed cables",
 		},
 		{
 			name: "http do fails",
 			args: args{
-				SecurityGroupID: "xyzzy",
+				ctx:  context.Background(),
+				sg:   SecurityGroupRef{ID: "sg_xw6mLJbhXQjdxfSY"},
+				opts: nil,
 			},
-			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/security_groups/_/rules",
-				wantMethod: "GET",
-				wantValues: url.Values{
-					"security_group[id]": []string{"xyzzy"},
-				},
-				wantBody: nil,
-				doErr:    fmt.Errorf("flux capacitor undercharged"),
-				doResp:   &katapult.Response{},
-			},
-			wantResp: &katapult.Response{},
-			wantErr:  "flux capacitor undercharged",
+			respErr: fmt.Errorf("flux capacitor undercharged"),
+			wantErr: "flux capacitor undercharged",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := NewSecurityGroupRulesClient(&fakeRequestMaker{
-				t:    t,
-				args: tt.frm,
-			})
+			tc := testclient.New(tt.resp, tt.respErr, tt.respV)
+			c := NewSecurityGroupRulesClient(tc)
+			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.List(
-				context.Background(),
-				SecurityGroupRef{ID: tt.args.SecurityGroupID},
-				tt.args.listOptions,
-			)
-			assert.Equal(t, tt.wantResp, resp)
+			got, resp, err := c.List(ctx, tt.args.sg, tt.args.opts)
+
+			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
+			test.AssertContext(t, ctx, tc.Ctx)
+
+			assert.Equal(t, tt.want, got)
+
+			if tt.resp != nil {
+				assert.Equal(t, tt.resp, resp)
+			}
+
+			if tt.wantReq != nil {
+				assert.Equal(t, tt.wantReq, tc.Request)
+			}
 
 			if tt.wantErr == "" {
 				assert.NoError(t, err)
 			} else {
 				assert.EqualError(t, err, tt.wantErr)
 			}
-
-			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func TestSecurityGroupRulesClient_Get(t *testing.T) {
 	type args struct {
+		ctx context.Context
 		ref SecurityGroupRuleRef
 	}
 	tests := []struct {
 		name    string
-		frm     fakeRequestMakerArgs
 		args    args
+		resp    *katapult.Response
+		respErr error
+		respV   *securityGroupRulesResponseBody
 		want    *SecurityGroupRule
+		wantReq *katapult.Request
 		wantErr string
 	}{
 		{
 			name: "success",
 			args: args{
-				ref: SecurityGroupRuleRef{ID: "123"},
+				ctx: context.Background(),
+				ref: SecurityGroupRuleRef{ID: "sgr_IppA889KHFY1BvDt"},
+			},
+			respV: &securityGroupRulesResponseBody{
+				SecurityGroupRule: &SecurityGroupRule{
+					ID:        "sgr_IppA889KHFY1BvDt",
+					Direction: "inbound",
+				},
 			},
 			want: &SecurityGroupRule{
-				ID:        "123",
+				ID:        "sgr_IppA889KHFY1BvDt",
 				Direction: "inbound",
 			},
-			frm: fakeRequestMakerArgs{
-				wantPath: "/core/v1/security_groups/rules/_",
-				wantValues: url.Values{
-					"security_group_rule[id]": []string{"123"},
+			wantReq: &katapult.Request{
+				Method: "GET",
+				URL: &url.URL{
+					Path: "/core/v1/security_groups/rules/_",
+					RawQuery: url.Values{
+						"security_group_rule[id]": []string{
+							"sgr_IppA889KHFY1BvDt",
+						},
+					}.Encode(),
 				},
-				wantMethod: "GET",
-				wantBody:   nil,
-				doResponseBody: &securityGroupRulesResponseBody{
-					SecurityGroupRule: &SecurityGroupRule{
-						ID:        "123",
-						Direction: "inbound",
-					},
-				},
-				doResp: &katapult.Response{},
 			},
 		},
 		{
-			name: "new request fails",
+			name: "request error",
 			args: args{
-				ref: SecurityGroupRuleRef{ID: "123"},
+				ctx: context.Background(),
+				ref: SecurityGroupRuleRef{ID: "sgr_IppA889KHFY1BvDt"},
 			},
-			frm: fakeRequestMakerArgs{
-				wantPath: "/core/v1/security_groups/rules/_",
-				wantValues: url.Values{
-					"security_group_rule[id]": []string{"123"},
-				},
-				wantMethod: "GET",
-				wantBody:   nil,
-				newReqErr:  fmt.Errorf("rats chewed cables"),
-			},
-			wantErr: "rats chewed cables",
-		},
-		{
-			name: "http do fails",
-			args: args{
-				ref: SecurityGroupRuleRef{ID: "123"},
-			},
-			frm: fakeRequestMakerArgs{
-				wantPath: "/core/v1/security_groups/rules/_",
-				wantValues: url.Values{
-					"security_group_rule[id]": []string{"123"},
-				},
-				wantMethod: "GET",
-				wantBody:   nil,
-				doErr:      fmt.Errorf("flux capacitor undercharged"),
-				doResp:     &katapult.Response{},
-			},
+			respErr: fmt.Errorf("flux capacitor undercharged"),
 			wantErr: "flux capacitor undercharged",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := NewSecurityGroupRulesClient(&fakeRequestMaker{
-				t:    t,
-				args: tt.frm,
-			})
+			tc := testclient.New(tt.resp, tt.respErr, tt.respV)
+			c := NewSecurityGroupRulesClient(tc)
+			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.Get(
-				context.Background(),
-				tt.args.ref,
-			)
-			assert.Equal(t, tt.frm.doResp, resp)
+			got, resp, err := c.Get(ctx, tt.args.ref)
+
+			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
+			test.AssertContext(t, ctx, tc.Ctx)
+
+			assert.Equal(t, tt.want, got)
+
+			if tt.resp != nil {
+				assert.Equal(t, tt.resp, resp)
+			}
+
+			if tt.wantReq != nil {
+				assert.Equal(t, tt.wantReq, tc.Request)
+			}
 
 			if tt.wantErr == "" {
 				assert.NoError(t, err)
 			} else {
 				assert.EqualError(t, err, tt.wantErr)
 			}
-
-			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func TestSecurityGroupRulesClient_GetByID(t *testing.T) {
 	type args struct {
-		id string
+		ctx context.Context
+		id  string
 	}
 	tests := []struct {
 		name    string
-		frm     fakeRequestMakerArgs
 		args    args
+		resp    *katapult.Response
+		respErr error
+		respV   *securityGroupRulesResponseBody
 		want    *SecurityGroupRule
+		wantReq *katapult.Request
 		wantErr string
 	}{
 		{
 			name: "success",
 			args: args{
-				id: "123",
+				ctx: context.Background(),
+				id:  "sgr_yOOeqZTbpLROjDGP",
+			},
+			respV: &securityGroupRulesResponseBody{
+				SecurityGroupRule: &SecurityGroupRule{
+					ID:        "sgr_yOOeqZTbpLROjDGP",
+					Direction: "inbound",
+				},
 			},
 			want: &SecurityGroupRule{
-				ID:        "123",
+				ID:        "sgr_yOOeqZTbpLROjDGP",
 				Direction: "inbound",
 			},
-			frm: fakeRequestMakerArgs{
-				wantPath: "/core/v1/security_groups/rules/_",
-				wantValues: url.Values{
-					"security_group_rule[id]": []string{"123"},
+			wantReq: &katapult.Request{
+				Method: "GET",
+				URL: &url.URL{
+					Path: "/core/v1/security_groups/rules/_",
+					RawQuery: url.Values{
+						"security_group_rule[id]": []string{
+							"sgr_yOOeqZTbpLROjDGP",
+						},
+					}.Encode(),
 				},
-				wantMethod: "GET",
-				wantBody:   nil,
-				doResponseBody: &securityGroupRulesResponseBody{
-					SecurityGroupRule: &SecurityGroupRule{
-						ID:        "123",
-						Direction: "inbound",
-					},
-				},
-				doResp: &katapult.Response{},
 			},
 		},
 		{
-			name: "new request fails",
+			name: "request error",
 			args: args{
-				id: "123",
+				ctx: context.Background(),
+				id:  "sgr_yOOeqZTbpLROjDGP",
 			},
-			frm: fakeRequestMakerArgs{
-				wantPath: "/core/v1/security_groups/rules/_",
-				wantValues: url.Values{
-					"security_group_rule[id]": []string{"123"},
-				},
-				wantMethod: "GET",
-				wantBody:   nil,
-				newReqErr:  fmt.Errorf("rats chewed cables"),
-			},
-			wantErr: "rats chewed cables",
-		},
-		{
-			name: "http do fails",
-			args: args{
-				id: "123",
-			},
-			frm: fakeRequestMakerArgs{
-				wantPath: "/core/v1/security_groups/rules/_",
-				wantValues: url.Values{
-					"security_group_rule[id]": []string{"123"},
-				},
-				wantMethod: "GET",
-				wantBody:   nil,
-				doErr:      fmt.Errorf("flux capacitor undercharged"),
-				doResp:     &katapult.Response{},
-			},
+			respErr: fmt.Errorf("flux capacitor undercharged"),
 			wantErr: "flux capacitor undercharged",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := NewSecurityGroupRulesClient(&fakeRequestMaker{
-				t:    t,
-				args: tt.frm,
-			})
+			tc := testclient.New(tt.resp, tt.respErr, tt.respV)
+			c := NewSecurityGroupRulesClient(tc)
+			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.GetByID(
-				context.Background(),
-				tt.args.id,
-			)
-			assert.Equal(t, tt.frm.doResp, resp)
+			got, resp, err := c.GetByID(ctx, tt.args.id)
+
+			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
+			test.AssertContext(t, ctx, tc.Ctx)
+
+			assert.Equal(t, tt.want, got)
+
+			if tt.resp != nil {
+				assert.Equal(t, tt.resp, resp)
+			}
+
+			if tt.wantReq != nil {
+				assert.Equal(t, tt.wantReq, tc.Request)
+			}
 
 			if tt.wantErr == "" {
 				assert.NoError(t, err)
 			} else {
 				assert.EqualError(t, err, tt.wantErr)
 			}
-
-			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func TestSecurityGroupRulesClient_Create(t *testing.T) {
 	type args struct {
-		SecurityGroupID string
-		creationArgs    *SecurityGroupRuleArguments
+		ctx  context.Context
+		ref  SecurityGroupRef
+		args *SecurityGroupRuleArguments
 	}
 	tests := []struct {
 		name    string
-		frm     fakeRequestMakerArgs
 		args    args
+		resp    *katapult.Response
+		respErr error
+		respV   *securityGroupRulesResponseBody
 		want    *SecurityGroupRule
+		wantReq *katapult.Request
 		wantErr string
 	}{
 		{
 			name: "success",
 			args: args{
-				SecurityGroupID: "xyzzy",
-				creationArgs: &SecurityGroupRuleArguments{
+				ctx: context.Background(),
+				ref: SecurityGroupRef{ID: "sg_lNIuBAGHLCiz21jh"},
+				args: &SecurityGroupRuleArguments{
+					Direction: "inbound",
+				},
+			},
+			respV: &securityGroupRulesResponseBody{
+				SecurityGroupRule: &SecurityGroupRule{
+					ID:        "sgr_RWe7qQRVygLUW9jT",
 					Direction: "inbound",
 				},
 			},
 			want: &SecurityGroupRule{
-				ID:        "abc",
+				ID:        "sgr_RWe7qQRVygLUW9jT",
 				Direction: "inbound",
 			},
-			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/security_groups/xyzzy/rules",
-				wantMethod: "POST",
-				wantBody: &securityGroupRuleCreateRequest{
+			wantReq: &katapult.Request{
+				Method: "POST",
+				URL: &url.URL{
+					Path: "/core/v1/security_groups/sg_lNIuBAGHLCiz21jh/rules",
+				},
+				Body: &securityGroupRuleCreateRequest{
 					Properties: &SecurityGroupRuleArguments{
 						Direction: "inbound",
 					},
 				},
-				doResponseBody: &securityGroupRulesResponseBody{
-					SecurityGroupRule: &SecurityGroupRule{
-						ID:        "abc",
-						Direction: "inbound",
-					},
-				},
-				doResp: &katapult.Response{},
 			},
 		},
 		{
-			name: "new request fails",
+			name: "request error",
 			args: args{
-				SecurityGroupID: "xyzzy",
+				ctx: context.Background(),
+				ref: SecurityGroupRef{ID: "sg_lNIuBAGHLCiz21jh"},
 			},
-			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/security_groups/xyzzy/rules",
-				wantMethod: "POST",
-				wantBody:   &securityGroupRuleCreateRequest{},
-				newReqErr:  fmt.Errorf("rats chewed cables"),
-			},
-			wantErr: "rats chewed cables",
-		},
-		{
-			name: "http do fails",
-			args: args{
-				SecurityGroupID: "xyzzy",
-			},
-			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/security_groups/xyzzy/rules",
-				wantMethod: "POST",
-				wantBody:   &securityGroupRuleCreateRequest{},
-				doErr:      fmt.Errorf("flux capacitor undercharged"),
-				doResp:     &katapult.Response{},
-			},
+			respErr: fmt.Errorf("flux capacitor undercharged"),
 			wantErr: "flux capacitor undercharged",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := NewSecurityGroupRulesClient(&fakeRequestMaker{
-				t:    t,
-				args: tt.frm,
-			})
+			tc := testclient.New(tt.resp, tt.respErr, tt.respV)
+			c := NewSecurityGroupRulesClient(tc)
+			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.Create(
-				context.Background(),
-				SecurityGroupRef{ID: tt.args.SecurityGroupID},
-				tt.args.creationArgs,
-			)
-			assert.Equal(t, tt.frm.doResp, resp)
+			got, resp, err := c.Create(ctx, tt.args.ref, tt.args.args)
+
+			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
+			test.AssertContext(t, ctx, tc.Ctx)
+
+			assert.Equal(t, tt.want, got)
+
+			if tt.resp != nil {
+				assert.Equal(t, tt.resp, resp)
+			}
+
+			if tt.wantReq != nil {
+				assert.Equal(t, tt.wantReq, tc.Request)
+			}
 
 			if tt.wantErr == "" {
 				assert.NoError(t, err)
 			} else {
 				assert.EqualError(t, err, tt.wantErr)
 			}
-
-			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func TestSecurityGroupRulesClient_Update(t *testing.T) {
 	type args struct {
-		ruleID     string
-		updateArgs *SecurityGroupRuleArguments
+		ctx  context.Context
+		ref  SecurityGroupRuleRef
+		args *SecurityGroupRuleArguments
 	}
 	tests := []struct {
 		name    string
-		frm     fakeRequestMakerArgs
 		args    args
+		resp    *katapult.Response
+		respErr error
+		respV   *securityGroupRulesResponseBody
 		want    *SecurityGroupRule
+		wantReq *katapult.Request
 		wantErr string
 	}{
 		{
 			name: "success",
+			args: args{
+				ctx: context.Background(),
+				ref: SecurityGroupRuleRef{ID: "sgr_FIxDC6SBnTBPtsIW"},
+				args: &SecurityGroupRuleArguments{
+					Direction: "inbound",
+				},
+			},
+			respV: &securityGroupRulesResponseBody{
+				SecurityGroupRule: &SecurityGroupRule{
+					ID:        "sgr_FIxDC6SBnTBPtsIW",
+					Direction: "inbound",
+				},
+			},
 			want: &SecurityGroupRule{
-				ID:        "abc",
+				ID:        "sgr_FIxDC6SBnTBPtsIW",
 				Direction: "inbound",
 			},
-			args: args{
-				updateArgs: &SecurityGroupRuleArguments{Direction: "inbound"},
-				ruleID:     "123",
-			},
-			frm: fakeRequestMakerArgs{
-				wantPath: "/core/v1/security_groups/rules/_",
-				wantValues: url.Values{
-					"security_group_rule[id]": []string{"123"},
+			wantReq: &katapult.Request{
+				Method: "PATCH",
+				URL: &url.URL{
+					Path: "/core/v1/security_groups/rules/_",
+					RawQuery: url.Values{
+						"security_group_rule[id]": []string{
+							"sgr_FIxDC6SBnTBPtsIW",
+						},
+					}.Encode(),
 				},
-				wantMethod: "PATCH",
-				wantBody: &securityGroupRuleUpdateRequest{
+				Body: &securityGroupRuleUpdateRequest{
 					Properties: &SecurityGroupRuleArguments{
 						Direction: "inbound",
 					},
 				},
-				doResponseBody: &securityGroupRulesResponseBody{
-					SecurityGroupRule: &SecurityGroupRule{
-						ID:        "abc",
-						Direction: "inbound",
-					},
-				},
-				doResp: &katapult.Response{},
 			},
 		},
 		{
-			name: "new request fails",
+			name: "request error",
 			args: args{
-				ruleID: "123",
+				ctx: context.Background(),
+				ref: SecurityGroupRuleRef{ID: "sgr_FIxDC6SBnTBPtsIW"},
 			},
-			frm: fakeRequestMakerArgs{
-				wantPath: "/core/v1/security_groups/rules/_",
-				wantValues: url.Values{
-					"security_group_rule[id]": []string{"123"},
-				},
-				wantMethod: "PATCH",
-				wantBody:   &securityGroupRuleUpdateRequest{},
-				newReqErr:  fmt.Errorf("rats chewed cables"),
-			},
-			wantErr: "rats chewed cables",
-		},
-		{
-			name: "http do fails",
-			args: args{
-				ruleID: "123",
-			},
-			frm: fakeRequestMakerArgs{
-				wantPath: "/core/v1/security_groups/rules/_",
-				wantValues: url.Values{
-					"security_group_rule[id]": []string{"123"},
-				},
-				wantMethod: "PATCH",
-				wantBody:   &securityGroupRuleUpdateRequest{},
-				doErr:      fmt.Errorf("flux capacitor undercharged"),
-				doResp:     &katapult.Response{},
-			},
+			respErr: fmt.Errorf("flux capacitor undercharged"),
 			wantErr: "flux capacitor undercharged",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := NewSecurityGroupRulesClient(&fakeRequestMaker{
-				t:    t,
-				args: tt.frm,
-			})
+			tc := testclient.New(tt.resp, tt.respErr, tt.respV)
+			c := NewSecurityGroupRulesClient(tc)
+			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.Update(
-				context.Background(),
-				SecurityGroupRuleRef{ID: tt.args.ruleID},
-				tt.args.updateArgs,
-			)
-			assert.Equal(t, tt.frm.doResp, resp)
+			got, resp, err := c.Update(ctx, tt.args.ref, tt.args.args)
+
+			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
+			test.AssertContext(t, ctx, tc.Ctx)
+
+			assert.Equal(t, tt.want, got)
+
+			if tt.resp != nil {
+				assert.Equal(t, tt.resp, resp)
+			}
+
+			if tt.wantReq != nil {
+				assert.Equal(t, tt.wantReq, tc.Request)
+			}
 
 			if tt.wantErr == "" {
 				assert.NoError(t, err)
 			} else {
 				assert.EqualError(t, err, tt.wantErr)
 			}
-
-			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
-func TestSecurityGroupRulesClient_Delete(t *testing.T) {
+func TestSecurityGroupRulesClient_Delete2(t *testing.T) {
 	type args struct {
-		ruleID string
-	}
-	sgr := SecurityGroupRule{
-		ID:        "abc",
-		Direction: "inbound",
+		ctx context.Context
+		ref SecurityGroupRuleRef
 	}
 	tests := []struct {
-		name string
-		args args
-		frm  fakeRequestMakerArgs
-
+		name    string
+		args    args
+		resp    *katapult.Response
+		respErr error
+		respV   *securityGroupRulesResponseBody
 		want    *SecurityGroupRule
+		wantReq *katapult.Request
 		wantErr string
 	}{
 		{
 			name: "success",
 			args: args{
-				ruleID: "123",
+				ctx: context.Background(),
+				ref: SecurityGroupRuleRef{ID: "sgr_htqQ6rLPQY0ljJTf"},
 			},
-			want: &sgr,
-			frm: fakeRequestMakerArgs{
-				wantPath: "/core/v1/security_groups/rules/_",
-				wantValues: url.Values{
-					"security_group_rule[id]": []string{"123"},
+			respV: &securityGroupRulesResponseBody{
+				SecurityGroupRule: &SecurityGroupRule{
+					ID: "sgr_htqQ6rLPQY0ljJTf",
 				},
-				wantMethod: "DELETE",
-				wantBody:   nil,
-				doResponseBody: &securityGroupRulesResponseBody{
-					SecurityGroupRule: &sgr,
+			},
+			want: &SecurityGroupRule{
+				ID: "sgr_htqQ6rLPQY0ljJTf",
+			},
+			wantReq: &katapult.Request{
+				Method: "DELETE",
+				URL: &url.URL{
+					Path: "/core/v1/security_groups/rules/_",
+					RawQuery: url.Values{
+						"security_group_rule[id]": []string{
+							"sgr_htqQ6rLPQY0ljJTf",
+						},
+					}.Encode(),
 				},
-				doResp: &katapult.Response{},
 			},
 		},
 		{
-			name: "new request fails",
+			name: "request error",
 			args: args{
-				ruleID: "123",
+				ctx: context.Background(),
+				ref: SecurityGroupRuleRef{ID: "sgr_htqQ6rLPQY0ljJTf"},
 			},
-			frm: fakeRequestMakerArgs{
-				wantPath: "/core/v1/security_groups/rules/_",
-				wantValues: url.Values{
-					"security_group_rule[id]": []string{"123"},
-				},
-				wantMethod: "DELETE",
-				newReqErr:  fmt.Errorf("rats chewed cables"),
-			},
-			wantErr: "rats chewed cables",
-		},
-		{
-			name: "http do fails",
-			args: args{
-				ruleID: "123",
-			},
-			frm: fakeRequestMakerArgs{
-				wantPath: "/core/v1/security_groups/rules/_",
-				wantValues: url.Values{
-					"security_group_rule[id]": []string{"123"},
-				},
-				wantMethod: "DELETE",
-				wantBody:   nil,
-				doErr:      fmt.Errorf("flux capacitor undercharged"),
-				doResp:     &katapult.Response{},
-			},
+			respErr: fmt.Errorf("flux capacitor undercharged"),
 			wantErr: "flux capacitor undercharged",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := NewSecurityGroupRulesClient(&fakeRequestMaker{
-				t:    t,
-				args: tt.frm,
-			})
+			tc := testclient.New(tt.resp, tt.respErr, tt.respV)
+			c := NewSecurityGroupRulesClient(tc)
+			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.Delete(
-				context.Background(),
-				SecurityGroupRuleRef{ID: tt.args.ruleID},
-			)
-			assert.Equal(t, tt.frm.doResp, resp)
+			got, resp, err := c.Delete(ctx, tt.args.ref)
+
+			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
+			test.AssertContext(t, ctx, tc.Ctx)
+
+			assert.Equal(t, tt.want, got)
+
+			if tt.resp != nil {
+				assert.Equal(t, tt.resp, resp)
+			}
+
+			if tt.wantReq != nil {
+				assert.Equal(t, tt.wantReq, tc.Request)
+			}
 
 			if tt.wantErr == "" {
 				assert.NoError(t, err)
 			} else {
 				assert.EqualError(t, err, tt.wantErr)
 			}
-
-			assert.Equal(t, tt.want, got)
 		})
 	}
 }

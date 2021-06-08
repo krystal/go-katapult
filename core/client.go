@@ -2,8 +2,6 @@ package core
 
 import (
 	"context"
-	"net/http"
-	"net/url"
 
 	"github.com/krystal/go-katapult"
 )
@@ -33,13 +31,11 @@ type Client struct {
 // RequestMaker represents something that the API Clients can use to create
 // and submit a request.
 type RequestMaker interface {
-	Do(req *http.Request, v interface{}) (*katapult.Response, error)
-	NewRequestWithContext(
+	Do(
 		ctx context.Context,
-		method string,
-		u *url.URL,
-		body interface{},
-	) (*http.Request, error)
+		req *katapult.Request,
+		v interface{},
+	) (*katapult.Response, error)
 }
 
 func New(rm RequestMaker) *Client {

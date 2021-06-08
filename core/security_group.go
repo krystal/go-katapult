@@ -162,11 +162,11 @@ func (sgc *SecurityGroupsClient) doRequest(
 ) (*securityGroupsResponseBody, *katapult.Response, error) {
 	u = sgc.basePath.ResolveReference(u)
 	respBody := &securityGroupsResponseBody{}
-	resp := katapult.NewResponse(nil)
 
-	req, err := sgc.client.NewRequestWithContext(ctx, method, u, body)
-	if err == nil {
-		resp, err = sgc.client.Do(req, respBody)
+	req := katapult.NewRequest(method, u, body)
+	resp, err := sgc.client.Do(ctx, req, respBody)
+	if resp == nil {
+		resp = katapult.NewResponse(nil)
 	}
 
 	return respBody, resp, err

@@ -172,17 +172,13 @@ func (s *SecurityGroupRulesClient) doRequest(
 	body interface{},
 ) (*securityGroupRulesResponseBody, *katapult.Response, error) {
 	u = s.basePath.ResolveReference(u)
-
-	req, err := s.client.NewRequestWithContext(ctx, method, u, body)
-	if err != nil {
-		return nil, nil, err
-	}
-
 	respBody := &securityGroupRulesResponseBody{}
-	resp, err := s.client.Do(req, respBody)
-	if err != nil {
-		return nil, resp, err
+
+	req := katapult.NewRequest(method, u, body)
+	resp, err := s.client.Do(ctx, req, respBody)
+	if resp == nil {
+		resp = katapult.NewResponse(nil)
 	}
 
-	return respBody, resp, nil
+	return respBody, resp, err
 }

@@ -1,16 +1,14 @@
 package core
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"net/url"
-	"reflect"
 	"testing"
 
 	"github.com/krystal/go-katapult"
 	"github.com/krystal/go-katapult/internal/test"
+	"github.com/krystal/go-katapult/internal/testclient"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -96,102 +94,31 @@ func TestClientImplementsRequestMaker(t *testing.T) {
 // Perhaps consider golden/testdata integration for generating request/response
 // data.
 
-type fakeRequestMakerArgs struct {
-	wantPath   string
-	wantValues url.Values
-	wantMethod string
-	wantBody   interface{}
-	newReqErr  error
-
-	doResp *katapult.Response
-	// doResponseBody should be a pointer to a type :)
-	doResponseBody interface{}
-	doErr          error
-}
-
-type fakeRequestMaker struct {
-	t                    *testing.T
-	newRequestBeenCalled bool
-	args                 fakeRequestMakerArgs
-}
-
-func (frm *fakeRequestMaker) Do(
-	req *http.Request,
-	val interface{},
-) (*katapult.Response, error) {
-	assert.True(frm.t, frm.newRequestBeenCalled)
-	assert.NotNil(frm.t, req)
-	assert.Equal(frm.t, frm.args.wantPath, req.URL.Path)
-	assert.Equal(frm.t, frm.args.wantMethod, req.Method)
-	assert.Equal(frm.t, frm.args.wantValues, req.URL.Query())
-
-	if frm.args.doErr != nil {
-		return frm.args.doResp, frm.args.doErr
-	}
-
-	if frm.args.doResponseBody != nil {
-		// Assert that the passed in interface is a not nil ptr
-		rv := reflect.ValueOf(val)
-		assert.True(frm.t, rv.Kind() == reflect.Ptr)
-		assert.NotNil(frm.t, val)
-		// Set value!
-		rv.Elem().Set(reflect.ValueOf(frm.args.doResponseBody).Elem())
-	} else {
-		assert.Nil(frm.t, val)
-	}
-
-	return frm.args.doResp, nil
-}
-
-func (frm *fakeRequestMaker) NewRequestWithContext(
-	ctx context.Context,
-	method string,
-	u *url.URL,
-	body interface{},
-) (*http.Request, error) {
-	frm.newRequestBeenCalled = true
-	assert.NotNil(frm.t, ctx)
-	assert.Equal(frm.t, frm.args.wantPath, u.Path)
-	assert.Equal(frm.t, frm.args.wantMethod, method)
-
-	if frm.args.wantValues == nil {
-		frm.args.wantValues = url.Values{}
-	}
-	assert.Equal(frm.t, frm.args.wantValues, u.Query())
-	assert.Equal(frm.t, frm.args.wantBody, body)
-
-	if frm.args.newReqErr != nil {
-		return nil, frm.args.newReqErr
-	}
-
-	return &http.Request{
-		URL:    u,
-		Method: method,
-	}, nil
+func TestRequestMaker(t *testing.T) {
+	assert.Implements(t, (*RequestMaker)(nil), &katapult.Client{})
+	assert.Implements(t, (*RequestMaker)(nil), &testclient.Client{})
 }
 
 func TestNew(t *testing.T) {
 	t.Parallel()
 
-	frm := &fakeRequestMaker{
-		t: t,
-	}
-	c := New(frm)
+	tc := &testclient.Client{}
+	c := New(tc)
 
-	assert.Equal(t, frm, c.Certificates.client)
-	assert.Equal(t, frm, c.DNSZones.client)
-	assert.Equal(t, frm, c.DataCenters.client)
-	assert.Equal(t, frm, c.DiskTemplates.client)
-	assert.Equal(t, frm, c.IPAddresses.client)
-	assert.Equal(t, frm, c.LoadBalancers.client)
-	assert.Equal(t, frm, c.NetworkSpeedProfiles.client)
-	assert.Equal(t, frm, c.Networks.client)
-	assert.Equal(t, frm, c.Organizations.client)
-	assert.Equal(t, frm, c.Tasks.client)
-	assert.Equal(t, frm, c.TrashObjects.client)
-	assert.Equal(t, frm, c.VirtualMachineBuilds.client)
-	assert.Equal(t, frm, c.VirtualMachineGroups.client)
-	assert.Equal(t, frm, c.VirtualMachineNetworkInterfaces.client)
-	assert.Equal(t, frm, c.VirtualMachinePackages.client)
-	assert.Equal(t, frm, c.VirtualMachines.client)
+	assert.Equal(t, tc, c.Certificates.client)
+	assert.Equal(t, tc, c.DNSZones.client)
+	assert.Equal(t, tc, c.DataCenters.client)
+	assert.Equal(t, tc, c.DiskTemplates.client)
+	assert.Equal(t, tc, c.IPAddresses.client)
+	assert.Equal(t, tc, c.LoadBalancers.client)
+	assert.Equal(t, tc, c.NetworkSpeedProfiles.client)
+	assert.Equal(t, tc, c.Networks.client)
+	assert.Equal(t, tc, c.Organizations.client)
+	assert.Equal(t, tc, c.Tasks.client)
+	assert.Equal(t, tc, c.TrashObjects.client)
+	assert.Equal(t, tc, c.VirtualMachineBuilds.client)
+	assert.Equal(t, tc, c.VirtualMachineGroups.client)
+	assert.Equal(t, tc, c.VirtualMachineNetworkInterfaces.client)
+	assert.Equal(t, tc, c.VirtualMachinePackages.client)
+	assert.Equal(t, tc, c.VirtualMachines.client)
 }

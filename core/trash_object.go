@@ -149,11 +149,11 @@ func (s *TrashObjectsClient) doRequest(
 ) (*trashObjectsResponseBody, *katapult.Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &trashObjectsResponseBody{}
-	resp := katapult.NewResponse(nil)
 
-	req, err := s.client.NewRequestWithContext(ctx, method, u, body)
-	if err == nil {
-		resp, err = s.client.Do(req, respBody)
+	req := katapult.NewRequest(method, u, body)
+	resp, err := s.client.Do(ctx, req, respBody)
+	if resp == nil {
+		resp = katapult.NewResponse(nil)
 	}
 
 	return respBody, resp, err

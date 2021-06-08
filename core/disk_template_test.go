@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/krystal/go-katapult"
+	"github.com/krystal/go-katapult/internal/testclient"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -34,7 +35,7 @@ var (
 )
 
 func TestClient_DiskTemplates(t *testing.T) {
-	c := New(&fakeRequestMaker{})
+	c := New(&testclient.Client{})
 
 	assert.IsType(t, &DiskTemplatesClient{}, c.DiskTemplates)
 }
