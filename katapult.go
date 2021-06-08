@@ -19,17 +19,17 @@ const (
 	DefaultTimeout   = time.Second * 60
 )
 
-var DefaultURL = &url.URL{Scheme: "https", Host: "api.katapult.io"}
+var (
+	DefaultURL = &url.URL{Scheme: "https", Host: "api.katapult.io"}
 
-func WithTimeout(t time.Duration) Opt {
-	return func(c *Client) error {
-		c.HTTPClient.Timeout = t
+	Err        = errors.New("katapult")
+	ErrRequest = fmt.Errorf("%w: request", Err)
+	ErrConfig  = fmt.Errorf("%w: config", Err)
+)
 
-		return nil
-	}
-}
+type Opt func(c *Client) error
 
-func WithHTTPClient(hc *http.Client) Opt {
+func WithHTTPClient(hc HTTPClient) Opt {
 	return func(c *Client) error {
 		c.HTTPClient = hc
 
@@ -70,7 +70,18 @@ func WithAPIKey(key string) Opt {
 	}
 }
 
-type Opt func(c *Client) error
+type HTTPClient interface {
+	Do(req *http.Request) (*http.Response, error)
+}
+
+type Client struct {
+	HTTPClient HTTPClient
+	Codec      codec.Codec
+
+	APIKey    string
+	UserAgent string
+	BaseURL   *url.URL
+}
 
 func New(opts ...Opt) (*Client, error) {
 	// Define default values for client
@@ -92,81 +103,75 @@ func New(opts ...Opt) (*Client, error) {
 	return c, nil
 }
 
-type Client struct {
-	HTTPClient *http.Client
-	Codec      codec.Codec
-
-	APIKey    string
-	UserAgent string
-	BaseURL   *url.URL
-}
-
-// NewRequestWithContext returns a http.Request created for sending to the API.
-func (c *Client) NewRequestWithContext(
+func (c *Client) Do(
 	ctx context.Context,
-	method string,
-	u *url.URL,
-	body interface{},
-) (*http.Request, error) {
-	var buf io.ReadWriter
-	if body != nil {
-		buf = &bytes.Buffer{}
-		err := c.Codec.Encode(body, buf)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	u = c.BaseURL.ResolveReference(u)
-	req, err := http.NewRequestWithContext(ctx, method, u.String(), buf)
+	request *Request,
+	v interface{},
+) (*Response, error) {
+	contentType, bodyReader, err := request.bodyContent()
 	if err != nil {
 		return nil, err
 	}
 
-	if c.APIKey != "" {
+	u := c.BaseURL.ResolveReference(request.URL)
+	req, err := http.NewRequestWithContext(
+		ctx, request.Method, u.String(), bodyReader,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(request.Header) > 0 {
+		for k := range request.Header {
+			for _, v := range request.Header.Values(k) {
+				req.Header.Add(k, v)
+			}
+		}
+	}
+
+	if !request.NoAuth {
+		if c.APIKey == "" {
+			return nil, fmt.Errorf(
+				"%w: no API key available for: %s %s",
+				ErrRequest, request.Method, request.URL.Path,
+			)
+		}
 		req.Header.Set(
 			"Authorization",
 			fmt.Sprintf("Bearer %s", c.APIKey),
 		)
 	}
-
 	req.Header.Set("User-Agent", c.UserAgent)
-	req.Header.Set("Accept", c.Codec.Accept())
-
-	if body != nil {
-		req.Header.Set("Content-Type", c.Codec.ContentType())
+	req.Header.Set("Accept", "application/json")
+	if contentType != "" {
+		req.Header.Set("Content-Type", contentType)
 	}
 
-	return req, nil
-}
-
-// Do executes a request, decoding the response body into argument v.
-func (c *Client) Do(req *http.Request, v interface{}) (*Response, error) {
 	r, err := c.HTTPClient.Do(req)
 	if err != nil {
-		return NewResponse(nil), err
+		return nil, err
 	}
 	defer r.Body.Close()
 
 	resp := NewResponse(r)
-	if resp.StatusCode/100 == 2 {
-		if v != nil && resp.StatusCode != 204 {
-			if w, ok := v.(io.Writer); ok {
-				_, err = io.Copy(w, r.Body)
-			} else {
-				err = c.Codec.Decode(resp.Body, v)
-			}
-		}
-
-		return resp, err
+	if resp.StatusCode/100 != 2 {
+		return c.handleResponseError(resp)
 	}
 
-	return c.handleResponseError(resp)
+	if v != nil && resp.StatusCode != 204 {
+		if w, ok := v.(io.Writer); ok {
+			_, err = io.Copy(w, r.Body)
+		} else {
+			err = json.NewDecoder(resp.Body).Decode(v)
+		}
+	}
+
+	return resp, err
 }
 
 func (c *Client) handleResponseError(resp *Response) (*Response, error) {
 	var body responseErrorBody
-	err := c.Codec.Decode(resp.Body, &body)
+	err := json.NewDecoder(resp.Body).Decode(&body)
 	if err != nil {
 		return resp, err
 	}
