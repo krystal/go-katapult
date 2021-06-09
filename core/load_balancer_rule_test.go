@@ -7,11 +7,13 @@ import (
 	"testing"
 
 	"github.com/krystal/go-katapult"
+	"github.com/krystal/go-katapult/internal/test"
+	"github.com/krystal/go-katapult/internal/testclient"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestClient_LoadBalancerRules(t *testing.T) {
-	c := New(&fakeRequestMaker{})
+	c := New(&testclient.Client{})
 
 	assert.IsType(t, &LoadBalancerRulesClient{}, c.LoadBalancerRules)
 }
@@ -212,610 +214,565 @@ func Test_loadBalancerRuleUpdateRequest_JSONMarshalling(t *testing.T) {
 	}
 }
 
-func TestLoadBalancerRulesClient_Get(t *testing.T) {
+func TestLoadBalancerRulesClient_List(t *testing.T) {
 	type args struct {
-		ref LoadBalancerRuleRef
+		ctx  context.Context
+		lb   LoadBalancerRef
+		opts *ListOptions
 	}
 	tests := []struct {
 		name    string
-		frm     fakeRequestMakerArgs
 		args    args
-		want    *LoadBalancerRule
+		resp    *katapult.Response
+		respErr error
+		respV   *loadBalancerRulesResponseBody
+		want    []LoadBalancerRule
+		wantReq *katapult.Request
 		wantErr string
 	}{
 		{
 			name: "success",
 			args: args{
-				ref: LoadBalancerRuleRef{ID: "123"},
-			},
-			want: &LoadBalancerRule{
-				ID:         "123",
-				ListenPort: 132,
-			},
-			frm: fakeRequestMakerArgs{
-				wantPath: "/core/v1/load_balancers/rules/_",
-				wantValues: url.Values{
-					"load_balancer_rule[id]": []string{"123"},
+				ctx: context.Background(),
+				lb:  LoadBalancerRef{ID: "lbrule_3W0eRZLQYHpTCPNX"},
+				opts: &ListOptions{
+					Page:    5,
+					PerPage: 32,
 				},
-				wantMethod: "GET",
-				wantBody:   nil,
-				doResponseBody: &loadBalancerRulesResponseBody{
-					LoadBalancerRule: &LoadBalancerRule{
-						ID:         "123",
-						ListenPort: 132,
-					},
+			},
+			resp: &katapult.Response{
+				Pagination: &katapult.Pagination{Total: 333},
+			},
+			respV: &loadBalancerRulesResponseBody{
+				LoadBalancerRules: []LoadBalancerRule{
+					{ID: "lbrule_3W0eRZLQYHpTCPNX", DestinationPort: 666},
 				},
-				doResp: &katapult.Response{},
+			},
+			want: []LoadBalancerRule{{
+				ID:              "lbrule_3W0eRZLQYHpTCPNX",
+				DestinationPort: 666,
+			}},
+			wantReq: &katapult.Request{
+				Method: "GET",
+				URL: &url.URL{
+					Path: "/core/v1/load_balancers/_/rules",
+					RawQuery: url.Values{
+						"page":     []string{"5"},
+						"per_page": []string{"32"},
+						"load_balancer[id]": []string{
+							"lbrule_3W0eRZLQYHpTCPNX",
+						},
+					}.Encode(),
+				},
 			},
 		},
 		{
-			name: "new request fails",
+			name: "success with nil options",
 			args: args{
-				ref: LoadBalancerRuleRef{ID: "123"},
+				ctx:  context.Background(),
+				lb:   LoadBalancerRef{ID: "lbrule_3W0eRZLQYHpTCPNX"},
+				opts: nil,
 			},
-			frm: fakeRequestMakerArgs{
-				wantPath: "/core/v1/load_balancers/rules/_",
-				wantValues: url.Values{
-					"load_balancer_rule[id]": []string{"123"},
+			resp: &katapult.Response{
+				Pagination: &katapult.Pagination{Total: 333},
+			},
+			respV: &loadBalancerRulesResponseBody{
+				LoadBalancerRules: []LoadBalancerRule{
+					{ID: "lbrule_3W0eRZLQYHpTCPNX", DestinationPort: 666},
 				},
-				wantMethod: "GET",
-				wantBody:   nil,
-				newReqErr:  fmt.Errorf("rats chewed cables"),
+				Pagination: &katapult.Pagination{Total: 333},
 			},
-			wantErr: "rats chewed cables",
+			want: []LoadBalancerRule{{
+				ID:              "lbrule_3W0eRZLQYHpTCPNX",
+				DestinationPort: 666,
+			}},
+			wantReq: &katapult.Request{
+				Method: "GET",
+				URL: &url.URL{
+					Path: "/core/v1/load_balancers/_/rules",
+					RawQuery: url.Values{
+						"load_balancer[id]": []string{
+							"lbrule_3W0eRZLQYHpTCPNX",
+						},
+					}.Encode(),
+				},
+			},
 		},
 		{
-			name: "http do fails",
+			name: "request error",
 			args: args{
-				ref: LoadBalancerRuleRef{ID: "123"},
+				ctx:  context.Background(),
+				lb:   LoadBalancerRef{ID: "lbrule_3W0eRZLQYHpTCPNX"},
+				opts: nil,
 			},
-			frm: fakeRequestMakerArgs{
-				wantPath: "/core/v1/load_balancers/rules/_",
-				wantValues: url.Values{
-					"load_balancer_rule[id]": []string{"123"},
-				},
-				wantMethod: "GET",
-				wantBody:   nil,
-				doErr:      fmt.Errorf("flux capacitor undercharged"),
-				doResp:     &katapult.Response{},
-			},
+			respErr: fmt.Errorf("flux capacitor undercharged"),
 			wantErr: "flux capacitor undercharged",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := NewLoadBalancerRulesClient(&fakeRequestMaker{
-				t:    t,
-				args: tt.frm,
-			})
+			tc := testclient.New(tt.resp, tt.respErr, tt.respV)
+			c := NewLoadBalancerRulesClient(tc)
+			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.Get(
-				context.Background(),
-				tt.args.ref,
-			)
-			assert.Equal(t, tt.frm.doResp, resp)
+			got, resp, err := c.List(ctx, tt.args.lb, tt.args.opts)
+
+			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
+			test.AssertContext(t, ctx, tc.Ctx)
+
+			assert.Equal(t, tt.want, got)
+
+			if tt.resp != nil {
+				assert.Equal(t, tt.resp, resp)
+			}
+
+			if tt.wantReq != nil {
+				assert.Equal(t, tt.wantReq, tc.Request)
+			}
 
 			if tt.wantErr == "" {
 				assert.NoError(t, err)
 			} else {
 				assert.EqualError(t, err, tt.wantErr)
 			}
+		})
+	}
+}
+
+func TestLoadBalancerRulesClient_Get(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		ref LoadBalancerRuleRef
+	}
+	tests := []struct {
+		name    string
+		args    args
+		resp    *katapult.Response
+		respErr error
+		respV   *loadBalancerRulesResponseBody
+		want    *LoadBalancerRule
+		wantReq *katapult.Request
+		wantErr string
+	}{
+		{
+			name: "success",
+			args: args{
+				ctx: context.Background(),
+				ref: LoadBalancerRuleRef{ID: "123"},
+			},
+			respV: &loadBalancerRulesResponseBody{
+				LoadBalancerRule: &LoadBalancerRule{
+					ID:         "123",
+					ListenPort: 132,
+				},
+			},
+			want: &LoadBalancerRule{
+				ID:         "123",
+				ListenPort: 132,
+			},
+			wantReq: &katapult.Request{
+				Method: "GET",
+				URL: &url.URL{
+					Path: "/core/v1/load_balancers/rules/_",
+					RawQuery: url.Values{
+						"load_balancer_rule[id]": []string{"123"},
+					}.Encode(),
+				},
+			},
+		},
+		{
+			name: "request error",
+			args: args{
+				ctx: context.Background(),
+				ref: LoadBalancerRuleRef{ID: "123"},
+			},
+			respErr: fmt.Errorf("flux capacitor undercharged"),
+			wantErr: "flux capacitor undercharged",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tc := testclient.New(tt.resp, tt.respErr, tt.respV)
+			c := NewLoadBalancerRulesClient(tc)
+			ctx := test.Context(tt.args.ctx)
+
+			got, resp, err := c.Get(ctx, tt.args.ref)
+
+			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
+			test.AssertContext(t, ctx, tc.Ctx)
 
 			assert.Equal(t, tt.want, got)
+
+			if tt.resp != nil {
+				assert.Equal(t, tt.resp, resp)
+			}
+
+			if tt.wantReq != nil {
+				assert.Equal(t, tt.wantReq, tc.Request)
+			}
+
+			if tt.wantErr == "" {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, tt.wantErr)
+			}
 		})
 	}
 }
 
 func TestLoadBalancerRulesClient_GetByID(t *testing.T) {
 	type args struct {
-		id string
+		ctx context.Context
+		id  string
 	}
 	tests := []struct {
 		name    string
-		frm     fakeRequestMakerArgs
 		args    args
+		resp    *katapult.Response
+		respErr error
+		respV   *loadBalancerRulesResponseBody
 		want    *LoadBalancerRule
+		wantReq *katapult.Request
 		wantErr string
 	}{
 		{
 			name: "success",
 			args: args{
-				id: "123",
+				ctx: context.Background(),
+				id:  "123",
+			},
+			respV: &loadBalancerRulesResponseBody{
+				LoadBalancerRule: &LoadBalancerRule{
+					ID:         "123",
+					ListenPort: 132,
+				},
 			},
 			want: &LoadBalancerRule{
 				ID:         "123",
 				ListenPort: 132,
 			},
-			frm: fakeRequestMakerArgs{
-				wantPath: "/core/v1/load_balancers/rules/_",
-				wantValues: url.Values{
-					"load_balancer_rule[id]": []string{"123"},
+			wantReq: &katapult.Request{
+				Method: "GET",
+				URL: &url.URL{
+					Path: "/core/v1/load_balancers/rules/_",
+					RawQuery: url.Values{
+						"load_balancer_rule[id]": []string{"123"},
+					}.Encode(),
 				},
-				wantMethod: "GET",
-				wantBody:   nil,
-				doResponseBody: &loadBalancerRulesResponseBody{
-					LoadBalancerRule: &LoadBalancerRule{
-						ID:         "123",
-						ListenPort: 132,
-					},
-				},
-				doResp: &katapult.Response{},
 			},
 		},
 		{
-			name: "new request fails",
+			name: "request error",
 			args: args{
-				id: "123",
+				ctx: context.Background(),
+				id:  "123",
 			},
-			frm: fakeRequestMakerArgs{
-				wantPath: "/core/v1/load_balancers/rules/_",
-				wantValues: url.Values{
-					"load_balancer_rule[id]": []string{"123"},
-				},
-				wantMethod: "GET",
-				wantBody:   nil,
-				newReqErr:  fmt.Errorf("rats chewed cables"),
-			},
-			wantErr: "rats chewed cables",
-		},
-		{
-			name: "http do fails",
-			args: args{
-				id: "123",
-			},
-			frm: fakeRequestMakerArgs{
-				wantPath: "/core/v1/load_balancers/rules/_",
-				wantValues: url.Values{
-					"load_balancer_rule[id]": []string{"123"},
-				},
-				wantMethod: "GET",
-				wantBody:   nil,
-				doErr:      fmt.Errorf("flux capacitor undercharged"),
-				doResp:     &katapult.Response{},
-			},
+			respErr: fmt.Errorf("flux capacitor undercharged"),
 			wantErr: "flux capacitor undercharged",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := NewLoadBalancerRulesClient(&fakeRequestMaker{
-				t:    t,
-				args: tt.frm,
-			})
+			tc := testclient.New(tt.resp, tt.respErr, tt.respV)
+			c := NewLoadBalancerRulesClient(tc)
+			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.GetByID(
-				context.Background(),
-				tt.args.id,
-			)
-			assert.Equal(t, tt.frm.doResp, resp)
+			got, resp, err := c.GetByID(ctx, tt.args.id)
+
+			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
+			test.AssertContext(t, ctx, tc.Ctx)
+
+			assert.Equal(t, tt.want, got)
+
+			if tt.resp != nil {
+				assert.Equal(t, tt.resp, resp)
+			}
+
+			if tt.wantReq != nil {
+				assert.Equal(t, tt.wantReq, tc.Request)
+			}
 
 			if tt.wantErr == "" {
 				assert.NoError(t, err)
 			} else {
 				assert.EqualError(t, err, tt.wantErr)
 			}
-
-			assert.Equal(t, tt.want, got)
-		})
-	}
-}
-
-func TestLoadBalancerRulesClient_List(t *testing.T) {
-	type args struct {
-		loadBalancerID string
-		listOptions    *ListOptions
-	}
-	tests := []struct {
-		name     string
-		frm      fakeRequestMakerArgs
-		args     args
-		want     []LoadBalancerRule
-		wantResp *katapult.Response
-		wantErr  string
-	}{
-		{
-			name: "success",
-			args: args{
-				loadBalancerID: "xyzzy",
-				listOptions: &ListOptions{
-					Page:    5,
-					PerPage: 32,
-				},
-			},
-			want: []LoadBalancerRule{{
-				ID:              "abc",
-				DestinationPort: 666,
-			}},
-			wantResp: &katapult.Response{
-				Pagination: &katapult.Pagination{Total: 333},
-			},
-			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/load_balancers/_/rules",
-				wantMethod: "GET",
-				wantBody:   nil,
-				wantValues: url.Values{
-					"page":              []string{"5"},
-					"per_page":          []string{"32"},
-					"load_balancer[id]": []string{"xyzzy"},
-				},
-				doResponseBody: &loadBalancerRulesResponseBody{
-					LoadBalancerRules: []LoadBalancerRule{
-						{ID: "abc", DestinationPort: 666},
-					},
-					Pagination: &katapult.Pagination{Total: 333},
-				},
-				doResp: &katapult.Response{},
-			},
-		},
-		{
-			name: "success with nil options",
-			args: args{
-				loadBalancerID: "xyzzy",
-				listOptions:    nil,
-			},
-
-			want: []LoadBalancerRule{{
-				ID: "cbd",
-			}},
-			wantResp: &katapult.Response{},
-			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/load_balancers/_/rules",
-				wantMethod: "GET",
-				wantValues: url.Values{
-					"load_balancer[id]": []string{"xyzzy"},
-				},
-				wantBody: nil,
-				doResponseBody: &loadBalancerRulesResponseBody{
-					LoadBalancerRules: []LoadBalancerRule{
-						{ID: "cbd"},
-					},
-				},
-				doResp: &katapult.Response{},
-			},
-		},
-		{
-			name: "new request fails",
-			args: args{
-				loadBalancerID: "xyzzy",
-			},
-			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/load_balancers/_/rules",
-				wantMethod: "GET",
-				wantValues: url.Values{
-					"load_balancer[id]": []string{"xyzzy"},
-				},
-				wantBody:  nil,
-				newReqErr: fmt.Errorf("rats chewed cables"),
-			},
-			wantErr: "rats chewed cables",
-		},
-		{
-			name: "http do fails",
-			args: args{
-				loadBalancerID: "xyzzy",
-			},
-			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/load_balancers/_/rules",
-				wantMethod: "GET",
-				wantValues: url.Values{
-					"load_balancer[id]": []string{"xyzzy"},
-				},
-				wantBody: nil,
-				doErr:    fmt.Errorf("flux capacitor undercharged"),
-				doResp:   &katapult.Response{},
-			},
-			wantResp: &katapult.Response{},
-			wantErr:  "flux capacitor undercharged",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			c := NewLoadBalancerRulesClient(&fakeRequestMaker{
-				t:    t,
-				args: tt.frm,
-			})
-
-			got, resp, err := c.List(
-				context.Background(),
-				LoadBalancerRef{ID: tt.args.loadBalancerID},
-				tt.args.listOptions,
-			)
-			assert.Equal(t, tt.wantResp, resp)
-
-			if tt.wantErr == "" {
-				assert.NoError(t, err)
-			} else {
-				assert.EqualError(t, err, tt.wantErr)
-			}
-
-			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func TestLoadBalancerRulesClient_Create(t *testing.T) {
 	type args struct {
-		loadBalancerID string
-		creationArgs   *LoadBalancerRuleArguments
+		ctx  context.Context
+		ref  LoadBalancerRef
+		args *LoadBalancerRuleArguments
 	}
 	tests := []struct {
 		name    string
-		frm     fakeRequestMakerArgs
 		args    args
+		resp    *katapult.Response
+		respErr error
+		respV   *loadBalancerRulesResponseBody
 		want    *LoadBalancerRule
+		wantReq *katapult.Request
 		wantErr string
 	}{
 		{
 			name: "success",
 			args: args{
-				loadBalancerID: "xyzzy",
-				creationArgs: &LoadBalancerRuleArguments{
-					DestinationPort: 666,
+				ctx: context.Background(),
+				ref: LoadBalancerRef{ID: "lb_aFr95Rvyt6L3eyiH"},
+				args: &LoadBalancerRuleArguments{
+					DestinationPort: 8080,
+					ListenPort:      80,
+					Protocol:        HTTPProtocol,
+				},
+			},
+			respV: &loadBalancerRulesResponseBody{
+				LoadBalancerRule: &LoadBalancerRule{
+					ID:              "lbrule_55P1GfFvW5pPPhgh",
+					DestinationPort: 8080,
+					ListenPort:      80,
+					Protocol:        HTTPProtocol,
 				},
 			},
 			want: &LoadBalancerRule{
-				ID:              "abc",
-				DestinationPort: 666,
+				ID:              "lbrule_55P1GfFvW5pPPhgh",
+				DestinationPort: 8080,
+				ListenPort:      80,
+				Protocol:        HTTPProtocol,
 			},
-			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/load_balancers/xyzzy/rules",
-				wantMethod: "POST",
-				wantBody: &loadBalancerRuleCreateRequest{
+			wantReq: &katapult.Request{
+				Method: "POST",
+				URL: &url.URL{
+					Path: "/core/v1/load_balancers/lb_aFr95Rvyt6L3eyiH/rules",
+				},
+				Body: &loadBalancerRuleCreateRequest{
 					Properties: &LoadBalancerRuleArguments{
-						DestinationPort: 666,
+						DestinationPort: 8080,
+						ListenPort:      80,
+						Protocol:        HTTPProtocol,
 					},
 				},
-				doResponseBody: &loadBalancerRulesResponseBody{
-					LoadBalancerRule: &LoadBalancerRule{
-						ID:              "abc",
-						DestinationPort: 666,
-					},
-				},
-				doResp: &katapult.Response{},
 			},
 		},
 		{
-			name: "new request fails",
+			name: "request error",
 			args: args{
-				loadBalancerID: "xyzzy",
+				ctx: context.Background(),
+				ref: LoadBalancerRef{ID: "lb_aFr95Rvyt6L3eyiH"},
+				args: &LoadBalancerRuleArguments{
+					DestinationPort: 8080,
+					ListenPort:      80,
+					Protocol:        HTTPProtocol,
+				},
 			},
-			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/load_balancers/xyzzy/rules",
-				wantMethod: "POST",
-				wantBody:   &loadBalancerRuleCreateRequest{},
-				newReqErr:  fmt.Errorf("rats chewed cables"),
-			},
-			wantErr: "rats chewed cables",
-		},
-		{
-			name: "http do fails",
-			args: args{
-				loadBalancerID: "xyzzy",
-			},
-			frm: fakeRequestMakerArgs{
-				wantPath:   "/core/v1/load_balancers/xyzzy/rules",
-				wantMethod: "POST",
-				wantBody:   &loadBalancerRuleCreateRequest{},
-				doErr:      fmt.Errorf("flux capacitor undercharged"),
-				doResp:     &katapult.Response{},
-			},
+			respErr: fmt.Errorf("flux capacitor undercharged"),
 			wantErr: "flux capacitor undercharged",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := NewLoadBalancerRulesClient(&fakeRequestMaker{
-				t:    t,
-				args: tt.frm,
-			})
+			tc := testclient.New(tt.resp, tt.respErr, tt.respV)
+			c := NewLoadBalancerRulesClient(tc)
+			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.Create(
-				context.Background(),
-				LoadBalancerRef{ID: tt.args.loadBalancerID},
-				tt.args.creationArgs,
-			)
-			assert.Equal(t, tt.frm.doResp, resp)
+			got, resp, err := c.Create(ctx, tt.args.ref, tt.args.args)
+
+			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
+			test.AssertContext(t, ctx, tc.Ctx)
+
+			assert.Equal(t, tt.want, got)
+
+			if tt.resp != nil {
+				assert.Equal(t, tt.resp, resp)
+			}
+
+			if tt.wantReq != nil {
+				assert.Equal(t, tt.wantReq, tc.Request)
+			}
 
 			if tt.wantErr == "" {
 				assert.NoError(t, err)
 			} else {
 				assert.EqualError(t, err, tt.wantErr)
 			}
-
-			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func TestLoadBalancerRulesClient_Update(t *testing.T) {
 	type args struct {
-		ruleID     string
-		updateArgs *LoadBalancerRuleArguments
+		ctx  context.Context
+		ref  LoadBalancerRuleRef
+		args *LoadBalancerRuleArguments
 	}
 	tests := []struct {
 		name    string
-		frm     fakeRequestMakerArgs
 		args    args
+		resp    *katapult.Response
+		respErr error
+		respV   *loadBalancerRulesResponseBody
 		want    *LoadBalancerRule
+		wantReq *katapult.Request
 		wantErr string
 	}{
 		{
 			name: "success",
+			args: args{
+				ctx:  context.Background(),
+				ref:  LoadBalancerRuleRef{ID: "lbrule_GDPBAqW3dm71i4ol"},
+				args: &LoadBalancerRuleArguments{DestinationPort: 3000},
+			},
+			respV: &loadBalancerRulesResponseBody{
+				LoadBalancerRule: &LoadBalancerRule{
+					ID:              "lbrule_GDPBAqW3dm71i4ol",
+					DestinationPort: 3000,
+					ListenPort:      80,
+					Protocol:        HTTPProtocol,
+				},
+			},
 			want: &LoadBalancerRule{
-				ID:              "abc",
-				DestinationPort: 666,
+				ID:              "lbrule_GDPBAqW3dm71i4ol",
+				DestinationPort: 3000,
+				ListenPort:      80,
+				Protocol:        HTTPProtocol,
 			},
-			args: args{
-				updateArgs: &LoadBalancerRuleArguments{DestinationPort: 666},
-				ruleID:     "123",
-			},
-			frm: fakeRequestMakerArgs{
-				wantPath: "/core/v1/load_balancers/rules/_",
-				wantValues: url.Values{
-					"load_balancer_rule[id]": []string{"123"},
+			wantReq: &katapult.Request{
+				Method: "PATCH",
+				URL: &url.URL{
+					Path: "/core/v1/load_balancers/rules/_",
+					RawQuery: url.Values{
+						"load_balancer_rule[id]": []string{
+							"lbrule_GDPBAqW3dm71i4ol",
+						},
+					}.Encode(),
 				},
-				wantMethod: "PATCH",
-				wantBody: &loadBalancerRuleUpdateRequest{
+				Body: &loadBalancerRuleUpdateRequest{
 					Properties: &LoadBalancerRuleArguments{
-						DestinationPort: 666,
+						DestinationPort: 3000,
 					},
 				},
-				doResponseBody: &loadBalancerRulesResponseBody{
-					LoadBalancerRule: &LoadBalancerRule{
-						ID:              "abc",
-						DestinationPort: 666,
-					},
-				},
-				doResp: &katapult.Response{},
 			},
 		},
 		{
-			name: "new request fails",
+			name: "request error",
 			args: args{
-				ruleID: "123",
+				ctx:  context.Background(),
+				ref:  LoadBalancerRuleRef{ID: "lbrule_GDPBAqW3dm71i4ol"},
+				args: &LoadBalancerRuleArguments{DestinationPort: 3000},
 			},
-			frm: fakeRequestMakerArgs{
-				wantPath: "/core/v1/load_balancers/rules/_",
-				wantValues: url.Values{
-					"load_balancer_rule[id]": []string{"123"},
-				},
-				wantMethod: "PATCH",
-				wantBody:   &loadBalancerRuleUpdateRequest{},
-				newReqErr:  fmt.Errorf("rats chewed cables"),
-			},
-			wantErr: "rats chewed cables",
-		},
-		{
-			name: "http do fails",
-			args: args{
-				ruleID: "123",
-			},
-			frm: fakeRequestMakerArgs{
-				wantPath: "/core/v1/load_balancers/rules/_",
-				wantValues: url.Values{
-					"load_balancer_rule[id]": []string{"123"},
-				},
-				wantMethod: "PATCH",
-				wantBody:   &loadBalancerRuleUpdateRequest{},
-				doErr:      fmt.Errorf("flux capacitor undercharged"),
-				doResp:     &katapult.Response{},
-			},
+			respErr: fmt.Errorf("flux capacitor undercharged"),
 			wantErr: "flux capacitor undercharged",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := NewLoadBalancerRulesClient(&fakeRequestMaker{
-				t:    t,
-				args: tt.frm,
-			})
+			tc := testclient.New(tt.resp, tt.respErr, tt.respV)
+			c := NewLoadBalancerRulesClient(tc)
+			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.Update(
-				context.Background(),
-				LoadBalancerRuleRef{ID: tt.args.ruleID},
-				tt.args.updateArgs,
-			)
-			assert.Equal(t, tt.frm.doResp, resp)
+			got, resp, err := c.Update(ctx, tt.args.ref, tt.args.args)
+
+			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
+			test.AssertContext(t, ctx, tc.Ctx)
+
+			assert.Equal(t, tt.want, got)
+
+			if tt.resp != nil {
+				assert.Equal(t, tt.resp, resp)
+			}
+
+			if tt.wantReq != nil {
+				assert.Equal(t, tt.wantReq, tc.Request)
+			}
 
 			if tt.wantErr == "" {
 				assert.NoError(t, err)
 			} else {
 				assert.EqualError(t, err, tt.wantErr)
 			}
-
-			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func TestLoadBalancerRulesClient_Delete(t *testing.T) {
 	type args struct {
-		ruleID string
-	}
-	lbr := LoadBalancerRule{
-		ID:              "abc",
-		DestinationPort: 55,
+		ctx context.Context
+		ref LoadBalancerRuleRef
 	}
 	tests := []struct {
-		name string
-		args args
-		frm  fakeRequestMakerArgs
-
+		name    string
+		args    args
+		resp    *katapult.Response
+		respErr error
+		respV   *loadBalancerRulesResponseBody
 		want    *LoadBalancerRule
+		wantReq *katapult.Request
 		wantErr string
 	}{
 		{
 			name: "success",
 			args: args{
-				ruleID: "123",
+				ctx: context.Background(),
+				ref: LoadBalancerRuleRef{ID: "lbrule_HfVizqDuo2B5B9kU"},
 			},
-			want: &lbr,
-			frm: fakeRequestMakerArgs{
-				wantPath: "/core/v1/load_balancers/rules/_",
-				wantValues: url.Values{
-					"load_balancer_rule[id]": []string{"123"},
+			respV: &loadBalancerRulesResponseBody{
+				LoadBalancerRule: &LoadBalancerRule{
+					ID: "lbrule_HfVizqDuo2B5B9kU",
 				},
-				wantMethod: "DELETE",
-				wantBody:   nil,
-				doResponseBody: &loadBalancerRulesResponseBody{
-					LoadBalancerRule: &lbr,
+			},
+			want: &LoadBalancerRule{
+				ID: "lbrule_HfVizqDuo2B5B9kU",
+			},
+			wantReq: &katapult.Request{
+				Method: "DELETE",
+				URL: &url.URL{
+					Path: "/core/v1/load_balancers/rules/_",
+					RawQuery: url.Values{
+						"load_balancer_rule[id]": []string{
+							"lbrule_HfVizqDuo2B5B9kU",
+						},
+					}.Encode(),
 				},
-				doResp: &katapult.Response{},
 			},
 		},
 		{
-			name: "new request fails",
+			name: "request error",
 			args: args{
-				ruleID: "123",
+				ctx: context.Background(),
+				ref: LoadBalancerRuleRef{ID: "lbrule_HfVizqDuo2B5B9kU"},
 			},
-			frm: fakeRequestMakerArgs{
-				wantPath: "/core/v1/load_balancers/rules/_",
-				wantValues: url.Values{
-					"load_balancer_rule[id]": []string{"123"},
-				},
-				wantMethod: "DELETE",
-				newReqErr:  fmt.Errorf("rats chewed cables"),
-			},
-			wantErr: "rats chewed cables",
-		},
-		{
-			name: "http do fails",
-			args: args{
-				ruleID: "123",
-			},
-			frm: fakeRequestMakerArgs{
-				wantPath: "/core/v1/load_balancers/rules/_",
-				wantValues: url.Values{
-					"load_balancer_rule[id]": []string{"123"},
-				},
-				wantMethod: "DELETE",
-				wantBody:   nil,
-				doErr:      fmt.Errorf("flux capacitor undercharged"),
-				doResp:     &katapult.Response{},
-			},
+			respErr: fmt.Errorf("flux capacitor undercharged"),
 			wantErr: "flux capacitor undercharged",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := NewLoadBalancerRulesClient(&fakeRequestMaker{
-				t:    t,
-				args: tt.frm,
-			})
+			tc := testclient.New(tt.resp, tt.respErr, tt.respV)
+			c := NewLoadBalancerRulesClient(tc)
+			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.Delete(
-				context.Background(),
-				LoadBalancerRuleRef{ID: tt.args.ruleID},
-			)
-			assert.Equal(t, tt.frm.doResp, resp)
+			got, resp, err := c.Delete(ctx, tt.args.ref)
+
+			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
+			test.AssertContext(t, ctx, tc.Ctx)
+
+			assert.Equal(t, tt.want, got)
+
+			if tt.resp != nil {
+				assert.Equal(t, tt.resp, resp)
+			}
+
+			if tt.wantReq != nil {
+				assert.Equal(t, tt.wantReq, tc.Request)
+			}
 
 			if tt.wantErr == "" {
 				assert.NoError(t, err)
 			} else {
 				assert.EqualError(t, err, tt.wantErr)
 			}
-
-			assert.Equal(t, tt.want, got)
 		})
 	}
 }

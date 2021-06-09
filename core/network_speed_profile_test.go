@@ -6,11 +6,12 @@ import (
 	"testing"
 
 	"github.com/krystal/go-katapult"
+	"github.com/krystal/go-katapult/internal/testclient"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestClient_NetworkSpeedProfiles(t *testing.T) {
-	c := New(&fakeRequestMaker{})
+	c := New(&testclient.Client{})
 
 	assert.IsType(t, &NetworkSpeedProfilesClient{}, c.NetworkSpeedProfiles)
 }

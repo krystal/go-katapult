@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/krystal/go-katapult"
+	"github.com/krystal/go-katapult/internal/testclient"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -30,7 +31,7 @@ var (
 )
 
 func TestClient_TrashObjects(t *testing.T) {
-	c := New(&fakeRequestMaker{})
+	c := New(&testclient.Client{})
 
 	assert.IsType(t, &TrashObjectsClient{}, c.TrashObjects)
 }

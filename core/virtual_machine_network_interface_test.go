@@ -10,11 +10,12 @@ import (
 
 	"github.com/jimeh/undent"
 	"github.com/krystal/go-katapult"
+	"github.com/krystal/go-katapult/internal/testclient"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestClient_VirtualMachineNetworkInterfaces(t *testing.T) {
-	c := New(&fakeRequestMaker{})
+	c := New(&testclient.Client{})
 
 	assert.IsType(t,
 		&VirtualMachineNetworkInterfacesClient{},

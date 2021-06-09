@@ -5,6 +5,8 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -14,33 +16,80 @@ import (
 	"time"
 
 	"github.com/jimeh/undent"
-	"github.com/krystal/go-katapult/internal/codec"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
-var testDefaultBaseURL = &url.URL{Scheme: "https", Host: "api.katapult.io"}
+type testErrorWriter struct {
+	err error
+}
 
-func TestClient_NewRequestWithContext(t *testing.T) {
+func (s *testErrorWriter) Write(p []byte) (int, error) {
+	return 0, s.err
+}
+
+type testErrorHTTPClient struct {
+	err error
+}
+
+func (s *testErrorHTTPClient) Do(req *http.Request) (*http.Response, error) {
+	return nil, s.err
+}
+
+//nolint:gocyclo
+func TestClient_Do(t *testing.T) {
+	defaultAPIKey := "7b6eb137-2ce3-4959-9b81-d7aca1428fe1"
 	type testCtxKey int
+
 	type reqBody struct {
-		Name string `json:"name"`
+		Hello string `json:"hello,omitempty"`
+		World string `json:"world,omitempty"`
 	}
-	type args struct {
-		ctx    context.Context
+	type respBody struct {
+		Foo string `json:"foo,omitempty"`
+		Bar string `json:"bar,omitempty"`
+	}
+
+	type wantReq struct {
 		method string
 		url    *url.URL
-		body   interface{}
+		noAuth bool
+		header http.Header
+		body   string
+	}
+	type resp struct {
+		status  int
+		header  http.Header
+		body    string
+		delay   time.Duration
+		timeout time.Duration
+	}
+	type wantResp struct {
+		status     int
+		header     http.Header
+		pagination *Pagination
+		error      *ResponseError
+	}
+
+	type fields struct {
+		HTTPClient HTTPClient
+		APIKey     *string
+		UserAgent  *string
+	}
+	type args struct {
+		ctx     context.Context
+		request *Request
+		v       interface{}
 	}
 	tests := []struct {
-		name       string
-		args       args
-		apiKey     string
-		baseURL    *url.URL
-		codec      *codec.JSON
-		wantedAuth string
-		wantedBody string
-		errStr     string
+		name     string
+		fields   fields
+		args     args
+		resp     *resp
+		want     interface{}
+		wantResp *wantResp
+		wantReq  *wantReq
+		wantErr  string
 	}{
 		{
 			name: "request without body",
@@ -48,312 +97,626 @@ func TestClient_NewRequestWithContext(t *testing.T) {
 				ctx: context.WithValue(
 					context.Background(), testCtxKey(0), "bar",
 				),
+				request: &Request{
+					Method: "GET",
+					URL:    &url.URL{Path: "/core/v1/data_centers"},
+				},
+				v: &respBody{},
+			},
+			resp: &resp{
+				body: `{"foo":"foz","bar":"baz"}`,
+			},
+			want: &respBody{Foo: "foz", Bar: "baz"},
+			wantReq: &wantReq{
 				method: "GET",
-				url:    &url.URL{Path: "v1/data_centers"},
+				url:    &url.URL{Path: "/core/v1/data_centers"},
+				header: http.Header{
+					"Accept":         []string{"application/json"},
+					"Authorization":  []string{"Bearer " + defaultAPIKey},
+					"Content-Length": []string(nil),
+					"User-Agent":     []string{DefaultUserAgent},
+				},
+			},
+			wantResp: &wantResp{
+				status: http.StatusOK,
 			},
 		},
 		{
-			name: "request with auth",
+			name: "request with struct body",
 			args: args{
 				ctx: context.WithValue(
 					context.Background(), testCtxKey(0), "bar",
 				),
-				method: "GET",
-				url:    &url.URL{Path: "v1/data_centers"},
+				request: &Request{
+					Method: "POST",
+					URL:    &url.URL{Path: "/core/v1/load_balancers"},
+					Body:   &reqBody{Hello: "hi", World: "globe"},
+				},
+				v: &respBody{},
 			},
-			apiKey:     "xyzzy",
-			wantedAuth: "Bearer xyzzy",
+			resp: &resp{
+				body: `{"foo":"foz","bar":"baz"}`,
+			},
+			want: &respBody{Foo: "foz", Bar: "baz"},
+			wantReq: &wantReq{
+				method: "POST",
+				url:    &url.URL{Path: "/core/v1/load_balancers"},
+				header: http.Header{
+					"Content-Length": []string{"31"},
+					"Content-Type":   []string{"application/json"},
+				},
+				body: `{"hello":"hi","world":"globe"}` + "\n",
+			},
+			wantResp: &wantResp{
+				status: http.StatusOK,
+			},
 		},
 		{
-			name: "request with body",
+			name: "request with struct body containing HTML in field values",
 			args: args{
 				ctx: context.WithValue(
-					context.Background(), testCtxKey(2), "bye",
+					context.Background(), testCtxKey(0), "bar",
 				),
-				method: "PATCH",
-				url: &url.URL{
-					Path: "v1/file_storage_volumes/fsv_SOIPKzqLkyPan28",
+				request: &Request{
+					Method: "POST",
+					URL:    &url.URL{Path: "/core/v1/load_balancers"},
+					Body:   &reqBody{Hello: "<b>hi</b>", World: "<i>globe</i>"},
 				},
-				body: &reqBody{Name: "Other Vol"},
+				v: &respBody{},
 			},
-			wantedBody: `{"name":"Other Vol"}`,
+			resp: &resp{
+				body: `{"foo":"foz","bar":"baz"}`,
+			},
+			want: &respBody{Foo: "foz", Bar: "baz"},
+			wantReq: &wantReq{
+				method: "POST",
+				url:    &url.URL{Path: "/core/v1/load_balancers"},
+				header: http.Header{
+					"Content-Length": []string{"45"},
+					"Content-Type":   []string{"application/json"},
+				},
+				body: `{"hello":"<b>hi</b>","world":"<i>globe</i>"}` + "\n",
+			},
+			wantResp: &wantResp{
+				status: http.StatusOK,
+			},
+		},
+		{
+			name: "request with custom io.Reader body",
+			args: args{
+				ctx: context.WithValue(
+					context.Background(), testCtxKey(0), "bar",
+				),
+				request: &Request{
+					Method:      "POST",
+					URL:         &url.URL{Path: "/core/v1/load_balancers"},
+					ContentType: "text/csv",
+					Body:        bytes.NewBufferString("foo,bar\nyes,no"),
+				},
+				v: &respBody{},
+			},
+			resp: &resp{
+				body: `{"foo":"sey","bar":"on"}`,
+			},
+			want: &respBody{Foo: "sey", Bar: "on"},
+			wantReq: &wantReq{
+				method: "POST",
+				url:    &url.URL{Path: "/core/v1/load_balancers"},
+				header: http.Header{
+					"Content-Length": []string{"14"},
+					"Content-Type":   []string{"text/csv"},
+				},
+				body: "foo,bar\nyes,no",
+			},
+			wantResp: &wantResp{
+				status: http.StatusOK,
+			},
+		},
+		{
+			name: "request with body of invalid type for json marshaling",
+			args: args{
+				ctx: context.WithValue(
+					context.Background(), testCtxKey(0), "bar",
+				),
+				request: &Request{
+					Method: "POST",
+					URL:    &url.URL{Path: "/core/v1/load_balancers"},
+					Body:   make(chan int),
+				},
+				v: &respBody{},
+			},
+			wantErr: "json: unsupported type: chan int",
+		},
+		{
+			name: "request with custom headers",
+			args: args{
+				ctx: context.WithValue(
+					context.Background(), testCtxKey(0), "bar",
+				),
+				request: &Request{
+					Method: "GET",
+					URL:    &url.URL{Path: "/core/v1/data_centers"},
+					Header: http.Header{
+						"Ignore-This": []string{"hello", "world"},
+						"X-Client":    []string{"Awesome App"},
+					},
+				},
+				v: &respBody{},
+			},
+			wantReq: &wantReq{
+				method: "GET",
+				url:    &url.URL{Path: "/core/v1/data_centers"},
+				header: http.Header{
+					"Ignore-This": []string{"hello", "world"},
+					"X-Client":    []string{"Awesome App"},
+				},
+			},
+			wantResp: &wantResp{
+				status: http.StatusOK,
+			},
+		},
+		{
+			name: "v is a io.Writer",
+			args: args{
+				ctx: context.WithValue(
+					context.Background(), testCtxKey(0), "bar",
+				),
+				request: &Request{
+					Method: "GET",
+					URL:    &url.URL{Path: "/core/v1/stats/csv"},
+				},
+				v: &bytes.Buffer{},
+			},
+			resp: &resp{
+				body: "foo,bar\nsey,on",
+			},
+			want: "foo,bar\nsey,on",
+			wantReq: &wantReq{
+				method: "GET",
+				url:    &url.URL{Path: "/core/v1/stats/csv"},
+			},
+		},
+		{
+			name: "v is a io.Writer which errors on write",
+			args: args{
+				ctx: context.WithValue(
+					context.Background(), testCtxKey(0), "bar",
+				),
+				request: &Request{
+					Method: "GET",
+					URL:    &url.URL{Path: "/core/v1/stats/csv"},
+				},
+				v: &testErrorWriter{err: errors.New("writer is broken")},
+			},
+			resp: &resp{
+				body: "foo,bar\nsey,on",
+			},
+			wantReq: &wantReq{
+				method: "GET",
+				url:    &url.URL{Path: "/core/v1/stats/csv"},
+			},
+			wantErr: "writer is broken",
+		},
+		{
+			name: "HTTPClient.Do() error",
+			fields: fields{
+				HTTPClient: &testErrorHTTPClient{
+					err: errors.New("HTTP failure"),
+				},
+			},
+			args: args{
+				ctx: context.WithValue(
+					context.Background(), testCtxKey(0), "bar",
+				),
+				request: &Request{
+					Method: "GET",
+					URL:    &url.URL{Path: "/core/v1/stats/csv"},
+				},
+				v: &respBody{},
+			},
+			wantErr: "HTTP failure",
+		},
+		{
+			name: "unauthenticated request",
+			args: args{
+				ctx: context.WithValue(
+					context.Background(), testCtxKey(0), "bar",
+				),
+				request: &Request{
+					Method: "GET",
+					URL:    &url.URL{Path: "/public/v1/stats"},
+					NoAuth: true,
+				},
+				v: &respBody{},
+			},
+			resp: &resp{
+				body: `{"foo":"foz"}`,
+			},
+			want: &respBody{Foo: "foz"},
+			wantReq: &wantReq{
+				method: "GET",
+				url:    &url.URL{Path: "/public/v1/stats"},
+				noAuth: true,
+				header: http.Header{
+					"Authorization": []string(nil),
+				},
+			},
+			wantResp: &wantResp{
+				status: http.StatusOK,
+			},
+		},
+		{
+			name: "authenticated request without API key",
+			fields: fields{
+				APIKey: strPtr(""),
+			},
+			args: args{
+				ctx: context.WithValue(
+					context.Background(), testCtxKey(0), "bar",
+				),
+				request: &Request{
+					Method: "GET",
+					URL:    &url.URL{Path: "/core/v1/stats"},
+				},
+				v: &respBody{},
+			},
+			wantErr: "katapult: request: no API key available for: " +
+				"GET /core/v1/stats",
+		},
+		{
+			name: "response has custom headers",
+			args: args{
+				ctx: context.WithValue(
+					context.Background(), testCtxKey(0), "bar",
+				),
+				request: &Request{
+					Method: "GET",
+					URL:    &url.URL{Path: "/core/v1/data_centers"},
+				},
+				v: &respBody{},
+			},
+			resp: &resp{
+				body: `{"foo":"foz","bar":"baz"}`,
+				header: http.Header{
+					"X-RateLimit-Permitted": []string{"100"},
+					"X-RateLimit-Remaining": []string{"99"},
+					"X-Hello":               []string{"Hi", "Hey"},
+				},
+			},
+			want: &respBody{Foo: "foz", Bar: "baz"},
+			wantReq: &wantReq{
+				method: "GET",
+				url:    &url.URL{Path: "/core/v1/data_centers"},
+			},
+			wantResp: &wantResp{
+				status: http.StatusOK,
+				header: http.Header{
+					"X-Ratelimit-Permitted": []string{"101"},
+					"X-Ratelimit-Remaining": []string{"99"},
+					"X-Hello":               []string{"Hi", "Hey"},
+				},
+			},
+		},
+		{
+			name: "response is an error without details",
+			args: args{
+				ctx: context.WithValue(
+					context.Background(), testCtxKey(0), "bar",
+				),
+				request: &Request{
+					Method: "GET",
+					URL:    &url.URL{Path: "/core/v1/stats"},
+				},
+				v: &respBody{},
+			},
+			resp: &resp{
+				status: http.StatusForbidden,
+				body: undent.String(`
+					{
+						"error": {
+							"code": "error_without_details",
+							"description": "This is an error without details",
+							"detail": {}
+						}
+					}`,
+				),
+			},
+			wantReq: &wantReq{
+				method: "GET",
+				url:    &url.URL{Path: "/core/v1/stats"},
+			},
+			wantResp: &wantResp{
+				error: &ResponseError{
+					Code:        "error_without_details",
+					Description: "This is an error without details",
+					Detail:      json.RawMessage("{}"),
+				},
+			},
+			wantErr: "error_without_details: This is an error without " +
+				"details",
+		},
+		{
+			name: "response is an error with details",
+			args: args{
+				ctx: context.WithValue(
+					context.Background(), testCtxKey(0), "bar",
+				),
+				request: &Request{
+					Method: "GET",
+					URL:    &url.URL{Path: "/core/v1/stats"},
+				},
+				v: &respBody{},
+			},
+			resp: &resp{
+				status: http.StatusForbidden,
+				body: undent.String(`
+					{
+						"error": {
+							"code": "error_with_details",
+							"description": "This is an error with details",
+							"detail": {"errors": ["hello","world"]}
+						}
+					}`,
+				),
+			},
+			wantReq: &wantReq{
+				method: "GET",
+				url:    &url.URL{Path: "/core/v1/stats"},
+			},
+			wantResp: &wantResp{
+				error: &ResponseError{
+					Code:        "error_with_details",
+					Description: "This is an error with details",
+					Detail: json.RawMessage(
+						`{"errors": ["hello","world"]}`,
+					),
+				},
+			},
+			wantErr: "error_with_details: This is an error with " +
+				"details -- " +
+				"{\n  \"errors\": [\n    \"hello\",\n    \"world\"\n  ]\n}",
+		},
+		{
+			name: "response is an error with no error info at all",
+			args: args{
+				ctx: context.WithValue(
+					context.Background(), testCtxKey(0), "bar",
+				),
+				request: &Request{
+					Method: "GET",
+					URL:    &url.URL{Path: "/core/v1/stats"},
+				},
+				v: &respBody{},
+			},
+			resp: &resp{
+				status: http.StatusForbidden,
+				body:   `{"code": "something wrong"}`,
+			},
+			wantReq: &wantReq{
+				method: "GET",
+				url:    &url.URL{Path: "/core/v1/stats"},
+			},
+			wantErr: "unexpected response",
+		},
+		{
+			name: "response body is invalid JSON",
+			args: args{
+				ctx: context.WithValue(
+					context.Background(), testCtxKey(0), "bar",
+				),
+				request: &Request{
+					Method: "GET",
+					URL:    &url.URL{Path: "/core/v1/stats"},
+				},
+				v: &respBody{},
+			},
+			resp: &resp{
+				body: `{"stats":{`,
+			},
+			wantReq: &wantReq{
+				method: "GET",
+				url:    &url.URL{Path: "/core/v1/stats"},
+			},
+			wantErr: "unexpected EOF",
+		},
+		{
+			name: "response is an error with a invalid JSON body",
+			args: args{
+				ctx: context.WithValue(
+					context.Background(), testCtxKey(0), "bar",
+				),
+				request: &Request{
+					Method: "GET",
+					URL:    &url.URL{Path: "/core/v1/stats"},
+				},
+				v: &respBody{},
+			},
+			resp: &resp{
+				status: http.StatusForbidden,
+				body:   `{"error":{`,
+			},
+			wantReq: &wantReq{
+				method: "GET",
+				url:    &url.URL{Path: "/core/v1/stats"},
+			},
+			wantErr: "unexpected EOF",
+		},
+		{
+			name: "context timeout",
+			args: args{
+				ctx: context.WithValue(
+					context.Background(), testCtxKey(0), "bar",
+				),
+				request: &Request{
+					Method: "GET",
+					URL:    &url.URL{Path: "/core/v1/stats"},
+				},
+				v: &respBody{},
+			},
+			resp: &resp{
+				body:    `{"foo":"sey","bar":"on"}`,
+				delay:   100 * time.Millisecond,
+				timeout: 50 * time.Millisecond,
+			},
+			wantReq: &wantReq{
+				method: "GET",
+				url:    &url.URL{Path: "/core/v1/stats"},
+			},
+			wantErr: "Get \"{{ServerURL}}/core/v1/stats\": " +
+				"context deadline exceeded",
 		},
 		{
 			name: "nil context",
 			args: args{
-				ctx:    nil,
-				method: "GET",
-				url:    &url.URL{Path: "bbq"},
+				ctx: nil,
+				request: &Request{
+					Method: "GET",
+					URL:    &url.URL{Path: "/core/v1/stats"},
+				},
 			},
-			errStr: "net/http: nil Context",
-		},
-		{
-			name: "invalid method",
-			args: args{
-				ctx:    context.Background(),
-				method: "foo bar",
-				url:    &url.URL{Path: "bbq"},
-			},
-			errStr: "net/http: invalid method \"foo bar\"",
-		},
-		{
-			name: "invalid body",
-			args: args{
-				ctx:    context.Background(),
-				method: "GET",
-				url:    &url.URL{Path: "bbq"},
-				body:   make(chan int),
-			},
-			errStr: "json: unsupported type: chan int",
+			wantErr: "net/http: nil Context",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if tt.baseURL == nil {
-				tt.baseURL = testDefaultBaseURL
-			}
-			if tt.codec == nil {
-				tt.codec = &codec.JSON{}
-			}
-
-			c := &Client{
-				BaseURL: tt.baseURL,
-				Codec:   tt.codec,
-				APIKey:  tt.apiKey,
-			}
-
-			got, err := c.NewRequestWithContext(
-				tt.args.ctx, tt.args.method, tt.args.url, tt.args.body,
-			)
-
-			if tt.errStr != "" {
-				assert.EqualError(t, err, tt.errStr)
-			} else {
-				wantedURL := tt.baseURL.ResolveReference(tt.args.url)
-
-				assert.NoError(t, err)
-				assert.Equal(t, tt.args.ctx, got.Context())
-				assert.Equal(t, tt.args.method, got.Method)
-				assert.Equal(t, wantedURL.String(), got.URL.String())
-				assert.Equal(t,
-					c.UserAgent,
-					got.Header.Get("User-Agent"),
+			mux := http.NewServeMux()
+			mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+				assert.FailNowf(
+					t, "Unhandled request", "%s %s", r.Method, r.URL.String(),
 				)
-				assert.Equal(t,
-					c.Codec.Accept(),
-					got.Header.Get("Accept"),
-				)
-				assert.Equal(t,
-					tt.wantedAuth,
-					got.Header.Get("Authorization"),
-				)
-
-				if tt.args.body != nil {
-					assert.Equal(t,
-						c.Codec.ContentType(),
-						got.Header.Get("Content-Type"),
-					)
-
-					body, err := ioutil.ReadAll(got.Body)
-					assert.NoError(t, err)
-					assert.Equal(t,
-						tt.wantedBody,
-						string(bytes.TrimSpace(body)),
-					)
-				}
-			}
-		})
-	}
-}
-
-func TestClient_Do(t *testing.T) {
-	type respBody struct {
-		ID   string `json:"id"`
-		Name string `json:"name"`
-	}
-	tests := []struct {
-		name       string
-		ctx        *context.Context
-		reqBody    string
-		v          interface{}
-		want       interface{}
-		errStr     string
-		errResp    *ResponseError
-		respStatus int
-		respBody   []byte
-		respDelay  time.Duration
-	}{
-		{
-			name:       "struct body with JSON tags",
-			v:          &respBody{},
-			want:       &respBody{ID: "foo", Name: "bar"},
-			respStatus: http.StatusOK,
-			respBody:   []byte(`{"id":"foo","name":"bar"}`),
-		},
-		{
-			name:       "io.Writer body",
-			v:          &strings.Builder{},
-			want:       `{"id":"foo"}`,
-			respStatus: http.StatusOK,
-			respBody:   []byte(`{"id":"foo"}`),
-		},
-		{
-			name:       "request body is submitted to the remote server",
-			reqBody:    `hello world`,
-			respStatus: http.StatusOK,
-			respBody:   []byte(`hi`),
-		},
-		{
-			name:       "response body is ignored for HTTP 204 responses",
-			v:          &strings.Builder{},
-			want:       "",
-			respBody:   []byte(`hi`),
-			respStatus: http.StatusNoContent,
-		},
-		{
-			name:       "request times out",
-			v:          &respBody{},
-			want:       &Response{Response: &http.Response{}},
-			errStr:     "Get \"{{baseURL}}/bar\": context deadline exceeded",
-			respStatus: http.StatusOK,
-			respDelay:  10,
-		},
-		{
-			name: "response is an error without details",
-			errStr: "error_without_details: This is an error without " +
-				"details",
-			errResp: &ResponseError{
-				Code:        "error_without_details",
-				Description: "This is an error without details",
-				Detail:      json.RawMessage("{}"),
-			},
-			respStatus: http.StatusForbidden,
-			respBody: undent.Bytes(`
-				{
-					"error": {
-						"code": "error_without_details",
-						"description": "This is an error without details",
-						"detail": {}
-					}
-				}`,
-			),
-		},
-		{
-			name: "response is an error with details",
-			errStr: "error_with_details: This is an error with " +
-				"details -- " +
-				"{\n  \"errors\": [\n    \"hello\",\n    \"world\"\n  ]\n}",
-			errResp: &ResponseError{
-				Code:        "error_with_details",
-				Description: "This is an error with details",
-				Detail:      json.RawMessage(`{"errors": ["hello","world"]}`),
-			},
-			respStatus: http.StatusForbidden,
-			respBody: undent.Bytes(`
-				{
-					"error": {
-						"code": "error_with_details",
-						"description": "This is an error with details",
-						"detail": {"errors": ["hello","world"]}
-					}
-				}`,
-			),
-		},
-		{
-			name:       "response is an error of invalid JSON",
-			errStr:     "unexpected EOF",
-			respStatus: http.StatusForbidden,
-			respBody:   []byte(`{"error":{`),
-		},
-		{
-			name:       "response is an error without error info",
-			errStr:     "unexpected response",
-			respStatus: http.StatusForbidden,
-			respBody:   []byte(`{"hello":"world"}`),
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			m := http.NewServeMux()
-			server := httptest.NewServer(m)
+				w.WriteHeader(http.StatusNotImplemented)
+				fmt.Fprint(w, "")
+			})
+			server := httptest.NewServer(mux)
 			defer server.Close()
 
-			url, err := url.Parse(server.URL)
-			if err != nil {
-				t.Fatalf("test failed, invalid URL: %s", err.Error())
+			u, err := url.Parse(server.URL)
+			require.NoError(t, err)
+
+			c, err := New(WithBaseURL(u))
+			require.NoError(t, err)
+			require.NotNil(t, c)
+
+			if tt.fields.HTTPClient != nil {
+				_ = WithHTTPClient(tt.fields.HTTPClient)(c)
 			}
 
-			c, err := New(
-				WithBaseURL(url),
-			)
-			if err != nil {
-				t.Fatalf("failed to setup katapult client: %s", err)
+			apiKey := defaultAPIKey
+			if tt.fields.APIKey != nil {
+				apiKey = *tt.fields.APIKey
+			}
+			_ = WithAPIKey(apiKey)(c)
+
+			if tt.fields.UserAgent != nil {
+				_ = WithUserAgent(*tt.fields.UserAgent)(c)
 			}
 
-			method := "GET"
-			ctx := context.Background()
+			if tt.wantReq != nil && tt.wantReq.url != nil {
+				mux.HandleFunc(tt.wantReq.url.Path,
+					func(w http.ResponseWriter, r *http.Request) {
+						assert.Equal(t, tt.wantReq.method, r.Method)
+						assert.Equal(t, tt.wantReq.url.Query(), r.URL.Query())
+						assert.Equal(t, tt.wantReq.url.Fragment, r.URL.Fragment)
 
-			if tt.reqBody != "" {
-				method = "POST"
-			}
-			if tt.ctx != nil {
-				ctx = *tt.ctx
-			}
-			if tt.respDelay != 0 {
-				var cancel context.CancelFunc
-				ctx, cancel = context.WithTimeout(
-					context.Background(),
-					(tt.respDelay/2)*time.Millisecond,
+						if tt.wantReq.noAuth {
+							assert.Equal(t, "", r.Header.Get("Authorization"))
+						} else {
+							assert.Equal(t,
+								"Bearer "+apiKey, r.Header.Get("Authorization"),
+							)
+						}
+
+						if len(tt.wantReq.header) > 0 {
+							for k := range tt.wantReq.header {
+								assert.Equalf(t,
+									tt.wantReq.header.Values(k),
+									r.Header.Values(k),
+									"request header: %s", k,
+								)
+							}
+						}
+
+						receivedReqBody, _ := ioutil.ReadAll(r.Body)
+						assert.Equal(t,
+							tt.wantReq.body, string(receivedReqBody),
+						)
+
+						var status int
+						var body string
+						if tt.resp != nil {
+							status = tt.resp.status
+							body = tt.resp.body
+
+							if tt.resp.delay != 0 {
+								time.Sleep(tt.resp.delay)
+							}
+						}
+
+						if status == 0 {
+							status = 200
+						}
+
+						if tt.wantResp != nil {
+							for k := range tt.wantResp.header {
+								for _, v := range tt.wantResp.header.Values(k) {
+									w.Header().Add(k, v)
+								}
+							}
+						}
+
+						w.WriteHeader(status)
+
+						if body != "" {
+							_, _ = w.Write([]byte(body))
+						}
+					},
 				)
+			}
+
+			ctx := tt.args.ctx
+			if tt.resp != nil && tt.resp.timeout > 0 {
+				var cancel context.CancelFunc
+				ctx, cancel = context.WithTimeout(ctx, tt.resp.timeout)
 				defer cancel()
 			}
 
-			m.HandleFunc("/bar",
-				func(w http.ResponseWriter, r *http.Request) {
-					assert.Equal(t, method, r.Method)
+			resp, err := c.Do(ctx, tt.args.request, tt.args.v)
 
-					receivedReqBody, _ := ioutil.ReadAll(r.Body)
-					assert.Equal(t, tt.reqBody, string(receivedReqBody))
-
-					if tt.respDelay != 0 {
-						time.Sleep(tt.respDelay * time.Millisecond)
-					}
-
-					w.WriteHeader(tt.respStatus)
-					_, _ = w.Write(tt.respBody)
-				},
-			)
-
-			req, err := http.NewRequestWithContext(
-				ctx,
-				method,
-				c.BaseURL.String()+"/bar",
-				strings.NewReader(tt.reqBody),
-			)
-			require.NoError(t, err)
-
-			got, err := c.Do(req, tt.v)
-
-			if tt.errResp != nil {
-				assert.Equal(t, tt.errResp, got.Error)
+			if tt.wantErr != "" {
+				wantErr := strings.ReplaceAll(
+					tt.wantErr, "{{ServerURL}}", server.URL,
+				)
+				assert.EqualError(t, err, wantErr)
 			}
 
-			if tt.errStr != "" {
-				tt.errStr = strings.ReplaceAll(
-					tt.errStr, "{{baseURL}}", server.URL,
-				)
-				assert.EqualError(t, err, tt.errStr)
-				if tt.want != nil {
-					assert.Equal(t, tt.want, got)
+			if tt.wantResp != nil && resp != nil {
+				if resp.Response != nil {
+					if tt.wantResp.status != 0 {
+						assert.Equal(t, tt.wantResp.status, resp.StatusCode)
+					}
+					if len(tt.wantResp.header) > 0 && resp.Response != nil {
+						for k := range tt.wantResp.header {
+							assert.Equal(t,
+								tt.wantResp.header.Get(k), resp.Header.Get(k),
+							)
+						}
+					}
 				}
-			} else {
-				assert.Equal(t, tt.respStatus, got.StatusCode)
+				if tt.wantResp.pagination != nil {
+					assert.Equal(t, tt.wantResp.pagination, resp.Pagination)
+				}
+				if tt.wantResp.error != nil {
+					assert.Equal(t, tt.wantResp.error, resp.Error)
+				}
+			}
 
-				switch v := tt.v.(type) {
-				case *strings.Builder:
-					assert.Equal(t, tt.want, v.String())
-				default:
-					assert.Equal(t, tt.want, tt.v)
+			if tt.want != nil {
+				if r, ok := tt.args.v.(io.Reader); ok {
+					b, err := ioutil.ReadAll(r)
+					require.NoError(t, err)
+					assert.Equal(t, tt.want, string(b))
+				} else {
+					assert.Equal(t, tt.want, tt.args.v)
 				}
 			}
 		})
@@ -374,9 +737,9 @@ func TestNew(t *testing.T) {
 		{
 			name:          "defaults",
 			wantAPIKey:    "",
-			wantUserAgent: DefaultUserAgent,
-			wantBaseURL:   DefaultURL,
-			wantTimeout:   DefaultTimeout,
+			wantUserAgent: "go-katapult",
+			wantBaseURL:   &url.URL{Scheme: "https", Host: "api.katapult.io"},
+			wantTimeout:   time.Second * 60,
 		},
 		{
 			name: "options specified",
@@ -386,8 +749,8 @@ func TestNew(t *testing.T) {
 			},
 			wantAPIKey:    "xyzzy",
 			wantUserAgent: "skynet",
-			wantBaseURL:   DefaultURL,
-			wantTimeout:   DefaultTimeout,
+			wantBaseURL:   &url.URL{Scheme: "https", Host: "api.katapult.io"},
+			wantTimeout:   time.Second * 60,
 		},
 		{
 			name: "err propagates",
@@ -415,17 +778,8 @@ func TestNew(t *testing.T) {
 			assert.Equal(t, tt.wantAPIKey, c.APIKey)
 			assert.Equal(t, tt.wantUserAgent, c.UserAgent)
 			assert.Equal(t, tt.wantBaseURL, c.BaseURL)
-			assert.Equal(t, tt.wantTimeout, c.HTTPClient.Timeout)
 		})
 	}
-}
-
-func TestWithTimeout(t *testing.T) {
-	c := &Client{HTTPClient: http.DefaultClient}
-	timeout := 42 * time.Second
-	err := WithTimeout(timeout)(c)
-	assert.NoError(t, err)
-	assert.Equal(t, timeout, c.HTTPClient.Timeout)
 }
 
 func TestWithHTTPClient(t *testing.T) {
