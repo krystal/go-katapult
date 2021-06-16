@@ -48,7 +48,10 @@ func CustomJSONMarshaling(
 	}
 
 	got := reflect.New(reflect.TypeOf(want).Elem()).Interface()
-	err = json.Unmarshal(g, got)
+	gr := bytes.NewBuffer(g)
+	dec := json.NewDecoder(gr)
+	dec.DisallowUnknownFields()
+	err = dec.Decode(got)
 	require.NoError(t, err, "decoding golden failed")
 	assert.Equal(t, want, got,
 		"decoding from golden does not match expected object",
