@@ -1,7 +1,6 @@
 package katapult
 
 import (
-	"encoding/json"
 	"net/http"
 	"testing"
 
@@ -36,55 +35,7 @@ func TestPagination_JSONMarshaling(t *testing.T) {
 	}
 }
 
-func TestResponseError_JSONMarshaling(t *testing.T) {
-	tests := []struct {
-		name string
-		obj  *ResponseError
-	}{
-		{
-			name: "empty",
-			obj:  &ResponseError{},
-		},
-		{
-			name: "full",
-			obj: &ResponseError{
-				Code:        "code",
-				Description: "desc",
-				Detail:      json.RawMessage(`[{}]`),
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			test.CustomJSONMarshaling(t, tt.obj, nil)
-		})
-	}
-}
-
-func Test_responseErrorBody_JSONMarshaling(t *testing.T) {
-	tests := []struct {
-		name string
-		obj  *responseErrorBody
-	}{
-		{
-			name: "empty",
-			obj:  &responseErrorBody{},
-		},
-		{
-			name: "full",
-			obj: &responseErrorBody{
-				ErrorInfo: &ResponseError{Code: "nope"},
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			test.CustomJSONMarshaling(t, tt.obj, nil)
-		})
-	}
-}
-
-func Test_newResponse(t *testing.T) {
+func TestNewResponse(t *testing.T) {
 	tests := []struct {
 		name string
 		r    *http.Response

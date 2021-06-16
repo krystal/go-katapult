@@ -13,8 +13,9 @@ import (
 )
 
 var (
-	fixtureDNSZoneNotFoundErr = "dns_zone_not_found: No DNS zone was found " +
-		"matching any of the criteria provided in the arguments"
+	fixtureDNSZoneNotFoundErr = "katapult: not_found: dns_zone_not_found: " +
+		"No DNS zone was found matching any of the criteria provided in the " +
+		"arguments"
 	fixtureDNSZoneNotFoundResponseError = &katapult.ResponseError{
 		Code: "dns_zone_not_found",
 		Description: "No DNS zone was found matching any of the criteria " +
@@ -22,9 +23,10 @@ var (
 		Detail: json.RawMessage(`{}`),
 	}
 
-	fixtureDNSZoneInfraErr = "infrastructure_dns_zone_cannot_be_edited: " +
-		"Infrastructure DNS zones cannot be edited through the API. " +
-		"These are managed exclusively by Katapult."
+	fixtureDNSZoneInfraErr = "katapult: unauthorized: " +
+		"infrastructure_dns_zone_cannot_be_edited: Infrastructure DNS zones " +
+		"cannot be edited through the API. These are managed exclusively by " +
+		"Katapult."
 	fixtureDNSZoneInfraResponseError = &katapult.ResponseError{
 		Code: "infrastructure_dns_zone_cannot_be_edited",
 		Description: "Infrastructure DNS zones cannot be edited through the " +
@@ -313,6 +315,7 @@ func TestDNSZonesClient_List(t *testing.T) {
 		wantPagination *katapult.Pagination
 		errStr         string
 		errResp        *katapult.ResponseError
+		errIs          error
 		respStatus     int
 		respBody       []byte
 	}{
@@ -407,6 +410,7 @@ func TestDNSZonesClient_List(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
+			errIs:      ErrOrganizationNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
@@ -418,6 +422,7 @@ func TestDNSZonesClient_List(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
+			errIs:      ErrOrganizationSuspended,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
@@ -429,6 +434,7 @@ func TestDNSZonesClient_List(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -487,6 +493,10 @@ func TestDNSZonesClient_List(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -502,6 +512,7 @@ func TestDNSZonesClient_Get(t *testing.T) {
 		want       *DNSZone
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -533,6 +544,7 @@ func TestDNSZonesClient_Get(t *testing.T) {
 			},
 			errStr:     fixtureDNSZoneNotFoundErr,
 			errResp:    fixtureDNSZoneNotFoundResponseError,
+			errIs:      ErrDNSZoneNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("dns_zone_not_found_error"),
 		},
@@ -584,6 +596,10 @@ func TestDNSZonesClient_Get(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -599,6 +615,7 @@ func TestDNSZonesClient_GetByID(t *testing.T) {
 		want       *DNSZone
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -620,6 +637,7 @@ func TestDNSZonesClient_GetByID(t *testing.T) {
 			},
 			errStr:     fixtureDNSZoneNotFoundErr,
 			errResp:    fixtureDNSZoneNotFoundResponseError,
+			errIs:      ErrDNSZoneNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("dns_zone_not_found_error"),
 		},
@@ -672,6 +690,10 @@ func TestDNSZonesClient_GetByID(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -687,6 +709,7 @@ func TestDNSZonesClient_GetByName(t *testing.T) {
 		want       *DNSZone
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -708,6 +731,7 @@ func TestDNSZonesClient_GetByName(t *testing.T) {
 			},
 			errStr:     fixtureDNSZoneNotFoundErr,
 			errResp:    fixtureDNSZoneNotFoundResponseError,
+			errIs:      ErrDNSZoneNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("dns_zone_not_found_error"),
 		},
@@ -759,6 +783,10 @@ func TestDNSZonesClient_GetByName(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -777,6 +805,7 @@ func TestDNSZonesClient_Create(t *testing.T) {
 		want       *DNSZone
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -863,6 +892,7 @@ func TestDNSZonesClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
+			errIs:      ErrOrganizationNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
@@ -875,6 +905,7 @@ func TestDNSZonesClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
+			errIs:      ErrOrganizationSuspended,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
@@ -887,6 +918,7 @@ func TestDNSZonesClient_Create(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -899,6 +931,7 @@ func TestDNSZonesClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureValidationErrorErr,
 			errResp:    fixtureValidationErrorResponseError,
+			errIs:      ErrValidationError,
 			respStatus: http.StatusUnprocessableEntity,
 			respBody:   fixture("validation_error"),
 		},
@@ -913,6 +946,7 @@ func TestDNSZonesClient_Create(t *testing.T) {
 				Organization: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			}, errStr: fixtureValidationErrorErr,
 			errResp:    fixtureValidationErrorResponseError,
+			errIs:      ErrValidationError,
 			respStatus: http.StatusUnprocessableEntity,
 			respBody:   fixture("validation_error"),
 		},
@@ -972,6 +1006,10 @@ func TestDNSZonesClient_Create(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -988,6 +1026,7 @@ func TestDNSZonesClient_Delete(t *testing.T) {
 		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -1025,6 +1064,7 @@ func TestDNSZonesClient_Delete(t *testing.T) {
 			},
 			errStr:     fixtureDNSZoneNotFoundErr,
 			errResp:    fixtureDNSZoneNotFoundResponseError,
+			errIs:      ErrDNSZoneNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("dns_zone_not_found_error"),
 		},
@@ -1082,6 +1122,10 @@ func TestDNSZonesClient_Delete(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -1098,6 +1142,7 @@ func TestDNSZonesClient_VerificationDetails(t *testing.T) {
 		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -1141,6 +1186,7 @@ func TestDNSZonesClient_VerificationDetails(t *testing.T) {
 			},
 			errStr:     fixtureDNSZoneNotFoundErr,
 			errResp:    fixtureDNSZoneNotFoundResponseError,
+			errIs:      ErrDNSZoneNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("dns_zone_not_found_error"),
 		},
@@ -1150,7 +1196,8 @@ func TestDNSZonesClient_VerificationDetails(t *testing.T) {
 				ctx:  context.Background(),
 				zone: DNSZoneRef{ID: "dnszone_k75eFc4UBOgeE5Zy"},
 			},
-			errStr: "dns_zone_already_verified: This DNS zone is already " +
+			errStr: "katapult: unprocessable_entity: " +
+				"dns_zone_already_verified: This DNS zone is already " +
 				"verified, and does not require any verification details",
 			errResp: &katapult.ResponseError{
 				Code: "dns_zone_already_verified",
@@ -1158,6 +1205,7 @@ func TestDNSZonesClient_VerificationDetails(t *testing.T) {
 					"not require any verification details",
 				Detail: json.RawMessage(`{}`),
 			},
+			errIs:      ErrDNSZoneAlreadyVerified,
 			respStatus: http.StatusUnprocessableEntity,
 			respBody:   fixture("dns_zone_already_verified_error"),
 		},
@@ -1169,6 +1217,7 @@ func TestDNSZonesClient_VerificationDetails(t *testing.T) {
 			},
 			errStr:     fixtureDNSZoneInfraErr,
 			errResp:    fixtureDNSZoneInfraResponseError,
+			errIs:      ErrInfrastructureDNSZoneCannotBeEdited,
 			respStatus: http.StatusForbidden,
 			respBody: fixture(
 				"dns_zone_infrastructure_zone_cannot_be_edited",
@@ -1230,6 +1279,10 @@ func TestDNSZonesClient_VerificationDetails(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -1246,6 +1299,7 @@ func TestDNSZonesClient_Verify(t *testing.T) {
 		want       *DNSZone
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -1287,6 +1341,7 @@ func TestDNSZonesClient_Verify(t *testing.T) {
 			},
 			errStr:     fixtureDNSZoneNotFoundErr,
 			errResp:    fixtureDNSZoneNotFoundResponseError,
+			errIs:      ErrDNSZoneNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("dns_zone_not_found_error"),
 		},
@@ -1298,6 +1353,7 @@ func TestDNSZonesClient_Verify(t *testing.T) {
 			},
 			errStr:     fixtureDNSZoneInfraErr,
 			errResp:    fixtureDNSZoneInfraResponseError,
+			errIs:      ErrInfrastructureDNSZoneCannotBeEdited,
 			respStatus: http.StatusUnprocessableEntity,
 			respBody: fixture(
 				"dns_zone_infrastructure_zone_cannot_be_edited",
@@ -1311,6 +1367,7 @@ func TestDNSZonesClient_Verify(t *testing.T) {
 			},
 			errStr:     fixtureValidationErrorErr,
 			errResp:    fixtureValidationErrorResponseError,
+			errIs:      ErrValidationError,
 			respStatus: http.StatusUnprocessableEntity,
 			respBody:   fixture("validation_error"),
 		},
@@ -1367,6 +1424,10 @@ func TestDNSZonesClient_Verify(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -1384,6 +1445,7 @@ func TestDNSZonesClient_UpdateTTL(t *testing.T) {
 		want       *DNSZone
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -1448,6 +1510,7 @@ func TestDNSZonesClient_UpdateTTL(t *testing.T) {
 			},
 			errStr:     fixtureDNSZoneNotFoundErr,
 			errResp:    fixtureDNSZoneNotFoundResponseError,
+			errIs:      ErrDNSZoneNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("dns_zone_not_found_error"),
 		},
@@ -1460,6 +1523,7 @@ func TestDNSZonesClient_UpdateTTL(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -1472,6 +1536,7 @@ func TestDNSZonesClient_UpdateTTL(t *testing.T) {
 			},
 			errStr:     fixtureValidationErrorErr,
 			errResp:    fixtureValidationErrorResponseError,
+			errIs:      ErrValidationError,
 			respStatus: http.StatusUnprocessableEntity,
 			respBody:   fixture("validation_error"),
 		},
@@ -1530,6 +1595,10 @@ func TestDNSZonesClient_UpdateTTL(t *testing.T) {
 
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
+			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
 			}
 		})
 	}

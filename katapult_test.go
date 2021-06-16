@@ -360,8 +360,8 @@ func TestClient_Do(t *testing.T) {
 				},
 				v: &respBody{},
 			},
-			wantErr: "katapult: request: no API key available for: " +
-				"GET /core/v1/stats",
+			wantErr: "katapult: request: no API key available for " +
+				"authenticated request: GET /core/v1/stats",
 		},
 		{
 			name: "response has custom headers",
@@ -496,7 +496,7 @@ func TestClient_Do(t *testing.T) {
 				method: "GET",
 				url:    &url.URL{Path: "/core/v1/stats"},
 			},
-			wantErr: "unexpected response",
+			wantErr: "katapult: unexpected_response",
 		},
 		{
 			name: "response body is invalid JSON",
@@ -539,7 +539,7 @@ func TestClient_Do(t *testing.T) {
 				method: "GET",
 				url:    &url.URL{Path: "/core/v1/stats"},
 			},
-			wantErr: "unexpected EOF",
+			wantErr: "katapult: unexpected_response",
 		},
 		{
 			name: "context timeout",

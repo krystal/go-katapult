@@ -1,10 +1,8 @@
 package katapult
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -17,13 +15,7 @@ const (
 	DefaultTimeout   = time.Second * 60
 )
 
-var (
-	DefaultURL = &url.URL{Scheme: "https", Host: "api.katapult.io"}
-
-	Err        = errors.New("katapult")
-	ErrRequest = fmt.Errorf("%w: request", Err)
-	ErrConfig  = fmt.Errorf("%w: config", Err)
-)
+var DefaultURL = &url.URL{Scheme: "https", Host: "api.katapult.io"}
 
 type Opt func(c *Client) error
 
@@ -128,7 +120,7 @@ func (c *Client) Do(
 	if !request.NoAuth {
 		if c.APIKey == "" {
 			return nil, fmt.Errorf(
-				"%w: no API key available for: %s %s",
+				"%w: no API key available for authenticated request: %s %s",
 				ErrRequest, request.Method, request.URL.Path,
 			)
 		}
@@ -169,31 +161,19 @@ func (c *Client) handleResponseError(resp *Response) (*Response, error) {
 	var body responseErrorBody
 	err := json.NewDecoder(resp.Body).Decode(&body)
 	if err != nil {
-		return resp, err
+		return resp, ErrUnexpectedResponse
 	}
 
-	if body.ErrorInfo == nil {
-		return resp, errors.New("unexpected response")
+	if body.Error == nil || body.Error.Code == "" {
+		return resp, ErrUnexpectedResponse
 	}
-	resp.Error = body.ErrorInfo
-
-	if len(resp.Error.Detail) > 2 {
-		buf := &bytes.Buffer{}
-		_ = json.Indent(buf, resp.Error.Detail, "", "  ")
-
-		baseErr := fmt.Errorf("%s: %s",
-			resp.Error.Code,
-			resp.Error.Description,
-		)
-
-		return resp, fmt.Errorf("%w -- %s",
-			baseErr,
-			buf.String(),
-		)
-	}
-
-	return resp, fmt.Errorf("%s: %s",
-		resp.Error.Code,
-		resp.Error.Description,
+	resp.Error = body.Error
+	respErr := NewResponseError(
+		resp.StatusCode,
+		body.Error.Code,
+		body.Error.Description,
+		body.Error.Detail,
 	)
+
+	return resp, castResponseError(respErr)
 }

@@ -25,9 +25,9 @@ func TestClient_VirtualMachineNetworkInterfaces(t *testing.T) {
 
 //nolint:lll
 var (
-	fixtureVMNetworkInterfaceNotFoundErr = "virtual_machine_network_interface_not_found: " +
-		"No network interface was found matching any of the criteria " +
-		"provided in the arguments"
+	fixtureVMNetworkInterfaceNotFoundErr = "katapult: not_found: " +
+		"virtual_machine_network_interface_not_found: No network interface " +
+		"was found matching any of the criteria provided in the arguments"
 	fixtureVMNetworkInterfaceNotFoundResponseError = &katapult.ResponseError{
 		Code: "virtual_machine_network_interface_not_found",
 		Description: "No network interface was found matching any of the " +
@@ -35,9 +35,9 @@ var (
 		Detail: json.RawMessage(`{}`),
 	}
 
-	fixtureNetworkSpeedProfileNotFoundErr = "network_speed_profile_not_found: " +
-		"No network speed profile was found matching any of the criteria " +
-		"provided in the arguments"
+	fixtureNetworkSpeedProfileNotFoundErr = "katapult: not_found: " +
+		"network_speed_profile_not_found: No network speed profile was found " +
+		"matching any of the criteria provided in the arguments"
 	fixtureNetworkSpeedProfileNotFoundResponseError = &katapult.ResponseError{
 		Code: "network_speed_profile_not_found",
 		Description: "No network speed profile was found matching any of the " +
@@ -45,9 +45,10 @@ var (
 		Detail: json.RawMessage(`{}`),
 	}
 
-	fixtureSpeedProfileAlreadyAssignedNotFoundErr = "speed_profile_already_assigned: " +
-		"This network speed profile is already assigned to this virtual " +
-		"machine network interface."
+	fixtureSpeedProfileAlreadyAssignedNotFoundErr = "katapult: " +
+		"unprocessable_entity: speed_profile_already_assigned: This network " +
+		"speed profile is already assigned to this virtual machine network " +
+		"interface."
 	fixtureSpeedProfileAlreadyAssignedNotFoundResponseError = &katapult.ResponseError{
 		Code: "speed_profile_already_assigned",
 		Description: "This network speed profile is already assigned to this " +
@@ -319,6 +320,7 @@ func TestVirtualMachineNetworkInterfacesClient_List(t *testing.T) {
 		wantPagination *katapult.Pagination
 		errStr         string
 		errResp        *katapult.ResponseError
+		errIs          error
 		respStatus     int
 		respBody       []byte
 	}{
@@ -431,6 +433,7 @@ func TestVirtualMachineNetworkInterfacesClient_List(t *testing.T) {
 			},
 			errStr:     fixtureVirtualMachineNotFoundErr,
 			errResp:    fixtureVirtualMachineNotFoundResponseError,
+			errIs:      ErrVirtualMachineNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("virtual_machine_not_found_error"),
 		},
@@ -493,6 +496,10 @@ func TestVirtualMachineNetworkInterfacesClient_List(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -508,6 +515,7 @@ func TestVirtualMachineNetworkInterfacesClient_GetByID(t *testing.T) {
 		want       *VirtualMachineNetworkInterface
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -533,6 +541,7 @@ func TestVirtualMachineNetworkInterfacesClient_GetByID(t *testing.T) {
 			},
 			errStr:     fixtureVMNetworkInterfaceNotFoundErr,
 			errResp:    fixtureVMNetworkInterfaceNotFoundResponseError,
+			errIs:      ErrVirtualMachineNetworkInterfaceNotFound,
 			respStatus: http.StatusNotFound,
 			respBody: fixture(
 				"virtual_machine_network_interface_not_found_error",
@@ -592,6 +601,10 @@ func TestVirtualMachineNetworkInterfacesClient_GetByID(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -607,6 +620,7 @@ func TestVirtualMachineNetworkInterfacesClient_Get(t *testing.T) {
 		want       *VirtualMachineNetworkInterface
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -636,6 +650,7 @@ func TestVirtualMachineNetworkInterfacesClient_Get(t *testing.T) {
 			},
 			errStr:     fixtureVMNetworkInterfaceNotFoundErr,
 			errResp:    fixtureVMNetworkInterfaceNotFoundResponseError,
+			errIs:      ErrVirtualMachineNetworkInterfaceNotFound,
 			respStatus: http.StatusNotFound,
 			respBody: fixture(
 				"virtual_machine_network_interface_not_found_error",
@@ -693,6 +708,10 @@ func TestVirtualMachineNetworkInterfacesClient_Get(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -709,6 +728,7 @@ func TestVirtualMachineNetworkInterfacesClient_AvailableIPs(t *testing.T) {
 		want       []*IPAddress
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -774,6 +794,7 @@ func TestVirtualMachineNetworkInterfacesClient_AvailableIPs(t *testing.T) {
 			},
 			errStr:     fixtureVMNetworkInterfaceNotFoundErr,
 			errResp:    fixtureVMNetworkInterfaceNotFoundResponseError,
+			errIs:      ErrVirtualMachineNetworkInterfaceNotFound,
 			respStatus: http.StatusNotFound,
 			respBody: fixture(
 				"virtual_machine_network_interface_not_found_error",
@@ -833,6 +854,10 @@ func TestVirtualMachineNetworkInterfacesClient_AvailableIPs(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -850,6 +875,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 		want        *VirtualMachineNetworkInterface
 		errStr      string
 		errResp     *katapult.ResponseError
+		errIs       error
 		respStatus  int
 		respBody    []byte
 	}{
@@ -924,6 +950,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 			},
 			errStr:     fixtureVMNetworkInterfaceNotFoundErr,
 			errResp:    fixtureVMNetworkInterfaceNotFoundResponseError,
+			errIs:      ErrVirtualMachineNetworkInterfaceNotFound,
 			respStatus: http.StatusNotFound,
 			respBody: fixture(
 				"virtual_machine_network_interface_not_found_error",
@@ -940,6 +967,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 			},
 			errStr:     fixtureIPAddressNotFoundErr,
 			errResp:    fixtureIPAddressNotFoundResponseError,
+			errIs:      ErrIPAddressNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("ip_address_not_found_error"),
 		},
@@ -954,6 +982,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 			},
 			errStr:     fixtureIPAlreadyAllocatedErr,
 			errResp:    fixtureIPAlreadyAllocatedResponseError,
+			errIs:      ErrIPAlreadyAllocated,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("ip_already_allocated_error"),
 		},
@@ -968,6 +997,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -1032,6 +1062,10 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -1049,6 +1083,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateNewIP(t *testing.T) {
 		want        *IPAddress
 		errStr      string
 		errResp     *katapult.ResponseError
+		errIs       error
 		respStatus  int
 		respBody    []byte
 	}{
@@ -1114,6 +1149,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateNewIP(t *testing.T) {
 			},
 			errStr:     fixtureVMNetworkInterfaceNotFoundErr,
 			errResp:    fixtureVMNetworkInterfaceNotFoundResponseError,
+			errIs:      ErrVirtualMachineNetworkInterfaceNotFound,
 			respStatus: http.StatusNotFound,
 			respBody: fixture(
 				"virtual_machine_network_interface_not_found_error",
@@ -1129,6 +1165,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateNewIP(t *testing.T) {
 			},
 			errStr:     fixtureIPAddressNotFoundErr,
 			errResp:    fixtureIPAddressNotFoundResponseError,
+			errIs:      ErrIPAddressNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("ip_address_not_found_error"),
 		},
@@ -1142,6 +1179,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateNewIP(t *testing.T) {
 			},
 			errStr:     fixtureNoAvailableAddressesErr,
 			errResp:    fixtureNoAvailableAddressesResponseError,
+			errIs:      ErrNoAvailableAddresses,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("no_available_addresses_error"),
 		},
@@ -1155,6 +1193,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateNewIP(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -1217,6 +1256,10 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateNewIP(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -1246,6 +1289,7 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 		want        *Task
 		errStr      string
 		errResp     *katapult.ResponseError
+		errIs       error
 		respStatus  int
 		respBody    []byte
 	}{
@@ -1318,6 +1362,7 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 			},
 			errStr:     fixtureVMNetworkInterfaceNotFoundErr,
 			errResp:    fixtureVMNetworkInterfaceNotFoundResponseError,
+			errIs:      ErrVirtualMachineNetworkInterfaceNotFound,
 			respStatus: http.StatusNotFound,
 			respBody: fixture(
 				"virtual_machine_network_interface_not_found_error",
@@ -1336,6 +1381,7 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 			},
 			errStr:     fixtureNetworkSpeedProfileNotFoundErr,
 			errResp:    fixtureNetworkSpeedProfileNotFoundResponseError,
+			errIs:      ErrNetworkSpeedProfileNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("network_speed_profile_not_found_error"),
 		},
@@ -1352,6 +1398,7 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 			},
 			errStr:     fixtureSpeedProfileAlreadyAssignedNotFoundErr,
 			errResp:    fixtureSpeedProfileAlreadyAssignedNotFoundResponseError,
+			errIs:      ErrSpeedProfileAlreadyAssigned,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("speed_profile_already_assigned_error"),
 		},
@@ -1368,6 +1415,7 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 			},
 			errStr:     fixtureTaskQueueingErrorErr,
 			errResp:    fixtureTaskQueueingErrorResponseError,
+			errIs:      ErrTaskQueueingError,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("task_queueing_error"),
 		},
@@ -1431,6 +1479,10 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
+			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
 			}
 		})
 	}

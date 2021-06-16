@@ -23,9 +23,8 @@ var (
 	}
 
 	//nolint:lll
-	fixturePermissionDeniedErr = "permission_denied: The authenticated " +
-		"identity is not permitted to perform this action -- " +
-		"{\n  \"details\": \"Additional information regarding the reason why permission was denied\"\n}"
+	fixturePermissionDeniedErr = "katapult: unauthorized: permission_denied: " +
+		"Additional information regarding the reason why permission was denied"
 	fixturePermissionDeniedResponseError = &katapult.ResponseError{
 		Code: "permission_denied",
 		Description: "The authenticated identity is not permitted to perform " +
@@ -37,9 +36,9 @@ var (
 	}
 
 	//nolint:lll
-	fixtureValidationErrorErr = "validation_error: A validation error " +
-		"occurred with the object that was being created/updated/deleted -- " +
-		"{\n  \"errors\": [\n    \"Failed reticulating 3-dimensional splines\",\n    \"Failed preparing captive simulators\"\n  ]\n}"
+	fixtureValidationErrorErr = "katapult: unprocessable_entity: " +
+		"validation_error: Failed reticulating 3-dimensional splines, " +
+		"Failed preparing captive simulators"
 	fixtureValidationErrorResponseError = &katapult.ResponseError{
 		Code: "validation_error",
 		Description: "A validation error occurred with the object that was " +
@@ -53,9 +52,10 @@ var (
 		),
 	}
 
-	fixtureObjectInTrashErr = "object_in_trash: The object found is in the " +
-		"trash and therefore cannot be manipulated through the API. It " +
-		"should be restored in order to run this operation."
+	fixtureObjectInTrashErr = "katapult: not_acceptable: object_in_trash: " +
+		"The object found is in the trash and therefore cannot be " +
+		"manipulated through the API. It should be restored in order to run " +
+		"this operation."
 	fixtureObjectInTrashResponseError = &katapult.ResponseError{
 		Code: "object_in_trash",
 		Description: "The object found is in the trash and therefore cannot " +

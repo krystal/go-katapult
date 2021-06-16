@@ -13,9 +13,9 @@ import (
 )
 
 var (
-	fixtureLoadBalancerNotFoundErr = "load_balancer_not_found: No load " +
-		"balancer was found matching any of the criteria provided in " +
-		"the arguments"
+	fixtureLoadBalancerNotFoundErr = "katapult: not_found: " +
+		"load_balancer_not_found: No load balancer was found matching any of " +
+		"the criteria provided in the arguments"
 	fixtureLoadBalancerNotFoundResponseError = &katapult.ResponseError{
 		Code: "load_balancer_not_found",
 		Description: "No load balancer was found matching any of the " +
@@ -287,6 +287,7 @@ func TestLoadBalancersClient_List(t *testing.T) {
 		wantPagination *katapult.Pagination
 		errStr         string
 		errResp        *katapult.ResponseError
+		errIs          error
 		respStatus     int
 		respBody       []byte
 	}{
@@ -379,6 +380,7 @@ func TestLoadBalancersClient_List(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
+			errIs:      ErrOrganizationNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
@@ -390,6 +392,7 @@ func TestLoadBalancersClient_List(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
+			errIs:      ErrOrganizationSuspended,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
@@ -448,6 +451,10 @@ func TestLoadBalancersClient_List(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -464,6 +471,7 @@ func TestLoadBalancersClient_Get(t *testing.T) {
 		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -492,6 +500,7 @@ func TestLoadBalancersClient_Get(t *testing.T) {
 			},
 			errStr:     fixtureLoadBalancerNotFoundErr,
 			errResp:    fixtureLoadBalancerNotFoundResponseError,
+			errIs:      ErrLoadBalancerNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("load_balancer_not_found_error"),
 		},
@@ -545,6 +554,10 @@ func TestLoadBalancersClient_Get(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -561,6 +574,7 @@ func TestLoadBalancersClient_GetByID(t *testing.T) {
 		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -589,6 +603,7 @@ func TestLoadBalancersClient_GetByID(t *testing.T) {
 			},
 			errStr:     fixtureLoadBalancerNotFoundErr,
 			errResp:    fixtureLoadBalancerNotFoundResponseError,
+			errIs:      ErrLoadBalancerNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("load_balancer_not_found_error"),
 		},
@@ -642,6 +657,10 @@ func TestLoadBalancersClient_GetByID(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -672,6 +691,7 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 		want       *LoadBalancer
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -757,6 +777,7 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureDataCenterNotFoundErr,
 			errResp:    fixtureDataCenterNotFoundResponseError,
+			errIs:      ErrDataCenterNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("data_center_not_found_error"),
 		},
@@ -769,6 +790,7 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
+			errIs:      ErrOrganizationNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
@@ -781,6 +803,7 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
+			errIs:      ErrOrganizationSuspended,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
@@ -793,6 +816,7 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureDataCenterNotFoundErr,
 			errResp:    fixtureDataCenterNotFoundResponseError,
+			errIs:      ErrDataCenterNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("data_center_not_found_error"),
 		},
@@ -805,6 +829,7 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -817,6 +842,7 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureValidationErrorErr,
 			errResp:    fixtureValidationErrorResponseError,
+			errIs:      ErrValidationError,
 			respStatus: http.StatusUnprocessableEntity,
 			respBody:   fixture("validation_error"),
 		},
@@ -829,6 +855,7 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureValidationErrorErr,
 			errResp:    fixtureValidationErrorResponseError,
+			errIs:      ErrValidationError,
 			respStatus: http.StatusUnprocessableEntity,
 			respBody:   fixture("validation_error"),
 		},
@@ -888,6 +915,10 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -921,6 +952,7 @@ func TestLoadBalancersClient_Update(t *testing.T) {
 		want       *LoadBalancer
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -978,6 +1010,7 @@ func TestLoadBalancersClient_Update(t *testing.T) {
 			},
 			errStr:     fixtureLoadBalancerNotFoundErr,
 			errResp:    fixtureLoadBalancerNotFoundResponseError,
+			errIs:      ErrLoadBalancerNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("load_balancer_not_found_error"),
 		},
@@ -990,6 +1023,7 @@ func TestLoadBalancersClient_Update(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -1002,6 +1036,7 @@ func TestLoadBalancersClient_Update(t *testing.T) {
 			},
 			errStr:     fixtureValidationErrorErr,
 			errResp:    fixtureValidationErrorResponseError,
+			errIs:      ErrValidationError,
 			respStatus: http.StatusUnprocessableEntity,
 			respBody:   fixture("validation_error"),
 		},
@@ -1060,6 +1095,10 @@ func TestLoadBalancersClient_Update(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -1076,6 +1115,7 @@ func TestLoadBalancersClient_Delete(t *testing.T) {
 		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -1104,6 +1144,7 @@ func TestLoadBalancersClient_Delete(t *testing.T) {
 			},
 			errStr:     fixtureLoadBalancerNotFoundErr,
 			errResp:    fixtureLoadBalancerNotFoundResponseError,
+			errIs:      ErrLoadBalancerNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("load_balancer_not_found_error"),
 		},
@@ -1160,6 +1201,10 @@ func TestLoadBalancersClient_Delete(t *testing.T) {
 
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
+			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
 			}
 		})
 	}

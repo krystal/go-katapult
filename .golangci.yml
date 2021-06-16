@@ -65,6 +65,12 @@ issues:
       linters:
         - funlen
         - dupl
+    - path: "_generated\\.go"
+      linters:
+        - funlen
+        - gocyclo
+        - lll
+        - misspell # TODO: Remove when spelling mistake is fixed in API schema
     - source: "^//go:generate "
       linters:
         - lll

@@ -20,8 +20,9 @@ var (
 		ObjectType: "VirtualMachine",
 	}
 
-	fixtureTrashObjectNotFoundErr = "trash_object_not_found: No trash object " +
-		"was found matching any of the criteria provided in the arguments"
+	fixtureTrashObjectNotFoundErr = "katapult: not_found: " +
+		"trash_object_not_found: No trash object was found matching any of " +
+		"the criteria provided in the arguments"
 	fixtureTrashObjectNotFoundResponseError = &katapult.ResponseError{
 		Code: "trash_object_not_found",
 		Description: "No trash object was found matching any of the criteria " +
@@ -183,6 +184,7 @@ func TestTrashObjectsClient_List(t *testing.T) {
 		wantPagination *katapult.Pagination
 		errStr         string
 		errResp        *katapult.ResponseError
+		errIs          error
 		respStatus     int
 		respBody       []byte
 	}{
@@ -275,6 +277,7 @@ func TestTrashObjectsClient_List(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
+			errIs:      ErrOrganizationNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
@@ -286,6 +289,7 @@ func TestTrashObjectsClient_List(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
+			errIs:      ErrOrganizationSuspended,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
@@ -344,6 +348,10 @@ func TestTrashObjectsClient_List(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -360,6 +368,7 @@ func TestTrashObjectsClient_Get(t *testing.T) {
 		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -407,6 +416,7 @@ func TestTrashObjectsClient_Get(t *testing.T) {
 			},
 			errStr:     fixtureTrashObjectNotFoundErr,
 			errResp:    fixtureTrashObjectNotFoundResponseError,
+			errIs:      ErrTrashObjectNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("trash_object_not_found_error"),
 		},
@@ -418,6 +428,7 @@ func TestTrashObjectsClient_Get(t *testing.T) {
 			},
 			errStr:     fixtureTrashObjectNotFoundErr,
 			errResp:    fixtureTrashObjectNotFoundResponseError,
+			errIs:      ErrTrashObjectNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("trash_object_not_found_error"),
 		},
@@ -473,6 +484,10 @@ func TestTrashObjectsClient_Get(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -488,6 +503,7 @@ func TestTrashObjectsClient_GetByID(t *testing.T) {
 		want       *TrashObject
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -514,6 +530,7 @@ func TestTrashObjectsClient_GetByID(t *testing.T) {
 			},
 			errStr:     fixtureTrashObjectNotFoundErr,
 			errResp:    fixtureTrashObjectNotFoundResponseError,
+			errIs:      ErrTrashObjectNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("trash_object_not_found_error"),
 		},
@@ -525,6 +542,7 @@ func TestTrashObjectsClient_GetByID(t *testing.T) {
 			},
 			errStr:     fixtureTrashObjectNotFoundErr,
 			errResp:    fixtureTrashObjectNotFoundResponseError,
+			errIs:      ErrTrashObjectNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("trash_object_not_found_error"),
 		},
@@ -580,6 +598,10 @@ func TestTrashObjectsClient_GetByID(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -595,6 +617,7 @@ func TestTrashObjectsClient_GetByObjectID(t *testing.T) {
 		want       *TrashObject
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -621,6 +644,7 @@ func TestTrashObjectsClient_GetByObjectID(t *testing.T) {
 			},
 			errStr:     fixtureTrashObjectNotFoundErr,
 			errResp:    fixtureTrashObjectNotFoundResponseError,
+			errIs:      ErrTrashObjectNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("trash_object_not_found_error"),
 		},
@@ -632,6 +656,7 @@ func TestTrashObjectsClient_GetByObjectID(t *testing.T) {
 			},
 			errStr:     fixtureTrashObjectNotFoundErr,
 			errResp:    fixtureTrashObjectNotFoundResponseError,
+			errIs:      ErrTrashObjectNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("trash_object_not_found_error"),
 		},
@@ -691,6 +716,10 @@ func TestTrashObjectsClient_GetByObjectID(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -707,6 +736,7 @@ func TestTrashObjectsClient_Purge(t *testing.T) {
 		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -752,6 +782,7 @@ func TestTrashObjectsClient_Purge(t *testing.T) {
 			},
 			errStr:     fixtureTrashObjectNotFoundErr,
 			errResp:    fixtureTrashObjectNotFoundResponseError,
+			errIs:      ErrTrashObjectNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("trash_object_not_found_error"),
 		},
@@ -763,6 +794,7 @@ func TestTrashObjectsClient_Purge(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -820,6 +852,10 @@ func TestTrashObjectsClient_Purge(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -835,6 +871,7 @@ func TestTrashObjectsClient_PurgeAll(t *testing.T) {
 		want       *Task
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -874,6 +911,7 @@ func TestTrashObjectsClient_PurgeAll(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
+			errIs:      ErrOrganizationNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
@@ -885,6 +923,7 @@ func TestTrashObjectsClient_PurgeAll(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -938,6 +977,10 @@ func TestTrashObjectsClient_PurgeAll(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -954,6 +997,7 @@ func TestTrashObjectsClient_Restore(t *testing.T) {
 		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -1001,6 +1045,7 @@ func TestTrashObjectsClient_Restore(t *testing.T) {
 			},
 			errStr:     fixtureTrashObjectNotFoundErr,
 			errResp:    fixtureTrashObjectNotFoundResponseError,
+			errIs:      ErrTrashObjectNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("trash_object_not_found_error"),
 		},
@@ -1012,6 +1057,7 @@ func TestTrashObjectsClient_Restore(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -1068,6 +1114,10 @@ func TestTrashObjectsClient_Restore(t *testing.T) {
 
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
+			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
 			}
 		})
 	}

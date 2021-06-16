@@ -130,5 +130,5 @@ func (s *DataCentersClient) request(
 		resp = katapult.NewResponse(nil)
 	}
 
-	return resp, err
+	return resp, handleResponseError(err)
 }

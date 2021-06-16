@@ -13,9 +13,9 @@ import (
 )
 
 var (
-	fixtureOrganizationSuspendedErr = "organization_suspended: " +
-		"An organization was found from the arguments provided but it was " +
-		"suspended"
+	fixtureOrganizationSuspendedErr = "katapult: unauthorized: " +
+		"organization_suspended: An organization was found from the " +
+		"arguments provided but it was suspended"
 	fixtureOrganizationSuspendedResponseError = &katapult.ResponseError{
 		Code: "organization_suspended",
 		Description: "An organization was found from the arguments " +
@@ -23,9 +23,9 @@ var (
 		Detail: json.RawMessage(`{}`),
 	}
 
-	fixtureOrganizationNotFoundErr = "organization_not_found: " +
-		"No organization was found matching any of the criteria provided " +
-		"in the arguments"
+	fixtureOrganizationNotFoundErr = "katapult: not_found: " +
+		"organization_not_found: No organization was found matching any of " +
+		"the criteria provided in the arguments"
 	fixtureOrganizationNotFoundResponseError = &katapult.ResponseError{
 		Code: "organization_not_found",
 		Description: "No organization was found matching any of the " +
@@ -33,9 +33,9 @@ var (
 		Detail: json.RawMessage(`{}`),
 	}
 
-	fixtureOrganizationNotActivatedErr = "organization_not_activated: " +
-		"An organization was found from the arguments provided but it wasn't " +
-		"activated yet"
+	fixtureOrganizationNotActivatedErr = "katapult: unauthorized: " +
+		"organization_not_activated: An organization was found from the " +
+		"arguments provided but it wasn't activated yet"
 	fixtureOrganizationNotActivatedResponseError = &katapult.ResponseError{
 		Code: "organization_not_activated",
 		Description: "An organization was found from the arguments provided " +
@@ -190,6 +190,7 @@ func TestOrganizationsClient_List(t *testing.T) {
 		want       []*Organization
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -267,6 +268,10 @@ func TestOrganizationsClient_List(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -284,6 +289,7 @@ func TestOrganizationsClient_Get(t *testing.T) {
 		want       *Organization
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -332,6 +338,7 @@ func TestOrganizationsClient_Get(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
+			errIs:      ErrOrganizationNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
@@ -346,6 +353,7 @@ func TestOrganizationsClient_Get(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
+			errIs:      ErrOrganizationSuspended,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
@@ -360,6 +368,7 @@ func TestOrganizationsClient_Get(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotActivatedErr,
 			errResp:    fixtureOrganizationNotActivatedResponseError,
+			errIs:      ErrOrganizationNotActivated,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_not_activated_error"),
 		},
@@ -415,6 +424,10 @@ func TestOrganizationsClient_Get(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -430,6 +443,7 @@ func TestOrganizationsClient_GetByID(t *testing.T) {
 		want       *Organization
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -455,6 +469,7 @@ func TestOrganizationsClient_GetByID(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
+			errIs:      ErrOrganizationNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
@@ -466,6 +481,7 @@ func TestOrganizationsClient_GetByID(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
+			errIs:      ErrOrganizationSuspended,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
@@ -477,6 +493,7 @@ func TestOrganizationsClient_GetByID(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotActivatedErr,
 			errResp:    fixtureOrganizationNotActivatedResponseError,
+			errIs:      ErrOrganizationNotActivated,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_not_activated_error"),
 		},
@@ -529,6 +546,10 @@ func TestOrganizationsClient_GetByID(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -544,6 +565,7 @@ func TestOrganizationsClient_GetBySubDomain(t *testing.T) {
 		want       *Organization
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -569,6 +591,7 @@ func TestOrganizationsClient_GetBySubDomain(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
+			errIs:      ErrOrganizationNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
@@ -580,6 +603,7 @@ func TestOrganizationsClient_GetBySubDomain(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
+			errIs:      ErrOrganizationSuspended,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
@@ -591,6 +615,7 @@ func TestOrganizationsClient_GetBySubDomain(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotActivatedErr,
 			errResp:    fixtureOrganizationNotActivatedResponseError,
+			errIs:      ErrOrganizationNotActivated,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_not_activated_error"),
 		},
@@ -646,6 +671,10 @@ func TestOrganizationsClient_GetBySubDomain(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -663,6 +692,7 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 		want       *Organization
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -726,7 +756,8 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 					SubDomain: "nerv",
 				},
 			},
-			errStr: "organization_limit_reached: The maxmium number of " +
+			errStr: "katapult: unprocessable_entity: " +
+				"organization_limit_reached: The maxmium number of " +
 				"organizations that can be created has been reached",
 			errResp: &katapult.ResponseError{
 				Code: "organization_limit_reached",
@@ -734,6 +765,7 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 					"be created has been reached",
 				Detail: json.RawMessage(`{}`),
 			},
+			errIs:      ErrOrganizationLimitReached,
 			respStatus: http.StatusUnprocessableEntity,
 			respBody:   fixture("organization_limit_reached_error"),
 		},
@@ -749,6 +781,7 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
+			errIs:      ErrOrganizationNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
@@ -764,6 +797,7 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
+			errIs:      ErrOrganizationSuspended,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
@@ -779,6 +813,7 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotActivatedErr,
 			errResp:    fixtureOrganizationNotActivatedResponseError,
+			errIs:      ErrOrganizationNotActivated,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_not_activated_error"),
 		},
@@ -792,10 +827,8 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 					SubDomain: "nerv",
 				},
 			},
-			//nolint:lll
-			errStr: "validation_error: A validation error occurred with the " +
-				"object that was being created/updated/deleted -- " +
-				"{\n  \"errors\": [\n    \"Sub domain has already been taken\"\n  ]\n}",
+			errStr: "katapult: unprocessable_entity: validation_error: " +
+				"Sub domain has already been taken",
 			errResp: &katapult.ResponseError{
 				Code: "validation_error",
 				Description: "A validation error occurred with the object " +
@@ -806,6 +839,7 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 				),
 			},
 			respStatus: http.StatusUnprocessableEntity,
+			errIs:      ErrValidationError,
 			respBody: fixture(
 				"organization_validation_error_sub_domain_taken",
 			),
@@ -819,6 +853,7 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 			},
 			errStr:     fixtureValidationErrorErr,
 			errResp:    fixtureValidationErrorResponseError,
+			errIs:      ErrValidationError,
 			respStatus: http.StatusUnprocessableEntity,
 			respBody:   fixture("validation_error"),
 		},
@@ -879,6 +914,10 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
+			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
 			}
 		})
 	}

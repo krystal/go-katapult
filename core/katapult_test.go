@@ -34,6 +34,10 @@ var (
 	falsePtr = boolPtr(false)
 )
 
+func stringPtr(s string) *string {
+	return &s
+}
+
 func timestampPtr(unixtime int64) *timestamp.Timestamp {
 	ts := timestamp.Timestamp(time.Unix(unixtime, 0).UTC())
 

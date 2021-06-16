@@ -12,6 +12,19 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var (
+	fixtureCertificateNotFoundErr = "katapult: not_found: " +
+		"certificate_not_found: No certificate was found matching any of the " +
+		"criteria provided " +
+		"in the arguments"
+	fixtureCertificateNotFoundResponseError = &katapult.ResponseError{
+		Code: "certificate_not_found",
+		Description: "No certificate was found matching any of the " +
+			"criteria provided in the arguments",
+		Detail: json.RawMessage(`{}`),
+	}
+)
+
 func TestClient_Certificates(t *testing.T) {
 	c := New(&testclient.Client{})
 
@@ -152,6 +165,7 @@ func TestCertificatesClient_List(t *testing.T) {
 		wantPagination *katapult.Pagination
 		errStr         string
 		errResp        *katapult.ResponseError
+		errIs          error
 		respStatus     int
 		respBody       []byte
 	}{
@@ -244,6 +258,7 @@ func TestCertificatesClient_List(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
+			errIs:      ErrOrganizationNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
@@ -255,6 +270,7 @@ func TestCertificatesClient_List(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
+			errIs:      ErrOrganizationSuspended,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
@@ -313,6 +329,10 @@ func TestCertificatesClient_List(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -329,6 +349,7 @@ func TestCertificatesClient_Get(t *testing.T) {
 		want       *Certificate
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -352,14 +373,9 @@ func TestCertificatesClient_Get(t *testing.T) {
 				ctx: context.Background(),
 				id:  "lb_nopethisbegone",
 			},
-			errStr: "certificate_not_found: No certificate was found " +
-				"matching any of the criteria provided in the arguments",
-			errResp: &katapult.ResponseError{
-				Code: "certificate_not_found",
-				Description: "No certificate was found matching any of the " +
-					"criteria provided in the arguments",
-				Detail: json.RawMessage(`{}`),
-			},
+			errStr:     fixtureCertificateNotFoundErr,
+			errResp:    fixtureCertificateNotFoundResponseError,
+			errIs:      ErrCertificateNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("certificate_not_found_error"),
 		},
@@ -409,6 +425,10 @@ func TestCertificatesClient_Get(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -425,6 +445,7 @@ func TestCertificatesClient_GetByID(t *testing.T) {
 		want       *Certificate
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -448,14 +469,9 @@ func TestCertificatesClient_GetByID(t *testing.T) {
 				ctx: context.Background(),
 				id:  "lb_nopethisbegone",
 			},
-			errStr: "certificate_not_found: No certificate was found " +
-				"matching any of the criteria provided in the arguments",
-			errResp: &katapult.ResponseError{
-				Code: "certificate_not_found",
-				Description: "No certificate was found matching any of the " +
-					"criteria provided in the arguments",
-				Detail: json.RawMessage(`{}`),
-			},
+			errStr:     fixtureCertificateNotFoundErr,
+			errResp:    fixtureCertificateNotFoundResponseError,
+			errIs:      ErrCertificateNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("certificate_not_found_error"),
 		},
@@ -503,6 +519,10 @@ func TestCertificatesClient_GetByID(t *testing.T) {
 
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
+			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
 			}
 		})
 	}
