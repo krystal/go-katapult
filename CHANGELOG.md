@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.5](https://github.com/krystal/go-katapult/compare/v0.1.4...v0.1.5) (2021-06-17)
+
+
+### Features
+
+* **apischema:** add package to parse Katapult API JSON schema ([932de00](https://github.com/krystal/go-katapult/commit/932de00ad64c3d7c633a3a1b912974885b5207fd))
+* **errors:** add custom code generator tool for generating error structs ([b481bdf](https://github.com/krystal/go-katapult/commit/b481bdf5c3b7a4cb857e5c928f572873708547ec))
+* **errors:** generate error structs from Katapult API schema ([903a4b8](https://github.com/krystal/go-katapult/commit/903a4b851aa990caa20fbb3fd2bf516e1d5b171d))
+* **security_groups:** add support for security group rules ([#112](https://github.com/krystal/go-katapult/issues/112)) ([0580d7a](https://github.com/krystal/go-katapult/commit/0580d7a9491ea823f9c1ef5db1567cc003359c69))
+* add support for katapult security groups ([#103](https://github.com/krystal/go-katapult/issues/103)) ([e5b1fb4](https://github.com/krystal/go-katapult/commit/e5b1fb4da06c3d89e4d9d228ffb5cbc0d09d2daf))
+
 ### [0.1.4](https://github.com/krystal/go-katapult/compare/v0.1.3...v0.1.4) (2021-05-31)
 
 
