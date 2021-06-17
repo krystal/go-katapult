@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1623927583464,
+  "lastUpdate": 1623928294227,
   "repoUrl": "https://github.com/krystal/go-katapult",
   "entries": {
     "Benchmark": [
@@ -3108,6 +3108,60 @@ window.BENCHMARK_DATA = {
             "value": 5272,
             "unit": "ns/op",
             "extra": "214687 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "contact@jimeh.me",
+            "name": "Jim Myhrberg",
+            "username": "jimeh"
+          },
+          "committer": {
+            "email": "contact@jimeh.me",
+            "name": "Jim Myhrberg",
+            "username": "jimeh"
+          },
+          "distinct": true,
+          "id": "288aed5b42a1892c4841a6bef3a48714bb4cc30d",
+          "message": "chore(release): 0.1.5",
+          "timestamp": "2021-06-17T12:10:15+01:00",
+          "tree_id": "5d5cdaa7980c0273043cf2e9e0494ac773ad947f",
+          "url": "https://github.com/krystal/go-katapult/commit/288aed5b42a1892c4841a6bef3a48714bb4cc30d"
+        },
+        "date": 1623928293674,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkNameGenerator_RandomHostname",
+            "value": 13096,
+            "unit": "ns/op",
+            "extra": "100623 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_NoPrefix",
+            "value": 5976,
+            "unit": "ns/op",
+            "extra": "196347 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_OnePrefix",
+            "value": 6363,
+            "unit": "ns/op",
+            "extra": "199147 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_TwoPrefixes",
+            "value": 5932,
+            "unit": "ns/op",
+            "extra": "193405 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_ThreePrefixes",
+            "value": 5962,
+            "unit": "ns/op",
+            "extra": "183486 times\n2 procs"
           }
         ]
       }
