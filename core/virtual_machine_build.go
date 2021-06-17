@@ -189,5 +189,5 @@ func (s *VirtualMachineBuildsClient) doRequest(
 		respBody.VirtualMachineBuild = respBody.Build
 	}
 
-	return respBody, resp, err
+	return respBody, resp, handleResponseError(err)
 }

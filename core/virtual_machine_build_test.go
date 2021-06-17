@@ -15,8 +15,8 @@ import (
 )
 
 var (
-	fixtureBuildNotFoundErr = "build_not_found: No build was found matching " +
-		"any of the criteria provided in the arguments"
+	fixtureBuildNotFoundErr = "katapult: not_found: build_not_found: No " +
+		"build was found matching any of the criteria provided in the arguments"
 	fixtureBuildNotFoundResponseError = &katapult.ResponseError{
 		Code: "build_not_found",
 		Description: "No build was found matching any of the criteria " +
@@ -24,12 +24,8 @@ var (
 		Detail: json.RawMessage(`{}`),
 	}
 
-	fixtureInvalidXMLSpecErr = "invalid_spec_xml: The spec XML provided is " +
-		"invalid -- " + undent.String(`
-            {
-              "errors": "1:21: FATAL: EndTag: '</' not found"
-            }`,
-	)
+	fixtureInvalidXMLSpecErr = "katapult: bad_request: invalid_spec_xml: " +
+		"1:21: FATAL: EndTag: '</' not found"
 	fixtureInvalidXMLSpecResponseError = &katapult.ResponseError{
 		Code:        "invalid_spec_xml",
 		Description: "The spec XML provided is invalid",
@@ -285,6 +281,7 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 		want       *VirtualMachineBuild
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -324,6 +321,7 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 			},
 			errStr:     fixtureBuildNotFoundErr,
 			errResp:    fixtureBuildNotFoundResponseError,
+			errIs:      ErrVirtualMachineBuildNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("build_not_found_error"),
 		},
@@ -376,6 +374,10 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -392,6 +394,7 @@ func TestVirtualMachineBuildsClient_GetByID(t *testing.T) {
 		want       *VirtualMachineBuild
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -431,6 +434,7 @@ func TestVirtualMachineBuildsClient_GetByID(t *testing.T) {
 			},
 			errStr:     fixtureBuildNotFoundErr,
 			errResp:    fixtureBuildNotFoundResponseError,
+			errIs:      ErrVirtualMachineBuildNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("build_not_found_error"),
 		},
@@ -488,6 +492,10 @@ func TestVirtualMachineBuildsClient_GetByID(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -527,6 +535,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 		want       *VirtualMachineBuild
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -651,6 +660,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
+			errIs:      ErrOrganizationNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
@@ -663,6 +673,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
+			errIs:      ErrOrganizationSuspended,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
@@ -675,6 +686,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureDataCenterNotFoundErr,
 			errResp:    fixtureDataCenterNotFoundResponseError,
+			errIs:      ErrDataCenterNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("data_center_not_found_error"),
 		},
@@ -687,6 +699,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			},
 			errStr:     fixturePackageNotFoundErr,
 			errResp:    fixturePackageNotFoundResponseError,
+			errIs:      ErrVirtualMachinePackageNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("package_not_found_error"),
 		},
@@ -699,6 +712,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureDiskTemplateNotFoundErr,
 			errResp:    fixtureDiskTemplateNotFoundResponseError,
+			errIs:      ErrDiskTemplateNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("disk_template_not_found_error"),
 		},
@@ -711,6 +725,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureZoneNotFoundErr,
 			errResp:    fixtureZoneNotFoundResponseError,
+			errIs:      ErrZoneNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("zone_not_found_error"),
 		},
@@ -723,6 +738,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -735,6 +751,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureValidationErrorErr,
 			errResp:    fixtureValidationErrorResponseError,
+			errIs:      ErrValidationError,
 			respStatus: http.StatusUnprocessableEntity,
 			respBody:   fixture("validation_error"),
 		},
@@ -745,8 +762,8 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 				org:       OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				buildArgs: fullArgs,
 			},
-			errStr: "location_required: A zone or a data_center argument " +
-				"must be provided",
+			errStr: "katapult: unprocessable_entity: location_required: A " +
+				"zone or a data_center argument must be provided",
 			errResp: &katapult.ResponseError{
 				Code: "location_required",
 				Description: "A zone or a data_center argument must be " +
@@ -812,6 +829,10 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -845,6 +866,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpec(t *testing.T) {
 		want       *VirtualMachineBuild
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -913,6 +935,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpec(t *testing.T) {
 			},
 			errStr:     fixtureInvalidXMLSpecErr,
 			errResp:    fixtureInvalidXMLSpecResponseError,
+			errIs:      ErrInvalidSpecXML,
 			respStatus: http.StatusBadRequest,
 			respBody:   fixture("invalid_spec_xml_error"),
 		},
@@ -925,6 +948,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpec(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
+			errIs:      ErrOrganizationNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
@@ -937,6 +961,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpec(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
+			errIs:      ErrOrganizationSuspended,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
@@ -949,6 +974,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpec(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -961,6 +987,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpec(t *testing.T) {
 			},
 			errStr:     fixtureValidationErrorErr,
 			errResp:    fixtureValidationErrorResponseError,
+			errIs:      ErrValidationError,
 			respStatus: http.StatusUnprocessableEntity,
 			respBody:   fixture("validation_error"),
 		},
@@ -1020,6 +1047,10 @@ func TestVirtualMachineBuildsClient_CreateFromSpec(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -1054,6 +1085,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpecXML(t *testing.T) {
 		want       *VirtualMachineBuild
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -1122,6 +1154,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpecXML(t *testing.T) {
 			},
 			errStr:     fixtureInvalidXMLSpecErr,
 			errResp:    fixtureInvalidXMLSpecResponseError,
+			errIs:      ErrInvalidSpecXML,
 			respStatus: http.StatusBadRequest,
 			respBody:   fixture("invalid_spec_xml_error"),
 		},
@@ -1134,6 +1167,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpecXML(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
+			errIs:      ErrOrganizationNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
@@ -1146,6 +1180,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpecXML(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
+			errIs:      ErrOrganizationSuspended,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
@@ -1158,6 +1193,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpecXML(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -1170,6 +1206,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpecXML(t *testing.T) {
 			},
 			errStr:     fixtureValidationErrorErr,
 			errResp:    fixtureValidationErrorResponseError,
+			errIs:      ErrValidationError,
 			respStatus: http.StatusUnprocessableEntity,
 			respBody:   fixture("validation_error"),
 		},
@@ -1228,6 +1265,10 @@ func TestVirtualMachineBuildsClient_CreateFromSpecXML(t *testing.T) {
 
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
+			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
 			}
 		})
 	}

@@ -14,9 +14,9 @@ import (
 )
 
 var (
-	fixtureVirtualMachineNotFoundErr = "virtual_machine_not_found: No " +
-		"virtual machine was found matching any of the criteria provided in " +
-		"the arguments"
+	fixtureVirtualMachineNotFoundErr = "katapult: not_found: " +
+		"virtual_machine_not_found: No virtual machine was found matching " +
+		"any of the criteria provided in the arguments"
 	fixtureVirtualMachineNotFoundResponseError = &katapult.ResponseError{
 		Code: "virtual_machine_not_found",
 		Description: "No virtual machine was found matching any of the " +
@@ -342,6 +342,7 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 		wantPagination *katapult.Pagination
 		errStr         string
 		errResp        *katapult.ResponseError
+		errIs          error
 		respStatus     int
 		respBody       []byte
 	}{
@@ -434,6 +435,7 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
+			errIs:      ErrOrganizationNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
@@ -445,6 +447,7 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
+			errIs:      ErrOrganizationSuspended,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
@@ -503,6 +506,10 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -519,6 +526,7 @@ func TestVirtualMachinesClient_Get(t *testing.T) {
 		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -564,6 +572,7 @@ func TestVirtualMachinesClient_Get(t *testing.T) {
 			},
 			errStr:     fixtureVirtualMachineNotFoundErr,
 			errResp:    fixtureVirtualMachineNotFoundResponseError,
+			errIs:      ErrVirtualMachineNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("virtual_machine_not_found_error"),
 		},
@@ -575,6 +584,7 @@ func TestVirtualMachinesClient_Get(t *testing.T) {
 			},
 			errStr:     fixtureObjectInTrashErr,
 			errResp:    fixtureObjectInTrashResponseError,
+			errIs:      ErrObjectInTrash,
 			respStatus: http.StatusNotAcceptable,
 			respBody:   fixture("object_in_trash_error"),
 		},
@@ -630,6 +640,10 @@ func TestVirtualMachinesClient_Get(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -645,6 +659,7 @@ func TestVirtualMachinesClient_GetByID(t *testing.T) {
 		want       *VirtualMachine
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -670,6 +685,7 @@ func TestVirtualMachinesClient_GetByID(t *testing.T) {
 			},
 			errStr:     fixtureVirtualMachineNotFoundErr,
 			errResp:    fixtureVirtualMachineNotFoundResponseError,
+			errIs:      ErrVirtualMachineNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("virtual_machine_not_found_error"),
 		},
@@ -681,6 +697,7 @@ func TestVirtualMachinesClient_GetByID(t *testing.T) {
 			},
 			errStr:     fixtureObjectInTrashErr,
 			errResp:    fixtureObjectInTrashResponseError,
+			errIs:      ErrObjectInTrash,
 			respStatus: http.StatusNotAcceptable,
 			respBody:   fixture("object_in_trash_error"),
 		},
@@ -735,6 +752,10 @@ func TestVirtualMachinesClient_GetByID(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -750,6 +771,7 @@ func TestVirtualMachinesClient_GetByFQDN(t *testing.T) {
 		want       *VirtualMachine
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -775,6 +797,7 @@ func TestVirtualMachinesClient_GetByFQDN(t *testing.T) {
 			},
 			errStr:     fixtureVirtualMachineNotFoundErr,
 			errResp:    fixtureVirtualMachineNotFoundResponseError,
+			errIs:      ErrVirtualMachineNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("virtual_machine_not_found_error"),
 		},
@@ -786,6 +809,7 @@ func TestVirtualMachinesClient_GetByFQDN(t *testing.T) {
 			},
 			errStr:     fixtureObjectInTrashErr,
 			errResp:    fixtureObjectInTrashResponseError,
+			errIs:      ErrObjectInTrash,
 			respStatus: http.StatusNotAcceptable,
 			respBody:   fixture("object_in_trash_error"),
 		},
@@ -842,6 +866,10 @@ func TestVirtualMachinesClient_GetByFQDN(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -859,6 +887,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 		want       *Task
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -956,6 +985,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 			},
 			errStr:     fixtureVirtualMachineNotFoundErr,
 			errResp:    fixtureVirtualMachineNotFoundResponseError,
+			errIs:      ErrVirtualMachineNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("virtual_machine_not_found_error"),
 		},
@@ -972,6 +1002,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 			},
 			errStr:     fixtureObjectInTrashErr,
 			errResp:    fixtureObjectInTrashResponseError,
+			errIs:      ErrObjectInTrash,
 			respStatus: http.StatusNotAcceptable,
 			respBody:   fixture("object_in_trash_error"),
 		},
@@ -988,6 +1019,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 			},
 			errStr:     fixturePackageNotFoundErr,
 			errResp:    fixturePackageNotFoundResponseError,
+			errIs:      ErrVirtualMachinePackageNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("package_not_found_error"),
 		},
@@ -1004,6 +1036,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -1020,6 +1053,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 			},
 			errStr:     fixtureTaskQueueingErrorErr,
 			errResp:    fixtureTaskQueueingErrorResponseError,
+			errIs:      ErrTaskQueueingError,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("task_queueing_error"),
 		},
@@ -1083,6 +1117,10 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -1105,6 +1143,7 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 		want       *VirtualMachine
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -1165,6 +1204,7 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 			},
 			errStr:     fixtureVirtualMachineNotFoundErr,
 			errResp:    fixtureVirtualMachineNotFoundResponseError,
+			errIs:      ErrVirtualMachineNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("virtual_machine_not_found_error"),
 		},
@@ -1179,6 +1219,7 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 			},
 			errStr:     fixtureObjectInTrashErr,
 			errResp:    fixtureObjectInTrashResponseError,
+			errIs:      ErrObjectInTrash,
 			respStatus: http.StatusNotAcceptable,
 			respBody:   fixture("object_in_trash_error"),
 		},
@@ -1193,6 +1234,7 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -1277,6 +1319,10 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -1293,6 +1339,7 @@ func TestVirtualMachinesClient_Delete(t *testing.T) {
 		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -1338,6 +1385,7 @@ func TestVirtualMachinesClient_Delete(t *testing.T) {
 			},
 			errStr:     fixtureVirtualMachineNotFoundErr,
 			errResp:    fixtureVirtualMachineNotFoundResponseError,
+			errIs:      ErrVirtualMachineNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("virtual_machine_not_found_error"),
 		},
@@ -1349,6 +1397,7 @@ func TestVirtualMachinesClient_Delete(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -1406,6 +1455,10 @@ func TestVirtualMachinesClient_Delete(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -1422,6 +1475,7 @@ func TestVirtualMachinesClient_Start(t *testing.T) {
 		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -1467,6 +1521,7 @@ func TestVirtualMachinesClient_Start(t *testing.T) {
 			},
 			errStr:     fixtureVirtualMachineNotFoundErr,
 			errResp:    fixtureVirtualMachineNotFoundResponseError,
+			errIs:      ErrVirtualMachineNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("virtual_machine_not_found_error"),
 		},
@@ -1478,6 +1533,7 @@ func TestVirtualMachinesClient_Start(t *testing.T) {
 			},
 			errStr:     fixtureObjectInTrashErr,
 			errResp:    fixtureObjectInTrashResponseError,
+			errIs:      ErrObjectInTrash,
 			respStatus: http.StatusNotAcceptable,
 			respBody:   fixture("object_in_trash_error"),
 		},
@@ -1489,6 +1545,7 @@ func TestVirtualMachinesClient_Start(t *testing.T) {
 			},
 			errStr:     fixtureTaskQueueingErrorErr,
 			errResp:    fixtureTaskQueueingErrorResponseError,
+			errIs:      ErrTaskQueueingError,
 			respStatus: http.StatusNotAcceptable,
 			respBody:   fixture("task_queueing_error"),
 		},
@@ -1544,6 +1601,10 @@ func TestVirtualMachinesClient_Start(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -1560,6 +1621,7 @@ func TestVirtualMachinesClient_Stop(t *testing.T) {
 		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -1605,6 +1667,7 @@ func TestVirtualMachinesClient_Stop(t *testing.T) {
 			},
 			errStr:     fixtureVirtualMachineNotFoundErr,
 			errResp:    fixtureVirtualMachineNotFoundResponseError,
+			errIs:      ErrVirtualMachineNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("virtual_machine_not_found_error"),
 		},
@@ -1616,6 +1679,7 @@ func TestVirtualMachinesClient_Stop(t *testing.T) {
 			},
 			errStr:     fixtureObjectInTrashErr,
 			errResp:    fixtureObjectInTrashResponseError,
+			errIs:      ErrObjectInTrash,
 			respStatus: http.StatusNotAcceptable,
 			respBody:   fixture("object_in_trash_error"),
 		},
@@ -1627,6 +1691,7 @@ func TestVirtualMachinesClient_Stop(t *testing.T) {
 			},
 			errStr:     fixtureTaskQueueingErrorErr,
 			errResp:    fixtureTaskQueueingErrorResponseError,
+			errIs:      ErrTaskQueueingError,
 			respStatus: http.StatusNotAcceptable,
 			respBody:   fixture("task_queueing_error"),
 		},
@@ -1682,6 +1747,10 @@ func TestVirtualMachinesClient_Stop(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -1698,6 +1767,7 @@ func TestVirtualMachinesClient_Shutdown(t *testing.T) {
 		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -1743,6 +1813,7 @@ func TestVirtualMachinesClient_Shutdown(t *testing.T) {
 			},
 			errStr:     fixtureVirtualMachineNotFoundErr,
 			errResp:    fixtureVirtualMachineNotFoundResponseError,
+			errIs:      ErrVirtualMachineNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("virtual_machine_not_found_error"),
 		},
@@ -1754,6 +1825,7 @@ func TestVirtualMachinesClient_Shutdown(t *testing.T) {
 			},
 			errStr:     fixtureObjectInTrashErr,
 			errResp:    fixtureObjectInTrashResponseError,
+			errIs:      ErrObjectInTrash,
 			respStatus: http.StatusNotAcceptable,
 			respBody:   fixture("object_in_trash_error"),
 		},
@@ -1765,6 +1837,7 @@ func TestVirtualMachinesClient_Shutdown(t *testing.T) {
 			},
 			errStr:     fixtureTaskQueueingErrorErr,
 			errResp:    fixtureTaskQueueingErrorResponseError,
+			errIs:      ErrTaskQueueingError,
 			respStatus: http.StatusNotAcceptable,
 			respBody:   fixture("task_queueing_error"),
 		},
@@ -1820,6 +1893,10 @@ func TestVirtualMachinesClient_Shutdown(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -1836,6 +1913,7 @@ func TestVirtualMachinesClient_Reset(t *testing.T) {
 		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -1881,6 +1959,7 @@ func TestVirtualMachinesClient_Reset(t *testing.T) {
 			},
 			errStr:     fixtureVirtualMachineNotFoundErr,
 			errResp:    fixtureVirtualMachineNotFoundResponseError,
+			errIs:      ErrVirtualMachineNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("virtual_machine_not_found_error"),
 		},
@@ -1892,6 +1971,7 @@ func TestVirtualMachinesClient_Reset(t *testing.T) {
 			},
 			errStr:     fixtureObjectInTrashErr,
 			errResp:    fixtureObjectInTrashResponseError,
+			errIs:      ErrObjectInTrash,
 			respStatus: http.StatusNotAcceptable,
 			respBody:   fixture("object_in_trash_error"),
 		},
@@ -1903,6 +1983,7 @@ func TestVirtualMachinesClient_Reset(t *testing.T) {
 			},
 			errStr:     fixtureTaskQueueingErrorErr,
 			errResp:    fixtureTaskQueueingErrorResponseError,
+			errIs:      ErrTaskQueueingError,
 			respStatus: http.StatusNotAcceptable,
 			respBody:   fixture("task_queueing_error"),
 		},
@@ -1957,6 +2038,10 @@ func TestVirtualMachinesClient_Reset(t *testing.T) {
 
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
+			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
 			}
 		})
 	}

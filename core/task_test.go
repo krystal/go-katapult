@@ -13,17 +13,17 @@ import (
 )
 
 var (
-	fixtureTaskQueueingErrorErr = "task_queueing_error: This error means " +
-		"that a background task that was needed to complete your request " +
-		"could not be queued"
+	fixtureTaskQueueingErrorErr = "katapult: not_acceptable: " +
+		"task_queueing_error: This error means that a background task that " +
+		"was needed to complete your request could not be queued"
 	fixtureTaskQueueingErrorResponseError = &katapult.ResponseError{
 		Code: "task_queueing_error",
 		Description: "This error means that a background task that was " +
 			"needed to complete your request could not be queued",
 		Detail: json.RawMessage(`{}`),
 	}
-	fixtureTaskNotFoundErr = "task_not_found: No task was found matching any " +
-		"of the criteria provided in the arguments"
+	fixtureTaskNotFoundErr = "katapult: not_found: task_not_found: No task " +
+		"was found matching any of the criteria provided in the arguments"
 	fixtureTaskNotFoundResponseError = &katapult.ResponseError{
 		Code: "task_not_found",
 		Description: "No task was found matching any of the criteria " +
@@ -147,6 +147,7 @@ func TestTasksClient_Get(t *testing.T) {
 		want       *Task
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -183,6 +184,7 @@ func TestTasksClient_Get(t *testing.T) {
 			},
 			errStr:     fixtureTaskNotFoundErr,
 			errResp:    fixtureTaskNotFoundResponseError,
+			errIs:      ErrTaskNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("task_not_found_error"),
 		},
@@ -233,6 +235,10 @@ func TestTasksClient_Get(t *testing.T) {
 
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
+			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
 			}
 		})
 	}

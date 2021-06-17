@@ -1,7 +1,6 @@
 package katapult
 
 import (
-	"encoding/json"
 	"net/http"
 )
 
@@ -26,14 +25,4 @@ type Pagination struct {
 	Total       int  `json:"total,omitempty"`
 	PerPage     int  `json:"per_page,omitempty"`
 	LargeSet    bool `json:"large_set,omitempty"`
-}
-
-type ResponseError struct {
-	Code        string          `json:"code,omitempty"`
-	Description string          `json:"description,omitempty"`
-	Detail      json.RawMessage `json:"detail,omitempty"`
-}
-
-type responseErrorBody struct {
-	ErrorInfo *ResponseError `json:"error,omitempty"`
 }

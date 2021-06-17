@@ -13,8 +13,9 @@ import (
 )
 
 var (
-	fixtureNetworkNotFoundErr = "network_not_found: No network was found " +
-		"matching any of the criteria provided in the arguments"
+	fixtureNetworkNotFoundErr = "katapult: not_found: network_not_found: No " +
+		"network was found matching any of the criteria provided in the " +
+		"arguments"
 	fixtureNetworkNotFoundResponseError = &katapult.ResponseError{
 		Code: "network_not_found",
 		Description: "No network was found matching any of the criteria " +
@@ -193,6 +194,7 @@ func TestNetworksClient_List(t *testing.T) {
 		wantVnets  []*VirtualNetwork
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -265,6 +267,7 @@ func TestNetworksClient_List(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
+			errIs:      ErrOrganizationNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
@@ -276,6 +279,7 @@ func TestNetworksClient_List(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
+			errIs:      ErrOrganizationSuspended,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
@@ -333,6 +337,10 @@ func TestNetworksClient_List(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -356,6 +364,7 @@ func TestNetworksClient_Get(t *testing.T) {
 		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -393,6 +402,7 @@ func TestNetworksClient_Get(t *testing.T) {
 			},
 			errStr:     fixtureNetworkNotFoundErr,
 			errResp:    fixtureNetworkNotFoundResponseError,
+			errIs:      ErrNetworkNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("network_not_found_error"),
 		},
@@ -404,6 +414,7 @@ func TestNetworksClient_Get(t *testing.T) {
 			},
 			errStr:     fixtureNetworkNotFoundErr,
 			errResp:    fixtureNetworkNotFoundResponseError,
+			errIs:      ErrNetworkNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("network_not_found_error"),
 		},
@@ -459,6 +470,10 @@ func TestNetworksClient_Get(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -481,6 +496,7 @@ func TestNetworksClient_GetByID(t *testing.T) {
 		want       *Network
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -502,6 +518,7 @@ func TestNetworksClient_GetByID(t *testing.T) {
 			},
 			errStr:     fixtureNetworkNotFoundErr,
 			errResp:    fixtureNetworkNotFoundResponseError,
+			errIs:      ErrNetworkNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("network_not_found_error"),
 		},
@@ -555,6 +572,10 @@ func TestNetworksClient_GetByID(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -577,6 +598,7 @@ func TestNetworksClient_GetByPermalink(t *testing.T) {
 		want       *Network
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -598,6 +620,7 @@ func TestNetworksClient_GetByPermalink(t *testing.T) {
 			},
 			errStr:     fixtureNetworkNotFoundErr,
 			errResp:    fixtureNetworkNotFoundResponseError,
+			errIs:      ErrNetworkNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("network_not_found_error"),
 		},
@@ -652,6 +675,10 @@ func TestNetworksClient_GetByPermalink(t *testing.T) {
 
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
+			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
 			}
 		})
 	}

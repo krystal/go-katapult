@@ -13,8 +13,9 @@ import (
 )
 
 var (
-	fixtureDataCenterNotFoundErr = "data_center_not_found: No data centers " +
-		"was found matching any of the criteria provided in the arguments"
+	fixtureDataCenterNotFoundErr = "katapult: not_found: " +
+		"data_center_not_found: No data centers was found matching any of " +
+		"the criteria provided in the arguments"
 	fixtureDataCenterNotFoundResponseError = &katapult.ResponseError{
 		Code: "data_center_not_found",
 		Description: "No data centers was found matching any of the " +
@@ -140,6 +141,7 @@ func TestDataCentersClient_List(t *testing.T) {
 		want       []*DataCenter
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -217,6 +219,10 @@ func TestDataCentersClient_List(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -241,6 +247,7 @@ func TestDataCentersClient_Get(t *testing.T) {
 		want       *DataCenter
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -281,6 +288,7 @@ func TestDataCentersClient_Get(t *testing.T) {
 			},
 			errStr:     fixtureDataCenterNotFoundErr,
 			errResp:    fixtureDataCenterNotFoundResponseError,
+			errIs:      ErrDataCenterNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("data_center_not_found_error"),
 		},
@@ -336,6 +344,10 @@ func TestDataCentersClient_Get(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -358,6 +370,7 @@ func TestDataCentersClient_GetByID(t *testing.T) {
 		want       *DataCenter
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -379,6 +392,7 @@ func TestDataCentersClient_GetByID(t *testing.T) {
 			},
 			errStr:     fixtureDataCenterNotFoundErr,
 			errResp:    fixtureDataCenterNotFoundResponseError,
+			errIs:      ErrDataCenterNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("data_center_not_found_error"),
 		},
@@ -432,6 +446,10 @@ func TestDataCentersClient_GetByID(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -454,6 +472,7 @@ func TestDataCentersClient_GetByPermalink(t *testing.T) {
 		want       *DataCenter
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -475,6 +494,7 @@ func TestDataCentersClient_GetByPermalink(t *testing.T) {
 			},
 			errStr:     fixtureDataCenterNotFoundErr,
 			errResp:    fixtureDataCenterNotFoundResponseError,
+			errIs:      ErrDataCenterNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("data_center_not_found_error"),
 		},
@@ -530,6 +550,10 @@ func TestDataCentersClient_GetByPermalink(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -554,6 +578,7 @@ func TestDataCentersClient_DefaultNetwork(t *testing.T) {
 		want       *Network
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -594,6 +619,7 @@ func TestDataCentersClient_DefaultNetwork(t *testing.T) {
 			},
 			errStr:     fixtureDataCenterNotFoundErr,
 			errResp:    fixtureDataCenterNotFoundResponseError,
+			errIs:      ErrDataCenterNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("data_center_not_found_error"),
 		},
@@ -648,6 +674,10 @@ func TestDataCentersClient_DefaultNetwork(t *testing.T) {
 
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
+			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
 			}
 		})
 	}

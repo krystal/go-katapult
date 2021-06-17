@@ -102,6 +102,22 @@ bench:
 	go test $(V) -count=1 -bench=$(BENCH) $(TESTARGS) ./...
 
 #
+# Code Generation
+#
+
+.PHONY: generate
+generate:
+	go generate ./...
+
+.PHONY: check-generate
+check-generate:
+	$(eval CHKDIR := $(shell mktemp -d))
+	cp -av . "$(CHKDIR)"
+	make -C "$(CHKDIR)/" generate
+	( diff -rN . "$(CHKDIR)" && rm -rf "$(CHKDIR)" ) || \
+	( rm -rf "$(CHKDIR)" && exit 1 )
+
+#
 # Coverage
 #
 

@@ -13,18 +13,19 @@ import (
 )
 
 var (
-	fixtureIPAlreadyAllocatedErr = "ip_already_allocated: " +
-		"This IP address has already been allocated to another " +
-		"virtual machine."
+	fixtureIPAlreadyAllocatedErr = "katapult: unprocessable_entity: " +
+		"ip_already_allocated: This IP address has already been allocated to " +
+		"another virtual machine."
 	fixtureIPAlreadyAllocatedResponseError = &katapult.ResponseError{
 		Code: "ip_already_allocated",
 		Description: "This IP address has already been allocated to another " +
 			"virtual machine.",
 		Detail: json.RawMessage(`{}`),
 	}
-	fixtureNoAvailableAddressesErr = "no_available_addresses: We don't have " +
-		"any available IPs for that network and address version at the " +
-		"moment. Please contact support for assistance."
+	fixtureNoAvailableAddressesErr = "katapult: service_unavailable: " +
+		"no_available_addresses: We don't have any available IPs for that " +
+		"network and address version at the moment. Please contact support " +
+		"for assistance."
 	fixtureNoAvailableAddressesResponseError = &katapult.ResponseError{
 		Code: "no_available_addresses",
 		Description: "We don't have any available IPs for that network and " +
@@ -45,8 +46,9 @@ var (
 		AllocationType:  "VirtualMachine",
 	}
 
-	fixtureIPAddressNotFoundErr = "ip_address_not_found: No IP addresses " +
-		"were found matching any of the criteria provided in the arguments"
+	fixtureIPAddressNotFoundErr = "katapult: not_found: " +
+		"ip_address_not_found: No IP addresses were found matching any of " +
+		"the criteria provided in the arguments"
 	fixtureIPAddressNotFoundResponseError = &katapult.ResponseError{
 		Code: "ip_address_not_found",
 		Description: "No IP addresses were found matching any of the " +
@@ -328,6 +330,7 @@ func TestIPAddressesClient_List(t *testing.T) {
 		wantPagination *katapult.Pagination
 		errStr         string
 		errResp        *katapult.ResponseError
+		errIs          error
 		respStatus     int
 		respBody       []byte
 	}{
@@ -420,6 +423,7 @@ func TestIPAddressesClient_List(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
+			errIs:      ErrOrganizationNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
@@ -431,6 +435,7 @@ func TestIPAddressesClient_List(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
+			errIs:      ErrOrganizationSuspended,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
@@ -489,6 +494,10 @@ func TestIPAddressesClient_List(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -505,6 +514,7 @@ func TestIPAddressesClient_Get(t *testing.T) {
 		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -550,6 +560,7 @@ func TestIPAddressesClient_Get(t *testing.T) {
 			},
 			errStr:     fixtureIPAddressNotFoundErr,
 			errResp:    fixtureIPAddressNotFoundResponseError,
+			errIs:      ErrIPAddressNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("ip_address_not_found_error"),
 		},
@@ -605,6 +616,10 @@ func TestIPAddressesClient_Get(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -620,6 +635,7 @@ func TestIPAddressesClient_GetByID(t *testing.T) {
 		want       *IPAddress
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -645,6 +661,7 @@ func TestIPAddressesClient_GetByID(t *testing.T) {
 			},
 			errStr:     fixtureIPAddressNotFoundErr,
 			errResp:    fixtureIPAddressNotFoundResponseError,
+			errIs:      ErrIPAddressNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("ip_address_not_found_error"),
 		},
@@ -656,6 +673,7 @@ func TestIPAddressesClient_GetByID(t *testing.T) {
 			},
 			errStr:     fixtureIPAddressNotFoundErr,
 			errResp:    fixtureIPAddressNotFoundResponseError,
+			errIs:      ErrIPAddressNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("ip_address_not_found_error"),
 		},
@@ -711,6 +729,10 @@ func TestIPAddressesClient_GetByID(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -726,6 +748,7 @@ func TestIPAddressesClient_GetByAddress(t *testing.T) {
 		want       *IPAddress
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -751,6 +774,7 @@ func TestIPAddressesClient_GetByAddress(t *testing.T) {
 			},
 			errStr:     fixtureIPAddressNotFoundErr,
 			errResp:    fixtureIPAddressNotFoundResponseError,
+			errIs:      ErrIPAddressNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("ip_address_not_found_error"),
 		},
@@ -762,6 +786,7 @@ func TestIPAddressesClient_GetByAddress(t *testing.T) {
 			},
 			errStr:     fixtureIPAddressNotFoundErr,
 			errResp:    fixtureIPAddressNotFoundResponseError,
+			errIs:      ErrIPAddressNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("ip_address_not_found_error"),
 		},
@@ -819,6 +844,10 @@ func TestIPAddressesClient_GetByAddress(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -841,6 +870,7 @@ func TestIPAddressesClient_Create(t *testing.T) {
 		want       *IPAddress
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -907,6 +937,7 @@ func TestIPAddressesClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
+			errIs:      ErrOrganizationNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
@@ -919,6 +950,7 @@ func TestIPAddressesClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
+			errIs:      ErrOrganizationSuspended,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
@@ -931,6 +963,7 @@ func TestIPAddressesClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureNetworkNotFoundErr,
 			errResp:    fixtureNetworkNotFoundResponseError,
+			errIs:      ErrNetworkNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("network_not_found_error"),
 		},
@@ -943,6 +976,7 @@ func TestIPAddressesClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureNoAvailableAddressesErr,
 			errResp:    fixtureNoAvailableAddressesResponseError,
+			errIs:      ErrNoAvailableAddresses,
 			respStatus: http.StatusServiceUnavailable,
 			respBody:   fixture("no_available_addresses_error"),
 		},
@@ -955,6 +989,7 @@ func TestIPAddressesClient_Create(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -967,6 +1002,7 @@ func TestIPAddressesClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureValidationErrorErr,
 			errResp:    fixtureValidationErrorResponseError,
+			errIs:      ErrValidationError,
 			respStatus: http.StatusUnprocessableEntity,
 			respBody:   fixture("validation_error"),
 		},
@@ -979,6 +1015,7 @@ func TestIPAddressesClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureValidationErrorErr,
 			errResp:    fixtureValidationErrorResponseError,
+			errIs:      ErrValidationError,
 			respStatus: http.StatusUnprocessableEntity,
 			respBody:   fixture("validation_error"),
 		},
@@ -1038,6 +1075,10 @@ func TestIPAddressesClient_Create(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -1061,6 +1102,7 @@ func TestIPAddressesClient_Update(t *testing.T) {
 		want       *IPAddress
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -1121,6 +1163,7 @@ func TestIPAddressesClient_Update(t *testing.T) {
 			},
 			errStr:     fixtureIPAddressNotFoundErr,
 			errResp:    fixtureIPAddressNotFoundResponseError,
+			errIs:      ErrIPAddressNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("ip_address_not_found_error"),
 		},
@@ -1133,6 +1176,7 @@ func TestIPAddressesClient_Update(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -1145,6 +1189,7 @@ func TestIPAddressesClient_Update(t *testing.T) {
 			},
 			errStr:     fixtureValidationErrorErr,
 			errResp:    fixtureValidationErrorResponseError,
+			errIs:      ErrValidationError,
 			respStatus: http.StatusUnprocessableEntity,
 			respBody:   fixture("validation_error"),
 		},
@@ -1204,6 +1249,10 @@ func TestIPAddressesClient_Update(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -1219,6 +1268,7 @@ func TestIPAddressesClient_Delete(t *testing.T) {
 		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -1254,6 +1304,7 @@ func TestIPAddressesClient_Delete(t *testing.T) {
 			},
 			errStr:     fixtureIPAddressNotFoundErr,
 			errResp:    fixtureIPAddressNotFoundResponseError,
+			errIs:      ErrIPAddressNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("ip_address_not_found_error"),
 		},
@@ -1265,6 +1316,7 @@ func TestIPAddressesClient_Delete(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -1318,6 +1370,10 @@ func TestIPAddressesClient_Delete(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -1333,6 +1389,7 @@ func TestIPAddressesClient_Unallocate(t *testing.T) {
 		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -1368,6 +1425,7 @@ func TestIPAddressesClient_Unallocate(t *testing.T) {
 			},
 			errStr:     fixtureIPAddressNotFoundErr,
 			errResp:    fixtureIPAddressNotFoundResponseError,
+			errIs:      ErrIPAddressNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("ip_address_not_found_error"),
 		},
@@ -1379,6 +1437,7 @@ func TestIPAddressesClient_Unallocate(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -1431,6 +1490,10 @@ func TestIPAddressesClient_Unallocate(t *testing.T) {
 
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
+			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
 			}
 		})
 	}

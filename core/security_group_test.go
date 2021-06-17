@@ -13,9 +13,9 @@ import (
 )
 
 var (
-	fixtureSecurityGroupNotFoundErr = "security_group_not_found: No security " +
-		"group was found matching any of the criteria provided in " +
-		"the arguments"
+	fixtureSecurityGroupNotFoundErr = "katapult: not_found: " +
+		"security_group_not_found: No security group was found matching any " +
+		"of the criteria provided in the arguments"
 	fixtureSecurityGroupNotFoundResponseError = &katapult.ResponseError{
 		Code: "security_group_not_found",
 		Description: "No security group was found matching any of the " +
@@ -293,6 +293,7 @@ func TestSecurityGroupsClient_List(t *testing.T) {
 		wantPagination *katapult.Pagination
 		errStr         string
 		errResp        *katapult.ResponseError
+		errIs          error
 		respStatus     int
 		respBody       []byte
 	}{
@@ -385,6 +386,7 @@ func TestSecurityGroupsClient_List(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
+			errIs:      ErrOrganizationNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
@@ -396,6 +398,7 @@ func TestSecurityGroupsClient_List(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
+			errIs:      ErrOrganizationSuspended,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
@@ -454,6 +457,10 @@ func TestSecurityGroupsClient_List(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -470,6 +477,7 @@ func TestSecurityGroupsClient_Get(t *testing.T) {
 		want       *SecurityGroup
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -495,6 +503,7 @@ func TestSecurityGroupsClient_Get(t *testing.T) {
 			},
 			errStr:     fixtureSecurityGroupNotFoundErr,
 			errResp:    fixtureSecurityGroupNotFoundResponseError,
+			errIs:      ErrSecurityGroupNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("security_group_not_found_error"),
 		},
@@ -548,6 +557,10 @@ func TestSecurityGroupsClient_Get(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -564,6 +577,7 @@ func TestSecurityGroupsClient_GetByID(t *testing.T) {
 		want       *SecurityGroup
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -589,6 +603,7 @@ func TestSecurityGroupsClient_GetByID(t *testing.T) {
 			},
 			errStr:     fixtureSecurityGroupNotFoundErr,
 			errResp:    fixtureSecurityGroupNotFoundResponseError,
+			errIs:      ErrSecurityGroupNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("security_group_not_found_error"),
 		},
@@ -638,6 +653,10 @@ func TestSecurityGroupsClient_GetByID(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -668,6 +687,7 @@ func TestSecurityGroupsClient_Create(t *testing.T) {
 		want       *SecurityGroup
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -751,6 +771,7 @@ func TestSecurityGroupsClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
+			errIs:      ErrOrganizationNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
@@ -763,6 +784,7 @@ func TestSecurityGroupsClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
+			errIs:      ErrOrganizationSuspended,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
@@ -775,6 +797,7 @@ func TestSecurityGroupsClient_Create(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -787,6 +810,7 @@ func TestSecurityGroupsClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureValidationErrorErr,
 			errResp:    fixtureValidationErrorResponseError,
+			errIs:      ErrValidationError,
 			respStatus: http.StatusUnprocessableEntity,
 			respBody:   fixture("validation_error"),
 		},
@@ -799,6 +823,7 @@ func TestSecurityGroupsClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureValidationErrorErr,
 			errResp:    fixtureValidationErrorResponseError,
+			errIs:      ErrValidationError,
 			respStatus: http.StatusUnprocessableEntity,
 			respBody:   fixture("validation_error"),
 		},
@@ -858,6 +883,10 @@ func TestSecurityGroupsClient_Create(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -889,6 +918,7 @@ func TestSecurityGroupsClient_Update(t *testing.T) {
 		want       *SecurityGroup
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -931,6 +961,7 @@ func TestSecurityGroupsClient_Update(t *testing.T) {
 			},
 			errStr:     fixtureSecurityGroupNotFoundErr,
 			errResp:    fixtureSecurityGroupNotFoundResponseError,
+			errIs:      ErrSecurityGroupNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("security_group_not_found_error"),
 		},
@@ -947,6 +978,7 @@ func TestSecurityGroupsClient_Update(t *testing.T) {
 			},
 			errStr:     fixtureSecurityGroupNotFoundErr,
 			errResp:    fixtureSecurityGroupNotFoundResponseError,
+			errIs:      ErrSecurityGroupNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("security_group_not_found_error"),
 		},
@@ -959,6 +991,7 @@ func TestSecurityGroupsClient_Update(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -971,6 +1004,7 @@ func TestSecurityGroupsClient_Update(t *testing.T) {
 			},
 			errStr:     fixtureValidationErrorErr,
 			errResp:    fixtureValidationErrorResponseError,
+			errIs:      ErrValidationError,
 			respStatus: http.StatusUnprocessableEntity,
 			respBody:   fixture("validation_error"),
 		},
@@ -1029,6 +1063,10 @@ func TestSecurityGroupsClient_Update(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -1045,6 +1083,7 @@ func TestSecurityGroupsClient_Delete(t *testing.T) {
 		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -1073,6 +1112,7 @@ func TestSecurityGroupsClient_Delete(t *testing.T) {
 			},
 			errStr:     fixtureSecurityGroupNotFoundErr,
 			errResp:    fixtureSecurityGroupNotFoundResponseError,
+			errIs:      ErrSecurityGroupNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("security_group_not_found_error"),
 		},
@@ -1129,6 +1169,10 @@ func TestSecurityGroupsClient_Delete(t *testing.T) {
 
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
+			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
 			}
 		})
 	}

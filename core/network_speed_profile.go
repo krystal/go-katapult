@@ -75,5 +75,5 @@ func (s *NetworkSpeedProfilesClient) doRequest(
 		resp = katapult.NewResponse(nil)
 	}
 
-	return respBody, resp, err
+	return respBody, resp, handleResponseError(err)
 }

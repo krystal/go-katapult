@@ -15,9 +15,9 @@ import (
 )
 
 var (
-	fixtureVMGroupNotFoundErr = "virtual_machine_group_not_found: " +
-		"No virtual machine group was found matching any of the criteria " +
-		"provided in the arguments"
+	fixtureVMGroupNotFoundErr = "katapult: not_found: " +
+		"virtual_machine_group_not_found: No virtual machine group was found " +
+		"matching any of the criteria provided in the arguments"
 	fixtureVMGroupNotFoundResponseError = &katapult.ResponseError{
 		Code: "virtual_machine_group_not_found",
 		Description: "No virtual machine group was found matching any of " +
@@ -235,6 +235,7 @@ func TestVirtualMachineGroupsClient_List(t *testing.T) {
 		want       []*VirtualMachineGroup
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -277,6 +278,7 @@ func TestVirtualMachineGroupsClient_List(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
+			errIs:      ErrOrganizationNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
@@ -288,6 +290,7 @@ func TestVirtualMachineGroupsClient_List(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotActivatedErr,
 			errResp:    fixtureOrganizationNotActivatedResponseError,
+			errIs:      ErrOrganizationNotActivated,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_not_activated_error"),
 		},
@@ -299,6 +302,7 @@ func TestVirtualMachineGroupsClient_List(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
+			errIs:      ErrOrganizationSuspended,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
@@ -310,6 +314,7 @@ func TestVirtualMachineGroupsClient_List(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -364,6 +369,10 @@ func TestVirtualMachineGroupsClient_List(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -379,6 +388,7 @@ func TestVirtualMachineGroupsClient_Get(t *testing.T) {
 		want       *VirtualMachineGroup
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -404,6 +414,7 @@ func TestVirtualMachineGroupsClient_Get(t *testing.T) {
 			},
 			errStr:     fixtureVMGroupNotFoundErr,
 			errResp:    fixtureVMGroupNotFoundResponseError,
+			errIs:      ErrVirtualMachineGroupNotFound,
 			respStatus: http.StatusNotFound,
 			respBody: fixture(
 				"virtual_machine_group_not_found_error",
@@ -417,6 +428,7 @@ func TestVirtualMachineGroupsClient_Get(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -471,6 +483,10 @@ func TestVirtualMachineGroupsClient_Get(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -486,6 +502,7 @@ func TestVirtualMachineGroupsClient_GetByID(t *testing.T) {
 		want       *VirtualMachineGroup
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -511,6 +528,7 @@ func TestVirtualMachineGroupsClient_GetByID(t *testing.T) {
 			},
 			errStr:     fixtureVMGroupNotFoundErr,
 			errResp:    fixtureVMGroupNotFoundResponseError,
+			errIs:      ErrVirtualMachineGroupNotFound,
 			respStatus: http.StatusNotFound,
 			respBody: fixture(
 				"virtual_machine_group_not_found_error",
@@ -524,6 +542,7 @@ func TestVirtualMachineGroupsClient_GetByID(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -578,6 +597,10 @@ func TestVirtualMachineGroupsClient_GetByID(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -600,6 +623,7 @@ func TestVirtualMachineGroupsClient_Create(t *testing.T) {
 		want       *VirtualMachineGroup
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -660,6 +684,7 @@ func TestVirtualMachineGroupsClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
+			errIs:      ErrOrganizationNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
@@ -672,6 +697,7 @@ func TestVirtualMachineGroupsClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
+			errIs:      ErrOrganizationSuspended,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
@@ -683,6 +709,7 @@ func TestVirtualMachineGroupsClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotActivatedErr,
 			errResp:    fixtureOrganizationNotActivatedResponseError,
+			errIs:      ErrOrganizationNotActivated,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_not_activated_error"),
 		},
@@ -695,6 +722,7 @@ func TestVirtualMachineGroupsClient_Create(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -707,6 +735,7 @@ func TestVirtualMachineGroupsClient_Create(t *testing.T) {
 			},
 			errStr:     fixtureValidationErrorErr,
 			errResp:    fixtureValidationErrorResponseError,
+			errIs:      ErrValidationError,
 			respStatus: http.StatusUnprocessableEntity,
 			respBody:   fixture("validation_error"),
 		},
@@ -766,6 +795,10 @@ func TestVirtualMachineGroupsClient_Create(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -788,6 +821,7 @@ func TestVirtualMachineGroupsClient_Update(t *testing.T) {
 		want       *VirtualMachineGroup
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -824,6 +858,7 @@ func TestVirtualMachineGroupsClient_Update(t *testing.T) {
 			},
 			errStr:     fixtureVMGroupNotFoundErr,
 			errResp:    fixtureVMGroupNotFoundResponseError,
+			errIs:      ErrVirtualMachineGroupNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("virtual_machine_group_not_found_error"),
 		},
@@ -836,6 +871,7 @@ func TestVirtualMachineGroupsClient_Update(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -848,6 +884,7 @@ func TestVirtualMachineGroupsClient_Update(t *testing.T) {
 			},
 			errStr:     fixtureValidationErrorErr,
 			errResp:    fixtureValidationErrorResponseError,
+			errIs:      ErrValidationError,
 			respStatus: http.StatusUnprocessableEntity,
 			respBody:   fixture("validation_error"),
 		},
@@ -909,6 +946,10 @@ func TestVirtualMachineGroupsClient_Update(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -924,6 +965,7 @@ func TestVirtualMachineGroupsClient_Delete(t *testing.T) {
 		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -947,6 +989,7 @@ func TestVirtualMachineGroupsClient_Delete(t *testing.T) {
 			},
 			errStr:     fixtureVMGroupNotFoundErr,
 			errResp:    fixtureVMGroupNotFoundResponseError,
+			errIs:      ErrVirtualMachineGroupNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("virtual_machine_group_not_found_error"),
 		},
@@ -958,6 +1001,7 @@ func TestVirtualMachineGroupsClient_Delete(t *testing.T) {
 			},
 			errStr:     fixturePermissionDeniedErr,
 			errResp:    fixturePermissionDeniedResponseError,
+			errIs:      ErrPermissionDenied,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("permission_denied_error"),
 		},
@@ -1013,6 +1057,10 @@ func TestVirtualMachineGroupsClient_Delete(t *testing.T) {
 
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
+			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
 			}
 		})
 	}

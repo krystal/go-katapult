@@ -13,8 +13,9 @@ import (
 )
 
 var (
-	fixturePackageNotFoundErr = "package_not_found: No package was found " +
-		"matching any of the criteria provided in the arguments"
+	fixturePackageNotFoundErr = "katapult: not_found: package_not_found: No " +
+		"package was found matching any of the criteria provided in the " +
+		"arguments"
 	fixturePackageNotFoundResponseError = &katapult.ResponseError{
 		Code: "package_not_found",
 		Description: "No package was found matching any of the criteria " +
@@ -191,6 +192,7 @@ func TestVirtualMachinePackagesClient_List(t *testing.T) {
 		wantPagination *katapult.Pagination
 		errStr         string
 		errResp        *katapult.ResponseError
+		errIs          error
 		respStatus     int
 		respBody       []byte
 	}{
@@ -321,6 +323,10 @@ func TestVirtualMachinePackagesClient_List(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -337,6 +343,7 @@ func TestVirtualMachinePackagesClient_Get(t *testing.T) {
 		want       *VirtualMachinePackage
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -376,6 +383,7 @@ func TestVirtualMachinePackagesClient_Get(t *testing.T) {
 			},
 			errStr:     fixturePackageNotFoundErr,
 			errResp:    fixturePackageNotFoundResponseError,
+			errIs:      ErrVirtualMachinePackageNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("package_not_found_error"),
 		},
@@ -429,6 +437,10 @@ func TestVirtualMachinePackagesClient_Get(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -444,6 +456,7 @@ func TestVirtualMachinePackagesClient_GetByID(t *testing.T) {
 		want       *VirtualMachinePackage
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -469,6 +482,7 @@ func TestVirtualMachinePackagesClient_GetByID(t *testing.T) {
 			},
 			errStr:     fixturePackageNotFoundErr,
 			errResp:    fixturePackageNotFoundResponseError,
+			errIs:      ErrVirtualMachinePackageNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("package_not_found_error"),
 		},
@@ -526,6 +540,10 @@ func TestVirtualMachinePackagesClient_GetByID(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -541,6 +559,7 @@ func TestVirtualMachinePackagesClient_GetByPermalink(t *testing.T) {
 		want       *VirtualMachinePackage
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -564,14 +583,9 @@ func TestVirtualMachinePackagesClient_GetByPermalink(t *testing.T) {
 				ctx:       context.Background(),
 				permalink: "nope-not-here",
 			},
-			errStr: "package_not_found: No package was found matching " +
-				"any of the criteria provided in the arguments",
-			errResp: &katapult.ResponseError{
-				Code: "package_not_found",
-				Description: "No package was found matching any of the " +
-					"criteria provided in the arguments",
-				Detail: json.RawMessage(`{}`),
-			},
+			errStr:     fixturePackageNotFoundErr,
+			errResp:    fixturePackageNotFoundResponseError,
+			errIs:      ErrVirtualMachinePackageNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("package_not_found_error"),
 		},
@@ -629,6 +643,10 @@ func TestVirtualMachinePackagesClient_GetByPermalink(t *testing.T) {
 
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
+			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
 			}
 		})
 	}

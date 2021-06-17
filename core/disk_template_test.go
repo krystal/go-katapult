@@ -13,9 +13,9 @@ import (
 )
 
 var (
-	fixtureDiskTemplateNotFoundErr = "disk_template_not_found: No disk " +
-		"template was found matching any of the criteria provided in the " +
-		"arguments"
+	fixtureDiskTemplateNotFoundErr = "katapult: not_found: " +
+		"disk_template_not_found: No disk template was found matching any of " +
+		"the criteria provided in the arguments"
 	fixtureDiskTemplateNotFoundResponseError = &katapult.ResponseError{
 		Code: "disk_template_not_found",
 		Description: "No disk template was found matching any of the " +
@@ -269,6 +269,7 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 		wantPagination *katapult.Pagination
 		errStr         string
 		errResp        *katapult.ResponseError
+		errIs          error
 		respStatus     int
 		respBody       []byte
 	}{
@@ -379,6 +380,7 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationNotFoundErr,
 			errResp:    fixtureOrganizationNotFoundResponseError,
+			errIs:      ErrOrganizationNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("organization_not_found_error"),
 		},
@@ -390,6 +392,7 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 			},
 			errStr:     fixtureOrganizationSuspendedErr,
 			errResp:    fixtureOrganizationSuspendedResponseError,
+			errIs:      ErrOrganizationSuspended,
 			respStatus: http.StatusForbidden,
 			respBody:   fixture("organization_suspended_error"),
 		},
@@ -448,6 +451,10 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -471,6 +478,7 @@ func TestDiskTemplatesClient_Get(t *testing.T) {
 		wantQuery  *url.Values
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -508,6 +516,7 @@ func TestDiskTemplatesClient_Get(t *testing.T) {
 			},
 			errStr:     fixtureDiskTemplateNotFoundErr,
 			errResp:    fixtureDiskTemplateNotFoundResponseError,
+			errIs:      ErrDiskTemplateNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("disk_template_not_found_error"),
 		},
@@ -574,6 +583,10 @@ func TestDiskTemplatesClient_Get(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -589,6 +602,7 @@ func TestDiskTemplatesClient_GetByID(t *testing.T) {
 		want       *DiskTemplate
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -614,6 +628,7 @@ func TestDiskTemplatesClient_GetByID(t *testing.T) {
 			},
 			errStr:     fixtureDiskTemplateNotFoundErr,
 			errResp:    fixtureDiskTemplateNotFoundResponseError,
+			errIs:      ErrDiskTemplateNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("disk_template_not_found_error"),
 		},
@@ -667,6 +682,10 @@ func TestDiskTemplatesClient_GetByID(t *testing.T) {
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
 			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
+			}
 		})
 	}
 }
@@ -682,6 +701,7 @@ func TestDiskTemplatesClient_GetByPermalink(t *testing.T) {
 		want       *DiskTemplate
 		errStr     string
 		errResp    *katapult.ResponseError
+		errIs      error
 		respStatus int
 		respBody   []byte
 	}{
@@ -707,6 +727,7 @@ func TestDiskTemplatesClient_GetByPermalink(t *testing.T) {
 			},
 			errStr:     fixtureDiskTemplateNotFoundErr,
 			errResp:    fixtureDiskTemplateNotFoundResponseError,
+			errIs:      ErrDiskTemplateNotFound,
 			respStatus: http.StatusNotFound,
 			respBody:   fixture("disk_template_not_found_error"),
 		},
@@ -761,6 +782,10 @@ func TestDiskTemplatesClient_GetByPermalink(t *testing.T) {
 
 			if tt.errResp != nil {
 				assert.Equal(t, tt.errResp, resp.Error)
+			}
+
+			if tt.errIs != nil {
+				assert.ErrorIs(t, err, tt.errIs)
 			}
 		})
 	}
