@@ -182,6 +182,12 @@ func TestSSHKeysClient_List(t *testing.T) {
 	}
 }
 
+//nolint:lll
+const sshPublicKey = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC7MZzjBzFWsc6BCcYE2EpSo8DOjzhDPb/WndW6QE/G0xM7iqdlezcmQnL3Gw9jtAOI4OlNok19v4q8C6ham+1WbX2aGd2labOmKoBVWXIzKyFz9pg2Rs10ZGn+Ly+uJF558rSehSvGJPFmKUagYeBG9c/cwuVMzube0yVbtH2CWRs2dMvwhloH5zOh3NMQj/5uBGYMh9uRQKsGHoG8TET08VSok3W/CFilSH7jSmaQYziUqJjOLE2hb8ziCzfv/0GhbY5MoJJUZqUdOlGkYgDMR/IVOHxxF93QBvp1AkAzh8RBsvJPajgZHFa1lWYJRP7U4TREWuxkpaJrbK3I3AHM74GAfIq76wndoFYJhi5qbNgaJjLUJDPPzl8KOcp0Pb5FPqygHWz/K4n1h5SV/LdD0mB487TxeC1NV4XBQQruM5RgfTXSWBW+8W83U0y5h1RNl/Qo9Efo7Kyc25wCxVT2cWRHr3mxZ98p+JxmFmC1KTdUrM95+B7+Hw9fKYvhKz0= jake@Jakes-MacBook-Pro.local"
+
+//nolint:lll
+const sshFingerprint = "SHA256:Ybk7/sbyptVqD87piCCz/XHiEKrdvHND2EMDA1qGqRA jake@Jakes-MacBook-Pro.local"
+
 func TestSSHKeysClient_Add(t *testing.T) {
 	type args struct {
 		ctx  context.Context
@@ -205,20 +211,20 @@ func TestSSHKeysClient_Add(t *testing.T) {
 				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				args: AuthSSHKeyProperties{
 					Name: "test",
-					Key:  "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC7MZzjBzFWsc6BCcYE2EpSo8DOjzhDPb/WndW6QE/G0xM7iqdlezcmQnL3Gw9jtAOI4OlNok19v4q8C6ham+1WbX2aGd2labOmKoBVWXIzKyFz9pg2Rs10ZGn+Ly+uJF558rSehSvGJPFmKUagYeBG9c/cwuVMzube0yVbtH2CWRs2dMvwhloH5zOh3NMQj/5uBGYMh9uRQKsGHoG8TET08VSok3W/CFilSH7jSmaQYziUqJjOLE2hb8ziCzfv/0GhbY5MoJJUZqUdOlGkYgDMR/IVOHxxF93QBvp1AkAzh8RBsvJPajgZHFa1lWYJRP7U4TREWuxkpaJrbK3I3AHM74GAfIq76wndoFYJhi5qbNgaJjLUJDPPzl8KOcp0Pb5FPqygHWz/K4n1h5SV/LdD0mB487TxeC1NV4XBQQruM5RgfTXSWBW+8W83U0y5h1RNl/Qo9Efo7Kyc25wCxVT2cWRHr3mxZ98p+JxmFmC1KTdUrM95+B7+Hw9fKYvhKz0= jake@Jakes-MacBook-Pro.local",
+					Key:  sshPublicKey,
 				},
 			},
 			respV: &sshKeysResponseBody{
 				SSHKey: &AuthSSHKey{
 					ID:          "testing-id",
 					Name:        "test",
-					Fingerprint: "SHA256:Ybk7/sbyptVqD87piCCz/XHiEKrdvHND2EMDA1qGqRA jake@Jakes-MacBook-Pro.local",
+					Fingerprint: sshFingerprint,
 				},
 			},
 			want: &AuthSSHKey{
 				ID:          "testing-id",
 				Name:        "test",
-				Fingerprint: "SHA256:Ybk7/sbyptVqD87piCCz/XHiEKrdvHND2EMDA1qGqRA jake@Jakes-MacBook-Pro.local",
+				Fingerprint: sshFingerprint,
 			},
 			wantReq: &katapult.Request{
 				Method: "POST",
@@ -232,7 +238,7 @@ func TestSSHKeysClient_Add(t *testing.T) {
 				},
 				Body: AuthSSHKeyProperties{
 					Name: "test",
-					Key:  "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC7MZzjBzFWsc6BCcYE2EpSo8DOjzhDPb/WndW6QE/G0xM7iqdlezcmQnL3Gw9jtAOI4OlNok19v4q8C6ham+1WbX2aGd2labOmKoBVWXIzKyFz9pg2Rs10ZGn+Ly+uJF558rSehSvGJPFmKUagYeBG9c/cwuVMzube0yVbtH2CWRs2dMvwhloH5zOh3NMQj/5uBGYMh9uRQKsGHoG8TET08VSok3W/CFilSH7jSmaQYziUqJjOLE2hb8ziCzfv/0GhbY5MoJJUZqUdOlGkYgDMR/IVOHxxF93QBvp1AkAzh8RBsvJPajgZHFa1lWYJRP7U4TREWuxkpaJrbK3I3AHM74GAfIq76wndoFYJhi5qbNgaJjLUJDPPzl8KOcp0Pb5FPqygHWz/K4n1h5SV/LdD0mB487TxeC1NV4XBQQruM5RgfTXSWBW+8W83U0y5h1RNl/Qo9Efo7Kyc25wCxVT2cWRHr3mxZ98p+JxmFmC1KTdUrM95+B7+Hw9fKYvhKz0= jake@Jakes-MacBook-Pro.local",
+					Key:  sshPublicKey,
 				},
 			},
 		},
@@ -243,7 +249,7 @@ func TestSSHKeysClient_Add(t *testing.T) {
 				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 				args: AuthSSHKeyProperties{
 					Name: "test",
-					Key:  "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC7MZzjBzFWsc6BCcYE2EpSo8DOjzhDPb/WndW6QE/G0xM7iqdlezcmQnL3Gw9jtAOI4OlNok19v4q8C6ham+1WbX2aGd2labOmKoBVWXIzKyFz9pg2Rs10ZGn+Ly+uJF558rSehSvGJPFmKUagYeBG9c/cwuVMzube0yVbtH2CWRs2dMvwhloH5zOh3NMQj/5uBGYMh9uRQKsGHoG8TET08VSok3W/CFilSH7jSmaQYziUqJjOLE2hb8ziCzfv/0GhbY5MoJJUZqUdOlGkYgDMR/IVOHxxF93QBvp1AkAzh8RBsvJPajgZHFa1lWYJRP7U4TREWuxkpaJrbK3I3AHM74GAfIq76wndoFYJhi5qbNgaJjLUJDPPzl8KOcp0Pb5FPqygHWz/K4n1h5SV/LdD0mB487TxeC1NV4XBQQruM5RgfTXSWBW+8W83U0y5h1RNl/Qo9Efo7Kyc25wCxVT2cWRHr3mxZ98p+JxmFmC1KTdUrM95+B7+Hw9fKYvhKz0= jake@Jakes-MacBook-Pro.local",
+					Key:  sshPublicKey,
 				},
 			},
 			respErr: fmt.Errorf("flux capacitor undercharged"),
@@ -305,13 +311,13 @@ func TestSSHKeysClient_Delete(t *testing.T) {
 				SSHKey: &AuthSSHKey{
 					ID:          "testing-id",
 					Name:        "test",
-					Fingerprint: "SHA256:Ybk7/sbyptVqD87piCCz/XHiEKrdvHND2EMDA1qGqRA jake@Jakes-MacBook-Pro.local",
+					Fingerprint: sshFingerprint,
 				},
 			},
 			want: &AuthSSHKey{
 				ID:          "testing-id",
 				Name:        "test",
-				Fingerprint: "SHA256:Ybk7/sbyptVqD87piCCz/XHiEKrdvHND2EMDA1qGqRA jake@Jakes-MacBook-Pro.local",
+				Fingerprint: sshFingerprint,
 			},
 			wantReq: &katapult.Request{
 				Method: "DELETE",
