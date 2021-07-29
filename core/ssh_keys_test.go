@@ -3,12 +3,13 @@ package core
 import (
 	"context"
 	"fmt"
+	"net/url"
+	"testing"
+
 	"github.com/krystal/go-katapult"
 	"github.com/krystal/go-katapult/internal/test"
 	"github.com/krystal/go-katapult/internal/testclient"
 	"github.com/stretchr/testify/assert"
-	"net/url"
-	"testing"
 )
 
 func Test_AuthSSHKey_JSONMarshaling(t *testing.T) {
@@ -99,8 +100,8 @@ func TestNewSSHKeysClient(t *testing.T) {
 
 func TestSSHKeysClient_List(t *testing.T) {
 	type args struct {
-		ctx  context.Context
-		org  OrganizationRef
+		ctx context.Context
+		org OrganizationRef
 	}
 	tests := []struct {
 		name    string
@@ -144,8 +145,8 @@ func TestSSHKeysClient_List(t *testing.T) {
 		{
 			name: "request error",
 			args: args{
-				ctx:  context.Background(),
-				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
+				ctx: context.Background(),
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			respErr: fmt.Errorf("flux capacitor undercharged"),
 			wantErr: "flux capacitor undercharged",
@@ -281,8 +282,8 @@ func TestSSHKeysClient_Add(t *testing.T) {
 
 func TestSSHKeysClient_Delete(t *testing.T) {
 	type args struct {
-		ctx  context.Context
-		ref  SSHKeyRef
+		ctx context.Context
+		ref SSHKeyRef
 	}
 	tests := []struct {
 		name    string
