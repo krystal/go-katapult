@@ -1,6 +1,11 @@
 package core
 
-import "testing"
+import (
+	"github.com/krystal/go-katapult/internal/testclient"
+	"github.com/stretchr/testify/assert"
+	"net/url"
+	"testing"
+)
 
 func TestTag_JSONMarshaling(t *testing.T) {
 	tests := []struct {
@@ -26,4 +31,11 @@ func TestTag_JSONMarshaling(t *testing.T) {
 			testJSONMarshaling(t, tt.obj)
 		})
 	}
+}
+
+func TestNewTagsClient(t *testing.T) {
+	tc := testclient.New(nil, nil, nil)
+	c := NewTagsClient(tc)
+	assert.Equal(t, tc, c.client)
+	assert.Equal(t, &url.URL{Path: "/core/v1/"}, c.basePath)
 }
