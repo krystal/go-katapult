@@ -33,8 +33,9 @@ type sshKeysResponseBody struct {
 func (s *SSHKeysClient) List(
 	ctx context.Context,
 	ref OrganizationRef,
+	opts *ListOptions,
 ) ([]*AuthSSHKey, *katapult.Response, error) {
-	qs := ref.queryValues()
+	qs := queryValues(opts, ref)
 	u := &url.URL{Path: "organizations/_/ssh_keys", RawQuery: qs.Encode()}
 
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)

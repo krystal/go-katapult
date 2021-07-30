@@ -121,8 +121,9 @@ func TestNewSSHKeysClient(t *testing.T) {
 
 func TestSSHKeysClient_List(t *testing.T) {
 	type args struct {
-		ctx context.Context
-		org OrganizationRef
+		ctx  context.Context
+		org  OrganizationRef
+		opts *ListOptions
 	}
 	tests := []struct {
 		name    string
@@ -136,6 +137,41 @@ func TestSSHKeysClient_List(t *testing.T) {
 	}{
 		{
 			name: "success",
+			args: args{
+				ctx: context.Background(),
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
+				opts: &ListOptions{
+					Page:    5,
+					PerPage: 32,
+				},
+			},
+			resp: &katapult.Response{
+				Pagination: &katapult.Pagination{Total: 333},
+			},
+			respV: &sshKeysResponseBody{
+				SSHKeys: []*AuthSSHKey{
+					{ID: "ssh_O574YEEEYeLmqdmn"},
+				},
+			},
+			want: []*AuthSSHKey{
+				{ID: "ssh_O574YEEEYeLmqdmn"},
+			},
+			wantReq: &katapult.Request{
+				Method: "GET",
+				URL: &url.URL{
+					Path: "/core/v1/organizations/_/ssh_keys",
+					RawQuery: url.Values{
+						"page":     []string{"5"},
+						"per_page": []string{"32"},
+						"organization[id]": []string{
+							"org_O648YDMEYeLmqdmn",
+						},
+					}.Encode(),
+				},
+			},
+		},
+		{
+			name: "success with nil options",
 			args: args{
 				ctx: context.Background(),
 				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
@@ -179,7 +215,7 @@ func TestSSHKeysClient_List(t *testing.T) {
 			c := NewSSHKeysClient(tc)
 			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.List(ctx, tt.args.org)
+			got, resp, err := c.List(ctx, tt.args.org, tt.args.opts)
 
 			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
 			test.AssertContext(t, ctx, tc.Ctx)
