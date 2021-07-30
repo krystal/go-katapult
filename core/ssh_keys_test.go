@@ -102,7 +102,7 @@ func Test_SSHKeyRef_JSONMarshaling(t *testing.T) {
 		},
 		{
 			name: "full",
-			obj: &SSHKeyRef{ID: "a"},
+			obj:  &SSHKeyRef{ID: "a"},
 		},
 	}
 	for _, tt := range tests {
