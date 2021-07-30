@@ -19,6 +19,7 @@ var (
 	ErrDNSZoneNotFound                            = fmt.Errorf("%w: dns_zone_not_found", katapult.ErrResourceNotFound)
 	ErrDNSZoneNotVerified                         = fmt.Errorf("%w: dns_zone_not_verified", katapult.ErrUnprocessableEntity)
 	ErrDataCenterNotFound                         = fmt.Errorf("%w: data_center_not_found", katapult.ErrResourceNotFound)
+	ErrDeletionRestricted                         = fmt.Errorf("%w: deletion_restricted", katapult.ErrConflict)
 	ErrDiskBackupPolicyNotFound                   = fmt.Errorf("%w: disk_backup_policy_not_found", katapult.ErrResourceNotFound)
 	ErrDiskNotFound                               = fmt.Errorf("%w: disk_not_found", katapult.ErrResourceNotFound)
 	ErrDiskTemplateNotFound                       = fmt.Errorf("%w: disk_template_not_found", katapult.ErrResourceNotFound)
@@ -181,7 +182,7 @@ func NewDNSZoneNotFoundError(theError *katapult.ResponseError) *DNSZoneNotFoundE
 }
 
 // DNSZoneNotVerifiedError:
-// The DNS zone could not be verified, check the nameservers a set correctly
+// The DNS zone could not be verified, check the nameservers are set correctly
 type DNSZoneNotVerifiedError struct {
 	katapult.CommonError
 	Detail *DNSZoneNotVerifiedErrorDetail `json:"detail,omitempty"`
@@ -224,6 +225,34 @@ func NewDataCenterNotFoundError(theError *katapult.ResponseError) *DataCenterNot
 			theError.Description,
 		),
 	}
+}
+
+// DeletionRestrictedError:
+// Object cannot be deleted
+type DeletionRestrictedError struct {
+	katapult.CommonError
+	Detail *DeletionRestrictedErrorDetail `json:"detail,omitempty"`
+}
+
+func NewDeletionRestrictedError(theError *katapult.ResponseError) *DeletionRestrictedError {
+	detail := &DeletionRestrictedErrorDetail{}
+	err := json.Unmarshal(theError.Detail, detail)
+	if err != nil {
+		detail = nil
+	}
+
+	return &DeletionRestrictedError{
+		CommonError: katapult.NewCommonError(
+			ErrDeletionRestricted,
+			"deletion_restricted",
+			theError.Description,
+		),
+		Detail: detail,
+	}
+}
+
+type DeletionRestrictedErrorDetail struct {
+	Errors []string `json:"errors,omitempty"`
 }
 
 // DiskBackupPolicyNotFoundError:
@@ -291,7 +320,7 @@ func NewDiskTemplateVersionNotFoundError(theError *katapult.ResponseError) *Disk
 }
 
 // FlexibleResourcesUnavailableToOrganizationError:
-// The orgainzation is not permitted to use flexible resources
+// The organization is not permitted to use flexible resources
 type FlexibleResourcesUnavailableToOrganizationError struct {
 	katapult.CommonError
 }
@@ -323,7 +352,7 @@ func NewIPAddressNotFoundError(theError *katapult.ResponseError) *IPAddressNotFo
 }
 
 // IPAlreadyAllocatedError:
-// This IP address has already been allocated to another virtual machine.
+// This IP address has already been allocated to another resource
 type IPAlreadyAllocatedError struct {
 	katapult.CommonError
 }
@@ -527,7 +556,7 @@ func NewNoAllocationError(theError *katapult.ResponseError) *NoAllocationError {
 }
 
 // NoAvailableAddressesError:
-// We don't have any available IPs for that network and address version at the moment. Please contact support for assistance.
+// Our pool of addresses for that version seems to have run dry. If this issue continues, please contact support.
 type NoAvailableAddressesError struct {
 	katapult.CommonError
 }
@@ -1095,6 +1124,8 @@ func castResponseError(theError *katapult.ResponseError) error {
 		return NewDNSZoneNotVerifiedError(theError)
 	case "data_center_not_found":
 		return NewDataCenterNotFoundError(theError)
+	case "deletion_restricted":
+		return NewDeletionRestrictedError(theError)
 	case "disk_backup_policy_not_found":
 		return NewDiskBackupPolicyNotFoundError(theError)
 	case "disk_not_found":
