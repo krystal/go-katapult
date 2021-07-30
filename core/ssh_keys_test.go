@@ -91,6 +91,27 @@ func Test_AuthSSHKeyProperties_JSONMarshaling(t *testing.T) {
 	}
 }
 
+func Test_SSHKeyRef_JSONMarshaling(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *SSHKeyRef
+	}{
+		{
+			name: "empty",
+			obj:  &SSHKeyRef{},
+		},
+		{
+			name: "full",
+			obj: &SSHKeyRef{ID: "a"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testJSONMarshaling(t, tt.obj)
+		})
+	}
+}
+
 func TestNewSSHKeysClient(t *testing.T) {
 	tc := testclient.New(nil, nil, nil)
 	c := NewSSHKeysClient(tc)
