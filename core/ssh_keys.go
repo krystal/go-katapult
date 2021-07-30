@@ -68,11 +68,7 @@ type SSHKeyRef struct {
 }
 
 func (kr SSHKeyRef) queryValues() *url.Values {
-	v := &url.Values{}
-
-	v.Set("ssh_key[id]", kr.ID)
-
-	return v
+	return &url.Values{"ssh_key[id]": []string{kr.ID}}
 }
 
 func (s *SSHKeysClient) Delete(
