@@ -183,10 +183,23 @@ func TestSSHKeysClient_List(t *testing.T) {
 }
 
 //nolint:lll
-const sshPublicKey = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC7MZzjBzFWsc6BCcYE2EpSo8DOjzhDPb/WndW6QE/G0xM7iqdlezcmQnL3Gw9jtAOI4OlNok19v4q8C6ham+1WbX2aGd2labOmKoBVWXIzKyFz9pg2Rs10ZGn+Ly+uJF558rSehSvGJPFmKUagYeBG9c/cwuVMzube0yVbtH2CWRs2dMvwhloH5zOh3NMQj/5uBGYMh9uRQKsGHoG8TET08VSok3W/CFilSH7jSmaQYziUqJjOLE2hb8ziCzfv/0GhbY5MoJJUZqUdOlGkYgDMR/IVOHxxF93QBvp1AkAzh8RBsvJPajgZHFa1lWYJRP7U4TREWuxkpaJrbK3I3AHM74GAfIq76wndoFYJhi5qbNgaJjLUJDPPzl8KOcp0Pb5FPqygHWz/K4n1h5SV/LdD0mB487TxeC1NV4XBQQruM5RgfTXSWBW+8W83U0y5h1RNl/Qo9Efo7Kyc25wCxVT2cWRHr3mxZ98p+JxmFmC1KTdUrM95+B7+Hw9fKYvhKz0= jake@Jakes-MacBook-Pro.local"
+const sshPublicKey = "ssh-rsa " +
+	"AAAAB3NzaC1yc2EAAAADAQABAAABgQC7MZzjBzFWsc6BCcYE2" +
+	"EpSo8DOjzhDPb/WndW6QE/G0xM7iqdlezcmQnL3Gw9jtAOI4O" +
+	"lNok19v4q8C6ham+1WbX2aGd2labOmKoBVWXIzKyFz9pg2Rs1" +
+	"0ZGn+Ly+uJF558rSehSvGJPFmKUagYeBG9c/cwuVMzube0yVb" +
+	"tH2CWRs2dMvwhloH5zOh3NMQj/5uBGYMh9uRQKsGHoG8TET08" +
+	"VSok3W/CFilSH7jSmaQYziUqJjOLE2hb8ziCzfv/0GhbY5MoJ" +
+	"JUZqUdOlGkYgDMR/IVOHxxF93QBvp1AkAzh8RBsvJPajgZHFa" +
+	"1lWYJRP7U4TREWuxkpaJrbK3I3AHM74GAfIq76wndoFYJhi5q" +
+	"bNgaJjLUJDPPzl8KOcp0Pb5FPqygHWz/K4n1h5SV/LdD0mB48" +
+	"7TxeC1NV4XBQQruM5RgfTXSWBW+8W83U0y5h1RNl/Qo9Efo7K" +
+	"yc25wCxVT2cWRHr3mxZ98p+JxmFmC1KTdUrM95+B7+Hw9fKYv" +
+	"hKz0= jake@Jakes-MacBook-Pro.local"
 
 //nolint:lll
-const sshFingerprint = "SHA256:Ybk7/sbyptVqD87piCCz/XHiEKrdvHND2EMDA1qGqRA jake@Jakes-MacBook-Pro.local"
+const sshFingerprint = "SHA256:Ybk7/sbyptVqD87piCCz/XHi" +
+	"EKrdvHND2EMDA1qGqRA jake@Jakes-MacBook-Pro.local"
 
 func TestSSHKeysClient_Add(t *testing.T) {
 	type args struct {
