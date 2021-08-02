@@ -3,6 +3,7 @@ package core
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"net/url"
 	"testing"
 
@@ -243,14 +244,15 @@ func TestSecurityGroupRulesClient_List(t *testing.T) {
 		opts *ListOptions
 	}
 	tests := []struct {
-		name    string
-		args    args
-		resp    *katapult.Response
-		respErr error
-		respV   *securityGroupRulesResponseBody
-		want    []SecurityGroupRule
-		wantReq *katapult.Request
-		wantErr string
+		name     string
+		args     args
+		resp     *katapult.Response
+		respErr  error
+		respV    *securityGroupRulesResponseBody
+		wantReq  *katapult.Request
+		want     []SecurityGroupRule
+		wantResp *katapult.Response
+		wantErr  string
 	}{
 		{
 			name: "success",
@@ -263,15 +265,13 @@ func TestSecurityGroupRulesClient_List(t *testing.T) {
 				},
 			},
 			resp: &katapult.Response{
-				Pagination: &katapult.Pagination{Total: 333},
+				Response: &http.Response{StatusCode: http.StatusOK},
 			},
 			respV: &securityGroupRulesResponseBody{
+				Pagination: &katapult.Pagination{Total: 333},
 				SecurityGroupRules: []SecurityGroupRule{
 					{ID: "sgr_WbCly1EHB3jNMQNC", Direction: "inbound"},
 				},
-			},
-			want: []SecurityGroupRule{
-				{ID: "sgr_WbCly1EHB3jNMQNC", Direction: "inbound"},
 			},
 			wantReq: &katapult.Request{
 				Method: "GET",
@@ -284,6 +284,13 @@ func TestSecurityGroupRulesClient_List(t *testing.T) {
 					}.Encode(),
 				},
 			},
+			want: []SecurityGroupRule{
+				{ID: "sgr_WbCly1EHB3jNMQNC", Direction: "inbound"},
+			},
+			wantResp: &katapult.Response{
+				Pagination: &katapult.Pagination{Total: 333},
+				Response:   &http.Response{StatusCode: http.StatusOK},
+			},
 		},
 		{
 			name: "success with nil options",
@@ -293,15 +300,13 @@ func TestSecurityGroupRulesClient_List(t *testing.T) {
 				opts: nil,
 			},
 			resp: &katapult.Response{
-				Pagination: &katapult.Pagination{Total: 333},
+				Response: &http.Response{StatusCode: http.StatusOK},
 			},
 			respV: &securityGroupRulesResponseBody{
+				Pagination: &katapult.Pagination{Total: 124},
 				SecurityGroupRules: []SecurityGroupRule{
 					{ID: "sgr_WbCly1EHB3jNMQNC", Direction: "inbound"},
 				},
-			},
-			want: []SecurityGroupRule{
-				{ID: "sgr_WbCly1EHB3jNMQNC", Direction: "inbound"},
 			},
 			wantReq: &katapult.Request{
 				Method: "GET",
@@ -312,16 +317,44 @@ func TestSecurityGroupRulesClient_List(t *testing.T) {
 					}.Encode(),
 				},
 			},
+			want: []SecurityGroupRule{
+				{ID: "sgr_WbCly1EHB3jNMQNC", Direction: "inbound"},
+			},
+			wantResp: &katapult.Response{
+				Pagination: &katapult.Pagination{Total: 124},
+				Response:   &http.Response{StatusCode: http.StatusOK},
+			},
 		},
 		{
-			name: "http do fails",
+			name: "request error",
 			args: args{
 				ctx:  context.Background(),
 				sg:   SecurityGroupRef{ID: "sg_xw6mLJbhXQjdxfSY"},
 				opts: nil,
 			},
+			resp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			respErr: fmt.Errorf("flux capacitor undercharged"),
+			wantResp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			wantErr: "flux capacitor undercharged",
+		},
+		{
+			name: "request error with nil response",
+			args: args{
+				ctx:  context.Background(),
+				sg:   SecurityGroupRef{ID: "sg_xw6mLJbhXQjdxfSY"},
+				opts: nil,
+			},
+			resp:    nil,
+			respErr: fmt.Errorf("someting is really wrong"),
+			wantErr: "someting is really wrong",
 		},
 	}
 	for _, tt := range tests {
@@ -337,8 +370,8 @@ func TestSecurityGroupRulesClient_List(t *testing.T) {
 
 			assert.Equal(t, tt.want, got)
 
-			if tt.resp != nil {
-				assert.Equal(t, tt.resp, resp)
+			if tt.wantResp != nil {
+				assert.Equal(t, tt.wantResp, resp)
 			}
 
 			if tt.wantReq != nil {
@@ -360,14 +393,15 @@ func TestSecurityGroupRulesClient_Get(t *testing.T) {
 		ref SecurityGroupRuleRef
 	}
 	tests := []struct {
-		name    string
-		args    args
-		resp    *katapult.Response
-		respErr error
-		respV   *securityGroupRulesResponseBody
-		want    *SecurityGroupRule
-		wantReq *katapult.Request
-		wantErr string
+		name     string
+		args     args
+		resp     *katapult.Response
+		respErr  error
+		respV    *securityGroupRulesResponseBody
+		wantReq  *katapult.Request
+		want     *SecurityGroupRule
+		wantResp *katapult.Response
+		wantErr  string
 	}{
 		{
 			name: "success",
@@ -375,15 +409,14 @@ func TestSecurityGroupRulesClient_Get(t *testing.T) {
 				ctx: context.Background(),
 				ref: SecurityGroupRuleRef{ID: "sgr_IppA889KHFY1BvDt"},
 			},
+			resp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
+			},
 			respV: &securityGroupRulesResponseBody{
 				SecurityGroupRule: &SecurityGroupRule{
 					ID:        "sgr_IppA889KHFY1BvDt",
 					Direction: "inbound",
 				},
-			},
-			want: &SecurityGroupRule{
-				ID:        "sgr_IppA889KHFY1BvDt",
-				Direction: "inbound",
 			},
 			wantReq: &katapult.Request{
 				Method: "GET",
@@ -396,6 +429,13 @@ func TestSecurityGroupRulesClient_Get(t *testing.T) {
 					}.Encode(),
 				},
 			},
+			want: &SecurityGroupRule{
+				ID:        "sgr_IppA889KHFY1BvDt",
+				Direction: "inbound",
+			},
+			wantResp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
+			},
 		},
 		{
 			name: "request error",
@@ -403,8 +443,28 @@ func TestSecurityGroupRulesClient_Get(t *testing.T) {
 				ctx: context.Background(),
 				ref: SecurityGroupRuleRef{ID: "sgr_IppA889KHFY1BvDt"},
 			},
+			resp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			respErr: fmt.Errorf("flux capacitor undercharged"),
+			wantResp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			wantErr: "flux capacitor undercharged",
+		},
+		{
+			name: "request error with nil response",
+			args: args{
+				ctx: context.Background(),
+				ref: SecurityGroupRuleRef{ID: "sgr_IppA889KHFY1BvDt"},
+			},
+			resp:    nil,
+			respErr: fmt.Errorf("someting is really wrong"),
+			wantErr: "someting is really wrong",
 		},
 	}
 	for _, tt := range tests {
@@ -420,8 +480,8 @@ func TestSecurityGroupRulesClient_Get(t *testing.T) {
 
 			assert.Equal(t, tt.want, got)
 
-			if tt.resp != nil {
-				assert.Equal(t, tt.resp, resp)
+			if tt.wantResp != nil {
+				assert.Equal(t, tt.wantResp, resp)
 			}
 
 			if tt.wantReq != nil {
@@ -443,14 +503,15 @@ func TestSecurityGroupRulesClient_GetByID(t *testing.T) {
 		id  string
 	}
 	tests := []struct {
-		name    string
-		args    args
-		resp    *katapult.Response
-		respErr error
-		respV   *securityGroupRulesResponseBody
-		want    *SecurityGroupRule
-		wantReq *katapult.Request
-		wantErr string
+		name     string
+		args     args
+		resp     *katapult.Response
+		respErr  error
+		respV    *securityGroupRulesResponseBody
+		wantReq  *katapult.Request
+		want     *SecurityGroupRule
+		wantResp *katapult.Response
+		wantErr  string
 	}{
 		{
 			name: "success",
@@ -458,15 +519,14 @@ func TestSecurityGroupRulesClient_GetByID(t *testing.T) {
 				ctx: context.Background(),
 				id:  "sgr_yOOeqZTbpLROjDGP",
 			},
+			resp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
+			},
 			respV: &securityGroupRulesResponseBody{
 				SecurityGroupRule: &SecurityGroupRule{
 					ID:        "sgr_yOOeqZTbpLROjDGP",
 					Direction: "inbound",
 				},
-			},
-			want: &SecurityGroupRule{
-				ID:        "sgr_yOOeqZTbpLROjDGP",
-				Direction: "inbound",
 			},
 			wantReq: &katapult.Request{
 				Method: "GET",
@@ -479,6 +539,13 @@ func TestSecurityGroupRulesClient_GetByID(t *testing.T) {
 					}.Encode(),
 				},
 			},
+			want: &SecurityGroupRule{
+				ID:        "sgr_yOOeqZTbpLROjDGP",
+				Direction: "inbound",
+			},
+			wantResp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
+			},
 		},
 		{
 			name: "request error",
@@ -486,8 +553,28 @@ func TestSecurityGroupRulesClient_GetByID(t *testing.T) {
 				ctx: context.Background(),
 				id:  "sgr_yOOeqZTbpLROjDGP",
 			},
+			resp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			respErr: fmt.Errorf("flux capacitor undercharged"),
+			wantResp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			wantErr: "flux capacitor undercharged",
+		},
+		{
+			name: "request error with nil response",
+			args: args{
+				ctx: context.Background(),
+				id:  "sgr_yOOeqZTbpLROjDGP",
+			},
+			resp:    nil,
+			respErr: fmt.Errorf("someting is really wrong"),
+			wantErr: "someting is really wrong",
 		},
 	}
 	for _, tt := range tests {
@@ -503,8 +590,8 @@ func TestSecurityGroupRulesClient_GetByID(t *testing.T) {
 
 			assert.Equal(t, tt.want, got)
 
-			if tt.resp != nil {
-				assert.Equal(t, tt.resp, resp)
+			if tt.wantResp != nil {
+				assert.Equal(t, tt.wantResp, resp)
 			}
 
 			if tt.wantReq != nil {
@@ -527,14 +614,15 @@ func TestSecurityGroupRulesClient_Create(t *testing.T) {
 		args *SecurityGroupRuleArguments
 	}
 	tests := []struct {
-		name    string
-		args    args
-		resp    *katapult.Response
-		respErr error
-		respV   *securityGroupRulesResponseBody
-		want    *SecurityGroupRule
-		wantReq *katapult.Request
-		wantErr string
+		name     string
+		args     args
+		resp     *katapult.Response
+		respErr  error
+		respV    *securityGroupRulesResponseBody
+		wantReq  *katapult.Request
+		want     *SecurityGroupRule
+		wantResp *katapult.Response
+		wantErr  string
 	}{
 		{
 			name: "success",
@@ -545,15 +633,14 @@ func TestSecurityGroupRulesClient_Create(t *testing.T) {
 					Direction: "inbound",
 				},
 			},
+			resp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
+			},
 			respV: &securityGroupRulesResponseBody{
 				SecurityGroupRule: &SecurityGroupRule{
 					ID:        "sgr_RWe7qQRVygLUW9jT",
 					Direction: "inbound",
 				},
-			},
-			want: &SecurityGroupRule{
-				ID:        "sgr_RWe7qQRVygLUW9jT",
-				Direction: "inbound",
 			},
 			wantReq: &katapult.Request{
 				Method: "POST",
@@ -566,6 +653,13 @@ func TestSecurityGroupRulesClient_Create(t *testing.T) {
 					},
 				},
 			},
+			want: &SecurityGroupRule{
+				ID:        "sgr_RWe7qQRVygLUW9jT",
+				Direction: "inbound",
+			},
+			wantResp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
+			},
 		},
 		{
 			name: "request error",
@@ -573,8 +667,28 @@ func TestSecurityGroupRulesClient_Create(t *testing.T) {
 				ctx: context.Background(),
 				ref: SecurityGroupRef{ID: "sg_lNIuBAGHLCiz21jh"},
 			},
+			resp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			respErr: fmt.Errorf("flux capacitor undercharged"),
+			wantResp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			wantErr: "flux capacitor undercharged",
+		},
+		{
+			name: "request error with nil response",
+			args: args{
+				ctx: context.Background(),
+				ref: SecurityGroupRef{ID: "sg_lNIuBAGHLCiz21jh"},
+			},
+			resp:    nil,
+			respErr: fmt.Errorf("someting is really wrong"),
+			wantErr: "someting is really wrong",
 		},
 	}
 	for _, tt := range tests {
@@ -590,8 +704,8 @@ func TestSecurityGroupRulesClient_Create(t *testing.T) {
 
 			assert.Equal(t, tt.want, got)
 
-			if tt.resp != nil {
-				assert.Equal(t, tt.resp, resp)
+			if tt.wantResp != nil {
+				assert.Equal(t, tt.wantResp, resp)
 			}
 
 			if tt.wantReq != nil {
@@ -614,14 +728,15 @@ func TestSecurityGroupRulesClient_Update(t *testing.T) {
 		args *SecurityGroupRuleArguments
 	}
 	tests := []struct {
-		name    string
-		args    args
-		resp    *katapult.Response
-		respErr error
-		respV   *securityGroupRulesResponseBody
-		want    *SecurityGroupRule
-		wantReq *katapult.Request
-		wantErr string
+		name     string
+		args     args
+		resp     *katapult.Response
+		respErr  error
+		respV    *securityGroupRulesResponseBody
+		wantReq  *katapult.Request
+		want     *SecurityGroupRule
+		wantResp *katapult.Response
+		wantErr  string
 	}{
 		{
 			name: "success",
@@ -632,15 +747,14 @@ func TestSecurityGroupRulesClient_Update(t *testing.T) {
 					Direction: "inbound",
 				},
 			},
+			resp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
+			},
 			respV: &securityGroupRulesResponseBody{
 				SecurityGroupRule: &SecurityGroupRule{
 					ID:        "sgr_FIxDC6SBnTBPtsIW",
 					Direction: "inbound",
 				},
-			},
-			want: &SecurityGroupRule{
-				ID:        "sgr_FIxDC6SBnTBPtsIW",
-				Direction: "inbound",
 			},
 			wantReq: &katapult.Request{
 				Method: "PATCH",
@@ -658,6 +772,13 @@ func TestSecurityGroupRulesClient_Update(t *testing.T) {
 					},
 				},
 			},
+			want: &SecurityGroupRule{
+				ID:        "sgr_FIxDC6SBnTBPtsIW",
+				Direction: "inbound",
+			},
+			wantResp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
+			},
 		},
 		{
 			name: "request error",
@@ -665,8 +786,28 @@ func TestSecurityGroupRulesClient_Update(t *testing.T) {
 				ctx: context.Background(),
 				ref: SecurityGroupRuleRef{ID: "sgr_FIxDC6SBnTBPtsIW"},
 			},
+			resp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			respErr: fmt.Errorf("flux capacitor undercharged"),
+			wantResp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			wantErr: "flux capacitor undercharged",
+		},
+		{
+			name: "request error with nil response",
+			args: args{
+				ctx: context.Background(),
+				ref: SecurityGroupRuleRef{ID: "sgr_FIxDC6SBnTBPtsIW"},
+			},
+			resp:    nil,
+			respErr: fmt.Errorf("someting is really wrong"),
+			wantErr: "someting is really wrong",
 		},
 	}
 	for _, tt := range tests {
@@ -682,8 +823,8 @@ func TestSecurityGroupRulesClient_Update(t *testing.T) {
 
 			assert.Equal(t, tt.want, got)
 
-			if tt.resp != nil {
-				assert.Equal(t, tt.resp, resp)
+			if tt.wantResp != nil {
+				assert.Equal(t, tt.wantResp, resp)
 			}
 
 			if tt.wantReq != nil {
@@ -705,14 +846,15 @@ func TestSecurityGroupRulesClient_Delete2(t *testing.T) {
 		ref SecurityGroupRuleRef
 	}
 	tests := []struct {
-		name    string
-		args    args
-		resp    *katapult.Response
-		respErr error
-		respV   *securityGroupRulesResponseBody
-		want    *SecurityGroupRule
-		wantReq *katapult.Request
-		wantErr string
+		name     string
+		args     args
+		resp     *katapult.Response
+		respErr  error
+		respV    *securityGroupRulesResponseBody
+		wantReq  *katapult.Request
+		want     *SecurityGroupRule
+		wantResp *katapult.Response
+		wantErr  string
 	}{
 		{
 			name: "success",
@@ -720,13 +862,13 @@ func TestSecurityGroupRulesClient_Delete2(t *testing.T) {
 				ctx: context.Background(),
 				ref: SecurityGroupRuleRef{ID: "sgr_htqQ6rLPQY0ljJTf"},
 			},
+			resp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
+			},
 			respV: &securityGroupRulesResponseBody{
 				SecurityGroupRule: &SecurityGroupRule{
 					ID: "sgr_htqQ6rLPQY0ljJTf",
 				},
-			},
-			want: &SecurityGroupRule{
-				ID: "sgr_htqQ6rLPQY0ljJTf",
 			},
 			wantReq: &katapult.Request{
 				Method: "DELETE",
@@ -739,6 +881,12 @@ func TestSecurityGroupRulesClient_Delete2(t *testing.T) {
 					}.Encode(),
 				},
 			},
+			want: &SecurityGroupRule{
+				ID: "sgr_htqQ6rLPQY0ljJTf",
+			},
+			wantResp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
+			},
 		},
 		{
 			name: "request error",
@@ -746,8 +894,28 @@ func TestSecurityGroupRulesClient_Delete2(t *testing.T) {
 				ctx: context.Background(),
 				ref: SecurityGroupRuleRef{ID: "sgr_htqQ6rLPQY0ljJTf"},
 			},
+			resp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			respErr: fmt.Errorf("flux capacitor undercharged"),
+			wantResp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			wantErr: "flux capacitor undercharged",
+		},
+		{
+			name: "request error with nil response",
+			args: args{
+				ctx: context.Background(),
+				ref: SecurityGroupRuleRef{ID: "sgr_htqQ6rLPQY0ljJTf"},
+			},
+			resp:    nil,
+			respErr: fmt.Errorf("someting is really wrong"),
+			wantErr: "someting is really wrong",
 		},
 	}
 	for _, tt := range tests {
@@ -763,8 +931,8 @@ func TestSecurityGroupRulesClient_Delete2(t *testing.T) {
 
 			assert.Equal(t, tt.want, got)
 
-			if tt.resp != nil {
-				assert.Equal(t, tt.resp, resp)
+			if tt.wantResp != nil {
+				assert.Equal(t, tt.wantResp, resp)
 			}
 
 			if tt.wantReq != nil {
