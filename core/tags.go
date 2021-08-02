@@ -71,11 +71,11 @@ type TagArguments struct {
 
 func (s *TagsClient) Create(
 	ctx context.Context,
-	ref  TagRef,
+	ref  OrganizationRef,
 	args TagArguments,
 ) (*Tag, *katapult.Response, error) {
 	qs := ref.queryValues()
-	u := &url.URL{Path: "tags/_", RawQuery: qs.Encode()}
+	u := &url.URL{Path: "organizations/_/tags", RawQuery: qs.Encode()}
 
 	body, resp, err := s.doRequest(ctx, "POST", u, args)
 
