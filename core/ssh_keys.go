@@ -26,8 +26,9 @@ func NewSSHKeysClient(rm RequestMaker) *SSHKeysClient {
 }
 
 type sshKeysResponseBody struct {
-	SSHKey  *AuthSSHKey   `json:"ssh_key,omitempty"`
-	SSHKeys []*AuthSSHKey `json:"ssh_keys,omitempty"`
+	Pagination *katapult.Pagination `json:"pagination,omitempty"`
+	SSHKey     *AuthSSHKey          `json:"ssh_key,omitempty"`
+	SSHKeys    []*AuthSSHKey        `json:"ssh_keys,omitempty"`
 }
 
 func (s *SSHKeysClient) List(
@@ -39,6 +40,7 @@ func (s *SSHKeysClient) List(
 	u := &url.URL{Path: "organizations/_/ssh_keys", RawQuery: qs.Encode()}
 
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	resp.Pagination = body.Pagination
 
 	return body.SSHKeys, resp, err
 }

@@ -3,6 +3,7 @@ package core
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"net/url"
 	"testing"
 
@@ -126,14 +127,15 @@ func TestSSHKeysClient_List(t *testing.T) {
 		opts *ListOptions
 	}
 	tests := []struct {
-		name    string
-		args    args
-		resp    *katapult.Response
-		respErr error
-		respV   *sshKeysResponseBody
-		want    []*AuthSSHKey
-		wantReq *katapult.Request
-		wantErr string
+		name     string
+		args     args
+		resp     *katapult.Response
+		respErr  error
+		respV    *sshKeysResponseBody
+		want     []*AuthSSHKey
+		wantReq  *katapult.Request
+		wantResp *katapult.Response
+		wantErr  string
 	}{
 		{
 			name: "success",
@@ -146,9 +148,10 @@ func TestSSHKeysClient_List(t *testing.T) {
 				},
 			},
 			resp: &katapult.Response{
-				Pagination: &katapult.Pagination{Total: 333},
+				Response: &http.Response{StatusCode: http.StatusOK},
 			},
 			respV: &sshKeysResponseBody{
+				Pagination: &katapult.Pagination{Total: 394},
 				SSHKeys: []*AuthSSHKey{
 					{ID: "ssh_O574YEEEYeLmqdmn"},
 				},
@@ -168,6 +171,10 @@ func TestSSHKeysClient_List(t *testing.T) {
 						},
 					}.Encode(),
 				},
+			},
+			wantResp: &katapult.Response{
+				Pagination: &katapult.Pagination{Total: 394},
+				Response:   &http.Response{StatusCode: http.StatusOK},
 			},
 		},
 		{
@@ -224,6 +231,10 @@ func TestSSHKeysClient_List(t *testing.T) {
 
 			if tt.resp != nil {
 				assert.Equal(t, tt.resp, resp)
+			}
+
+			if tt.wantResp != nil {
+				assert.Equal(t, tt.wantResp, resp)
 			}
 
 			if tt.wantReq != nil {
