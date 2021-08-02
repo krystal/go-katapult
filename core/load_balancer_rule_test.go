@@ -3,6 +3,7 @@ package core
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"net/url"
 	"testing"
 
@@ -228,6 +229,7 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 		respV   *loadBalancerRulesResponseBody
 		want    []LoadBalancerRule
 		wantReq *katapult.Request
+		wantResp *katapult.Response
 		wantErr string
 	}{
 		{
@@ -241,9 +243,10 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 				},
 			},
 			resp: &katapult.Response{
-				Pagination: &katapult.Pagination{Total: 333},
+				Response: &http.Response{StatusCode: http.StatusOK},
 			},
 			respV: &loadBalancerRulesResponseBody{
+				Pagination: &katapult.Pagination{Total: 394},
 				LoadBalancerRules: []LoadBalancerRule{
 					{ID: "lbrule_3W0eRZLQYHpTCPNX", DestinationPort: 666},
 				},
@@ -265,6 +268,10 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 					}.Encode(),
 				},
 			},
+			wantResp: &katapult.Response{
+				Pagination: &katapult.Pagination{Total: 394},
+				Response:   &http.Response{StatusCode: http.StatusOK},
+			},
 		},
 		{
 			name: "success with nil options",
@@ -274,13 +281,13 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 				opts: nil,
 			},
 			resp: &katapult.Response{
-				Pagination: &katapult.Pagination{Total: 333},
+				Response: &http.Response{StatusCode: http.StatusOK},
 			},
 			respV: &loadBalancerRulesResponseBody{
+				Pagination: &katapult.Pagination{Total: 333},
 				LoadBalancerRules: []LoadBalancerRule{
 					{ID: "lbrule_3W0eRZLQYHpTCPNX", DestinationPort: 666},
 				},
-				Pagination: &katapult.Pagination{Total: 333},
 			},
 			want: []LoadBalancerRule{{
 				ID:              "lbrule_3W0eRZLQYHpTCPNX",
@@ -296,6 +303,10 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 						},
 					}.Encode(),
 				},
+			},
+			wantResp: &katapult.Response{
+				Pagination: &katapult.Pagination{Total: 333},
+				Response:   &http.Response{StatusCode: http.StatusOK},
 			},
 		},
 		{
@@ -324,6 +335,10 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 
 			if tt.resp != nil {
 				assert.Equal(t, tt.resp, resp)
+			}
+
+			if tt.wantResp != nil {
+				assert.Equal(t, tt.wantResp, resp)
 			}
 
 			if tt.wantReq != nil {

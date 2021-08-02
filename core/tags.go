@@ -2,9 +2,10 @@ package core
 
 import (
 	"context"
+	"net/url"
+
 	"github.com/augurysys/timestamp"
 	"github.com/krystal/go-katapult"
-	"net/url"
 )
 
 type Tag struct {
@@ -27,19 +28,21 @@ func NewTagsClient(rm RequestMaker) *TagsClient {
 }
 
 type tagsResponseBody struct {
-	Tags []*Tag `json:"tags,omitempty"`
-	Tag  *Tag   `json:"tag,omitempty"`
+	Pagination *katapult.Pagination `json:"pagination,omitempty"`
+	Tags       []*Tag               `json:"tags,omitempty"`
+	Tag        *Tag                 `json:"tag,omitempty"`
 }
 
 func (s *TagsClient) List(
-	ctx  context.Context,
-	ref  OrganizationRef,
+	ctx context.Context,
+	ref OrganizationRef,
 	opts *ListOptions,
 ) ([]*Tag, *katapult.Response, error) {
 	qs := queryValues(opts, ref)
 	u := &url.URL{Path: "organizations/_/tags", RawQuery: qs.Encode()}
 
 	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	resp.Pagination = body.Pagination
 
 	return body.Tags, resp, err
 }
@@ -71,7 +74,7 @@ type TagArguments struct {
 
 func (s *TagsClient) Create(
 	ctx context.Context,
-	ref  OrganizationRef,
+	ref OrganizationRef,
 	args TagArguments,
 ) (*Tag, *katapult.Response, error) {
 	qs := ref.queryValues()
@@ -84,7 +87,7 @@ func (s *TagsClient) Create(
 
 func (s *TagsClient) Update(
 	ctx context.Context,
-	ref  TagRef,
+	ref TagRef,
 	args TagArguments,
 ) (*Tag, *katapult.Response, error) {
 	qs := ref.queryValues()

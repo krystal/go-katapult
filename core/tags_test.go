@@ -3,12 +3,13 @@ package core
 import (
 	"context"
 	"fmt"
+	"net/url"
+	"testing"
+
 	"github.com/krystal/go-katapult"
 	"github.com/krystal/go-katapult/internal/test"
 	"github.com/krystal/go-katapult/internal/testclient"
 	"github.com/stretchr/testify/assert"
-	"net/url"
-	"testing"
 )
 
 func TestTag_JSONMarshaling(t *testing.T) {
@@ -96,7 +97,7 @@ func TestTagRef_JSONMarshaling(t *testing.T) {
 		},
 		{
 			name: "full",
-			obj: &TagRef{ID: "id1"},
+			obj:  &TagRef{ID: "id1"},
 		},
 	}
 	for _, tt := range tests {
@@ -117,15 +118,15 @@ func TestTagArguments_JSONMarshaling(t *testing.T) {
 		},
 		{
 			name: "name",
-			obj: &TagArguments{Name: "tag_name"},
+			obj:  &TagArguments{Name: "tag_name"},
 		},
 		{
 			name: "color",
-			obj: &TagArguments{Color: "#0d1d1f"},
+			obj:  &TagArguments{Color: "#0d1d1f"},
 		},
 		{
 			name: "full",
-			obj: &TagArguments{Name: "tag_name", Color: "#0d1d1f"},
+			obj:  &TagArguments{Name: "tag_name", Color: "#0d1d1f"},
 		},
 	}
 	for _, tt := range tests {
@@ -257,8 +258,8 @@ func TestTagsClient_List(t *testing.T) {
 
 func TestTagsClient_Get(t *testing.T) {
 	type args struct {
-		ctx  context.Context
-		ref  TagRef
+		ctx context.Context
+		ref TagRef
 	}
 	tests := []struct {
 		name    string
@@ -273,8 +274,8 @@ func TestTagsClient_Get(t *testing.T) {
 		{
 			name: "success",
 			args: args{
-				ctx:  context.Background(),
-				ref:  TagRef{ID: "tag_O574YEEEYeLmqdmn"},
+				ctx: context.Background(),
+				ref: TagRef{ID: "tag_O574YEEEYeLmqdmn"},
 			},
 			resp: &katapult.Response{
 				Pagination: &katapult.Pagination{Total: 333},
@@ -342,8 +343,8 @@ func TestTagsClient_Get(t *testing.T) {
 func TestTagsClient_Create(t *testing.T) {
 	type args struct {
 		ctx  context.Context
-		org   OrganizationRef
-		args  TagArguments
+		org  OrganizationRef
+		args TagArguments
 	}
 	tests := []struct {
 		name    string
@@ -358,8 +359,8 @@ func TestTagsClient_Create(t *testing.T) {
 		{
 			name: "success",
 			args: args{
-				ctx:  context.Background(),
-				org:  OrganizationRef{ID: "org_O574YEEEYeLmqdmn"},
+				ctx: context.Background(),
+				org: OrganizationRef{ID: "org_O574YEEEYeLmqdmn"},
 				args: TagArguments{
 					Name:  "testing",
 					Color: "#2ACAEA",
@@ -395,8 +396,8 @@ func TestTagsClient_Create(t *testing.T) {
 		{
 			name: "request error",
 			args: args{
-				ctx:  context.Background(),
-				org:  OrganizationRef{ID: "org_O574YEEEYeLmqdmn"},
+				ctx: context.Background(),
+				org: OrganizationRef{ID: "org_O574YEEEYeLmqdmn"},
 				args: TagArguments{
 					Name:  "testing",
 					Color: "#2ACAEA",
@@ -455,8 +456,8 @@ func TestTagsClient_Update(t *testing.T) {
 		{
 			name: "success",
 			args: args{
-				ctx:  context.Background(),
-				ref:  TagRef{ID: "tag_O574YEEEYeLmqdmn"},
+				ctx: context.Background(),
+				ref: TagRef{ID: "tag_O574YEEEYeLmqdmn"},
 				args: TagArguments{
 					Name:  "testing",
 					Color: "#2ACAEA",
@@ -492,8 +493,8 @@ func TestTagsClient_Update(t *testing.T) {
 		{
 			name: "request error",
 			args: args{
-				ctx:  context.Background(),
-				ref:  TagRef{ID: "tag_O574YEEEYeLmqdmn"},
+				ctx: context.Background(),
+				ref: TagRef{ID: "tag_O574YEEEYeLmqdmn"},
 			},
 			respErr: fmt.Errorf("flux capacitor undercharged"),
 			wantErr: "flux capacitor undercharged",
@@ -531,8 +532,8 @@ func TestTagsClient_Update(t *testing.T) {
 
 func TestTagsClient_Delete(t *testing.T) {
 	type args struct {
-		ctx  context.Context
-		ref  TagRef
+		ctx context.Context
+		ref TagRef
 	}
 	tests := []struct {
 		name    string
@@ -547,8 +548,8 @@ func TestTagsClient_Delete(t *testing.T) {
 		{
 			name: "success",
 			args: args{
-				ctx:  context.Background(),
-				ref:  TagRef{ID: "tag_O574YEEEYeLmqdmn"},
+				ctx: context.Background(),
+				ref: TagRef{ID: "tag_O574YEEEYeLmqdmn"},
 			},
 			resp: &katapult.Response{
 				Pagination: &katapult.Pagination{Total: 333},
@@ -576,8 +577,8 @@ func TestTagsClient_Delete(t *testing.T) {
 		{
 			name: "request error",
 			args: args{
-				ctx:  context.Background(),
-				ref:  TagRef{ID: "tag_O574YEEEYeLmqdmn"},
+				ctx: context.Background(),
+				ref: TagRef{ID: "tag_O574YEEEYeLmqdmn"},
 			},
 			respErr: fmt.Errorf("flux capacitor undercharged"),
 			wantErr: "flux capacitor undercharged",
