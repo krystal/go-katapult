@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"reflect"
 	"testing"
+	"unsafe"
 
 	"github.com/krystal/go-katapult"
 	"github.com/krystal/go-katapult/internal/test"
@@ -87,6 +89,10 @@ func assertAuthorization(t *testing.T, r *http.Request) {
 	assertCustomAuthorization(t, r, test.APIKey)
 }
 
+//
+// Tests
+//
+
 func TestClientImplementsRequestMaker(t *testing.T) {
 	assert.Implements(t, (*RequestMaker)(nil), new(katapult.Client))
 }
@@ -105,20 +111,25 @@ func TestNew(t *testing.T) {
 	tc := &testclient.Client{}
 	c := New(tc)
 
-	assert.Equal(t, tc, c.Certificates.client)
-	assert.Equal(t, tc, c.DNSZones.client)
-	assert.Equal(t, tc, c.DataCenters.client)
-	assert.Equal(t, tc, c.DiskTemplates.client)
-	assert.Equal(t, tc, c.IPAddresses.client)
-	assert.Equal(t, tc, c.LoadBalancers.client)
-	assert.Equal(t, tc, c.NetworkSpeedProfiles.client)
-	assert.Equal(t, tc, c.Networks.client)
-	assert.Equal(t, tc, c.Organizations.client)
-	assert.Equal(t, tc, c.Tasks.client)
-	assert.Equal(t, tc, c.TrashObjects.client)
-	assert.Equal(t, tc, c.VirtualMachineBuilds.client)
-	assert.Equal(t, tc, c.VirtualMachineGroups.client)
-	assert.Equal(t, tc, c.VirtualMachineNetworkInterfaces.client)
-	assert.Equal(t, tc, c.VirtualMachinePackages.client)
-	assert.Equal(t, tc, c.VirtualMachines.client)
+	rv := reflect.ValueOf(c).Elem()
+
+	// Check every field on the Client struct, this effectively performs:
+	//  assert.Equal(t, tc, c.<FieldName>.client)
+	for i := 0; i < rv.NumField(); i++ {
+		name := rv.Type().Field(i).Name
+		f := rv.Field(i)
+
+		if f.IsNil() {
+			assert.Fail(t, "Client field: "+name+" (is nil)")
+		} else {
+			clientField := f.Elem().FieldByName("client")
+
+			// Get value of unexported field "client" without panic.
+			value := reflect.NewAt(
+				clientField.Type(), unsafe.Pointer(clientField.UnsafeAddr()),
+			).Elem().Interface()
+
+			assert.Equal(t, tc, value, "Client field: "+name)
+		}
+	}
 }
