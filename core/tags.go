@@ -32,8 +32,8 @@ type tagsResponseBody struct {
 }
 
 func (s *TagsClient) List(
-	ctx context.Context,
-	ref OrganizationRef,
+	ctx  context.Context,
+	ref  OrganizationRef,
 	opts *ListOptions,
 ) ([]*Tag, *katapult.Response, error) {
 	qs := queryValues(opts, ref)
