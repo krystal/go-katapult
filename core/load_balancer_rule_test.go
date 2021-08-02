@@ -3,6 +3,7 @@ package core
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"net/url"
 	"testing"
 
@@ -221,14 +222,15 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 		opts *ListOptions
 	}
 	tests := []struct {
-		name    string
-		args    args
-		resp    *katapult.Response
-		respErr error
-		respV   *loadBalancerRulesResponseBody
-		want    []LoadBalancerRule
-		wantReq *katapult.Request
-		wantErr string
+		name     string
+		args     args
+		resp     *katapult.Response
+		respErr  error
+		respV    *loadBalancerRulesResponseBody
+		wantReq  *katapult.Request
+		want     []LoadBalancerRule
+		wantResp *katapult.Response
+		wantErr  string
 	}{
 		{
 			name: "success",
@@ -241,17 +243,14 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 				},
 			},
 			resp: &katapult.Response{
-				Pagination: &katapult.Pagination{Total: 333},
+				Response: &http.Response{StatusCode: http.StatusOK},
 			},
 			respV: &loadBalancerRulesResponseBody{
+				Pagination: &katapult.Pagination{Total: 394},
 				LoadBalancerRules: []LoadBalancerRule{
 					{ID: "lbrule_3W0eRZLQYHpTCPNX", DestinationPort: 666},
 				},
 			},
-			want: []LoadBalancerRule{{
-				ID:              "lbrule_3W0eRZLQYHpTCPNX",
-				DestinationPort: 666,
-			}},
 			wantReq: &katapult.Request{
 				Method: "GET",
 				URL: &url.URL{
@@ -265,6 +264,14 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 					}.Encode(),
 				},
 			},
+			want: []LoadBalancerRule{{
+				ID:              "lbrule_3W0eRZLQYHpTCPNX",
+				DestinationPort: 666,
+			}},
+			wantResp: &katapult.Response{
+				Pagination: &katapult.Pagination{Total: 394},
+				Response:   &http.Response{StatusCode: http.StatusOK},
+			},
 		},
 		{
 			name: "success with nil options",
@@ -274,18 +281,14 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 				opts: nil,
 			},
 			resp: &katapult.Response{
-				Pagination: &katapult.Pagination{Total: 333},
+				Response: &http.Response{StatusCode: http.StatusOK},
 			},
 			respV: &loadBalancerRulesResponseBody{
+				Pagination: &katapult.Pagination{Total: 333},
 				LoadBalancerRules: []LoadBalancerRule{
 					{ID: "lbrule_3W0eRZLQYHpTCPNX", DestinationPort: 666},
 				},
-				Pagination: &katapult.Pagination{Total: 333},
 			},
-			want: []LoadBalancerRule{{
-				ID:              "lbrule_3W0eRZLQYHpTCPNX",
-				DestinationPort: 666,
-			}},
 			wantReq: &katapult.Request{
 				Method: "GET",
 				URL: &url.URL{
@@ -297,6 +300,14 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 					}.Encode(),
 				},
 			},
+			want: []LoadBalancerRule{{
+				ID:              "lbrule_3W0eRZLQYHpTCPNX",
+				DestinationPort: 666,
+			}},
+			wantResp: &katapult.Response{
+				Pagination: &katapult.Pagination{Total: 333},
+				Response:   &http.Response{StatusCode: http.StatusOK},
+			},
 		},
 		{
 			name: "request error",
@@ -305,8 +316,29 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 				lb:   LoadBalancerRef{ID: "lbrule_3W0eRZLQYHpTCPNX"},
 				opts: nil,
 			},
+			resp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			respErr: fmt.Errorf("flux capacitor undercharged"),
+			wantResp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			wantErr: "flux capacitor undercharged",
+		},
+		{
+			name: "request error with nil response",
+			args: args{
+				ctx:  context.Background(),
+				lb:   LoadBalancerRef{ID: "lbrule_3W0eRZLQYHpTCPNX"},
+				opts: nil,
+			},
+			resp:    nil,
+			respErr: fmt.Errorf("someting is really wrong"),
+			wantErr: "someting is really wrong",
 		},
 	}
 	for _, tt := range tests {
@@ -322,8 +354,8 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 
 			assert.Equal(t, tt.want, got)
 
-			if tt.resp != nil {
-				assert.Equal(t, tt.resp, resp)
+			if tt.wantResp != nil {
+				assert.Equal(t, tt.wantResp, resp)
 			}
 
 			if tt.wantReq != nil {
@@ -345,14 +377,15 @@ func TestLoadBalancerRulesClient_Get(t *testing.T) {
 		ref LoadBalancerRuleRef
 	}
 	tests := []struct {
-		name    string
-		args    args
-		resp    *katapult.Response
-		respErr error
-		respV   *loadBalancerRulesResponseBody
-		want    *LoadBalancerRule
-		wantReq *katapult.Request
-		wantErr string
+		name     string
+		args     args
+		resp     *katapult.Response
+		respErr  error
+		respV    *loadBalancerRulesResponseBody
+		wantReq  *katapult.Request
+		want     *LoadBalancerRule
+		wantResp *katapult.Response
+		wantErr  string
 	}{
 		{
 			name: "success",
@@ -360,15 +393,14 @@ func TestLoadBalancerRulesClient_Get(t *testing.T) {
 				ctx: context.Background(),
 				ref: LoadBalancerRuleRef{ID: "123"},
 			},
+			resp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
+			},
 			respV: &loadBalancerRulesResponseBody{
 				LoadBalancerRule: &LoadBalancerRule{
 					ID:         "123",
 					ListenPort: 132,
 				},
-			},
-			want: &LoadBalancerRule{
-				ID:         "123",
-				ListenPort: 132,
 			},
 			wantReq: &katapult.Request{
 				Method: "GET",
@@ -379,6 +411,13 @@ func TestLoadBalancerRulesClient_Get(t *testing.T) {
 					}.Encode(),
 				},
 			},
+			want: &LoadBalancerRule{
+				ID:         "123",
+				ListenPort: 132,
+			},
+			wantResp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
+			},
 		},
 		{
 			name: "request error",
@@ -386,8 +425,28 @@ func TestLoadBalancerRulesClient_Get(t *testing.T) {
 				ctx: context.Background(),
 				ref: LoadBalancerRuleRef{ID: "123"},
 			},
+			resp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			respErr: fmt.Errorf("flux capacitor undercharged"),
+			wantResp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			wantErr: "flux capacitor undercharged",
+		},
+		{
+			name: "request error with nil response",
+			args: args{
+				ctx: context.Background(),
+				ref: LoadBalancerRuleRef{ID: "123"},
+			},
+			resp:    nil,
+			respErr: fmt.Errorf("someting is really wrong"),
+			wantErr: "someting is really wrong",
 		},
 	}
 	for _, tt := range tests {
@@ -403,8 +462,8 @@ func TestLoadBalancerRulesClient_Get(t *testing.T) {
 
 			assert.Equal(t, tt.want, got)
 
-			if tt.resp != nil {
-				assert.Equal(t, tt.resp, resp)
+			if tt.wantResp != nil {
+				assert.Equal(t, tt.wantResp, resp)
 			}
 
 			if tt.wantReq != nil {
@@ -426,14 +485,15 @@ func TestLoadBalancerRulesClient_GetByID(t *testing.T) {
 		id  string
 	}
 	tests := []struct {
-		name    string
-		args    args
-		resp    *katapult.Response
-		respErr error
-		respV   *loadBalancerRulesResponseBody
-		want    *LoadBalancerRule
-		wantReq *katapult.Request
-		wantErr string
+		name     string
+		args     args
+		resp     *katapult.Response
+		respErr  error
+		respV    *loadBalancerRulesResponseBody
+		wantReq  *katapult.Request
+		want     *LoadBalancerRule
+		wantResp *katapult.Response
+		wantErr  string
 	}{
 		{
 			name: "success",
@@ -441,15 +501,14 @@ func TestLoadBalancerRulesClient_GetByID(t *testing.T) {
 				ctx: context.Background(),
 				id:  "123",
 			},
+			resp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
+			},
 			respV: &loadBalancerRulesResponseBody{
 				LoadBalancerRule: &LoadBalancerRule{
 					ID:         "123",
 					ListenPort: 132,
 				},
-			},
-			want: &LoadBalancerRule{
-				ID:         "123",
-				ListenPort: 132,
 			},
 			wantReq: &katapult.Request{
 				Method: "GET",
@@ -460,6 +519,13 @@ func TestLoadBalancerRulesClient_GetByID(t *testing.T) {
 					}.Encode(),
 				},
 			},
+			want: &LoadBalancerRule{
+				ID:         "123",
+				ListenPort: 132,
+			},
+			wantResp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
+			},
 		},
 		{
 			name: "request error",
@@ -467,8 +533,28 @@ func TestLoadBalancerRulesClient_GetByID(t *testing.T) {
 				ctx: context.Background(),
 				id:  "123",
 			},
+			resp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			respErr: fmt.Errorf("flux capacitor undercharged"),
+			wantResp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			wantErr: "flux capacitor undercharged",
+		},
+		{
+			name: "request error with nil response",
+			args: args{
+				ctx: context.Background(),
+				id:  "123",
+			},
+			resp:    nil,
+			respErr: fmt.Errorf("someting is really wrong"),
+			wantErr: "someting is really wrong",
 		},
 	}
 	for _, tt := range tests {
@@ -484,8 +570,8 @@ func TestLoadBalancerRulesClient_GetByID(t *testing.T) {
 
 			assert.Equal(t, tt.want, got)
 
-			if tt.resp != nil {
-				assert.Equal(t, tt.resp, resp)
+			if tt.wantResp != nil {
+				assert.Equal(t, tt.wantResp, resp)
 			}
 
 			if tt.wantReq != nil {
@@ -508,14 +594,15 @@ func TestLoadBalancerRulesClient_Create(t *testing.T) {
 		args *LoadBalancerRuleArguments
 	}
 	tests := []struct {
-		name    string
-		args    args
-		resp    *katapult.Response
-		respErr error
-		respV   *loadBalancerRulesResponseBody
-		want    *LoadBalancerRule
-		wantReq *katapult.Request
-		wantErr string
+		name     string
+		args     args
+		resp     *katapult.Response
+		respErr  error
+		respV    *loadBalancerRulesResponseBody
+		wantReq  *katapult.Request
+		want     *LoadBalancerRule
+		wantResp *katapult.Response
+		wantErr  string
 	}{
 		{
 			name: "success",
@@ -528,6 +615,9 @@ func TestLoadBalancerRulesClient_Create(t *testing.T) {
 					Protocol:        HTTPProtocol,
 				},
 			},
+			resp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
+			},
 			respV: &loadBalancerRulesResponseBody{
 				LoadBalancerRule: &LoadBalancerRule{
 					ID:              "lbrule_55P1GfFvW5pPPhgh",
@@ -535,12 +625,6 @@ func TestLoadBalancerRulesClient_Create(t *testing.T) {
 					ListenPort:      80,
 					Protocol:        HTTPProtocol,
 				},
-			},
-			want: &LoadBalancerRule{
-				ID:              "lbrule_55P1GfFvW5pPPhgh",
-				DestinationPort: 8080,
-				ListenPort:      80,
-				Protocol:        HTTPProtocol,
 			},
 			wantReq: &katapult.Request{
 				Method: "POST",
@@ -555,6 +639,15 @@ func TestLoadBalancerRulesClient_Create(t *testing.T) {
 					},
 				},
 			},
+			want: &LoadBalancerRule{
+				ID:              "lbrule_55P1GfFvW5pPPhgh",
+				DestinationPort: 8080,
+				ListenPort:      80,
+				Protocol:        HTTPProtocol,
+			},
+			wantResp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
+			},
 		},
 		{
 			name: "request error",
@@ -567,8 +660,33 @@ func TestLoadBalancerRulesClient_Create(t *testing.T) {
 					Protocol:        HTTPProtocol,
 				},
 			},
+			resp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			respErr: fmt.Errorf("flux capacitor undercharged"),
+			wantResp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			wantErr: "flux capacitor undercharged",
+		},
+		{
+			name: "request error with nil response",
+			args: args{
+				ctx: context.Background(),
+				ref: LoadBalancerRef{ID: "lb_aFr95Rvyt6L3eyiH"},
+				args: &LoadBalancerRuleArguments{
+					DestinationPort: 8080,
+					ListenPort:      80,
+					Protocol:        HTTPProtocol,
+				},
+			},
+			resp:    nil,
+			respErr: fmt.Errorf("someting is really wrong"),
+			wantErr: "someting is really wrong",
 		},
 	}
 	for _, tt := range tests {
@@ -584,8 +702,8 @@ func TestLoadBalancerRulesClient_Create(t *testing.T) {
 
 			assert.Equal(t, tt.want, got)
 
-			if tt.resp != nil {
-				assert.Equal(t, tt.resp, resp)
+			if tt.wantResp != nil {
+				assert.Equal(t, tt.wantResp, resp)
 			}
 
 			if tt.wantReq != nil {
@@ -608,14 +726,15 @@ func TestLoadBalancerRulesClient_Update(t *testing.T) {
 		args *LoadBalancerRuleArguments
 	}
 	tests := []struct {
-		name    string
-		args    args
-		resp    *katapult.Response
-		respErr error
-		respV   *loadBalancerRulesResponseBody
-		want    *LoadBalancerRule
-		wantReq *katapult.Request
-		wantErr string
+		name     string
+		args     args
+		resp     *katapult.Response
+		respErr  error
+		respV    *loadBalancerRulesResponseBody
+		wantReq  *katapult.Request
+		want     *LoadBalancerRule
+		wantResp *katapult.Response
+		wantErr  string
 	}{
 		{
 			name: "success",
@@ -624,6 +743,9 @@ func TestLoadBalancerRulesClient_Update(t *testing.T) {
 				ref:  LoadBalancerRuleRef{ID: "lbrule_GDPBAqW3dm71i4ol"},
 				args: &LoadBalancerRuleArguments{DestinationPort: 3000},
 			},
+			resp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
+			},
 			respV: &loadBalancerRulesResponseBody{
 				LoadBalancerRule: &LoadBalancerRule{
 					ID:              "lbrule_GDPBAqW3dm71i4ol",
@@ -631,12 +753,6 @@ func TestLoadBalancerRulesClient_Update(t *testing.T) {
 					ListenPort:      80,
 					Protocol:        HTTPProtocol,
 				},
-			},
-			want: &LoadBalancerRule{
-				ID:              "lbrule_GDPBAqW3dm71i4ol",
-				DestinationPort: 3000,
-				ListenPort:      80,
-				Protocol:        HTTPProtocol,
 			},
 			wantReq: &katapult.Request{
 				Method: "PATCH",
@@ -654,6 +770,15 @@ func TestLoadBalancerRulesClient_Update(t *testing.T) {
 					},
 				},
 			},
+			want: &LoadBalancerRule{
+				ID:              "lbrule_GDPBAqW3dm71i4ol",
+				DestinationPort: 3000,
+				ListenPort:      80,
+				Protocol:        HTTPProtocol,
+			},
+			wantResp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
+			},
 		},
 		{
 			name: "request error",
@@ -662,8 +787,29 @@ func TestLoadBalancerRulesClient_Update(t *testing.T) {
 				ref:  LoadBalancerRuleRef{ID: "lbrule_GDPBAqW3dm71i4ol"},
 				args: &LoadBalancerRuleArguments{DestinationPort: 3000},
 			},
+			resp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			respErr: fmt.Errorf("flux capacitor undercharged"),
+			wantResp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			wantErr: "flux capacitor undercharged",
+		},
+		{
+			name: "request error with nil response",
+			args: args{
+				ctx:  context.Background(),
+				ref:  LoadBalancerRuleRef{ID: "lbrule_GDPBAqW3dm71i4ol"},
+				args: &LoadBalancerRuleArguments{DestinationPort: 3000},
+			},
+			resp:    nil,
+			respErr: fmt.Errorf("someting is really wrong"),
+			wantErr: "someting is really wrong",
 		},
 	}
 	for _, tt := range tests {
@@ -679,8 +825,8 @@ func TestLoadBalancerRulesClient_Update(t *testing.T) {
 
 			assert.Equal(t, tt.want, got)
 
-			if tt.resp != nil {
-				assert.Equal(t, tt.resp, resp)
+			if tt.wantResp != nil {
+				assert.Equal(t, tt.wantResp, resp)
 			}
 
 			if tt.wantReq != nil {
@@ -702,14 +848,15 @@ func TestLoadBalancerRulesClient_Delete(t *testing.T) {
 		ref LoadBalancerRuleRef
 	}
 	tests := []struct {
-		name    string
-		args    args
-		resp    *katapult.Response
-		respErr error
-		respV   *loadBalancerRulesResponseBody
-		want    *LoadBalancerRule
-		wantReq *katapult.Request
-		wantErr string
+		name     string
+		args     args
+		resp     *katapult.Response
+		respErr  error
+		respV    *loadBalancerRulesResponseBody
+		wantReq  *katapult.Request
+		want     *LoadBalancerRule
+		wantResp *katapult.Response
+		wantErr  string
 	}{
 		{
 			name: "success",
@@ -717,13 +864,13 @@ func TestLoadBalancerRulesClient_Delete(t *testing.T) {
 				ctx: context.Background(),
 				ref: LoadBalancerRuleRef{ID: "lbrule_HfVizqDuo2B5B9kU"},
 			},
+			resp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
+			},
 			respV: &loadBalancerRulesResponseBody{
 				LoadBalancerRule: &LoadBalancerRule{
 					ID: "lbrule_HfVizqDuo2B5B9kU",
 				},
-			},
-			want: &LoadBalancerRule{
-				ID: "lbrule_HfVizqDuo2B5B9kU",
 			},
 			wantReq: &katapult.Request{
 				Method: "DELETE",
@@ -736,6 +883,11 @@ func TestLoadBalancerRulesClient_Delete(t *testing.T) {
 					}.Encode(),
 				},
 			},
+			want: &LoadBalancerRule{
+				ID: "lbrule_HfVizqDuo2B5B9kU",
+			}, wantResp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
+			},
 		},
 		{
 			name: "request error",
@@ -743,8 +895,28 @@ func TestLoadBalancerRulesClient_Delete(t *testing.T) {
 				ctx: context.Background(),
 				ref: LoadBalancerRuleRef{ID: "lbrule_HfVizqDuo2B5B9kU"},
 			},
+			resp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			respErr: fmt.Errorf("flux capacitor undercharged"),
+			wantResp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			wantErr: "flux capacitor undercharged",
+		},
+		{
+			name: "request error with nil response",
+			args: args{
+				ctx: context.Background(),
+				ref: LoadBalancerRuleRef{ID: "lbrule_HfVizqDuo2B5B9kU"},
+			},
+			resp:    nil,
+			respErr: fmt.Errorf("someting is really wrong"),
+			wantErr: "someting is really wrong",
 		},
 	}
 	for _, tt := range tests {
@@ -760,8 +932,8 @@ func TestLoadBalancerRulesClient_Delete(t *testing.T) {
 
 			assert.Equal(t, tt.want, got)
 
-			if tt.resp != nil {
-				assert.Equal(t, tt.resp, resp)
+			if tt.wantResp != nil {
+				assert.Equal(t, tt.wantResp, resp)
 			}
 
 			if tt.wantReq != nil {
