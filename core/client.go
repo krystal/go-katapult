@@ -19,6 +19,7 @@ type Client struct {
 	Organizations                   *OrganizationsClient
 	SecurityGroups                  *SecurityGroupsClient
 	SecurityGroupRules              *SecurityGroupRulesClient
+	Tags                            *TagsClient
 	Tasks                           *TasksClient
 	TrashObjects                    *TrashObjectsClient
 	VirtualMachineBuilds            *VirtualMachineBuildsClient
