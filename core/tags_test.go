@@ -117,14 +117,6 @@ func TestTagArguments_JSONMarshaling(t *testing.T) {
 			obj:  &TagArguments{},
 		},
 		{
-			name: "name",
-			obj:  &TagArguments{Name: "tag_name"},
-		},
-		{
-			name: "color",
-			obj:  &TagArguments{Color: "#0d1d1f"},
-		},
-		{
 			name: "full",
 			obj:  &TagArguments{Name: "tag_name", Color: "#0d1d1f"},
 		},
