@@ -48,15 +48,13 @@ func Test_sshKeyResponseBody_JSONMarshaling(t *testing.T) {
 			obj:  &sshKeysResponseBody{},
 		},
 		{
-			name: "ssh_key",
+			name: "full",
 			obj: &sshKeysResponseBody{
-				SSHKey: &AuthSSHKey{},
-			},
-		},
-		{
-			name: "ssh_keys",
-			obj: &sshKeysResponseBody{
-				SSHKeys: []*AuthSSHKey{{}},
+				Pagination: &katapult.Pagination{
+					CurrentPage: 33,
+				},
+				SSHKey:  &AuthSSHKey{ID: "1"},
+				SSHKeys: []*AuthSSHKey{{ID: "2"}},
 			},
 		},
 	}
