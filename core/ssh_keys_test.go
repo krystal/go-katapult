@@ -215,7 +215,17 @@ func TestSSHKeysClient_List(t *testing.T) {
 				ctx: context.Background(),
 				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
+			resp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			respErr: fmt.Errorf("flux capacitor undercharged"),
+			wantResp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			wantErr: "flux capacitor undercharged",
 		},
 		{
