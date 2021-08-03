@@ -144,15 +144,15 @@ func TestTagsClient_List(t *testing.T) {
 		opts *ListOptions
 	}
 	tests := []struct {
-		name    string
-		args    args
-		resp    *katapult.Response
-		respErr error
-		respV   *tagsResponseBody
-		want    []*Tag
-		wantReq *katapult.Request
+		name     string
+		args     args
+		resp     *katapult.Response
+		respErr  error
+		respV    *tagsResponseBody
+		want     []*Tag
+		wantReq  *katapult.Request
 		wantResp *katapult.Response
-		wantErr string
+		wantErr  string
 	}{
 		{
 			name: "success",
@@ -286,15 +286,15 @@ func TestTagsClient_Get(t *testing.T) {
 		ref TagRef
 	}
 	tests := []struct {
-		name    string
-		args    args
-		resp    *katapult.Response
-		respErr error
-		respV   *tagsResponseBody
-		want    *Tag
-		wantReq *katapult.Request
+		name     string
+		args     args
+		resp     *katapult.Response
+		respErr  error
+		respV    *tagsResponseBody
+		want     *Tag
+		wantReq  *katapult.Request
 		wantResp *katapult.Response
-		wantErr string
+		wantErr  string
 	}{
 		{
 			name: "success",
@@ -328,7 +328,7 @@ func TestTagsClient_Get(t *testing.T) {
 		{
 			name: "request error",
 			args: args{
-				ctx:  context.Background(),
+				ctx: context.Background(),
 				ref: TagRef{ID: "tag_O574YEEEYeLmqdmn"},
 			},
 			resp: &katapult.Response{
@@ -347,7 +347,7 @@ func TestTagsClient_Get(t *testing.T) {
 		{
 			name: "request error with nil response",
 			args: args{
-				ctx:  context.Background(),
+				ctx: context.Background(),
 				ref: TagRef{ID: "tag_O574YEEEYeLmqdmn"},
 			},
 			resp:    nil,
@@ -392,15 +392,15 @@ func TestTagsClient_Create(t *testing.T) {
 		args TagArguments
 	}
 	tests := []struct {
-		name    string
-		args    args
-		resp    *katapult.Response
-		respErr error
-		respV   *tagsResponseBody
-		want    *Tag
-		wantReq *katapult.Request
+		name     string
+		args     args
+		resp     *katapult.Response
+		respErr  error
+		respV    *tagsResponseBody
+		want     *Tag
+		wantReq  *katapult.Request
 		wantResp *katapult.Response
-		wantErr string
+		wantErr  string
 	}{
 		{
 			name: "success",
@@ -442,8 +442,8 @@ func TestTagsClient_Create(t *testing.T) {
 		{
 			name: "request error",
 			args: args{
-				ctx:  context.Background(),
-				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
+				ctx: context.Background(),
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			resp: &katapult.Response{
 				Response: &http.Response{
@@ -461,8 +461,8 @@ func TestTagsClient_Create(t *testing.T) {
 		{
 			name: "request error with nil response",
 			args: args{
-				ctx:  context.Background(),
-				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
+				ctx: context.Background(),
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			resp:    nil,
 			respErr: fmt.Errorf("someting is really wrong"),
@@ -506,15 +506,15 @@ func TestTagsClient_Update(t *testing.T) {
 		args TagArguments
 	}
 	tests := []struct {
-		name    string
-		args    args
-		resp    *katapult.Response
-		respErr error
-		respV   *tagsResponseBody
-		want    *Tag
-		wantReq *katapult.Request
+		name     string
+		args     args
+		resp     *katapult.Response
+		respErr  error
+		respV    *tagsResponseBody
+		want     *Tag
+		wantReq  *katapult.Request
 		wantResp *katapult.Response
-		wantErr string
+		wantErr  string
 	}{
 		{
 			name: "success",
@@ -556,8 +556,8 @@ func TestTagsClient_Update(t *testing.T) {
 		{
 			name: "request error",
 			args: args{
-				ctx:  context.Background(),
-				ref:  TagRef{ID: "tag_O574YEEEYeLmqdmn"},
+				ctx: context.Background(),
+				ref: TagRef{ID: "tag_O574YEEEYeLmqdmn"},
 			},
 			resp: &katapult.Response{
 				Response: &http.Response{
@@ -575,8 +575,8 @@ func TestTagsClient_Update(t *testing.T) {
 		{
 			name: "request error with nil response",
 			args: args{
-				ctx:  context.Background(),
-				ref:  TagRef{ID: "tag_O574YEEEYeLmqdmn"},
+				ctx: context.Background(),
+				ref: TagRef{ID: "tag_O574YEEEYeLmqdmn"},
 			},
 			resp:    nil,
 			respErr: fmt.Errorf("someting is really wrong"),
@@ -619,12 +619,12 @@ func TestTagsClient_Delete(t *testing.T) {
 		ref TagRef
 	}
 	tests := []struct {
-		name    string
-		args    args
-		resp    *katapult.Response
-		respErr error
-		respV   *tagsResponseBody
-		want    *Tag
+		name     string
+		args     args
+		resp     *katapult.Response
+		respErr  error
+		respV    *tagsResponseBody
+		want     *Tag
 		wantResp *katapult.Response
 		wantReq  *katapult.Request
 		wantErr  string
@@ -661,8 +661,8 @@ func TestTagsClient_Delete(t *testing.T) {
 		{
 			name: "request error",
 			args: args{
-				ctx:  context.Background(),
-				ref:  TagRef{ID: "tag_O574YEEEYeLmqdmn"},
+				ctx: context.Background(),
+				ref: TagRef{ID: "tag_O574YEEEYeLmqdmn"},
 			},
 			resp: &katapult.Response{
 				Response: &http.Response{
@@ -680,8 +680,8 @@ func TestTagsClient_Delete(t *testing.T) {
 		{
 			name: "request error with nil response",
 			args: args{
-				ctx:  context.Background(),
-				ref:  TagRef{ID: "tag_O574YEEEYeLmqdmn"},
+				ctx: context.Background(),
+				ref: TagRef{ID: "tag_O574YEEEYeLmqdmn"},
 			},
 			resp:    nil,
 			respErr: fmt.Errorf("someting is really wrong"),
