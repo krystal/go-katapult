@@ -270,14 +270,15 @@ func TestSSHKeysClient_Add(t *testing.T) {
 		args AuthSSHKeyProperties
 	}
 	tests := []struct {
-		name    string
-		args    args
-		resp    *katapult.Response
-		respErr error
-		respV   *sshKeysResponseBody
-		want    *AuthSSHKey
-		wantReq *katapult.Request
-		wantErr string
+		name     string
+		args     args
+		respErr  error
+		resp     *katapult.Response
+		respV    *sshKeysResponseBody
+		want     *AuthSSHKey
+		wantReq  *katapult.Request
+		wantResp *katapult.Response
+		wantErr  string
 	}{
 		{
 			name: "success",
@@ -288,6 +289,9 @@ func TestSSHKeysClient_Add(t *testing.T) {
 					Name: "test",
 					Key:  sshPublicKey,
 				},
+			},
+			resp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
 			},
 			respV: &sshKeysResponseBody{
 				SSHKey: &AuthSSHKey{
@@ -315,6 +319,9 @@ func TestSSHKeysClient_Add(t *testing.T) {
 					Name: "test",
 					Key:  sshPublicKey,
 				},
+			},
+			wantResp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
 			},
 		},
 		{
@@ -344,8 +351,8 @@ func TestSSHKeysClient_Add(t *testing.T) {
 
 			assert.Equal(t, tt.want, got)
 
-			if tt.resp != nil {
-				assert.Equal(t, tt.resp, resp)
+			if tt.wantResp != nil {
+				assert.Equal(t, tt.wantResp, resp)
 			}
 
 			if tt.wantReq != nil {
