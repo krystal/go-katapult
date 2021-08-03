@@ -3,6 +3,7 @@ package core
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"net/url"
 	"testing"
 
@@ -150,6 +151,7 @@ func TestTagsClient_List(t *testing.T) {
 		respV   *tagsResponseBody
 		want    []*Tag
 		wantReq *katapult.Request
+		wantResp *katapult.Response
 		wantErr string
 	}{
 		{
@@ -219,11 +221,33 @@ func TestTagsClient_List(t *testing.T) {
 		{
 			name: "request error",
 			args: args{
-				ctx: context.Background(),
-				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
+				ctx:  context.Background(),
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
+				opts: nil,
+			},
+			resp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
 			},
 			respErr: fmt.Errorf("flux capacitor undercharged"),
+			wantResp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			wantErr: "flux capacitor undercharged",
+		},
+		{
+			name: "request error with nil response",
+			args: args{
+				ctx:  context.Background(),
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
+				opts: nil,
+			},
+			resp:    nil,
+			respErr: fmt.Errorf("someting is really wrong"),
+			wantErr: "someting is really wrong",
 		},
 	}
 	for _, tt := range tests {
@@ -239,8 +263,8 @@ func TestTagsClient_List(t *testing.T) {
 
 			assert.Equal(t, tt.want, got)
 
-			if tt.resp != nil {
-				assert.Equal(t, tt.resp, resp)
+			if tt.wantResp != nil {
+				assert.Equal(t, tt.wantResp, resp)
 			}
 
 			if tt.wantReq != nil {
@@ -269,6 +293,7 @@ func TestTagsClient_Get(t *testing.T) {
 		respV   *tagsResponseBody
 		want    *Tag
 		wantReq *katapult.Request
+		wantResp *katapult.Response
 		wantErr string
 	}{
 		{
@@ -303,11 +328,31 @@ func TestTagsClient_Get(t *testing.T) {
 		{
 			name: "request error",
 			args: args{
-				ctx: context.Background(),
+				ctx:  context.Background(),
 				ref: TagRef{ID: "tag_O574YEEEYeLmqdmn"},
 			},
+			resp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			respErr: fmt.Errorf("flux capacitor undercharged"),
+			wantResp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			wantErr: "flux capacitor undercharged",
+		},
+		{
+			name: "request error with nil response",
+			args: args{
+				ctx:  context.Background(),
+				ref: TagRef{ID: "tag_O574YEEEYeLmqdmn"},
+			},
+			resp:    nil,
+			respErr: fmt.Errorf("someting is really wrong"),
+			wantErr: "someting is really wrong",
 		},
 	}
 	for _, tt := range tests {
@@ -323,8 +368,8 @@ func TestTagsClient_Get(t *testing.T) {
 
 			assert.Equal(t, tt.want, got)
 
-			if tt.resp != nil {
-				assert.Equal(t, tt.resp, resp)
+			if tt.wantResp != nil {
+				assert.Equal(t, tt.wantResp, resp)
 			}
 
 			if tt.wantReq != nil {
@@ -354,6 +399,7 @@ func TestTagsClient_Create(t *testing.T) {
 		respV   *tagsResponseBody
 		want    *Tag
 		wantReq *katapult.Request
+		wantResp *katapult.Response
 		wantErr string
 	}{
 		{
@@ -396,15 +442,31 @@ func TestTagsClient_Create(t *testing.T) {
 		{
 			name: "request error",
 			args: args{
-				ctx: context.Background(),
-				org: OrganizationRef{ID: "org_O574YEEEYeLmqdmn"},
-				args: TagArguments{
-					Name:  "testing",
-					Color: "#2ACAEA",
+				ctx:  context.Background(),
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
+			},
+			resp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
 				},
 			},
 			respErr: fmt.Errorf("flux capacitor undercharged"),
+			wantResp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			wantErr: "flux capacitor undercharged",
+		},
+		{
+			name: "request error with nil response",
+			args: args{
+				ctx:  context.Background(),
+				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
+			},
+			resp:    nil,
+			respErr: fmt.Errorf("someting is really wrong"),
+			wantErr: "someting is really wrong",
 		},
 	}
 	for _, tt := range tests {
@@ -420,8 +482,8 @@ func TestTagsClient_Create(t *testing.T) {
 
 			assert.Equal(t, tt.want, got)
 
-			if tt.resp != nil {
-				assert.Equal(t, tt.resp, resp)
+			if tt.wantResp != nil {
+				assert.Equal(t, tt.wantResp, resp)
 			}
 
 			if tt.wantReq != nil {
@@ -451,6 +513,7 @@ func TestTagsClient_Update(t *testing.T) {
 		respV   *tagsResponseBody
 		want    *Tag
 		wantReq *katapult.Request
+		wantResp *katapult.Response
 		wantErr string
 	}{
 		{
@@ -493,11 +556,31 @@ func TestTagsClient_Update(t *testing.T) {
 		{
 			name: "request error",
 			args: args{
-				ctx: context.Background(),
-				ref: TagRef{ID: "tag_O574YEEEYeLmqdmn"},
+				ctx:  context.Background(),
+				ref:  TagRef{ID: "tag_O574YEEEYeLmqdmn"},
+			},
+			resp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
 			},
 			respErr: fmt.Errorf("flux capacitor undercharged"),
+			wantResp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			wantErr: "flux capacitor undercharged",
+		},
+		{
+			name: "request error with nil response",
+			args: args{
+				ctx:  context.Background(),
+				ref:  TagRef{ID: "tag_O574YEEEYeLmqdmn"},
+			},
+			resp:    nil,
+			respErr: fmt.Errorf("someting is really wrong"),
+			wantErr: "someting is really wrong",
 		},
 	}
 	for _, tt := range tests {
@@ -513,8 +596,8 @@ func TestTagsClient_Update(t *testing.T) {
 
 			assert.Equal(t, tt.want, got)
 
-			if tt.resp != nil {
-				assert.Equal(t, tt.resp, resp)
+			if tt.wantResp != nil {
+				assert.Equal(t, tt.wantResp, resp)
 			}
 
 			if tt.wantReq != nil {
@@ -542,8 +625,9 @@ func TestTagsClient_Delete(t *testing.T) {
 		respErr error
 		respV   *tagsResponseBody
 		want    *Tag
-		wantReq *katapult.Request
-		wantErr string
+		wantResp *katapult.Response
+		wantReq  *katapult.Request
+		wantErr  string
 	}{
 		{
 			name: "success",
@@ -577,11 +661,31 @@ func TestTagsClient_Delete(t *testing.T) {
 		{
 			name: "request error",
 			args: args{
-				ctx: context.Background(),
-				ref: TagRef{ID: "tag_O574YEEEYeLmqdmn"},
+				ctx:  context.Background(),
+				ref:  TagRef{ID: "tag_O574YEEEYeLmqdmn"},
+			},
+			resp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
 			},
 			respErr: fmt.Errorf("flux capacitor undercharged"),
+			wantResp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			wantErr: "flux capacitor undercharged",
+		},
+		{
+			name: "request error with nil response",
+			args: args{
+				ctx:  context.Background(),
+				ref:  TagRef{ID: "tag_O574YEEEYeLmqdmn"},
+			},
+			resp:    nil,
+			respErr: fmt.Errorf("someting is really wrong"),
+			wantErr: "someting is really wrong",
 		},
 	}
 	for _, tt := range tests {
@@ -597,8 +701,8 @@ func TestTagsClient_Delete(t *testing.T) {
 
 			assert.Equal(t, tt.want, got)
 
-			if tt.resp != nil {
-				assert.Equal(t, tt.resp, resp)
+			if tt.wantResp != nil {
+				assert.Equal(t, tt.wantResp, resp)
 			}
 
 			if tt.wantReq != nil {
@@ -612,4 +716,10 @@ func TestTagsClient_Delete(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestClient_Tags(t *testing.T) {
+	c := New(&testclient.Client{})
+
+	assert.IsType(t, &TagsClient{}, c.Tags)
 }
