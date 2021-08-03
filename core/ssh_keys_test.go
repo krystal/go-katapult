@@ -182,9 +182,10 @@ func TestSSHKeysClient_List(t *testing.T) {
 				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			resp: &katapult.Response{
-				Pagination: &katapult.Pagination{Total: 333},
+				Response: &http.Response{StatusCode: http.StatusOK},
 			},
 			respV: &sshKeysResponseBody{
+				Pagination: &katapult.Pagination{Total: 333},
 				SSHKeys: []*AuthSSHKey{
 					{ID: "ssh_O574YEEEYeLmqdmn"},
 				},
@@ -202,6 +203,10 @@ func TestSSHKeysClient_List(t *testing.T) {
 						},
 					}.Encode(),
 				},
+			},
+			wantResp: &katapult.Response{
+				Pagination: &katapult.Pagination{Total: 333},
+				Response:   &http.Response{StatusCode: http.StatusOK},
 			},
 		},
 		{
