@@ -353,13 +353,29 @@ func TestSSHKeysClient_Add(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
-				args: AuthSSHKeyProperties{
-					Name: "test",
-					Key:  sshPublicKey,
+			},
+			resp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
 				},
 			},
 			respErr: fmt.Errorf("flux capacitor undercharged"),
+			wantResp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			wantErr: "flux capacitor undercharged",
+		},
+		{
+			name: "request error with nil response",
+			args: args{
+				ctx: context.Background(),
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
+			},
+			resp:    nil,
+			respErr: fmt.Errorf("something is really wrong"),
+			wantErr: "something is really wrong",
 		},
 	}
 	for _, tt := range tests {
@@ -448,10 +464,28 @@ func TestSSHKeysClient_Delete(t *testing.T) {
 			name: "request error",
 			args: args{
 				ctx: context.Background(),
-				ref: SSHKeyRef{ID: "ssh_O574YEEEYeLmqdmn"},
+			},
+			resp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
 			},
 			respErr: fmt.Errorf("flux capacitor undercharged"),
+			wantResp: &katapult.Response{
+				Response: &http.Response{
+					StatusCode: http.StatusInternalServerError,
+				},
+			},
 			wantErr: "flux capacitor undercharged",
+		},
+		{
+			name: "request error with nil response",
+			args: args{
+				ctx: context.Background(),
+			},
+			resp:    nil,
+			respErr: fmt.Errorf("something is really wrong"),
+			wantErr: "something is really wrong",
 		},
 	}
 	for _, tt := range tests {
