@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1628009359486,
+  "lastUpdate": 1628009488774,
   "repoUrl": "https://github.com/krystal/go-katapult",
   "entries": {
     "Benchmark": [
@@ -3378,6 +3378,60 @@ window.BENCHMARK_DATA = {
             "value": 5105,
             "unit": "ns/op",
             "extra": "251689 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jake.gealer@krystal.uk",
+            "name": "Jake Gealer",
+            "username": "JakeMakesStuff"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "782b3dd6c06ac1f0bfb51e486eb0a7ab306d0ee2",
+          "message": "feat(ssh_keys): add support for managing organization SSH keys (#119)\n\n* add SSH key client\r\n\r\n* add start of tests\r\n\r\n* add list test\r\n\r\n* add all unit tests\r\n\r\n* make format\r\n\r\n* fix linter\r\n\r\n* split up string\r\n\r\n* simplify url.Values\r\n\r\n* add SSHKeyRef json test\r\n\r\n* add SSH key client\r\n\r\n* add pagination to List\r\n\r\n* use new pagination methods in list function\r\n\r\n* change test to full\r\n\r\n* remove resp test check\r\n\r\n* add wantResp\r\n\r\n* this spiralled my mind for some reason\r\n\r\n* add request error with nil response\r\n\r\n* fix ssh key properties, and actually in the right branch this time\r\n\r\n* add status to the right branch this time\r\n\r\n* add test cases for nil/not nil requests\r\n\r\n* add TestClient_SSHKeys",
+          "timestamp": "2021-08-03T17:50:23+01:00",
+          "tree_id": "87b874b6d33f941a24b0924e0a797d45ced431af",
+          "url": "https://github.com/krystal/go-katapult/commit/782b3dd6c06ac1f0bfb51e486eb0a7ab306d0ee2"
+        },
+        "date": 1628009488175,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkNameGenerator_RandomHostname",
+            "value": 10788,
+            "unit": "ns/op",
+            "extra": "106996 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_NoPrefix",
+            "value": 4973,
+            "unit": "ns/op",
+            "extra": "230658 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_OnePrefix",
+            "value": 5112,
+            "unit": "ns/op",
+            "extra": "239354 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_TwoPrefixes",
+            "value": 5372,
+            "unit": "ns/op",
+            "extra": "234570 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_ThreePrefixes",
+            "value": 5200,
+            "unit": "ns/op",
+            "extra": "237157 times\n2 procs"
           }
         ]
       }
