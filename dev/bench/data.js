@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1627897323642,
+  "lastUpdate": 1628009056115,
   "repoUrl": "https://github.com/krystal/go-katapult",
   "entries": {
     "Benchmark": [
@@ -3270,6 +3270,60 @@ window.BENCHMARK_DATA = {
             "value": 5018,
             "unit": "ns/op",
             "extra": "235372 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jake.gealer@krystal.uk",
+            "name": "Jake Gealer",
+            "username": "JakeMakesStuff"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "37192f2b082a1899ead6d0cf49f028cfadbe1d85",
+          "message": "Merge pull request #115 from krystal/jakemakesstuff/ssh-keys\n\nfeat(ssh_keys): add support for managing organization SSH keys",
+          "timestamp": "2021-08-03T17:43:43+01:00",
+          "tree_id": "87b874b6d33f941a24b0924e0a797d45ced431af",
+          "url": "https://github.com/krystal/go-katapult/commit/37192f2b082a1899ead6d0cf49f028cfadbe1d85"
+        },
+        "date": 1628009055055,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkNameGenerator_RandomHostname",
+            "value": 7427,
+            "unit": "ns/op",
+            "extra": "173163 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_NoPrefix",
+            "value": 3752,
+            "unit": "ns/op",
+            "extra": "310286 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_OnePrefix",
+            "value": 4027,
+            "unit": "ns/op",
+            "extra": "308706 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_TwoPrefixes",
+            "value": 3607,
+            "unit": "ns/op",
+            "extra": "308858 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_ThreePrefixes",
+            "value": 3862,
+            "unit": "ns/op",
+            "extra": "286358 times\n2 procs"
           }
         ]
       }
