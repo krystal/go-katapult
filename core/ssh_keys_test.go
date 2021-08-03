@@ -68,18 +68,17 @@ func Test_sshKeyResponseBody_JSONMarshaling(t *testing.T) {
 func Test_AuthSSHKeyProperties_JSONMarshaling(t *testing.T) {
 	tests := []struct {
 		name string
-		obj  *AuthSSHKey
+		obj  *AuthSSHKeyProperties
 	}{
 		{
 			name: "empty",
-			obj:  &AuthSSHKey{},
+			obj:  &AuthSSHKeyProperties{},
 		},
 		{
 			name: "full",
-			obj: &AuthSSHKey{
-				ID:          "a",
-				Name:        "b",
-				Fingerprint: "c",
+			obj: &AuthSSHKeyProperties{
+				Name: "a",
+				Key:  "b",
 			},
 		},
 	}
