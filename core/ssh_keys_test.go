@@ -218,6 +218,16 @@ func TestSSHKeysClient_List(t *testing.T) {
 			respErr: fmt.Errorf("flux capacitor undercharged"),
 			wantErr: "flux capacitor undercharged",
 		},
+		{
+			name: "request error with nil response",
+			args: args{
+				ctx: context.Background(),
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
+			},
+			resp:    nil,
+			respErr: fmt.Errorf("something is really wrong"),
+			wantErr: "something is really wrong",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -379,14 +389,15 @@ func TestSSHKeysClient_Delete(t *testing.T) {
 		ref SSHKeyRef
 	}
 	tests := []struct {
-		name    string
-		args    args
-		resp    *katapult.Response
-		respErr error
-		respV   *sshKeysResponseBody
-		want    *AuthSSHKey
-		wantReq *katapult.Request
-		wantErr string
+		name     string
+		args     args
+		resp     *katapult.Response
+		respErr  error
+		respV    *sshKeysResponseBody
+		want     *AuthSSHKey
+		wantReq  *katapult.Request
+		wantResp *katapult.Response
+		wantErr  string
 	}{
 		{
 			name: "success",
@@ -400,6 +411,9 @@ func TestSSHKeysClient_Delete(t *testing.T) {
 					Name:        "test",
 					Fingerprint: sshFingerprint,
 				},
+			},
+			resp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
 			},
 			want: &AuthSSHKey{
 				ID:          "testing-id",
@@ -416,6 +430,9 @@ func TestSSHKeysClient_Delete(t *testing.T) {
 						},
 					}.Encode(),
 				},
+			},
+			wantResp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
 			},
 		},
 		{
@@ -441,8 +458,8 @@ func TestSSHKeysClient_Delete(t *testing.T) {
 
 			assert.Equal(t, tt.want, got)
 
-			if tt.resp != nil {
-				assert.Equal(t, tt.resp, resp)
+			if tt.wantResp != nil {
+				assert.Equal(t, tt.wantResp, resp)
 			}
 
 			if tt.wantReq != nil {
