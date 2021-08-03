@@ -227,10 +227,6 @@ func TestSSHKeysClient_List(t *testing.T) {
 
 			assert.Equal(t, tt.want, got)
 
-			if tt.resp != nil {
-				assert.Equal(t, tt.resp, resp)
-			}
-
 			if tt.wantResp != nil {
 				assert.Equal(t, tt.wantResp, resp)
 			}
