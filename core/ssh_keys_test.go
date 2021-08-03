@@ -517,3 +517,9 @@ func TestSSHKeysClient_Delete(t *testing.T) {
 		})
 	}
 }
+
+func TestClient_SSHKeys(t *testing.T) {
+	c := New(&testclient.Client{})
+
+	assert.IsType(t, &SSHKeysClient{}, c.SSHKeys)
+}
