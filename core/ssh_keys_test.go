@@ -48,15 +48,13 @@ func Test_sshKeyResponseBody_JSONMarshaling(t *testing.T) {
 			obj:  &sshKeysResponseBody{},
 		},
 		{
-			name: "ssh_key",
+			name: "full",
 			obj: &sshKeysResponseBody{
-				SSHKey: &AuthSSHKey{},
-			},
-		},
-		{
-			name: "ssh_keys",
-			obj: &sshKeysResponseBody{
-				SSHKeys: []*AuthSSHKey{{}},
+				Pagination: &katapult.Pagination{
+					CurrentPage: 33,
+				},
+				SSHKey:  &AuthSSHKey{ID: "1"},
+				SSHKeys: []*AuthSSHKey{{ID: "2"}},
 			},
 		},
 	}
@@ -184,9 +182,10 @@ func TestSSHKeysClient_List(t *testing.T) {
 				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
 			},
 			resp: &katapult.Response{
-				Pagination: &katapult.Pagination{Total: 333},
+				Response: &http.Response{StatusCode: http.StatusOK},
 			},
 			respV: &sshKeysResponseBody{
+				Pagination: &katapult.Pagination{Total: 333},
 				SSHKeys: []*AuthSSHKey{
 					{ID: "ssh_O574YEEEYeLmqdmn"},
 				},
@@ -205,6 +204,10 @@ func TestSSHKeysClient_List(t *testing.T) {
 					}.Encode(),
 				},
 			},
+			wantResp: &katapult.Response{
+				Pagination: &katapult.Pagination{Total: 333},
+				Response:   &http.Response{StatusCode: http.StatusOK},
+			},
 		},
 		{
 			name: "request error",
@@ -214,6 +217,16 @@ func TestSSHKeysClient_List(t *testing.T) {
 			},
 			respErr: fmt.Errorf("flux capacitor undercharged"),
 			wantErr: "flux capacitor undercharged",
+		},
+		{
+			name: "request error with nil response",
+			args: args{
+				ctx: context.Background(),
+				org: OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
+			},
+			resp:    nil,
+			respErr: fmt.Errorf("something is really wrong"),
+			wantErr: "something is really wrong",
 		},
 	}
 	for _, tt := range tests {
@@ -228,10 +241,6 @@ func TestSSHKeysClient_List(t *testing.T) {
 			test.AssertContext(t, ctx, tc.Ctx)
 
 			assert.Equal(t, tt.want, got)
-
-			if tt.resp != nil {
-				assert.Equal(t, tt.resp, resp)
-			}
 
 			if tt.wantResp != nil {
 				assert.Equal(t, tt.wantResp, resp)
@@ -276,14 +285,15 @@ func TestSSHKeysClient_Add(t *testing.T) {
 		args AuthSSHKeyProperties
 	}
 	tests := []struct {
-		name    string
-		args    args
-		resp    *katapult.Response
-		respErr error
-		respV   *sshKeysResponseBody
-		want    *AuthSSHKey
-		wantReq *katapult.Request
-		wantErr string
+		name     string
+		args     args
+		respErr  error
+		resp     *katapult.Response
+		respV    *sshKeysResponseBody
+		want     *AuthSSHKey
+		wantReq  *katapult.Request
+		wantResp *katapult.Response
+		wantErr  string
 	}{
 		{
 			name: "success",
@@ -294,6 +304,9 @@ func TestSSHKeysClient_Add(t *testing.T) {
 					Name: "test",
 					Key:  sshPublicKey,
 				},
+			},
+			resp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
 			},
 			respV: &sshKeysResponseBody{
 				SSHKey: &AuthSSHKey{
@@ -321,6 +334,9 @@ func TestSSHKeysClient_Add(t *testing.T) {
 					Name: "test",
 					Key:  sshPublicKey,
 				},
+			},
+			wantResp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
 			},
 		},
 		{
@@ -350,8 +366,8 @@ func TestSSHKeysClient_Add(t *testing.T) {
 
 			assert.Equal(t, tt.want, got)
 
-			if tt.resp != nil {
-				assert.Equal(t, tt.resp, resp)
+			if tt.wantResp != nil {
+				assert.Equal(t, tt.wantResp, resp)
 			}
 
 			if tt.wantReq != nil {
@@ -373,14 +389,15 @@ func TestSSHKeysClient_Delete(t *testing.T) {
 		ref SSHKeyRef
 	}
 	tests := []struct {
-		name    string
-		args    args
-		resp    *katapult.Response
-		respErr error
-		respV   *sshKeysResponseBody
-		want    *AuthSSHKey
-		wantReq *katapult.Request
-		wantErr string
+		name     string
+		args     args
+		resp     *katapult.Response
+		respErr  error
+		respV    *sshKeysResponseBody
+		want     *AuthSSHKey
+		wantReq  *katapult.Request
+		wantResp *katapult.Response
+		wantErr  string
 	}{
 		{
 			name: "success",
@@ -394,6 +411,9 @@ func TestSSHKeysClient_Delete(t *testing.T) {
 					Name:        "test",
 					Fingerprint: sshFingerprint,
 				},
+			},
+			resp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
 			},
 			want: &AuthSSHKey{
 				ID:          "testing-id",
@@ -410,6 +430,9 @@ func TestSSHKeysClient_Delete(t *testing.T) {
 						},
 					}.Encode(),
 				},
+			},
+			wantResp: &katapult.Response{
+				Response: &http.Response{StatusCode: http.StatusOK},
 			},
 		},
 		{
@@ -435,8 +458,8 @@ func TestSSHKeysClient_Delete(t *testing.T) {
 
 			assert.Equal(t, tt.want, got)
 
-			if tt.resp != nil {
-				assert.Equal(t, tt.resp, resp)
+			if tt.wantResp != nil {
+				assert.Equal(t, tt.wantResp, resp)
 			}
 
 			if tt.wantReq != nil {
