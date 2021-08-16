@@ -319,15 +319,15 @@ func (g *Generator) structField(
 	}
 
 	switch f.Type {
-	case "Rapid/Scalars/Boolean":
+	case "Apia/Scalars/Boolean", "Rapid/Scalars/Boolean":
 		return jen.Id(name).Add(base.Bool().Add(tag)), nil
-	case "Rapid/Scalars/Decimal":
+	case "Apia/Scalars/Decimal", "Rapid/Scalars/Decimal":
 		return jen.Id(name).Add(base.Float64().Add(tag)), nil
-	case "Rapid/Scalars/Integer":
+	case "Apia/Scalars/Integer", "Rapid/Scalars/Integer":
 		return jen.Id(name).Add(base.Int().Add(tag)), nil
-	case "Rapid/Scalars/String":
+	case "Apia/Scalars/String", "Rapid/Scalars/String":
 		return jen.Id(name).Add(base.String().Add(tag)), nil
-	case "Rapid/Scalars/UnixTime":
+	case "Apia/Scalars/UnixTime", "Rapid/Scalars/UnixTime":
 		return jen.Id(name).Add(sliceBase.Id("*").Qual(
 			"github.com/augurysys/timestamp", "Timestamp",
 		)).Add(tag), nil
