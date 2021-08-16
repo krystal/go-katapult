@@ -64,6 +64,7 @@ func WithAPIKey(key string) Opt {
 
 // WithTracing wraps the http client Transport with the otelhttp helper
 // This captures outgoing request details.
+// This has no affect when used in combination with WithHTTPClient()
 func WithTracing(opts ...otelhttp.Option) Opt {
 	return func(c *Client, httpClient *http.Client) error {
 		httpClient.Transport = otelhttp.NewTransport(
