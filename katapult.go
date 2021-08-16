@@ -66,7 +66,10 @@ func WithAPIKey(key string) Opt {
 // This captures outgoing request details.
 func WithTracing(opts ...otelhttp.Option) Opt {
 	return func(c *Client, httpClient *http.Client) error {
-		httpClient.Transport = otelhttp.NewTransport(httpClient.Transport, opts...)
+		httpClient.Transport = otelhttp.NewTransport(
+			httpClient.Transport,
+			opts...,
+		)
 
 		return nil
 	}
@@ -88,7 +91,7 @@ func New(opts ...Opt) (*Client, error) {
 	// Define default values for client
 	httpClient := &http.Client{Timeout: DefaultTimeout}
 	c := &Client{
-		HTTPClient: httpClient,
+		HTTPClient: nil,
 		BaseURL:    DefaultURL,
 		UserAgent:  DefaultUserAgent,
 	}
@@ -99,6 +102,10 @@ func New(opts ...Opt) (*Client, error) {
 		if err != nil {
 			return nil, err
 		}
+	}
+
+	if c.HTTPClient == nil {
+		c.HTTPClient = httpClient
 	}
 
 	return c, nil
