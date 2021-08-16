@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"io"
 	"net/http"
 	"net/url"
@@ -17,10 +18,10 @@ const (
 
 var DefaultURL = &url.URL{Scheme: "https", Host: "api.katapult.io"}
 
-type Opt func(c *Client) error
+type Opt func(c *Client, h *http.Client) error
 
 func WithHTTPClient(hc HTTPClient) Opt {
-	return func(c *Client) error {
+	return func(c *Client, _ *http.Client) error {
 		c.HTTPClient = hc
 
 		return nil
@@ -28,7 +29,7 @@ func WithHTTPClient(hc HTTPClient) Opt {
 }
 
 func WithUserAgent(ua string) Opt {
-	return func(c *Client) error {
+	return func(c *Client, _ *http.Client) error {
 		c.UserAgent = ua
 
 		return nil
@@ -36,7 +37,7 @@ func WithUserAgent(ua string) Opt {
 }
 
 func WithBaseURL(u *url.URL) Opt {
-	return func(c *Client) error {
+	return func(c *Client, _ *http.Client) error {
 		switch {
 		case u == nil:
 			return fmt.Errorf("katapult: base URL cannot be nil")
@@ -53,8 +54,18 @@ func WithBaseURL(u *url.URL) Opt {
 }
 
 func WithAPIKey(key string) Opt {
-	return func(c *Client) error {
+	return func(c *Client, _ *http.Client) error {
 		c.APIKey = key
+
+		return nil
+	}
+}
+
+// WithTracing wraps the http client Transport with the otelhttp helper
+// This captures outgoing request details.
+func WithTracing() Opt {
+	return func(c *Client, httpClient *http.Client) error {
+		httpClient.Transport = otelhttp.NewTransport(httpClient.Transport)
 
 		return nil
 	}
@@ -74,15 +85,16 @@ type Client struct {
 
 func New(opts ...Opt) (*Client, error) {
 	// Define default values for client
+	httpClient := &http.Client{Timeout: DefaultTimeout}
 	c := &Client{
-		HTTPClient: &http.Client{Timeout: DefaultTimeout},
+		HTTPClient: httpClient,
 		BaseURL:    DefaultURL,
 		UserAgent:  DefaultUserAgent,
 	}
 
 	// Apply options to created Client
 	for _, o := range opts {
-		err := o(c)
+		err := o(c, httpClient)
 		if err != nil {
 			return nil, err
 		}

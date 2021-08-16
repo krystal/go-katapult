@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -598,17 +599,17 @@ func TestClient_Do(t *testing.T) {
 			require.NotNil(t, c)
 
 			if tt.fields.HTTPClient != nil {
-				_ = WithHTTPClient(tt.fields.HTTPClient)(c)
+				_ = WithHTTPClient(tt.fields.HTTPClient)(c, nil)
 			}
 
 			apiKey := defaultAPIKey
 			if tt.fields.APIKey != nil {
 				apiKey = *tt.fields.APIKey
 			}
-			_ = WithAPIKey(apiKey)(c)
+			_ = WithAPIKey(apiKey)(c, nil)
 
 			if tt.fields.UserAgent != nil {
-				_ = WithUserAgent(*tt.fields.UserAgent)(c)
+				_ = WithUserAgent(*tt.fields.UserAgent)(c, nil)
 			}
 
 			if tt.wantReq != nil && tt.wantReq.url != nil {
@@ -755,7 +756,7 @@ func TestNew(t *testing.T) {
 		{
 			name: "err propagates",
 			opts: []Opt{
-				func(c *Client) error {
+				func(c *Client, _ *http.Client) error {
 					return errors.New("tribbles in the vents")
 				},
 			},
@@ -785,7 +786,7 @@ func TestNew(t *testing.T) {
 func TestWithHTTPClient(t *testing.T) {
 	hc := &http.Client{Timeout: 42 * time.Second}
 	c := &Client{HTTPClient: http.DefaultClient}
-	err := WithHTTPClient(hc)(c)
+	err := WithHTTPClient(hc)(c, nil)
 	assert.NoError(t, err)
 	assert.Equal(t, hc, c.HTTPClient)
 }
@@ -793,7 +794,7 @@ func TestWithHTTPClient(t *testing.T) {
 func TestWithUserAgent(t *testing.T) {
 	c := &Client{}
 	ua := "roger_moore/0.0.7"
-	err := WithUserAgent(ua)(c)
+	err := WithUserAgent(ua)(c, nil)
 	assert.NoError(t, err)
 	assert.Equal(t, ua, c.UserAgent)
 }
@@ -801,9 +802,20 @@ func TestWithUserAgent(t *testing.T) {
 func TestWithAPIKey(t *testing.T) {
 	c := &Client{}
 	key := "extremely_very_secret_secret"
-	err := WithAPIKey(key)(c)
+	err := WithAPIKey(key)(c, nil)
 	assert.NoError(t, err)
 	assert.Equal(t, key, c.APIKey)
+}
+
+func TestWithTracing(t *testing.T) {
+	c := &Client{}
+	httpClient := &http.Client{}
+	c.HTTPClient = httpClient
+
+	err := WithTracing()(c, httpClient)
+	assert.NoError(t, err)
+
+	assert.IsType(t, otelhttp.NewTransport(nil), httpClient.Transport)
 }
 
 func TestWithBaseURL(t *testing.T) {
@@ -832,7 +844,7 @@ func TestWithBaseURL(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &Client{}
-			err := WithBaseURL(tt.baseURL)(c)
+			err := WithBaseURL(tt.baseURL)(c, nil)
 			if tt.wantErr != "" {
 				assert.EqualError(t, err, tt.wantErr)
 
