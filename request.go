@@ -56,7 +56,12 @@ func RequestSetHeader(key, value string) RequestOption {
 	}
 }
 
-func NewRequest(method string, u *url.URL, body interface{}, opts ...RequestOption) *Request {
+func NewRequest(
+	method string,
+	u *url.URL,
+	body interface{},
+	opts ...RequestOption,
+) *Request {
 	r := &Request{
 		Method: method,
 		URL:    u,
