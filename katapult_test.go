@@ -727,7 +727,7 @@ func TestNew(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		name          string
-		opts          []Opt
+		opts          []Option
 		wantAPIKey    string
 		wantUserAgent string
 		wantBaseURL   *url.URL
@@ -743,7 +743,7 @@ func TestNew(t *testing.T) {
 		},
 		{
 			name: "options specified",
-			opts: []Opt{
+			opts: []Option{
 				WithAPIKey("xyzzy"),
 				WithUserAgent("skynet"),
 			},
@@ -754,7 +754,7 @@ func TestNew(t *testing.T) {
 		},
 		{
 			name: "err propagates",
-			opts: []Opt{
+			opts: []Option{
 				func(c *Client) error {
 					return errors.New("tribbles in the vents")
 				},

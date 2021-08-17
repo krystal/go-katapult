@@ -46,12 +46,29 @@ type Request struct {
 	Body interface{}
 }
 
-func NewRequest(method string, u *url.URL, body interface{}) *Request {
-	return &Request{
+type RequestOption = func(r *Request)
+
+// RequestSetHeader sets a header on the outgoing request. This replaces any
+// headers that are currently specified with that key.
+func RequestSetHeader(key, value string) RequestOption {
+	return func(r *Request) {
+		r.Header.Set(key, value)
+	}
+}
+
+func NewRequest(method string, u *url.URL, body interface{}, opts ...RequestOption) *Request {
+	r := &Request{
 		Method: method,
 		URL:    u,
 		Body:   body,
 	}
+
+	// Apply options to created Client
+	for _, opt := range opts {
+		opt(r)
+	}
+
+	return r
 }
 
 func (r *Request) bodyContent() (string, io.Reader, error) {

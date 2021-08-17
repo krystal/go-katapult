@@ -17,9 +17,9 @@ const (
 
 var DefaultURL = &url.URL{Scheme: "https", Host: "api.katapult.io"}
 
-type Opt func(c *Client) error
+type Option func(c *Client) error
 
-func WithHTTPClient(hc HTTPClient) Opt {
+func WithHTTPClient(hc HTTPClient) Option {
 	return func(c *Client) error {
 		c.HTTPClient = hc
 
@@ -27,7 +27,7 @@ func WithHTTPClient(hc HTTPClient) Opt {
 	}
 }
 
-func WithUserAgent(ua string) Opt {
+func WithUserAgent(ua string) Option {
 	return func(c *Client) error {
 		c.UserAgent = ua
 
@@ -35,7 +35,7 @@ func WithUserAgent(ua string) Opt {
 	}
 }
 
-func WithBaseURL(u *url.URL) Opt {
+func WithBaseURL(u *url.URL) Option {
 	return func(c *Client) error {
 		switch {
 		case u == nil:
@@ -52,7 +52,7 @@ func WithBaseURL(u *url.URL) Opt {
 	}
 }
 
-func WithAPIKey(key string) Opt {
+func WithAPIKey(key string) Option {
 	return func(c *Client) error {
 		c.APIKey = key
 
@@ -72,7 +72,7 @@ type Client struct {
 	BaseURL   *url.URL
 }
 
-func New(opts ...Opt) (*Client, error) {
+func New(opts ...Option) (*Client, error) {
 	// Define default values for client
 	c := &Client{
 		HTTPClient: &http.Client{Timeout: DefaultTimeout},
