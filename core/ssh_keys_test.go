@@ -244,7 +244,7 @@ func TestSSHKeysClient_List(t *testing.T) {
 			c := NewSSHKeysClient(tc)
 			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.List(ctx, tt.args.org, tt.args.opts)
+			got, resp, err := c.List(ctx, tt.args.org, tt.args.opts, testRequestOption)
 
 			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
 			test.AssertContext(t, ctx, tc.Ctx)
@@ -256,6 +256,7 @@ func TestSSHKeysClient_List(t *testing.T) {
 			}
 
 			if tt.wantReq != nil {
+				setWantRequestOptionHeader(tt.wantReq)
 				assert.Equal(t, tt.wantReq, tc.Request)
 			}
 
@@ -384,7 +385,7 @@ func TestSSHKeysClient_Add(t *testing.T) {
 			c := NewSSHKeysClient(tc)
 			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.Add(ctx, tt.args.org, tt.args.args)
+			got, resp, err := c.Add(ctx, tt.args.org, tt.args.args, testRequestOption)
 
 			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
 			test.AssertContext(t, ctx, tc.Ctx)
@@ -396,6 +397,7 @@ func TestSSHKeysClient_Add(t *testing.T) {
 			}
 
 			if tt.wantReq != nil {
+				setWantRequestOptionHeader(tt.wantReq)
 				assert.Equal(t, tt.wantReq, tc.Request)
 			}
 
@@ -494,7 +496,7 @@ func TestSSHKeysClient_Delete(t *testing.T) {
 			c := NewSSHKeysClient(tc)
 			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.Delete(ctx, tt.args.ref)
+			got, resp, err := c.Delete(ctx, tt.args.ref, testRequestOption)
 
 			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
 			test.AssertContext(t, ctx, tc.Ctx)
@@ -506,6 +508,7 @@ func TestSSHKeysClient_Delete(t *testing.T) {
 			}
 
 			if tt.wantReq != nil {
+				setWantRequestOptionHeader(tt.wantReq)
 				assert.Equal(t, tt.wantReq, tc.Request)
 			}
 

@@ -120,3 +120,19 @@ func prepareTestClient(t *testing.T) (
 
 	return rm, mux, url.String(), server.Close
 }
+
+var testRequestOption = katapult.RequestSetHeader("X-Clacks-Overhead", "GNU Corey Kendall")
+
+func setWantRequestOptionHeader(wantReq *katapult.Request) {
+	if wantReq.Header == nil {
+		wantReq.Header = http.Header{}
+	}
+
+	wantReq.Header.Set("X-Clacks-Overhead", "GNU Corey Kendall")
+}
+
+func assertRequestOptionHeader(t *testing.T, r *http.Request) {
+	want := "GNU Corey Kendall"
+	got := r.Header.Get("X-Clacks-Overhead")
+	assert.Equal(t, want, got)
+}

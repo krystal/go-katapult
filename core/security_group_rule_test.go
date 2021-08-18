@@ -363,7 +363,7 @@ func TestSecurityGroupRulesClient_List(t *testing.T) {
 			c := NewSecurityGroupRulesClient(tc)
 			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.List(ctx, tt.args.sg, tt.args.opts)
+			got, resp, err := c.List(ctx, tt.args.sg, tt.args.opts, testRequestOption)
 
 			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
 			test.AssertContext(t, ctx, tc.Ctx)
@@ -375,6 +375,7 @@ func TestSecurityGroupRulesClient_List(t *testing.T) {
 			}
 
 			if tt.wantReq != nil {
+				setWantRequestOptionHeader(tt.wantReq)
 				assert.Equal(t, tt.wantReq, tc.Request)
 			}
 
@@ -473,7 +474,7 @@ func TestSecurityGroupRulesClient_Get(t *testing.T) {
 			c := NewSecurityGroupRulesClient(tc)
 			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.Get(ctx, tt.args.ref)
+			got, resp, err := c.Get(ctx, tt.args.ref, testRequestOption)
 
 			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
 			test.AssertContext(t, ctx, tc.Ctx)
@@ -485,6 +486,7 @@ func TestSecurityGroupRulesClient_Get(t *testing.T) {
 			}
 
 			if tt.wantReq != nil {
+				setWantRequestOptionHeader(tt.wantReq)
 				assert.Equal(t, tt.wantReq, tc.Request)
 			}
 
@@ -583,7 +585,7 @@ func TestSecurityGroupRulesClient_GetByID(t *testing.T) {
 			c := NewSecurityGroupRulesClient(tc)
 			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.GetByID(ctx, tt.args.id)
+			got, resp, err := c.GetByID(ctx, tt.args.id, testRequestOption)
 
 			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
 			test.AssertContext(t, ctx, tc.Ctx)
@@ -595,6 +597,7 @@ func TestSecurityGroupRulesClient_GetByID(t *testing.T) {
 			}
 
 			if tt.wantReq != nil {
+				setWantRequestOptionHeader(tt.wantReq)
 				assert.Equal(t, tt.wantReq, tc.Request)
 			}
 
@@ -697,7 +700,7 @@ func TestSecurityGroupRulesClient_Create(t *testing.T) {
 			c := NewSecurityGroupRulesClient(tc)
 			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.Create(ctx, tt.args.ref, tt.args.args)
+			got, resp, err := c.Create(ctx, tt.args.ref, tt.args.args, testRequestOption)
 
 			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
 			test.AssertContext(t, ctx, tc.Ctx)
@@ -709,6 +712,7 @@ func TestSecurityGroupRulesClient_Create(t *testing.T) {
 			}
 
 			if tt.wantReq != nil {
+				setWantRequestOptionHeader(tt.wantReq)
 				assert.Equal(t, tt.wantReq, tc.Request)
 			}
 
@@ -816,7 +820,7 @@ func TestSecurityGroupRulesClient_Update(t *testing.T) {
 			c := NewSecurityGroupRulesClient(tc)
 			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.Update(ctx, tt.args.ref, tt.args.args)
+			got, resp, err := c.Update(ctx, tt.args.ref, tt.args.args, testRequestOption)
 
 			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
 			test.AssertContext(t, ctx, tc.Ctx)
@@ -828,6 +832,7 @@ func TestSecurityGroupRulesClient_Update(t *testing.T) {
 			}
 
 			if tt.wantReq != nil {
+				setWantRequestOptionHeader(tt.wantReq)
 				assert.Equal(t, tt.wantReq, tc.Request)
 			}
 
@@ -924,7 +929,7 @@ func TestSecurityGroupRulesClient_Delete2(t *testing.T) {
 			c := NewSecurityGroupRulesClient(tc)
 			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.Delete(ctx, tt.args.ref)
+			got, resp, err := c.Delete(ctx, tt.args.ref, testRequestOption)
 
 			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
 			test.AssertContext(t, ctx, tc.Ctx)
@@ -936,6 +941,7 @@ func TestSecurityGroupRulesClient_Delete2(t *testing.T) {
 			}
 
 			if tt.wantReq != nil {
+				setWantRequestOptionHeader(tt.wantReq)
 				assert.Equal(t, tt.wantReq, tc.Request)
 			}
 
