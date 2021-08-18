@@ -363,7 +363,12 @@ func TestSecurityGroupRulesClient_List(t *testing.T) {
 			c := NewSecurityGroupRulesClient(tc)
 			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.List(ctx, tt.args.sg, tt.args.opts, testRequestOption)
+			got, resp, err := c.List(
+				ctx,
+				tt.args.sg,
+				tt.args.opts,
+				testRequestOption,
+			)
 
 			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
 			test.AssertContext(t, ctx, tc.Ctx)
@@ -700,7 +705,12 @@ func TestSecurityGroupRulesClient_Create(t *testing.T) {
 			c := NewSecurityGroupRulesClient(tc)
 			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.Create(ctx, tt.args.ref, tt.args.args, testRequestOption)
+			got, resp, err := c.Create(
+				ctx,
+				tt.args.ref,
+				tt.args.args,
+				testRequestOption,
+			)
 
 			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
 			test.AssertContext(t, ctx, tc.Ctx)
@@ -820,7 +830,12 @@ func TestSecurityGroupRulesClient_Update(t *testing.T) {
 			c := NewSecurityGroupRulesClient(tc)
 			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.Update(ctx, tt.args.ref, tt.args.args, testRequestOption)
+			got, resp, err := c.Update(
+				ctx,
+				tt.args.ref,
+				tt.args.args,
+				testRequestOption,
+			)
 
 			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
 			test.AssertContext(t, ctx, tc.Ctx)

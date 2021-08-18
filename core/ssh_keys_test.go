@@ -244,7 +244,12 @@ func TestSSHKeysClient_List(t *testing.T) {
 			c := NewSSHKeysClient(tc)
 			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.List(ctx, tt.args.org, tt.args.opts, testRequestOption)
+			got, resp, err := c.List(
+				ctx,
+				tt.args.org,
+				tt.args.opts,
+				testRequestOption,
+			)
 
 			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
 			test.AssertContext(t, ctx, tc.Ctx)
@@ -385,7 +390,12 @@ func TestSSHKeysClient_Add(t *testing.T) {
 			c := NewSSHKeysClient(tc)
 			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.Add(ctx, tt.args.org, tt.args.args, testRequestOption)
+			got, resp, err := c.Add(
+				ctx,
+				tt.args.org,
+				tt.args.args,
+				testRequestOption,
+			)
 
 			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
 			test.AssertContext(t, ctx, tc.Ctx)

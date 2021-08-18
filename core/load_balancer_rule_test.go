@@ -347,7 +347,12 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 			c := NewLoadBalancerRulesClient(tc)
 			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.List(ctx, tt.args.lb, tt.args.opts, testRequestOption)
+			got, resp, err := c.List(
+				ctx,
+				tt.args.lb,
+				tt.args.opts,
+				testRequestOption,
+			)
 
 			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
 			test.AssertContext(t, ctx, tc.Ctx)
@@ -702,7 +707,12 @@ func TestLoadBalancerRulesClient_Create(t *testing.T) {
 			c := NewLoadBalancerRulesClient(tc)
 			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.Create(ctx, tt.args.ref, tt.args.args, testRequestOption)
+			got, resp, err := c.Create(
+				ctx,
+				tt.args.ref,
+				tt.args.args,
+				testRequestOption,
+			)
 
 			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
 			test.AssertContext(t, ctx, tc.Ctx)
@@ -826,7 +836,12 @@ func TestLoadBalancerRulesClient_Update(t *testing.T) {
 			c := NewLoadBalancerRulesClient(tc)
 			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.Update(ctx, tt.args.ref, tt.args.args, testRequestOption)
+			got, resp, err := c.Update(
+				ctx,
+				tt.args.ref,
+				tt.args.args,
+				testRequestOption,
+			)
 
 			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
 			test.AssertContext(t, ctx, tc.Ctx)
