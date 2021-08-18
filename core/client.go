@@ -19,6 +19,7 @@ type Client struct {
 	Organizations                   *OrganizationsClient
 	SecurityGroups                  *SecurityGroupsClient
 	SecurityGroupRules              *SecurityGroupRulesClient
+	Tags                            *TagsClient
 	SSHKeys                         *SSHKeysClient
 	Tasks                           *TasksClient
 	TrashObjects                    *TrashObjectsClient
@@ -54,6 +55,7 @@ func New(rm RequestMaker) *Client {
 		Organizations:                   NewOrganizationsClient(rm),
 		SecurityGroups:                  NewSecurityGroupsClient(rm),
 		SecurityGroupRules:              NewSecurityGroupRulesClient(rm),
+		Tags:                            NewTagsClient(rm),
 		SSHKeys:                         NewSSHKeysClient(rm),
 		Tasks:                           NewTasksClient(rm),
 		TrashObjects:                    NewTrashObjectsClient(rm),

@@ -358,6 +358,10 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 				assert.Equal(t, tt.wantResp, resp)
 			}
 
+			if tt.wantResp != nil {
+				assert.Equal(t, tt.wantResp, resp)
+			}
+
 			if tt.wantReq != nil {
 				assert.Equal(t, tt.wantReq, tc.Request)
 			}
