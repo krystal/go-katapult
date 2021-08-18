@@ -97,6 +97,7 @@ func (s *DiskTemplatesClient) List(
 	ctx context.Context,
 	org OrganizationRef,
 	opts *DiskTemplateListOptions,
+	reqOpts ...katapult.RequestOption,
 ) ([]*DiskTemplate, *katapult.Response, error) {
 	qs := queryValues(org, opts)
 	u := &url.URL{
@@ -104,7 +105,7 @@ func (s *DiskTemplatesClient) List(
 		RawQuery: qs.Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 	resp.Pagination = body.Pagination
 
 	return body.DiskTemplates, resp, err
@@ -113,13 +114,14 @@ func (s *DiskTemplatesClient) List(
 func (s *DiskTemplatesClient) Get(
 	ctx context.Context,
 	ref DiskTemplateRef,
+	reqOpts ...katapult.RequestOption,
 ) (*DiskTemplate, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "disk_templates/_",
 		RawQuery: ref.queryValues().Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 
 	return body.DiskTemplate, resp, err
 }
@@ -127,15 +129,17 @@ func (s *DiskTemplatesClient) Get(
 func (s *DiskTemplatesClient) GetByID(
 	ctx context.Context,
 	id string,
+	reqOpts ...katapult.RequestOption,
 ) (*DiskTemplate, *katapult.Response, error) {
-	return s.Get(ctx, DiskTemplateRef{ID: id})
+	return s.Get(ctx, DiskTemplateRef{ID: id}, reqOpts...)
 }
 
 func (s *DiskTemplatesClient) GetByPermalink(
 	ctx context.Context,
 	permalink string,
+	reqOpts ...katapult.RequestOption,
 ) (*DiskTemplate, *katapult.Response, error) {
-	return s.Get(ctx, DiskTemplateRef{Permalink: permalink})
+	return s.Get(ctx, DiskTemplateRef{Permalink: permalink}, reqOpts...)
 }
 
 func (s *DiskTemplatesClient) doRequest(
@@ -143,11 +147,12 @@ func (s *DiskTemplatesClient) doRequest(
 	method string,
 	u *url.URL,
 	body interface{},
+	reqOpts ...katapult.RequestOption,
 ) (*diskTemplateResponseBody, *katapult.Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &diskTemplateResponseBody{}
 
-	req := katapult.NewRequest(method, u, body)
+	req := katapult.NewRequest(method, u, body, reqOpts...)
 	resp, err := s.client.Do(ctx, req, respBody)
 	if resp == nil {
 		resp = katapult.NewResponse(nil)

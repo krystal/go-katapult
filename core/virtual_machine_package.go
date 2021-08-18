@@ -63,13 +63,14 @@ func NewVirtualMachinePackagesClient(
 func (s *VirtualMachinePackagesClient) List(
 	ctx context.Context,
 	opts *ListOptions,
+	reqOpts ...katapult.RequestOption,
 ) ([]*VirtualMachinePackage, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "virtual_machine_packages",
 		RawQuery: opts.queryValues().Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 	resp.Pagination = body.Pagination
 
 	return body.VirtualMachinePackages, resp, err
@@ -78,12 +79,13 @@ func (s *VirtualMachinePackagesClient) List(
 func (s *VirtualMachinePackagesClient) Get(
 	ctx context.Context,
 	ref VirtualMachinePackageRef,
+	reqOpts ...katapult.RequestOption,
 ) (*VirtualMachinePackage, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "virtual_machine_packages/_",
 		RawQuery: ref.queryValues().Encode(),
 	}
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 
 	return body.VirtualMachinePackage, resp, err
 }
@@ -91,15 +93,17 @@ func (s *VirtualMachinePackagesClient) Get(
 func (s *VirtualMachinePackagesClient) GetByID(
 	ctx context.Context,
 	id string,
+	reqOpts ...katapult.RequestOption,
 ) (*VirtualMachinePackage, *katapult.Response, error) {
-	return s.Get(ctx, VirtualMachinePackageRef{ID: id})
+	return s.Get(ctx, VirtualMachinePackageRef{ID: id}, reqOpts...)
 }
 
 func (s *VirtualMachinePackagesClient) GetByPermalink(
 	ctx context.Context,
 	permalink string,
+	reqOpts ...katapult.RequestOption,
 ) (*VirtualMachinePackage, *katapult.Response, error) {
-	return s.Get(ctx, VirtualMachinePackageRef{Permalink: permalink})
+	return s.Get(ctx, VirtualMachinePackageRef{Permalink: permalink}, reqOpts...)
 }
 
 func (s *VirtualMachinePackagesClient) doRequest(
@@ -107,11 +111,12 @@ func (s *VirtualMachinePackagesClient) doRequest(
 	method string,
 	u *url.URL,
 	body interface{},
+	reqOpts ...katapult.RequestOption,
 ) (*virtualMachinePackagesResponseBody, *katapult.Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &virtualMachinePackagesResponseBody{}
 
-	req := katapult.NewRequest(method, u, body)
+	req := katapult.NewRequest(method, u, body, reqOpts...)
 	resp, err := s.client.Do(ctx, req, respBody)
 	if resp == nil {
 		resp = katapult.NewResponse(nil)

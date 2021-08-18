@@ -100,6 +100,7 @@ func (s *LoadBalancerRulesClient) List(
 	ctx context.Context,
 	lb LoadBalancerRef,
 	opts *ListOptions,
+	reqOpts ...katapult.RequestOption,
 ) ([]LoadBalancerRule, *katapult.Response, error) {
 	qs := queryValues(opts, lb)
 	u := &url.URL{
@@ -107,7 +108,7 @@ func (s *LoadBalancerRulesClient) List(
 		RawQuery: qs.Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -120,12 +121,13 @@ func (s *LoadBalancerRulesClient) List(
 func (s *LoadBalancerRulesClient) Get(
 	ctx context.Context,
 	ref LoadBalancerRuleRef,
+	reqOpts ...katapult.RequestOption,
 ) (*LoadBalancerRule, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "load_balancers/rules/_",
 		RawQuery: ref.queryValues().Encode(),
 	}
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -136,8 +138,9 @@ func (s *LoadBalancerRulesClient) Get(
 func (s *LoadBalancerRulesClient) GetByID(
 	ctx context.Context,
 	id string,
+	reqOpts ...katapult.RequestOption,
 ) (*LoadBalancerRule, *katapult.Response, error) {
-	return s.Get(ctx, LoadBalancerRuleRef{ID: id})
+	return s.Get(ctx, LoadBalancerRuleRef{ID: id}, reqOpts...)
 }
 
 type loadBalancerRuleCreateRequest struct {
@@ -148,13 +151,14 @@ func (s *LoadBalancerRulesClient) Create(
 	ctx context.Context,
 	lb LoadBalancerRef,
 	args *LoadBalancerRuleArguments,
+	reqOpts ...katapult.RequestOption,
 ) (*LoadBalancerRule, *katapult.Response, error) {
 	u := &url.URL{Path: fmt.Sprintf("load_balancers/%s/rules", lb.ID)}
 	reqBody := &loadBalancerRuleCreateRequest{
 		Properties: args,
 	}
 
-	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
+	body, resp, err := s.doRequest(ctx, "POST", u, reqBody, reqOpts...)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -170,6 +174,7 @@ func (s *LoadBalancerRulesClient) Update(
 	ctx context.Context,
 	ref LoadBalancerRuleRef,
 	args *LoadBalancerRuleArguments,
+	reqOpts ...katapult.RequestOption,
 ) (*LoadBalancerRule, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "load_balancers/rules/_",
@@ -179,7 +184,7 @@ func (s *LoadBalancerRulesClient) Update(
 		Properties: args,
 	}
 
-	body, resp, err := s.doRequest(ctx, "PATCH", u, reqBody)
+	body, resp, err := s.doRequest(ctx, "PATCH", u, reqBody, reqOpts...)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -190,12 +195,13 @@ func (s *LoadBalancerRulesClient) Update(
 func (s *LoadBalancerRulesClient) Delete(
 	ctx context.Context,
 	ref LoadBalancerRuleRef,
+	reqOpts ...katapult.RequestOption,
 ) (*LoadBalancerRule, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "load_balancers/rules/_",
 		RawQuery: ref.queryValues().Encode(),
 	}
-	body, resp, err := s.doRequest(ctx, "DELETE", u, nil)
+	body, resp, err := s.doRequest(ctx, "DELETE", u, nil, reqOpts...)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -208,11 +214,12 @@ func (s *LoadBalancerRulesClient) doRequest(
 	method string,
 	u *url.URL,
 	body interface{},
+	reqOpts ...katapult.RequestOption,
 ) (*loadBalancerRulesResponseBody, *katapult.Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &loadBalancerRulesResponseBody{}
 
-	req := katapult.NewRequest(method, u, body)
+	req := katapult.NewRequest(method, u, body, reqOpts...)
 	resp, err := s.client.Do(ctx, req, respBody)
 	if resp == nil {
 		resp = katapult.NewResponse(nil)

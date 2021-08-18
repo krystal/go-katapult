@@ -47,6 +47,7 @@ func (s *NetworkSpeedProfilesClient) List(
 	ctx context.Context,
 	org OrganizationRef,
 	opts *ListOptions,
+	reqOpts ...katapult.RequestOption,
 ) ([]*NetworkSpeedProfile, *katapult.Response, error) {
 	qs := queryValues(org, opts)
 	u := &url.URL{
@@ -54,7 +55,7 @@ func (s *NetworkSpeedProfilesClient) List(
 		RawQuery: qs.Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 	resp.Pagination = body.Pagination
 
 	return body.NetworkSpeedProfiles, resp, err
@@ -65,11 +66,12 @@ func (s *NetworkSpeedProfilesClient) doRequest(
 	method string,
 	u *url.URL,
 	body interface{},
+	reqOpts ...katapult.RequestOption,
 ) (*networkSpeedProfileResponseBody, *katapult.Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &networkSpeedProfileResponseBody{}
 
-	req := katapult.NewRequest(method, u, body)
+	req := katapult.NewRequest(method, u, body, reqOpts...)
 	resp, err := s.client.Do(ctx, req, respBody)
 	if resp == nil {
 		resp = katapult.NewResponse(nil)

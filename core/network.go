@@ -63,13 +63,14 @@ func NewNetworksClient(rm RequestMaker) *NetworksClient {
 func (s *NetworksClient) List(
 	ctx context.Context,
 	org OrganizationRef,
+	reqOpts ...katapult.RequestOption,
 ) ([]*Network, []*VirtualNetwork, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "organizations/_/available_networks",
 		RawQuery: org.queryValues().Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 
 	return body.Networks, body.VirtualNetworks, resp, err
 }
@@ -77,13 +78,14 @@ func (s *NetworksClient) List(
 func (s *NetworksClient) Get(
 	ctx context.Context,
 	ref NetworkRef,
+	reqOpts ...katapult.RequestOption,
 ) (*Network, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "networks/_",
 		RawQuery: ref.queryValues().Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 
 	return body.Network, resp, err
 }
@@ -91,15 +93,17 @@ func (s *NetworksClient) Get(
 func (s *NetworksClient) GetByID(
 	ctx context.Context,
 	id string,
+	reqOpts ...katapult.RequestOption,
 ) (*Network, *katapult.Response, error) {
-	return s.Get(ctx, NetworkRef{ID: id})
+	return s.Get(ctx, NetworkRef{ID: id}, reqOpts...)
 }
 
 func (s *NetworksClient) GetByPermalink(
 	ctx context.Context,
 	permalink string,
+	reqOpts ...katapult.RequestOption,
 ) (*Network, *katapult.Response, error) {
-	return s.Get(ctx, NetworkRef{Permalink: permalink})
+	return s.Get(ctx, NetworkRef{Permalink: permalink}, reqOpts...)
 }
 
 func (s *NetworksClient) doRequest(
@@ -107,11 +111,12 @@ func (s *NetworksClient) doRequest(
 	method string,
 	u *url.URL,
 	body interface{},
+	reqOpts ...katapult.RequestOption,
 ) (*networksResponseBody, *katapult.Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &networksResponseBody{}
 
-	req := katapult.NewRequest(method, u, body)
+	req := katapult.NewRequest(method, u, body, reqOpts...)
 	resp, err := s.client.Do(ctx, req, respBody)
 	if resp == nil {
 		resp = katapult.NewResponse(nil)

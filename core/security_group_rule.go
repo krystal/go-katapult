@@ -62,6 +62,7 @@ func (s *SecurityGroupRulesClient) List(
 	ctx context.Context,
 	sg SecurityGroupRef,
 	opts *ListOptions,
+	reqOpts ...katapult.RequestOption,
 ) ([]SecurityGroupRule, *katapult.Response, error) {
 	qs := queryValues(opts, sg)
 	u := &url.URL{
@@ -69,7 +70,7 @@ func (s *SecurityGroupRulesClient) List(
 		RawQuery: qs.Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -82,12 +83,13 @@ func (s *SecurityGroupRulesClient) List(
 func (s *SecurityGroupRulesClient) Get(
 	ctx context.Context,
 	ref SecurityGroupRuleRef,
+	reqOpts ...katapult.RequestOption,
 ) (*SecurityGroupRule, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "security_groups/rules/_",
 		RawQuery: ref.queryValues().Encode(),
 	}
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -98,8 +100,9 @@ func (s *SecurityGroupRulesClient) Get(
 func (s *SecurityGroupRulesClient) GetByID(
 	ctx context.Context,
 	id string,
+	reqOpts ...katapult.RequestOption,
 ) (*SecurityGroupRule, *katapult.Response, error) {
-	return s.Get(ctx, SecurityGroupRuleRef{ID: id})
+	return s.Get(ctx, SecurityGroupRuleRef{ID: id}, reqOpts...)
 }
 
 type securityGroupRuleCreateRequest struct {
@@ -110,13 +113,14 @@ func (s *SecurityGroupRulesClient) Create(
 	ctx context.Context,
 	sg SecurityGroupRef,
 	args *SecurityGroupRuleArguments,
+	reqOpts ...katapult.RequestOption,
 ) (*SecurityGroupRule, *katapult.Response, error) {
 	u := &url.URL{Path: fmt.Sprintf("security_groups/%s/rules", sg.ID)}
 	reqBody := &securityGroupRuleCreateRequest{
 		Properties: args,
 	}
 
-	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
+	body, resp, err := s.doRequest(ctx, "POST", u, reqBody, reqOpts...)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -132,6 +136,7 @@ func (s *SecurityGroupRulesClient) Update(
 	ctx context.Context,
 	ref SecurityGroupRuleRef,
 	args *SecurityGroupRuleArguments,
+	reqOpts ...katapult.RequestOption,
 ) (*SecurityGroupRule, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "security_groups/rules/_",
@@ -141,7 +146,7 @@ func (s *SecurityGroupRulesClient) Update(
 		Properties: args,
 	}
 
-	body, resp, err := s.doRequest(ctx, "PATCH", u, reqBody)
+	body, resp, err := s.doRequest(ctx, "PATCH", u, reqBody, reqOpts...)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -152,12 +157,13 @@ func (s *SecurityGroupRulesClient) Update(
 func (s *SecurityGroupRulesClient) Delete(
 	ctx context.Context,
 	ref SecurityGroupRuleRef,
+	reqOpts ...katapult.RequestOption,
 ) (*SecurityGroupRule, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "security_groups/rules/_",
 		RawQuery: ref.queryValues().Encode(),
 	}
-	body, resp, err := s.doRequest(ctx, "DELETE", u, nil)
+	body, resp, err := s.doRequest(ctx, "DELETE", u, nil, reqOpts...)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -170,11 +176,12 @@ func (s *SecurityGroupRulesClient) doRequest(
 	method string,
 	u *url.URL,
 	body interface{},
+	reqOpts ...katapult.RequestOption,
 ) (*securityGroupRulesResponseBody, *katapult.Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &securityGroupRulesResponseBody{}
 
-	req := katapult.NewRequest(method, u, body)
+	req := katapult.NewRequest(method, u, body, reqOpts...)
 	resp, err := s.client.Do(ctx, req, respBody)
 	if resp == nil {
 		resp = katapult.NewResponse(nil)

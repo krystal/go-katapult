@@ -47,6 +47,7 @@ func NewTasksClient(rm RequestMaker) *TasksClient {
 func (s *TasksClient) Get(
 	ctx context.Context,
 	id string,
+	reqOpts ...katapult.RequestOption,
 ) (*Task, *katapult.Response, error) {
 	u := &url.URL{
 		Path: fmt.Sprintf("tasks/%s", id),
@@ -62,11 +63,12 @@ func (s *TasksClient) doRequest(
 	method string,
 	u *url.URL,
 	body interface{},
+	reqOpts ...katapult.RequestOption,
 ) (*tasksResponseBody, *katapult.Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &tasksResponseBody{}
 
-	req := katapult.NewRequest(method, u, body)
+	req := katapult.NewRequest(method, u, body, reqOpts...)
 	resp, err := s.client.Do(ctx, req, respBody)
 	if resp == nil {
 		resp = katapult.NewResponse(nil)

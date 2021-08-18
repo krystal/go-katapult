@@ -60,6 +60,7 @@ func (s *CertificatesClient) List(
 	ctx context.Context,
 	org OrganizationRef,
 	opts *ListOptions,
+	reqOpts ...katapult.RequestOption,
 ) ([]*Certificate, *katapult.Response, error) {
 	qs := queryValues(org, opts)
 	u := &url.URL{
@@ -67,7 +68,7 @@ func (s *CertificatesClient) List(
 		RawQuery: qs.Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 	resp.Pagination = body.Pagination
 
 	return body.Certificates, resp, err
@@ -76,16 +77,18 @@ func (s *CertificatesClient) List(
 func (s *CertificatesClient) Get(
 	ctx context.Context,
 	id string,
+	reqOpts ...katapult.RequestOption,
 ) (*Certificate, *katapult.Response, error) {
-	return s.GetByID(ctx, id)
+	return s.GetByID(ctx, id, reqOpts...)
 }
 
 func (s *CertificatesClient) GetByID(
 	ctx context.Context,
 	id string,
+	reqOpts ...katapult.RequestOption,
 ) (*Certificate, *katapult.Response, error) {
 	u := &url.URL{Path: fmt.Sprintf("certificates/%s", id)}
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 
 	return body.Certificate, resp, err
 }
@@ -95,11 +98,12 @@ func (s *CertificatesClient) doRequest(
 	method string,
 	u *url.URL,
 	body interface{},
+	reqOpts ...katapult.RequestOption,
 ) (*certificatesResponseBody, *katapult.Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &certificatesResponseBody{}
 
-	req := katapult.NewRequest(method, u, body)
+	req := katapult.NewRequest(method, u, body, reqOpts...)
 	resp, err := s.client.Do(ctx, req, respBody)
 	if resp == nil {
 		resp = katapult.NewResponse(nil)

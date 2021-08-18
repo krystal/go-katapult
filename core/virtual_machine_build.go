@@ -93,12 +93,13 @@ func NewVirtualMachineBuildsClient(
 func (s *VirtualMachineBuildsClient) Get(
 	ctx context.Context,
 	ref VirtualMachineBuildRef,
+	reqOpts ...katapult.RequestOption,
 ) (*VirtualMachineBuild, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "virtual_machines/builds/_",
 		RawQuery: ref.queryValues().Encode(),
 	}
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 
 	build := body.VirtualMachineBuild
 	if build == nil {
@@ -111,14 +112,16 @@ func (s *VirtualMachineBuildsClient) Get(
 func (s *VirtualMachineBuildsClient) GetByID(
 	ctx context.Context,
 	id string,
+	reqOpts ...katapult.RequestOption,
 ) (*VirtualMachineBuild, *katapult.Response, error) {
-	return s.Get(ctx, VirtualMachineBuildRef{ID: id})
+	return s.Get(ctx, VirtualMachineBuildRef{ID: id}, reqOpts...)
 }
 
 func (s *VirtualMachineBuildsClient) Create(
 	ctx context.Context,
 	org OrganizationRef,
 	args *VirtualMachineBuildArguments,
+	reqOpts ...katapult.RequestOption,
 ) (*VirtualMachineBuild, *katapult.Response, error) {
 	u := &url.URL{Path: "organizations/_/virtual_machines/build"}
 	reqBody := &virtualMachineBuildCreateRequest{
@@ -132,7 +135,7 @@ func (s *VirtualMachineBuildsClient) Create(
 		Network:             args.Network,
 	}
 
-	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
+	body, resp, err := s.doRequest(ctx, "POST", u, reqBody, reqOpts...)
 
 	return body.VirtualMachineBuild, resp, err
 }
@@ -141,6 +144,7 @@ func (s *VirtualMachineBuildsClient) CreateFromSpec(
 	ctx context.Context,
 	org OrganizationRef,
 	spec *buildspec.VirtualMachineSpec,
+	reqOpts ...katapult.RequestOption,
 ) (*VirtualMachineBuild, *katapult.Response, error) {
 	specXML, _ := spec.XML()
 
@@ -150,7 +154,7 @@ func (s *VirtualMachineBuildsClient) CreateFromSpec(
 		XML:          string(specXML),
 	}
 
-	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
+	body, resp, err := s.doRequest(ctx, "POST", u, reqBody, reqOpts...)
 
 	return body.VirtualMachineBuild, resp, err
 }
@@ -159,6 +163,7 @@ func (s *VirtualMachineBuildsClient) CreateFromSpecXML(
 	ctx context.Context,
 	org OrganizationRef,
 	specXML string,
+	reqOpts ...katapult.RequestOption,
 ) (*VirtualMachineBuild, *katapult.Response, error) {
 	u := &url.URL{Path: "organizations/_/virtual_machines/build_from_spec"}
 	reqBody := &virtualMachineBuildCreateFromSpecRequest{
@@ -166,7 +171,7 @@ func (s *VirtualMachineBuildsClient) CreateFromSpecXML(
 		XML:          specXML,
 	}
 
-	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
+	body, resp, err := s.doRequest(ctx, "POST", u, reqBody, reqOpts...)
 
 	return body.VirtualMachineBuild, resp, err
 }
@@ -176,11 +181,12 @@ func (s *VirtualMachineBuildsClient) doRequest(
 	method string,
 	u *url.URL,
 	body interface{},
+	reqOpts ...katapult.RequestOption,
 ) (*virtualMachineBuildsResponseBody, *katapult.Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &virtualMachineBuildsResponseBody{}
 
-	req := katapult.NewRequest(method, u, body)
+	req := katapult.NewRequest(method, u, body, reqOpts...)
 	resp, err := s.client.Do(ctx, req, respBody)
 	if resp == nil {
 		resp = katapult.NewResponse(nil)

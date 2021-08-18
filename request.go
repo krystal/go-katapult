@@ -66,6 +66,7 @@ func NewRequest(
 		Method: method,
 		URL:    u,
 		Body:   body,
+		Header: map[string][]string{},
 	}
 
 	// Apply options to created Client
