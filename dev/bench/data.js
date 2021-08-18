@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1629302859537,
+  "lastUpdate": 1629303002268,
   "repoUrl": "https://github.com/krystal/go-katapult",
   "entries": {
     "Benchmark": [
@@ -3540,6 +3540,60 @@ window.BENCHMARK_DATA = {
             "value": 4171,
             "unit": "ns/op",
             "extra": "295237 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "noah@noahstride.co.uk",
+            "name": "Noah Stride",
+            "username": "strideynet"
+          },
+          "committer": {
+            "email": "noah@noahstride.co.uk",
+            "name": "Noah Stride",
+            "username": "strideynet"
+          },
+          "distinct": true,
+          "id": "ac03dc68dba6b74ece46cbd0da3b55db66da1362",
+          "message": "chore(release): 0.1.6",
+          "timestamp": "2021-08-18T17:08:15+01:00",
+          "tree_id": "675feced976d93db7c19fcf15ca43d5ef3b30085",
+          "url": "https://github.com/krystal/go-katapult/commit/ac03dc68dba6b74ece46cbd0da3b55db66da1362"
+        },
+        "date": 1629303000411,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkNameGenerator_RandomHostname",
+            "value": 8640,
+            "unit": "ns/op",
+            "extra": "134497 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_NoPrefix",
+            "value": 4511,
+            "unit": "ns/op",
+            "extra": "275856 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_OnePrefix",
+            "value": 4470,
+            "unit": "ns/op",
+            "extra": "259461 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_TwoPrefixes",
+            "value": 4499,
+            "unit": "ns/op",
+            "extra": "242434 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_ThreePrefixes",
+            "value": 4651,
+            "unit": "ns/op",
+            "extra": "249811 times\n2 procs"
           }
         ]
       }
