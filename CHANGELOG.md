@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.6](https://github.com/krystal/go-katapult/compare/v0.1.5...v0.1.6) (2021-08-18)
+
+
+### Features
+
+* **errors:** update generated errors based on latest Katapult API schema ([462b2c4](https://github.com/krystal/go-katapult/commit/462b2c4212af5e7c7a11c8fa35f4b9594e7d583e))
+* **ssh_keys:** add support for managing organization SSH keys ([#119](https://github.com/krystal/go-katapult/issues/119)) ([782b3dd](https://github.com/krystal/go-katapult/commit/782b3dd6c06ac1f0bfb51e486eb0a7ab306d0ee2))
+* **tags:** Add tag management support ([#118](https://github.com/krystal/go-katapult/issues/118)) ([0a78954](https://github.com/krystal/go-katapult/commit/0a78954f5f5eaeed6b7601e5b7c3755b1779670b))
+
+
+### Bug Fixes
+
+* **codegen:** fix issue caused by a recent change to Katapult's API Schema ([7120dd7](https://github.com/krystal/go-katapult/commit/7120dd7533c6f9dff283de161bfacea6a416cae0))
+
 ### [0.1.5](https://github.com/krystal/go-katapult/compare/v0.1.4...v0.1.5) (2021-06-17)
 
 
