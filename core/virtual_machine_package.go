@@ -103,7 +103,9 @@ func (s *VirtualMachinePackagesClient) GetByPermalink(
 	permalink string,
 	reqOpts ...katapult.RequestOption,
 ) (*VirtualMachinePackage, *katapult.Response, error) {
-	return s.Get(ctx, VirtualMachinePackageRef{Permalink: permalink}, reqOpts...)
+	return s.Get(ctx, VirtualMachinePackageRef{
+		Permalink: permalink,
+	}, reqOpts...)
 }
 
 func (s *VirtualMachinePackagesClient) doRequest(
