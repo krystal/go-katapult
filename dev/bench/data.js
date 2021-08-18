@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1629119385166,
+  "lastUpdate": 1629302859537,
   "repoUrl": "https://github.com/krystal/go-katapult",
   "entries": {
     "Benchmark": [
@@ -3486,6 +3486,60 @@ window.BENCHMARK_DATA = {
             "value": 5042,
             "unit": "ns/op",
             "extra": "244430 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "jake.gealer@krystal.uk",
+            "name": "Jake Gealer",
+            "username": "JakeMakesStuff"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0a78954f5f5eaeed6b7601e5b7c3755b1779670b",
+          "message": "feat(tags): Add tag management support (#118)\n\n* untested tags client\r\n\r\n* add a lot of tests (tests WIP)\r\n\r\n* add tests pre-pagination changes\r\n\r\n* add to client\r\n\r\n* make sure it isn't nil in the client\r\n\r\n* move to new pagination method\r\n\r\n* check nil response\r\n\r\n* formatting",
+          "timestamp": "2021-08-18T17:07:05+01:00",
+          "tree_id": "6ad29c91daa5760cccb79f1d3bd53cd0c6b22868",
+          "url": "https://github.com/krystal/go-katapult/commit/0a78954f5f5eaeed6b7601e5b7c3755b1779670b"
+        },
+        "date": 1629302859045,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkNameGenerator_RandomHostname",
+            "value": 7715,
+            "unit": "ns/op",
+            "extra": "133609 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_NoPrefix",
+            "value": 4046,
+            "unit": "ns/op",
+            "extra": "288573 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_OnePrefix",
+            "value": 4059,
+            "unit": "ns/op",
+            "extra": "296442 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_TwoPrefixes",
+            "value": 4089,
+            "unit": "ns/op",
+            "extra": "277524 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_ThreePrefixes",
+            "value": 4171,
+            "unit": "ns/op",
+            "extra": "295237 times\n2 procs"
           }
         ]
       }
