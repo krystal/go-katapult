@@ -123,7 +123,7 @@ func prepareTestClient(t *testing.T) (
 
 var testRequestOption = katapult.RequestSetHeader(
 	"X-Clacks-Overhead",
-	"GNU Corey Kendall",
+	"GNU CK",
 )
 
 func setWantRequestOptionHeader(wantReq *katapult.Request) {
@@ -131,11 +131,11 @@ func setWantRequestOptionHeader(wantReq *katapult.Request) {
 		wantReq.Header = http.Header{}
 	}
 
-	wantReq.Header.Set("X-Clacks-Overhead", "GNU Corey Kendall")
+	wantReq.Header.Set("X-Clacks-Overhead", "GNU CK")
 }
 
 func assertRequestOptionHeader(t *testing.T, r *http.Request) {
-	want := "GNU Corey Kendall"
+	want := "GNU CK"
 	got := r.Header.Get("X-Clacks-Overhead")
 	assert.Equal(t, want, got)
 }

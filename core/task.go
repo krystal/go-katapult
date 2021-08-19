@@ -53,7 +53,7 @@ func (s *TasksClient) Get(
 		Path: fmt.Sprintf("tasks/%s", id),
 	}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 
 	return body.Task, resp, err
 }

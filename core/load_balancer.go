@@ -114,8 +114,9 @@ func (s *LoadBalancersClient) Get(
 func (s *LoadBalancersClient) GetByID(
 	ctx context.Context,
 	id string,
+	reqOpts ...katapult.RequestOption,
 ) (*LoadBalancer, *katapult.Response, error) {
-	return s.Get(ctx, LoadBalancerRef{ID: id})
+	return s.Get(ctx, LoadBalancerRef{ID: id}, reqOpts...)
 }
 
 func (s *LoadBalancersClient) Create(

@@ -194,13 +194,14 @@ func TestDataCentersClient_List(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
 				},
 			)
 
-			got, resp, err := c.List(tt.args.ctx)
+			got, resp, err := c.List(tt.args.ctx, testRequestOption)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -313,6 +314,7 @@ func TestDataCentersClient_Get(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.reqQuery != nil {
 						assert.Equal(t, *tt.reqQuery, r.URL.Query())
@@ -324,7 +326,7 @@ func TestDataCentersClient_Get(t *testing.T) {
 			)
 
 			got, resp, err := c.Get(
-				tt.args.ctx, tt.args.ref,
+				tt.args.ctx, tt.args.ref, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -416,6 +418,7 @@ func TestDataCentersClient_GetByID(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					qs := url.Values{
 						"data_center[id]": []string{tt.args.id},
@@ -427,7 +430,11 @@ func TestDataCentersClient_GetByID(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.GetByID(tt.args.ctx, tt.args.id)
+			got, resp, err := c.GetByID(
+				tt.args.ctx,
+				tt.args.id,
+				testRequestOption,
+			)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -518,6 +525,7 @@ func TestDataCentersClient_GetByPermalink(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					qs := url.Values{
 						"data_center[permalink]": []string{tt.args.permalink},
@@ -530,7 +538,7 @@ func TestDataCentersClient_GetByPermalink(t *testing.T) {
 			)
 
 			got, resp, err := c.GetByPermalink(
-				tt.args.ctx, tt.args.permalink,
+				tt.args.ctx, tt.args.permalink, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -644,6 +652,7 @@ func TestDataCentersClient_DefaultNetwork(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.reqQuery != nil {
 						assert.Equal(t, *tt.reqQuery, r.URL.Query())
@@ -655,7 +664,7 @@ func TestDataCentersClient_DefaultNetwork(t *testing.T) {
 			)
 
 			got, resp, err := c.DefaultNetwork(
-				tt.args.ctx, tt.args.ref,
+				tt.args.ctx, tt.args.ref, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {

@@ -417,6 +417,7 @@ func TestLoadBalancersClient_List(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					qs := queryValues(tt.args.org, tt.args.opts)
 					assert.Equal(t, *qs, r.URL.Query())
@@ -427,7 +428,7 @@ func TestLoadBalancersClient_List(t *testing.T) {
 			)
 
 			got, resp, err := c.List(
-				tt.args.ctx, tt.args.org, tt.args.opts,
+				tt.args.ctx, tt.args.org, tt.args.opts, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -525,6 +526,7 @@ func TestLoadBalancersClient_Get(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.wantQuery != nil {
 						assert.Equal(t, *tt.wantQuery, r.URL.Query())
@@ -535,7 +537,7 @@ func TestLoadBalancersClient_Get(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.Get(tt.args.ctx, tt.args.ref)
+			got, resp, err := c.Get(tt.args.ctx, tt.args.ref, testRequestOption)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -628,6 +630,7 @@ func TestLoadBalancersClient_GetByID(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.wantQuery != nil {
 						assert.Equal(t, *tt.wantQuery, r.URL.Query())
@@ -638,7 +641,7 @@ func TestLoadBalancersClient_GetByID(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.GetByID(tt.args.ctx, tt.args.id)
+			got, resp, err := c.GetByID(tt.args.ctx, tt.args.id, testRequestOption)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -881,6 +884,7 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 					assert.Equal(t, "POST", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.reqBody != nil {
 						reqBody := &loadBalancerCreateRequest{}
@@ -895,7 +899,7 @@ func TestLoadBalancersClient_Create(t *testing.T) {
 			)
 
 			got, resp, err := c.Create(
-				tt.args.ctx, tt.args.org, tt.args.lbArgs,
+				tt.args.ctx, tt.args.org, tt.args.lbArgs, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -1061,6 +1065,7 @@ func TestLoadBalancersClient_Update(t *testing.T) {
 					assert.Equal(t, "PATCH", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.reqBody != nil {
 						reqBody := &loadBalancerUpdateRequest{}
@@ -1075,7 +1080,7 @@ func TestLoadBalancersClient_Update(t *testing.T) {
 			)
 
 			got, resp, err := c.Update(
-				tt.args.ctx, tt.args.lb, tt.args.lbArgs,
+				tt.args.ctx, tt.args.lb, tt.args.lbArgs, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -1169,6 +1174,7 @@ func TestLoadBalancersClient_Delete(t *testing.T) {
 					assert.Equal(t, "DELETE", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.wantQuery != nil {
 						assert.Equal(t, *tt.wantQuery, r.URL.Query())
@@ -1183,7 +1189,9 @@ func TestLoadBalancersClient_Delete(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.Delete(tt.args.ctx, tt.args.lb)
+			got, resp, err := c.Delete(
+				tt.args.ctx, tt.args.lb, testRequestOption,
+			)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)

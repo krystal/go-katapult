@@ -37,11 +37,12 @@ func (s *TagsClient) List(
 	ctx context.Context,
 	ref OrganizationRef,
 	opts *ListOptions,
+	reqOpts ...katapult.RequestOption,
 ) ([]*Tag, *katapult.Response, error) {
 	qs := queryValues(opts, ref)
 	u := &url.URL{Path: "organizations/_/tags", RawQuery: qs.Encode()}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 	resp.Pagination = body.Pagination
 
 	return body.Tags, resp, err
@@ -58,11 +59,12 @@ func (tr TagRef) queryValues() *url.Values {
 func (s *TagsClient) Get(
 	ctx context.Context,
 	ref TagRef,
+	reqOpts ...katapult.RequestOption,
 ) (*Tag, *katapult.Response, error) {
 	qs := ref.queryValues()
 	u := &url.URL{Path: "tags/_", RawQuery: qs.Encode()}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 
 	return body.Tag, resp, err
 }
@@ -76,11 +78,12 @@ func (s *TagsClient) Create(
 	ctx context.Context,
 	ref OrganizationRef,
 	args TagArguments,
+	reqOpts ...katapult.RequestOption,
 ) (*Tag, *katapult.Response, error) {
 	qs := ref.queryValues()
 	u := &url.URL{Path: "organizations/_/tags", RawQuery: qs.Encode()}
 
-	body, resp, err := s.doRequest(ctx, "POST", u, args)
+	body, resp, err := s.doRequest(ctx, "POST", u, args, reqOpts...)
 
 	return body.Tag, resp, err
 }
@@ -89,11 +92,12 @@ func (s *TagsClient) Update(
 	ctx context.Context,
 	ref TagRef,
 	args TagArguments,
+	reqOpts ...katapult.RequestOption,
 ) (*Tag, *katapult.Response, error) {
 	qs := ref.queryValues()
 	u := &url.URL{Path: "tags/_", RawQuery: qs.Encode()}
 
-	body, resp, err := s.doRequest(ctx, "PATCH", u, args)
+	body, resp, err := s.doRequest(ctx, "PATCH", u, args, reqOpts...)
 
 	return body.Tag, resp, err
 }
@@ -101,11 +105,14 @@ func (s *TagsClient) Update(
 func (s *TagsClient) Delete(
 	ctx context.Context,
 	ref TagRef,
+	reqOpts ...katapult.RequestOption,
 ) (*Tag, *katapult.Response, error) {
 	qs := ref.queryValues()
 	u := &url.URL{Path: "tags/_", RawQuery: qs.Encode()}
 
-	body, resp, err := s.doRequest(ctx, "DELETE", u, nil)
+	body, resp, err := s.doRequest(
+		ctx, "DELETE", u, nil, reqOpts...,
+	)
 
 	return body.Tag, resp, err
 }
@@ -115,11 +122,12 @@ func (s *TagsClient) doRequest(
 	method string,
 	u *url.URL,
 	body interface{},
+	reqOpts ...katapult.RequestOption,
 ) (*tagsResponseBody, *katapult.Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &tagsResponseBody{}
 
-	req := katapult.NewRequest(method, u, body)
+	req := katapult.NewRequest(method, u, body, reqOpts...)
 	resp, err := s.client.Do(ctx, req, respBody)
 	if resp == nil {
 		resp = katapult.NewResponse(nil)

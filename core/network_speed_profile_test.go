@@ -299,6 +299,7 @@ func TestNetworkSpeedTestsClient_List(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					assert.Equal(t,
 						*queryValues(tt.args.org, tt.args.opts), r.URL.Query(),
@@ -310,7 +311,7 @@ func TestNetworkSpeedTestsClient_List(t *testing.T) {
 			)
 
 			got, resp, err := c.List(
-				tt.args.ctx, tt.args.org, tt.args.opts,
+				tt.args.ctx, tt.args.org, tt.args.opts, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {

@@ -314,6 +314,7 @@ func TestTrashObjectsClient_List(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					qs := queryValues(tt.args.org, tt.args.opts)
 					assert.Equal(t, *qs, r.URL.Query())
@@ -324,7 +325,7 @@ func TestTrashObjectsClient_List(t *testing.T) {
 			)
 
 			got, resp, err := c.List(
-				tt.args.ctx, tt.args.org, tt.args.opts,
+				tt.args.ctx, tt.args.org, tt.args.opts, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -453,6 +454,7 @@ func TestTrashObjectsClient_Get(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.wantQuery != nil {
 						assert.Equal(t, *tt.wantQuery, r.URL.Query())
@@ -464,7 +466,7 @@ func TestTrashObjectsClient_Get(t *testing.T) {
 			)
 
 			got, resp, err := c.Get(
-				tt.args.ctx, tt.args.ref,
+				tt.args.ctx, tt.args.ref, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -567,6 +569,7 @@ func TestTrashObjectsClient_GetByID(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					qs := url.Values{}
 					if tt.args.id != "" {
@@ -579,7 +582,9 @@ func TestTrashObjectsClient_GetByID(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.GetByID(tt.args.ctx, tt.args.id)
+			got, resp, err := c.GetByID(
+				tt.args.ctx, tt.args.id, testRequestOption,
+			)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -681,6 +686,7 @@ func TestTrashObjectsClient_GetByObjectID(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					qs := url.Values{}
 					if tt.args.objectID != "" {
@@ -696,7 +702,7 @@ func TestTrashObjectsClient_GetByObjectID(t *testing.T) {
 			)
 
 			got, resp, err := c.GetByObjectID(
-				tt.args.ctx, tt.args.objectID,
+				tt.args.ctx, tt.args.objectID, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -819,6 +825,7 @@ func TestTrashObjectsClient_Purge(t *testing.T) {
 					assert.Equal(t, "DELETE", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.wantQuery != nil {
 						assert.Equal(t, *tt.wantQuery, r.URL.Query())
@@ -833,7 +840,9 @@ func TestTrashObjectsClient_Purge(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.Purge(tt.args.ctx, tt.args.ref)
+			got, resp, err := c.Purge(
+				tt.args.ctx, tt.args.ref, testRequestOption,
+			)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -948,6 +957,7 @@ func TestTrashObjectsClient_PurgeAll(t *testing.T) {
 					assert.Equal(t, "POST", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					assert.Equal(t,
 						*tt.args.org.queryValues(), r.URL.Query(),
@@ -958,7 +968,9 @@ func TestTrashObjectsClient_PurgeAll(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.PurgeAll(tt.args.ctx, tt.args.org)
+			got, resp, err := c.PurgeAll(
+				tt.args.ctx, tt.args.org, testRequestOption,
+			)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -1082,6 +1094,7 @@ func TestTrashObjectsClient_Restore(t *testing.T) {
 					assert.Equal(t, "POST", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.wantQuery != nil {
 						assert.Equal(t, *tt.wantQuery, r.URL.Query())
@@ -1096,7 +1109,9 @@ func TestTrashObjectsClient_Restore(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.Restore(tt.args.ctx, tt.args.ref)
+			got, resp, err := c.Restore(
+				tt.args.ctx, tt.args.ref, testRequestOption,
+			)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)

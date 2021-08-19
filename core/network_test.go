@@ -304,6 +304,7 @@ func TestNetworksClient_List(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					assert.Equal(t,
 						*tt.args.org.queryValues(), r.URL.Query(),
@@ -314,7 +315,9 @@ func TestNetworksClient_List(t *testing.T) {
 				},
 			)
 
-			got1, got2, resp, err := c.List(tt.args.ctx, tt.args.org)
+			got1, got2, resp, err := c.List(
+				tt.args.ctx, tt.args.org, testRequestOption,
+			)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -439,6 +442,7 @@ func TestNetworksClient_Get(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.wantQuery != nil {
 						assert.Equal(t, *tt.wantQuery, r.URL.Query())
@@ -450,7 +454,7 @@ func TestNetworksClient_Get(t *testing.T) {
 			)
 
 			got, resp, err := c.Get(
-				tt.args.ctx, tt.args.ref,
+				tt.args.ctx, tt.args.ref, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -542,6 +546,7 @@ func TestNetworksClient_GetByID(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					qs := url.Values{
 						"network[id]": []string{tt.args.id},
@@ -553,7 +558,7 @@ func TestNetworksClient_GetByID(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.GetByID(tt.args.ctx, tt.args.id)
+			got, resp, err := c.GetByID(tt.args.ctx, tt.args.id, testRequestOption)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -644,6 +649,7 @@ func TestNetworksClient_GetByPermalink(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					qs := url.Values{
 						"network[permalink]": []string{tt.args.permalink},
@@ -656,7 +662,7 @@ func TestNetworksClient_GetByPermalink(t *testing.T) {
 			)
 
 			got, resp, err := c.GetByPermalink(
-				tt.args.ctx, tt.args.permalink,
+				tt.args.ctx, tt.args.permalink, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {

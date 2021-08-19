@@ -346,6 +346,7 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 					assert.Equal(t, *tt.args.ref.queryValues(), r.URL.Query())
 
 					w.WriteHeader(tt.respStatus)
@@ -354,7 +355,7 @@ func TestVirtualMachineBuildsClient_Get(t *testing.T) {
 			)
 
 			got, resp, err := c.Get(
-				tt.args.ctx, tt.args.ref,
+				tt.args.ctx, tt.args.ref, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -459,6 +460,7 @@ func TestVirtualMachineBuildsClient_GetByID(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					assert.Equal(t, url.Values{
 						"virtual_machine_build[id]": []string{
@@ -472,7 +474,7 @@ func TestVirtualMachineBuildsClient_GetByID(t *testing.T) {
 			)
 
 			got, resp, err := c.GetByID(
-				tt.args.ctx, tt.args.id,
+				tt.args.ctx, tt.args.id, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -795,6 +797,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 					assert.Equal(t, "POST", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.reqBody != nil {
 						reqBody := &virtualMachineBuildCreateRequest{}
@@ -809,7 +812,7 @@ func TestVirtualMachineBuildsClient_Create(t *testing.T) {
 			)
 
 			got, resp, err := c.Create(
-				tt.args.ctx, tt.args.org, tt.args.buildArgs,
+				tt.args.ctx, tt.args.org, tt.args.buildArgs, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -1013,6 +1016,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpec(t *testing.T) {
 					assert.Equal(t, "POST", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.reqBody != nil {
 						reqBody := &virtualMachineBuildCreateFromSpecRequest{}
@@ -1027,7 +1031,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpec(t *testing.T) {
 			)
 
 			got, resp, err := c.CreateFromSpec(
-				tt.args.ctx, tt.args.org, tt.args.spec,
+				tt.args.ctx, tt.args.org, tt.args.spec, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -1232,6 +1236,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpecXML(t *testing.T) {
 					assert.Equal(t, "POST", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.reqBody != nil {
 						reqBody := &virtualMachineBuildCreateFromSpecRequest{}
@@ -1246,7 +1251,7 @@ func TestVirtualMachineBuildsClient_CreateFromSpecXML(t *testing.T) {
 			)
 
 			got, resp, err := c.CreateFromSpecXML(
-				tt.args.ctx, tt.args.org, tt.args.xml,
+				tt.args.ctx, tt.args.org, tt.args.xml, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {

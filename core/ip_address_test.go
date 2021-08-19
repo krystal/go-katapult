@@ -460,6 +460,7 @@ func TestIPAddressesClient_List(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					qs := queryValues(tt.args.org, tt.args.opts)
 					assert.Equal(t, *qs, r.URL.Query())
@@ -470,7 +471,7 @@ func TestIPAddressesClient_List(t *testing.T) {
 			)
 
 			got, resp, err := c.List(
-				tt.args.ctx, tt.args.org, tt.args.opts,
+				tt.args.ctx, tt.args.org, tt.args.opts, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -585,6 +586,7 @@ func TestIPAddressesClient_Get(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.wantQuery != nil {
 						assert.Equal(t, *tt.wantQuery, r.URL.Query())
@@ -596,7 +598,7 @@ func TestIPAddressesClient_Get(t *testing.T) {
 			)
 
 			got, resp, err := c.Get(
-				tt.args.ctx, tt.args.ref,
+				tt.args.ctx, tt.args.ref, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -698,6 +700,7 @@ func TestIPAddressesClient_GetByID(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					qs := url.Values{}
 					if tt.args.id != "" {
@@ -710,7 +713,11 @@ func TestIPAddressesClient_GetByID(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.GetByID(tt.args.ctx, tt.args.id)
+			got, resp, err := c.GetByID(
+				tt.args.ctx,
+				tt.args.id,
+				testRequestOption,
+			)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -811,6 +818,7 @@ func TestIPAddressesClient_GetByAddress(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					qs := url.Values{}
 					if tt.args.address != "" {
@@ -824,7 +832,7 @@ func TestIPAddressesClient_GetByAddress(t *testing.T) {
 			)
 
 			got, resp, err := c.GetByAddress(
-				tt.args.ctx, tt.args.address,
+				tt.args.ctx, tt.args.address, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -1041,6 +1049,7 @@ func TestIPAddressesClient_Create(t *testing.T) {
 					assert.Equal(t, "POST", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.reqBody != nil {
 						reqBody := &ipAddressCreateRequest{}
@@ -1055,7 +1064,7 @@ func TestIPAddressesClient_Create(t *testing.T) {
 			)
 
 			got, resp, err := c.Create(
-				tt.args.ctx, tt.args.org, tt.args.args,
+				tt.args.ctx, tt.args.org, tt.args.args, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -1215,6 +1224,7 @@ func TestIPAddressesClient_Update(t *testing.T) {
 					assert.Equal(t, "PATCH", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.reqBody != nil {
 						reqBody := &ipAddressUpdateRequest{}
@@ -1229,7 +1239,7 @@ func TestIPAddressesClient_Update(t *testing.T) {
 			)
 
 			got, resp, err := c.Update(
-				tt.args.ctx, tt.args.ip, tt.args.args,
+				tt.args.ctx, tt.args.ip, tt.args.args, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -1341,6 +1351,7 @@ func TestIPAddressesClient_Delete(t *testing.T) {
 					assert.Equal(t, "DELETE", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.wantQuery != nil {
 						assert.Equal(t, *tt.wantQuery, r.URL.Query())
@@ -1355,7 +1366,7 @@ func TestIPAddressesClient_Delete(t *testing.T) {
 				},
 			)
 
-			resp, err := c.Delete(tt.args.ctx, tt.args.ip)
+			resp, err := c.Delete(tt.args.ctx, tt.args.ip, testRequestOption)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -1462,6 +1473,7 @@ func TestIPAddressesClient_Unallocate(t *testing.T) {
 					assert.Equal(t, "POST", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.wantQuery != nil {
 						assert.Equal(t, *tt.wantQuery, r.URL.Query())
@@ -1476,7 +1488,9 @@ func TestIPAddressesClient_Unallocate(t *testing.T) {
 				},
 			)
 
-			resp, err := c.Unallocate(tt.args.ctx, tt.args.ip)
+			resp, err := c.Unallocate(
+				tt.args.ctx, tt.args.ip, testRequestOption,
+			)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
