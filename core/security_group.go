@@ -76,6 +76,7 @@ func (sgc *SecurityGroupsClient) List(
 	ctx context.Context,
 	org OrganizationRef,
 	opts *ListOptions,
+	reqOpts ...katapult.RequestOption,
 ) ([]*SecurityGroup, *katapult.Response, error) {
 	qs := queryValues(org, opts)
 	u := &url.URL{
@@ -83,7 +84,7 @@ func (sgc *SecurityGroupsClient) List(
 		RawQuery: qs.Encode(),
 	}
 
-	body, resp, err := sgc.doRequest(ctx, "GET", u, nil)
+	body, resp, err := sgc.doRequest(ctx, "GET", u, nil, reqOpts...)
 	resp.Pagination = body.Pagination
 
 	return body.SecurityGroups, resp, err
@@ -92,12 +93,13 @@ func (sgc *SecurityGroupsClient) List(
 func (sgc *SecurityGroupsClient) Get(
 	ctx context.Context,
 	ref SecurityGroupRef,
+	reqOpts ...katapult.RequestOption,
 ) (*SecurityGroup, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "security_groups/_",
 		RawQuery: ref.queryValues().Encode(),
 	}
-	body, resp, err := sgc.doRequest(ctx, "GET", u, nil)
+	body, resp, err := sgc.doRequest(ctx, "GET", u, nil, reqOpts...)
 
 	return body.SecurityGroup, resp, err
 }
@@ -105,14 +107,16 @@ func (sgc *SecurityGroupsClient) Get(
 func (sgc *SecurityGroupsClient) GetByID(
 	ctx context.Context,
 	id string,
+	reqOpts ...katapult.RequestOption,
 ) (*SecurityGroup, *katapult.Response, error) {
-	return sgc.Get(ctx, SecurityGroupRef{ID: id})
+	return sgc.Get(ctx, SecurityGroupRef{ID: id}, reqOpts...)
 }
 
 func (sgc *SecurityGroupsClient) Create(
 	ctx context.Context,
 	org OrganizationRef,
 	args *SecurityGroupCreateArguments,
+	reqOpts ...katapult.RequestOption,
 ) (*SecurityGroup, *katapult.Response, error) {
 	u := &url.URL{Path: "organizations/_/security_groups"}
 	reqBody := &securityGroupCreateRequest{
@@ -120,7 +124,7 @@ func (sgc *SecurityGroupsClient) Create(
 		Properties:   args,
 	}
 
-	body, resp, err := sgc.doRequest(ctx, "POST", u, reqBody)
+	body, resp, err := sgc.doRequest(ctx, "POST", u, reqBody, reqOpts...)
 
 	return body.SecurityGroup, resp, err
 }
@@ -129,6 +133,7 @@ func (sgc *SecurityGroupsClient) Update(
 	ctx context.Context,
 	sg SecurityGroupRef,
 	args *SecurityGroupUpdateArguments,
+	reqOpts ...katapult.RequestOption,
 ) (*SecurityGroup, *katapult.Response, error) {
 	u := &url.URL{Path: "security_groups/_"}
 	reqBody := &securityGroupUpdateRequest{
@@ -136,7 +141,7 @@ func (sgc *SecurityGroupsClient) Update(
 		Properties:    args,
 	}
 
-	body, resp, err := sgc.doRequest(ctx, "PATCH", u, reqBody)
+	body, resp, err := sgc.doRequest(ctx, "PATCH", u, reqBody, reqOpts...)
 
 	return body.SecurityGroup, resp, err
 }
@@ -144,12 +149,13 @@ func (sgc *SecurityGroupsClient) Update(
 func (sgc *SecurityGroupsClient) Delete(
 	ctx context.Context,
 	sg SecurityGroupRef,
+	reqOpts ...katapult.RequestOption,
 ) (*SecurityGroup, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "security_groups/_",
 		RawQuery: sg.queryValues().Encode(),
 	}
-	body, resp, err := sgc.doRequest(ctx, "DELETE", u, nil)
+	body, resp, err := sgc.doRequest(ctx, "DELETE", u, nil, reqOpts...)
 
 	return body.SecurityGroup, resp, err
 }
@@ -159,11 +165,12 @@ func (sgc *SecurityGroupsClient) doRequest(
 	method string,
 	u *url.URL,
 	body interface{},
+	reqOpts ...katapult.RequestOption,
 ) (*securityGroupsResponseBody, *katapult.Response, error) {
 	u = sgc.basePath.ResolveReference(u)
 	respBody := &securityGroupsResponseBody{}
 
-	req := katapult.NewRequest(method, u, body)
+	req := katapult.NewRequest(method, u, body, reqOpts...)
 	resp, err := sgc.client.Do(ctx, req, respBody)
 	if resp == nil {
 		resp = katapult.NewResponse(nil)

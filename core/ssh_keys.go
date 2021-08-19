@@ -35,11 +35,12 @@ func (s *SSHKeysClient) List(
 	ctx context.Context,
 	ref OrganizationRef,
 	opts *ListOptions,
+	reqOpts ...katapult.RequestOption,
 ) ([]*AuthSSHKey, *katapult.Response, error) {
 	qs := queryValues(opts, ref)
 	u := &url.URL{Path: "organizations/_/ssh_keys", RawQuery: qs.Encode()}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 	resp.Pagination = body.Pagination
 
 	return body.SSHKeys, resp, err
@@ -57,11 +58,12 @@ func (s *SSHKeysClient) Add(
 	ctx context.Context,
 	ref OrganizationRef,
 	properties AuthSSHKeyProperties,
+	reqOpts ...katapult.RequestOption,
 ) (*AuthSSHKey, *katapult.Response, error) {
 	qs := ref.queryValues()
 	u := &url.URL{Path: "organizations/_/ssh_keys", RawQuery: qs.Encode()}
 
-	body, resp, err := s.doRequest(ctx, "POST", u, properties)
+	body, resp, err := s.doRequest(ctx, "POST", u, properties, reqOpts...)
 
 	return body.SSHKey, resp, err
 }
@@ -77,11 +79,12 @@ func (kr SSHKeyRef) queryValues() *url.Values {
 func (s *SSHKeysClient) Delete(
 	ctx context.Context,
 	ref SSHKeyRef,
+	reqOpts ...katapult.RequestOption,
 ) (*AuthSSHKey, *katapult.Response, error) {
 	qs := ref.queryValues()
 	u := &url.URL{Path: "ssh_keys/_", RawQuery: qs.Encode()}
 
-	body, resp, err := s.doRequest(ctx, "DELETE", u, nil)
+	body, resp, err := s.doRequest(ctx, "DELETE", u, nil, reqOpts...)
 
 	return body.SSHKey, resp, err
 }
@@ -91,11 +94,12 @@ func (s *SSHKeysClient) doRequest(
 	method string,
 	u *url.URL,
 	body interface{},
+	reqOpts ...katapult.RequestOption,
 ) (*sshKeysResponseBody, *katapult.Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &sshKeysResponseBody{}
 
-	req := katapult.NewRequest(method, u, body)
+	req := katapult.NewRequest(method, u, body, reqOpts...)
 	resp, err := s.client.Do(ctx, req, respBody)
 	if resp == nil {
 		resp = katapult.NewResponse(nil)

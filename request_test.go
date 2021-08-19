@@ -24,6 +24,7 @@ func TestNewRequest(t *testing.T) {
 		method string
 		u      *url.URL
 		body   interface{}
+		opts   []RequestOption
 	}
 	tests := []struct {
 		name string
@@ -44,6 +45,32 @@ func TestNewRequest(t *testing.T) {
 				},
 				ContentType: "",
 				Body:        nil,
+				Header:      map[string][]string{},
+			},
+		},
+		{
+			name: "with custom header",
+			args: args{
+				method: "GET",
+				u:      &url.URL{Path: "/foo/bar", RawQuery: "?hello=world"},
+				opts: []RequestOption{
+					RequestSetHeader(
+						"X-Clacks-Overhead",
+						"GNU Terry Pratchett",
+					),
+				},
+			},
+			want: &Request{
+				Method: "GET",
+				URL: &url.URL{
+					Path:     "/foo/bar",
+					RawQuery: "?hello=world",
+				},
+				ContentType: "",
+				Body:        nil,
+				Header: map[string][]string{
+					"X-Clacks-Overhead": {"GNU Terry Pratchett"},
+				},
 			},
 		},
 		{
@@ -61,6 +88,7 @@ func TestNewRequest(t *testing.T) {
 				},
 				ContentType: "",
 				Body:        reqBody{Hello: "world"},
+				Header:      map[string][]string{},
 			},
 		},
 		{
@@ -78,12 +106,18 @@ func TestNewRequest(t *testing.T) {
 				},
 				ContentType: "",
 				Body:        bytes.NewBufferString("hello"),
+				Header:      map[string][]string{},
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := NewRequest(tt.args.method, tt.args.u, tt.args.body)
+			got := NewRequest(
+				tt.args.method,
+				tt.args.u,
+				tt.args.body,
+				tt.args.opts...,
+			)
 
 			assert.Equal(t, tt.want, got)
 		})

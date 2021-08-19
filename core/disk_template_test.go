@@ -417,6 +417,7 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					qs := queryValues(tt.args.org, tt.args.opts)
 					assert.Equal(t, *qs, r.URL.Query())
@@ -427,7 +428,7 @@ func TestDiskTemplatesClient_List(t *testing.T) {
 			)
 
 			got, resp, err := c.List(
-				tt.args.ctx, tt.args.org, tt.args.opts,
+				tt.args.ctx, tt.args.org, tt.args.opts, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -552,6 +553,7 @@ func TestDiskTemplatesClient_Get(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.wantQuery != nil {
 						assert.Equal(t, *tt.wantQuery, r.URL.Query())
@@ -563,7 +565,7 @@ func TestDiskTemplatesClient_Get(t *testing.T) {
 			)
 
 			got, resp, err := c.Get(
-				tt.args.ctx, tt.args.ref,
+				tt.args.ctx, tt.args.ref, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -652,6 +654,7 @@ func TestDiskTemplatesClient_GetByID(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					qs := url.Values{
 						"disk_template[id]": []string{tt.args.id},
@@ -663,7 +666,11 @@ func TestDiskTemplatesClient_GetByID(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.GetByID(tt.args.ctx, tt.args.id)
+			got, resp, err := c.GetByID(
+				tt.args.ctx,
+				tt.args.id,
+				testRequestOption,
+			)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -751,6 +758,7 @@ func TestDiskTemplatesClient_GetByPermalink(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					qs := url.Values{
 						"disk_template[permalink]": []string{tt.args.permalink},
@@ -763,7 +771,7 @@ func TestDiskTemplatesClient_GetByPermalink(t *testing.T) {
 			)
 
 			got, resp, err := c.GetByPermalink(
-				tt.args.ctx, tt.args.permalink,
+				tt.args.ctx, tt.args.permalink, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {

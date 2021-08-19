@@ -100,6 +100,7 @@ func (s *IPAddressesClient) List(
 	ctx context.Context,
 	org OrganizationRef,
 	opts *ListOptions,
+	reqOpts ...katapult.RequestOption,
 ) ([]*IPAddress, *katapult.Response, error) {
 	qs := queryValues(org, opts)
 	u := &url.URL{
@@ -107,7 +108,7 @@ func (s *IPAddressesClient) List(
 		RawQuery: qs.Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 	resp.Pagination = body.Pagination
 
 	return body.IPAddresses, resp, err
@@ -116,13 +117,14 @@ func (s *IPAddressesClient) List(
 func (s *IPAddressesClient) Get(
 	ctx context.Context,
 	ref IPAddressRef,
+	reqOpts ...katapult.RequestOption,
 ) (*IPAddress, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "ip_addresses/_",
 		RawQuery: ref.queryValues().Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 
 	return body.IPAddress, resp, err
 }
@@ -130,21 +132,24 @@ func (s *IPAddressesClient) Get(
 func (s *IPAddressesClient) GetByID(
 	ctx context.Context,
 	id string,
+	reqOpts ...katapult.RequestOption,
 ) (*IPAddress, *katapult.Response, error) {
-	return s.Get(ctx, IPAddressRef{ID: id})
+	return s.Get(ctx, IPAddressRef{ID: id}, reqOpts...)
 }
 
 func (s *IPAddressesClient) GetByAddress(
 	ctx context.Context,
 	address string,
+	reqOpts ...katapult.RequestOption,
 ) (*IPAddress, *katapult.Response, error) {
-	return s.Get(ctx, IPAddressRef{Address: address})
+	return s.Get(ctx, IPAddressRef{Address: address}, reqOpts...)
 }
 
 func (s *IPAddressesClient) Create(
 	ctx context.Context,
 	org OrganizationRef,
 	args *IPAddressCreateArguments,
+	reqOpts ...katapult.RequestOption,
 ) (*IPAddress, *katapult.Response, error) {
 	u := &url.URL{Path: "organizations/_/ip_addresses"}
 	reqBody := &ipAddressCreateRequest{
@@ -158,7 +163,7 @@ func (s *IPAddressesClient) Create(
 		reqBody.Label = args.Label
 	}
 
-	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
+	body, resp, err := s.doRequest(ctx, "POST", u, reqBody, reqOpts...)
 
 	return body.IPAddress, resp, err
 }
@@ -167,6 +172,7 @@ func (s *IPAddressesClient) Update(
 	ctx context.Context,
 	ip IPAddressRef,
 	args *IPAddressUpdateArguments,
+	reqOpts ...katapult.RequestOption,
 ) (*IPAddress, *katapult.Response, error) {
 	u := &url.URL{Path: "ip_addresses/_"}
 	reqBody := &ipAddressUpdateRequest{
@@ -179,7 +185,7 @@ func (s *IPAddressesClient) Update(
 		reqBody.ReverseDNS = args.ReverseDNS
 	}
 
-	body, resp, err := s.doRequest(ctx, "PATCH", u, reqBody)
+	body, resp, err := s.doRequest(ctx, "PATCH", u, reqBody, reqOpts...)
 
 	return body.IPAddress, resp, err
 }
@@ -187,11 +193,12 @@ func (s *IPAddressesClient) Update(
 func (s *IPAddressesClient) Delete(
 	ctx context.Context,
 	ip IPAddressRef,
+	reqOpts ...katapult.RequestOption,
 ) (*katapult.Response, error) {
 	qs := queryValues(ip)
 	u := &url.URL{Path: "ip_addresses/_", RawQuery: qs.Encode()}
 
-	_, resp, err := s.doRequest(ctx, "DELETE", u, nil)
+	_, resp, err := s.doRequest(ctx, "DELETE", u, nil, reqOpts...)
 
 	return resp, err
 }
@@ -199,11 +206,12 @@ func (s *IPAddressesClient) Delete(
 func (s *IPAddressesClient) Unallocate(
 	ctx context.Context,
 	ip IPAddressRef,
+	reqOpts ...katapult.RequestOption,
 ) (*katapult.Response, error) {
 	qs := queryValues(ip)
 	u := &url.URL{Path: "ip_addresses/_/unallocate", RawQuery: qs.Encode()}
 
-	_, resp, err := s.doRequest(ctx, "POST", u, nil)
+	_, resp, err := s.doRequest(ctx, "POST", u, nil, reqOpts...)
 
 	return resp, err
 }
@@ -213,11 +221,12 @@ func (s *IPAddressesClient) doRequest(
 	method string,
 	u *url.URL,
 	body interface{},
+	reqOpts ...katapult.RequestOption,
 ) (*ipAddressesResponseBody, *katapult.Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &ipAddressesResponseBody{}
 
-	req := katapult.NewRequest(method, u, body)
+	req := katapult.NewRequest(method, u, body, reqOpts...)
 	resp, err := s.client.Do(ctx, req, respBody)
 	if resp == nil {
 		resp = katapult.NewResponse(nil)

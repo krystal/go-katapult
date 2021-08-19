@@ -295,6 +295,7 @@ func TestCertificatesClient_List(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					qs := queryValues(tt.args.org, tt.args.opts)
 					assert.Equal(t, *qs, r.URL.Query())
@@ -305,7 +306,7 @@ func TestCertificatesClient_List(t *testing.T) {
 			)
 
 			got, resp, err := c.List(
-				tt.args.ctx, tt.args.org, tt.args.opts,
+				tt.args.ctx, tt.args.org, tt.args.opts, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -400,13 +401,14 @@ func TestCertificatesClient_Get(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
 				},
 			)
 
-			got, resp, err := c.Get(tt.args.ctx, tt.args.id)
+			got, resp, err := c.Get(tt.args.ctx, tt.args.id, testRequestOption)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -495,13 +497,18 @@ func TestCertificatesClient_GetByID(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
 				},
 			)
 
-			got, resp, err := c.GetByID(tt.args.ctx, tt.args.id)
+			got, resp, err := c.GetByID(
+				tt.args.ctx,
+				tt.args.id,
+				testRequestOption,
+			)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)

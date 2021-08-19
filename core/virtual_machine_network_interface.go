@@ -77,6 +77,7 @@ func (s *VirtualMachineNetworkInterfacesClient) List(
 	ctx context.Context,
 	vm VirtualMachineRef,
 	opts *ListOptions,
+	reqOpts ...katapult.RequestOption,
 ) ([]*VirtualMachineNetworkInterface, *katapult.Response, error) {
 	qs := queryValues(vm, opts)
 	u := &url.URL{
@@ -84,7 +85,7 @@ func (s *VirtualMachineNetworkInterfacesClient) List(
 		RawQuery: qs.Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 	resp.Pagination = body.Pagination
 
 	return body.VirtualMachineNetworkInterfaces, resp, err
@@ -93,13 +94,14 @@ func (s *VirtualMachineNetworkInterfacesClient) List(
 func (s *VirtualMachineNetworkInterfacesClient) Get(
 	ctx context.Context,
 	ref VirtualMachineNetworkInterfaceRef,
+	reqOpts ...katapult.RequestOption,
 ) (*VirtualMachineNetworkInterface, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "virtual_machine_network_interfaces/_",
 		RawQuery: ref.queryValues().Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 
 	return body.VirtualMachineNetworkInterface, resp, err
 }
@@ -107,14 +109,16 @@ func (s *VirtualMachineNetworkInterfacesClient) Get(
 func (s *VirtualMachineNetworkInterfacesClient) GetByID(
 	ctx context.Context,
 	id string,
+	reqOpts ...katapult.RequestOption,
 ) (*VirtualMachineNetworkInterface, *katapult.Response, error) {
-	return s.Get(ctx, VirtualMachineNetworkInterfaceRef{ID: id})
+	return s.Get(ctx, VirtualMachineNetworkInterfaceRef{ID: id}, reqOpts...)
 }
 
 func (s *VirtualMachineNetworkInterfacesClient) AvailableIPs(
 	ctx context.Context,
 	vmnet *VirtualMachineNetworkInterface,
 	ipVer IPVersion,
+	reqOpts ...katapult.RequestOption,
 ) ([]*IPAddress, *katapult.Response, error) {
 	u := &url.URL{
 		Path: fmt.Sprintf(
@@ -123,7 +127,7 @@ func (s *VirtualMachineNetworkInterfacesClient) AvailableIPs(
 		),
 	}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 
 	return body.IPAddresses, resp, err
 }
@@ -132,6 +136,7 @@ func (s *VirtualMachineNetworkInterfacesClient) AllocateIP(
 	ctx context.Context,
 	vmnet VirtualMachineNetworkInterfaceRef,
 	ip IPAddressRef,
+	reqOpts ...katapult.RequestOption,
 ) (*VirtualMachineNetworkInterface, *katapult.Response, error) {
 	u := &url.URL{Path: "virtual_machine_network_interfaces/_/allocate_ip"}
 	reqBody := &virtualMachineNetworkInterfaceAllocateIPRequest{
@@ -139,7 +144,7 @@ func (s *VirtualMachineNetworkInterfacesClient) AllocateIP(
 		IPAddress:                      ip,
 	}
 
-	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
+	body, resp, err := s.doRequest(ctx, "POST", u, reqBody, reqOpts...)
 
 	return body.VirtualMachineNetworkInterface, resp, err
 }
@@ -148,6 +153,7 @@ func (s *VirtualMachineNetworkInterfacesClient) AllocateNewIP(
 	ctx context.Context,
 	vmnet VirtualMachineNetworkInterfaceRef,
 	ipVer IPVersion,
+	reqOpts ...katapult.RequestOption,
 ) (*IPAddress, *katapult.Response, error) {
 	u := &url.URL{Path: "virtual_machine_network_interfaces/_/allocate_new_ip"}
 	reqBody := &virtualMachineNetworkInterfaceAllocateNewIPRequest{
@@ -155,7 +161,7 @@ func (s *VirtualMachineNetworkInterfacesClient) AllocateNewIP(
 		AddressVersion:                 ipVer,
 	}
 
-	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
+	body, resp, err := s.doRequest(ctx, "POST", u, reqBody, reqOpts...)
 
 	return body.IPAddress, resp, err
 }
@@ -164,6 +170,7 @@ func (s *VirtualMachineNetworkInterfacesClient) UpdateSpeedProfile(
 	ctx context.Context,
 	vmnet VirtualMachineNetworkInterfaceRef,
 	speedProfile NetworkSpeedProfileRef,
+	reqOpts ...katapult.RequestOption,
 ) (*Task, *katapult.Response, error) {
 	u := &url.URL{
 		Path: "virtual_machine_network_interfaces/_/update_speed_profile",
@@ -173,7 +180,7 @@ func (s *VirtualMachineNetworkInterfacesClient) UpdateSpeedProfile(
 		SpeedProfile:                   speedProfile,
 	}
 
-	body, resp, err := s.doRequest(ctx, "PATCH", u, reqBody)
+	body, resp, err := s.doRequest(ctx, "PATCH", u, reqBody, reqOpts...)
 
 	return body.Task, resp, err
 }
@@ -183,11 +190,12 @@ func (s *VirtualMachineNetworkInterfacesClient) doRequest(
 	method string,
 	u *url.URL,
 	body interface{},
+	reqOpts ...katapult.RequestOption,
 ) (*virtualMachineNetworkInterfacesResponseBody, *katapult.Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &virtualMachineNetworkInterfacesResponseBody{}
 
-	req := katapult.NewRequest(method, u, body)
+	req := katapult.NewRequest(method, u, body, reqOpts...)
 	resp, err := s.client.Do(ctx, req, respBody)
 	if resp == nil {
 		resp = katapult.NewResponse(nil)

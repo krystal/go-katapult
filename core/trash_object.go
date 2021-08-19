@@ -59,6 +59,7 @@ func (s *TrashObjectsClient) List(
 	ctx context.Context,
 	org OrganizationRef,
 	opts *ListOptions,
+	reqOpts ...katapult.RequestOption,
 ) ([]*TrashObject, *katapult.Response, error) {
 	qs := queryValues(org, opts)
 	u := &url.URL{
@@ -66,7 +67,7 @@ func (s *TrashObjectsClient) List(
 		RawQuery: qs.Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 	resp.Pagination = body.Pagination
 
 	return body.TrashObjects, resp, err
@@ -75,12 +76,13 @@ func (s *TrashObjectsClient) List(
 func (s *TrashObjectsClient) Get(
 	ctx context.Context,
 	ref TrashObjectRef,
+	reqOpts ...katapult.RequestOption,
 ) (*TrashObject, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "trash_objects/_",
 		RawQuery: ref.queryValues().Encode(),
 	}
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 
 	return body.TrashObject, resp, err
 }
@@ -88,27 +90,30 @@ func (s *TrashObjectsClient) Get(
 func (s *TrashObjectsClient) GetByID(
 	ctx context.Context,
 	id string,
+	reqOpts ...katapult.RequestOption,
 ) (*TrashObject, *katapult.Response, error) {
-	return s.Get(ctx, TrashObjectRef{ID: id})
+	return s.Get(ctx, TrashObjectRef{ID: id}, reqOpts...)
 }
 
 func (s *TrashObjectsClient) GetByObjectID(
 	ctx context.Context,
 	objectID string,
+	reqOpts ...katapult.RequestOption,
 ) (*TrashObject, *katapult.Response, error) {
-	return s.Get(ctx, TrashObjectRef{ObjectID: objectID})
+	return s.Get(ctx, TrashObjectRef{ObjectID: objectID}, reqOpts...)
 }
 
 func (s *TrashObjectsClient) Purge(
 	ctx context.Context,
 	ref TrashObjectRef,
+	reqOpts ...katapult.RequestOption,
 ) (*Task, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "trash_objects/_",
 		RawQuery: ref.queryValues().Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "DELETE", u, nil)
+	body, resp, err := s.doRequest(ctx, "DELETE", u, nil, reqOpts...)
 
 	return body.Task, resp, err
 }
@@ -116,13 +121,14 @@ func (s *TrashObjectsClient) Purge(
 func (s *TrashObjectsClient) PurgeAll(
 	ctx context.Context,
 	org OrganizationRef,
+	reqOpts ...katapult.RequestOption,
 ) (*Task, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "organizations/_/trash_objects/purge_all",
 		RawQuery: org.queryValues().Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "POST", u, nil)
+	body, resp, err := s.doRequest(ctx, "POST", u, nil, reqOpts...)
 
 	return body.Task, resp, err
 }
@@ -130,13 +136,14 @@ func (s *TrashObjectsClient) PurgeAll(
 func (s *TrashObjectsClient) Restore(
 	ctx context.Context,
 	ref TrashObjectRef,
+	reqOpts ...katapult.RequestOption,
 ) (*TrashObject, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "trash_objects/_/restore",
 		RawQuery: ref.queryValues().Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "POST", u, nil)
+	body, resp, err := s.doRequest(ctx, "POST", u, nil, reqOpts...)
 
 	return body.TrashObject, resp, err
 }
@@ -146,11 +153,12 @@ func (s *TrashObjectsClient) doRequest(
 	method string,
 	u *url.URL,
 	body interface{},
+	reqOpts ...katapult.RequestOption,
 ) (*trashObjectsResponseBody, *katapult.Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &trashObjectsResponseBody{}
 
-	req := katapult.NewRequest(method, u, body)
+	req := katapult.NewRequest(method, u, body, reqOpts...)
 	resp, err := s.client.Do(ctx, req, respBody)
 	if resp == nil {
 		resp = katapult.NewResponse(nil)

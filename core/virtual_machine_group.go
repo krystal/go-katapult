@@ -103,6 +103,7 @@ func NewVirtualMachineGroupsClient(
 func (s *VirtualMachineGroupsClient) List(
 	ctx context.Context,
 	org OrganizationRef,
+	reqOpts ...katapult.RequestOption,
 ) ([]*VirtualMachineGroup, *katapult.Response, error) {
 	qs := queryValues(org)
 	u := &url.URL{
@@ -110,7 +111,7 @@ func (s *VirtualMachineGroupsClient) List(
 		RawQuery: qs.Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 
 	return body.VirtualMachineGroups, resp, err
 }
@@ -118,19 +119,21 @@ func (s *VirtualMachineGroupsClient) List(
 func (s *VirtualMachineGroupsClient) Get(
 	ctx context.Context,
 	ref VirtualMachineGroupRef,
+	reqOpts ...katapult.RequestOption,
 ) (*VirtualMachineGroup, *katapult.Response, error) {
-	return s.GetByID(ctx, ref.ID)
+	return s.GetByID(ctx, ref.ID, reqOpts...)
 }
 
 func (s *VirtualMachineGroupsClient) GetByID(
 	ctx context.Context,
 	id string,
+	reqOpts ...katapult.RequestOption,
 ) (*VirtualMachineGroup, *katapult.Response, error) {
 	u := &url.URL{
 		Path: fmt.Sprintf("virtual_machine_groups/%s", id),
 	}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 
 	return body.VirtualMachineGroup, resp, err
 }
@@ -139,6 +142,7 @@ func (s *VirtualMachineGroupsClient) Create(
 	ctx context.Context,
 	org OrganizationRef,
 	args *VirtualMachineGroupCreateArguments,
+	reqOpts ...katapult.RequestOption,
 ) (*VirtualMachineGroup, *katapult.Response, error) {
 	u := &url.URL{Path: "organizations/_/virtual_machine_groups"}
 	reqBody := &virtualMachineGroupCreateRequest{
@@ -146,7 +150,7 @@ func (s *VirtualMachineGroupsClient) Create(
 		Properties:   args,
 	}
 
-	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
+	body, resp, err := s.doRequest(ctx, "POST", u, reqBody, reqOpts...)
 
 	return body.VirtualMachineGroup, resp, err
 }
@@ -155,6 +159,7 @@ func (s *VirtualMachineGroupsClient) Update(
 	ctx context.Context,
 	ref VirtualMachineGroupRef,
 	args *VirtualMachineGroupUpdateArguments,
+	reqOpts ...katapult.RequestOption,
 ) (*VirtualMachineGroup, *katapult.Response, error) {
 	u := &url.URL{Path: "virtual_machine_groups/_"}
 	reqBody := &virtualMachineGroupUpdateRequest{
@@ -162,7 +167,7 @@ func (s *VirtualMachineGroupsClient) Update(
 		Properties:          args,
 	}
 
-	body, resp, err := s.doRequest(ctx, "PATCH", u, reqBody)
+	body, resp, err := s.doRequest(ctx, "PATCH", u, reqBody, reqOpts...)
 
 	return body.VirtualMachineGroup, resp, err
 }
@@ -170,11 +175,12 @@ func (s *VirtualMachineGroupsClient) Update(
 func (s *VirtualMachineGroupsClient) Delete(
 	ctx context.Context,
 	group VirtualMachineGroupRef,
+	reqOpts ...katapult.RequestOption,
 ) (*katapult.Response, error) {
 	qs := queryValues(group)
 	u := &url.URL{Path: "virtual_machine_groups/_", RawQuery: qs.Encode()}
 
-	_, resp, err := s.doRequest(ctx, "DELETE", u, nil)
+	_, resp, err := s.doRequest(ctx, "DELETE", u, nil, reqOpts...)
 
 	return resp, err
 }
@@ -184,11 +190,12 @@ func (s *VirtualMachineGroupsClient) doRequest(
 	method string,
 	u *url.URL,
 	body interface{},
+	reqOpts ...katapult.RequestOption,
 ) (*virtualMachineGroupsResponseBody, *katapult.Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &virtualMachineGroupsResponseBody{}
 
-	req := katapult.NewRequest(method, u, body)
+	req := katapult.NewRequest(method, u, body, reqOpts...)
 	resp, err := s.client.Do(ctx, req, respBody)
 	if resp == nil {
 		resp = katapult.NewResponse(nil)

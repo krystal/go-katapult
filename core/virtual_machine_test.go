@@ -472,6 +472,7 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					qs := queryValues(tt.args.org, tt.args.opts)
 					assert.Equal(t, *qs, r.URL.Query())
@@ -482,7 +483,7 @@ func TestVirtualMachinesClient_List(t *testing.T) {
 			)
 
 			got, resp, err := c.List(
-				tt.args.ctx, tt.args.org, tt.args.opts,
+				tt.args.ctx, tt.args.org, tt.args.opts, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -609,6 +610,7 @@ func TestVirtualMachinesClient_Get(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.wantQuery != nil {
 						assert.Equal(t, *tt.wantQuery, r.URL.Query())
@@ -620,7 +622,7 @@ func TestVirtualMachinesClient_Get(t *testing.T) {
 			)
 
 			got, resp, err := c.Get(
-				tt.args.ctx, tt.args.ref,
+				tt.args.ctx, tt.args.ref, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -722,6 +724,7 @@ func TestVirtualMachinesClient_GetByID(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					qs := url.Values{
 						"virtual_machine[id]": []string{tt.args.id},
@@ -733,7 +736,11 @@ func TestVirtualMachinesClient_GetByID(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.GetByID(tt.args.ctx, tt.args.id)
+			got, resp, err := c.GetByID(
+				tt.args.ctx,
+				tt.args.id,
+				testRequestOption,
+			)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -834,6 +841,7 @@ func TestVirtualMachinesClient_GetByFQDN(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					qs := url.Values{
 						"virtual_machine[fqdn]": []string{tt.args.fqdn},
@@ -846,7 +854,7 @@ func TestVirtualMachinesClient_GetByFQDN(t *testing.T) {
 			)
 
 			got, resp, err := c.GetByFQDN(
-				tt.args.ctx, tt.args.fqdn,
+				tt.args.ctx, tt.args.fqdn, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -1083,6 +1091,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 					assert.Equal(t, "PUT", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.reqBody != nil {
 						reqBody := &virtualMachineChangePackageRequest{}
@@ -1097,7 +1106,7 @@ func TestVirtualMachinesClient_ChangePackage(t *testing.T) {
 			)
 
 			got, resp, err := c.ChangePackage(
-				tt.args.ctx, tt.args.ref, tt.args.pkg,
+				tt.args.ctx, tt.args.ref, tt.args.pkg, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -1285,6 +1294,7 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 					assert.Equal(t, "PATCH", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.reqBody != nil {
 						reqBody := &virtualMachineUpdateRequest{}
@@ -1299,7 +1309,7 @@ func TestVirtualMachinesClient_Update(t *testing.T) {
 			)
 
 			got, resp, err := c.Update(
-				tt.args.ctx, tt.args.ref, tt.args.args,
+				tt.args.ctx, tt.args.ref, tt.args.args, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -1422,6 +1432,7 @@ func TestVirtualMachinesClient_Delete(t *testing.T) {
 					assert.Equal(t, "DELETE", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.wantQuery != nil {
 						assert.Equal(t, *tt.wantQuery, r.URL.Query())
@@ -1436,7 +1447,9 @@ func TestVirtualMachinesClient_Delete(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.Delete(tt.args.ctx, tt.args.vm)
+			got, resp, err := c.Delete(
+				tt.args.ctx, tt.args.vm, testRequestOption,
+			)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -1570,6 +1583,7 @@ func TestVirtualMachinesClient_Start(t *testing.T) {
 					assert.Equal(t, "POST", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.wantQuery != nil {
 						assert.Equal(t, *tt.wantQuery, r.URL.Query())
@@ -1581,7 +1595,7 @@ func TestVirtualMachinesClient_Start(t *testing.T) {
 			)
 
 			got, resp, err := c.Start(
-				tt.args.ctx, tt.args.ref,
+				tt.args.ctx, tt.args.ref, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -1716,6 +1730,7 @@ func TestVirtualMachinesClient_Stop(t *testing.T) {
 					assert.Equal(t, "POST", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.wantQuery != nil {
 						assert.Equal(t, *tt.wantQuery, r.URL.Query())
@@ -1727,7 +1742,7 @@ func TestVirtualMachinesClient_Stop(t *testing.T) {
 			)
 
 			got, resp, err := c.Stop(
-				tt.args.ctx, tt.args.ref,
+				tt.args.ctx, tt.args.ref, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -1862,6 +1877,7 @@ func TestVirtualMachinesClient_Shutdown(t *testing.T) {
 					assert.Equal(t, "POST", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.wantQuery != nil {
 						assert.Equal(t, *tt.wantQuery, r.URL.Query())
@@ -1873,7 +1889,7 @@ func TestVirtualMachinesClient_Shutdown(t *testing.T) {
 			)
 
 			got, resp, err := c.Shutdown(
-				tt.args.ctx, tt.args.ref,
+				tt.args.ctx, tt.args.ref, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -2008,6 +2024,7 @@ func TestVirtualMachinesClient_Reset(t *testing.T) {
 					assert.Equal(t, "POST", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.wantQuery != nil {
 						assert.Equal(t, *tt.wantQuery, r.URL.Query())
@@ -2019,7 +2036,7 @@ func TestVirtualMachinesClient_Reset(t *testing.T) {
 			)
 
 			got, resp, err := c.Reset(
-				tt.args.ctx, tt.args.ref,
+				tt.args.ctx, tt.args.ref, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {

@@ -339,6 +339,7 @@ func TestVirtualMachineGroupsClient_List(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					qs := queryValues(tt.args.org)
 					assert.Equal(t, *qs, r.URL.Query())
@@ -349,7 +350,7 @@ func TestVirtualMachineGroupsClient_List(t *testing.T) {
 			)
 
 			got, resp, err := c.List(
-				tt.args.ctx, tt.args.org,
+				tt.args.ctx, tt.args.org, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -456,6 +457,7 @@ func TestVirtualMachineGroupsClient_Get(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -463,7 +465,7 @@ func TestVirtualMachineGroupsClient_Get(t *testing.T) {
 			)
 
 			got, resp, err := c.Get(
-				tt.args.ctx, tt.args.ref,
+				tt.args.ctx, tt.args.ref, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -570,6 +572,7 @@ func TestVirtualMachineGroupsClient_GetByID(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -577,7 +580,7 @@ func TestVirtualMachineGroupsClient_GetByID(t *testing.T) {
 			)
 
 			got, resp, err := c.GetByID(
-				tt.args.ctx, tt.args.id,
+				tt.args.ctx, tt.args.id, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -761,6 +764,7 @@ func TestVirtualMachineGroupsClient_Create(t *testing.T) {
 					assert.Equal(t, "POST", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.reqBody != nil {
 						reqBody := &virtualMachineGroupCreateRequest{}
@@ -775,7 +779,7 @@ func TestVirtualMachineGroupsClient_Create(t *testing.T) {
 			)
 
 			got, resp, err := c.Create(
-				tt.args.ctx, tt.args.org, tt.args.args,
+				tt.args.ctx, tt.args.org, tt.args.args, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -912,6 +916,7 @@ func TestVirtualMachineGroupsClient_Update(t *testing.T) {
 					assert.Equal(t, "PATCH", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.reqBody != nil {
 						reqBody := &virtualMachineGroupUpdateRequest{}
@@ -926,7 +931,7 @@ func TestVirtualMachineGroupsClient_Update(t *testing.T) {
 			)
 
 			got, resp, err := c.Update(
-				tt.args.ctx, tt.args.group, tt.args.args,
+				tt.args.ctx, tt.args.group, tt.args.args, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -1026,6 +1031,7 @@ func TestVirtualMachineGroupsClient_Delete(t *testing.T) {
 					assert.Equal(t, "DELETE", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.wantQuery != nil {
 						assert.Equal(t, *tt.wantQuery, r.URL.Query())
@@ -1043,6 +1049,7 @@ func TestVirtualMachineGroupsClient_Delete(t *testing.T) {
 			resp, err := c.Delete(
 				tt.args.ctx,
 				tt.args.group,
+				testRequestOption,
 			)
 
 			if tt.respStatus != 0 {

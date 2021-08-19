@@ -82,6 +82,7 @@ func (s *LoadBalancersClient) List(
 	ctx context.Context,
 	org OrganizationRef,
 	opts *ListOptions,
+	reqOpts ...katapult.RequestOption,
 ) ([]*LoadBalancer, *katapult.Response, error) {
 	qs := queryValues(org, opts)
 	u := &url.URL{
@@ -89,7 +90,7 @@ func (s *LoadBalancersClient) List(
 		RawQuery: qs.Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 	resp.Pagination = body.Pagination
 
 	return body.LoadBalancers, resp, err
@@ -98,13 +99,14 @@ func (s *LoadBalancersClient) List(
 func (s *LoadBalancersClient) Get(
 	ctx context.Context,
 	ref LoadBalancerRef,
+	reqOpts ...katapult.RequestOption,
 ) (*LoadBalancer, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "load_balancers/_",
 		RawQuery: ref.queryValues().Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 
 	return body.LoadBalancer, resp, err
 }
@@ -112,14 +114,16 @@ func (s *LoadBalancersClient) Get(
 func (s *LoadBalancersClient) GetByID(
 	ctx context.Context,
 	id string,
+	reqOpts ...katapult.RequestOption,
 ) (*LoadBalancer, *katapult.Response, error) {
-	return s.Get(ctx, LoadBalancerRef{ID: id})
+	return s.Get(ctx, LoadBalancerRef{ID: id}, reqOpts...)
 }
 
 func (s *LoadBalancersClient) Create(
 	ctx context.Context,
 	org OrganizationRef,
 	args *LoadBalancerCreateArguments,
+	reqOpts ...katapult.RequestOption,
 ) (*LoadBalancer, *katapult.Response, error) {
 	u := &url.URL{Path: "organizations/_/load_balancers"}
 	reqBody := &loadBalancerCreateRequest{
@@ -127,7 +131,7 @@ func (s *LoadBalancersClient) Create(
 		Properties:   args,
 	}
 
-	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
+	body, resp, err := s.doRequest(ctx, "POST", u, reqBody, reqOpts...)
 
 	return body.LoadBalancer, resp, err
 }
@@ -136,6 +140,7 @@ func (s *LoadBalancersClient) Update(
 	ctx context.Context,
 	lb LoadBalancerRef,
 	args *LoadBalancerUpdateArguments,
+	reqOpts ...katapult.RequestOption,
 ) (*LoadBalancer, *katapult.Response, error) {
 	u := &url.URL{Path: "load_balancers/_"}
 	reqBody := &loadBalancerUpdateRequest{
@@ -143,7 +148,7 @@ func (s *LoadBalancersClient) Update(
 		Properties:   args,
 	}
 
-	body, resp, err := s.doRequest(ctx, "PATCH", u, reqBody)
+	body, resp, err := s.doRequest(ctx, "PATCH", u, reqBody, reqOpts...)
 
 	return body.LoadBalancer, resp, err
 }
@@ -151,12 +156,13 @@ func (s *LoadBalancersClient) Update(
 func (s *LoadBalancersClient) Delete(
 	ctx context.Context,
 	lb LoadBalancerRef,
+	reqOpts ...katapult.RequestOption,
 ) (*LoadBalancer, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "load_balancers/_",
 		RawQuery: lb.queryValues().Encode(),
 	}
-	body, resp, err := s.doRequest(ctx, "DELETE", u, nil)
+	body, resp, err := s.doRequest(ctx, "DELETE", u, nil, reqOpts...)
 
 	return body.LoadBalancer, resp, err
 }
@@ -166,11 +172,12 @@ func (s *LoadBalancersClient) doRequest(
 	method string,
 	u *url.URL,
 	body interface{},
+	reqOpts ...katapult.RequestOption,
 ) (*loadBalancersResponseBody, *katapult.Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &loadBalancersResponseBody{}
 
-	req := katapult.NewRequest(method, u, body)
+	req := katapult.NewRequest(method, u, body, reqOpts...)
 	resp, err := s.client.Do(ctx, req, respBody)
 	if resp == nil {
 		resp = katapult.NewResponse(nil)

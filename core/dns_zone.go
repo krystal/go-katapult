@@ -91,6 +91,7 @@ func (s *DNSZonesClient) List(
 	ctx context.Context,
 	org OrganizationRef,
 	opts *ListOptions,
+	reqOpts ...katapult.RequestOption,
 ) ([]*DNSZone, *katapult.Response, error) {
 	qs := queryValues(org, opts)
 
@@ -99,7 +100,7 @@ func (s *DNSZonesClient) List(
 		RawQuery: qs.Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 	resp.Pagination = body.Pagination
 
 	return body.DNSZones, resp, err
@@ -108,10 +109,11 @@ func (s *DNSZonesClient) List(
 func (s *DNSZonesClient) Get(
 	ctx context.Context,
 	ref DNSZoneRef,
+	reqOpts ...katapult.RequestOption,
 ) (*DNSZone, *katapult.Response, error) {
 	u := &url.URL{Path: "dns/zones/_", RawQuery: ref.queryValues().Encode()}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 
 	return body.DNSZone, resp, err
 }
@@ -119,21 +121,24 @@ func (s *DNSZonesClient) Get(
 func (s *DNSZonesClient) GetByID(
 	ctx context.Context,
 	id string,
+	reqOpts ...katapult.RequestOption,
 ) (*DNSZone, *katapult.Response, error) {
-	return s.Get(ctx, DNSZoneRef{ID: id})
+	return s.Get(ctx, DNSZoneRef{ID: id}, reqOpts...)
 }
 
 func (s *DNSZonesClient) GetByName(
 	ctx context.Context,
 	name string,
+	reqOpts ...katapult.RequestOption,
 ) (*DNSZone, *katapult.Response, error) {
-	return s.Get(ctx, DNSZoneRef{Name: name})
+	return s.Get(ctx, DNSZoneRef{Name: name}, reqOpts...)
 }
 
 func (s *DNSZonesClient) Create(
 	ctx context.Context,
 	org OrganizationRef,
 	args *DNSZoneArguments,
+	reqOpts ...katapult.RequestOption,
 ) (*DNSZone, *katapult.Response, error) {
 	u := &url.URL{Path: "organizations/_/dns/zones"}
 	reqBody := &dnsZoneCreateRequest{
@@ -148,7 +153,7 @@ func (s *DNSZonesClient) Create(
 		reqBody.SkipVerfication = args.SkipVerfication
 	}
 
-	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
+	body, resp, err := s.doRequest(ctx, "POST", u, reqBody, reqOpts...)
 
 	return body.DNSZone, resp, err
 }
@@ -156,12 +161,13 @@ func (s *DNSZonesClient) Create(
 func (s *DNSZonesClient) Delete(
 	ctx context.Context,
 	zone DNSZoneRef,
+	reqOpts ...katapult.RequestOption,
 ) (*DNSZone, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "dns/zones/_",
 		RawQuery: zone.queryValues().Encode(),
 	}
-	body, resp, err := s.doRequest(ctx, "DELETE", u, nil)
+	body, resp, err := s.doRequest(ctx, "DELETE", u, nil, reqOpts...)
 
 	return body.DNSZone, resp, err
 }
@@ -169,12 +175,13 @@ func (s *DNSZonesClient) Delete(
 func (s *DNSZonesClient) VerificationDetails(
 	ctx context.Context,
 	zone DNSZoneRef,
+	reqOpts ...katapult.RequestOption,
 ) (*DNSZoneVerificationDetails, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "dns/zones/_/verification_details",
 		RawQuery: zone.queryValues().Encode(),
 	}
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 
 	return body.VerificationDetails, resp, err
 }
@@ -182,12 +189,13 @@ func (s *DNSZonesClient) VerificationDetails(
 func (s *DNSZonesClient) Verify(
 	ctx context.Context,
 	ref DNSZoneRef,
+	reqOpts ...katapult.RequestOption,
 ) (*DNSZone, *katapult.Response, error) {
 	u := &url.URL{Path: "dns/zones/_/verify"}
 	reqBody := &dnsZoneVerifyRequest{
 		DNSZone: ref,
 	}
-	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
+	body, resp, err := s.doRequest(ctx, "POST", u, reqBody, reqOpts...)
 
 	return body.DNSZone, resp, err
 }
@@ -196,13 +204,14 @@ func (s *DNSZonesClient) UpdateTTL(
 	ctx context.Context,
 	ref DNSZoneRef,
 	ttl int,
+	reqOpts ...katapult.RequestOption,
 ) (*DNSZone, *katapult.Response, error) {
 	u := &url.URL{Path: "dns/zones/_/update_ttl"}
 	reqBody := &dnsZoneUpdateTTLRequest{
 		DNSZone: ref,
 		TTL:     ttl,
 	}
-	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
+	body, resp, err := s.doRequest(ctx, "POST", u, reqBody, reqOpts...)
 
 	return body.DNSZone, resp, err
 }
@@ -212,11 +221,12 @@ func (s *DNSZonesClient) doRequest(
 	method string,
 	u *url.URL,
 	body interface{},
+	reqOpts ...katapult.RequestOption,
 ) (*dnsZoneResponseBody, *katapult.Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &dnsZoneResponseBody{}
 
-	req := katapult.NewRequest(method, u, body)
+	req := katapult.NewRequest(method, u, body, reqOpts...)
 	resp, err := s.client.Do(ctx, req, respBody)
 	if resp == nil {
 		resp = katapult.NewResponse(nil)

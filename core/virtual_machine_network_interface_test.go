@@ -458,6 +458,7 @@ func TestVirtualMachineNetworkInterfacesClient_List(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.wantQuery != nil {
 						assert.Equal(t, *tt.wantQuery, r.URL.Query())
@@ -472,7 +473,7 @@ func TestVirtualMachineNetworkInterfacesClient_List(t *testing.T) {
 			)
 
 			got, resp, err := c.List(
-				tt.args.ctx, tt.args.vm, tt.args.opts,
+				tt.args.ctx, tt.args.vm, tt.args.opts, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -568,6 +569,7 @@ func TestVirtualMachineNetworkInterfacesClient_GetByID(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					assert.Equal(t, url.Values{
 						"virtual_machine_network_interface[id]": []string{
@@ -581,7 +583,7 @@ func TestVirtualMachineNetworkInterfacesClient_GetByID(t *testing.T) {
 			)
 
 			got, resp, err := c.GetByID(
-				tt.args.ctx, tt.args.id,
+				tt.args.ctx, tt.args.id, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -679,6 +681,7 @@ func TestVirtualMachineNetworkInterfacesClient_Get(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					assert.Equal(t, *tt.args.ref.queryValues(), r.URL.Query())
 
@@ -688,7 +691,7 @@ func TestVirtualMachineNetworkInterfacesClient_Get(t *testing.T) {
 			)
 
 			got, resp, err := c.Get(
-				tt.args.ctx, tt.args.ref,
+				tt.args.ctx, tt.args.ref, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -827,6 +830,7 @@ func TestVirtualMachineNetworkInterfacesClient_AvailableIPs(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
@@ -834,7 +838,7 @@ func TestVirtualMachineNetworkInterfacesClient_AvailableIPs(t *testing.T) {
 			)
 
 			got, resp, err := c.AvailableIPs(
-				tt.args.ctx, tt.args.vmnet, tt.args.ipVer,
+				tt.args.ctx, tt.args.vmnet, tt.args.ipVer, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -1027,6 +1031,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 					assert.Equal(t, "POST", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.wantReqBody != nil {
 						reqBody :=
@@ -1042,7 +1047,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 			)
 
 			got, resp, err := c.AllocateIP(
-				tt.args.ctx, tt.args.vmnet, tt.args.ip,
+				tt.args.ctx, tt.args.vmnet, tt.args.ip, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -1220,6 +1225,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateNewIP(t *testing.T) {
 					assert.Equal(t, "POST", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.wantReqBody != nil {
 						//nolint:lll
@@ -1236,7 +1242,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateNewIP(t *testing.T) {
 			)
 
 			got, resp, err := c.AllocateNewIP(
-				tt.args.ctx, tt.args.vmnet, tt.args.ipVer,
+				tt.args.ctx, tt.args.vmnet, tt.args.ipVer, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -1443,6 +1449,7 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 					assert.Equal(t, "PATCH", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.wantReqBody != nil {
 						//nolint:lll
@@ -1460,7 +1467,10 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 
 			//nolint:lll
 			got, resp, err := c.UpdateSpeedProfile(
-				tt.args.ctx, tt.args.vmnet, tt.args.speedProfile,
+				tt.args.ctx,
+				tt.args.vmnet,
+				tt.args.speedProfile,
+				testRequestOption,
 			)
 
 			if tt.respStatus != 0 {

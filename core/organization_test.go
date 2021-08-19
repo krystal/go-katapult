@@ -243,13 +243,14 @@ func TestOrganizationsClient_List(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					w.WriteHeader(tt.respStatus)
 					_, _ = w.Write(tt.respBody)
 				},
 			)
 
-			got, resp, err := c.List(tt.args.ctx)
+			got, resp, err := c.List(tt.args.ctx, testRequestOption)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -393,6 +394,7 @@ func TestOrganizationsClient_Get(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.reqQuery != nil {
 						assert.Equal(t, *tt.reqQuery, r.URL.Query())
@@ -404,7 +406,7 @@ func TestOrganizationsClient_Get(t *testing.T) {
 			)
 
 			got, resp, err := c.Get(
-				tt.args.ctx, tt.args.ref,
+				tt.args.ctx, tt.args.ref, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -517,6 +519,7 @@ func TestOrganizationsClient_GetByID(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					assert.Equal(t, url.Values{
 						"organization[id]": []string{tt.args.id},
@@ -527,7 +530,9 @@ func TestOrganizationsClient_GetByID(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.GetByID(tt.args.ctx, tt.args.id)
+			got, resp, err := c.GetByID(
+				tt.args.ctx, tt.args.id, testRequestOption,
+			)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -639,6 +644,7 @@ func TestOrganizationsClient_GetBySubDomain(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					qs := url.Values{
 						"organization[sub_domain]": []string{tt.args.subDomain},
@@ -651,7 +657,7 @@ func TestOrganizationsClient_GetBySubDomain(t *testing.T) {
 			)
 
 			got, resp, err := c.GetBySubDomain(
-				tt.args.ctx, tt.args.subDomain,
+				tt.args.ctx, tt.args.subDomain, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -882,6 +888,7 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 					assert.Equal(t, "POST", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.reqBody != nil {
 						reqBody := &organizationCreateManagedRequest{}
@@ -895,7 +902,7 @@ func TestOrganizationsClient_CreateManaged(t *testing.T) {
 			)
 
 			got, resp, err := c.CreateManaged(
-				tt.args.ctx, tt.args.parent, tt.args.args,
+				tt.args.ctx, tt.args.parent, tt.args.args, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {

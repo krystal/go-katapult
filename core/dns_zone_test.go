@@ -459,6 +459,7 @@ func TestDNSZonesClient_List(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					qs := queryValues(tt.args.org, tt.args.opts)
 					assert.Equal(t, *qs, r.URL.Query())
@@ -469,7 +470,7 @@ func TestDNSZonesClient_List(t *testing.T) {
 			)
 
 			got, resp, err := c.List(
-				tt.args.ctx, tt.args.org, tt.args.opts,
+				tt.args.ctx, tt.args.org, tt.args.opts, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -569,6 +570,7 @@ func TestDNSZonesClient_Get(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					assert.Equal(t, *tt.args.ref.queryValues(), r.URL.Query())
 
@@ -577,7 +579,7 @@ func TestDNSZonesClient_Get(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.Get(tt.args.ctx, tt.args.ref)
+			got, resp, err := c.Get(tt.args.ctx, tt.args.ref, testRequestOption)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -661,6 +663,7 @@ func TestDNSZonesClient_GetByID(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					assert.Equal(t, url.Values{
 						"dns_zone[id]": []string{tt.args.id},
@@ -671,7 +674,11 @@ func TestDNSZonesClient_GetByID(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.GetByID(tt.args.ctx, tt.args.id)
+			got, resp, err := c.GetByID(
+				tt.args.ctx,
+				tt.args.id,
+				testRequestOption,
+			)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -755,6 +762,7 @@ func TestDNSZonesClient_GetByName(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					qs := url.Values{"dns_zone[name]": []string{tt.args.name}}
 					assert.Equal(t, qs, r.URL.Query())
@@ -764,7 +772,11 @@ func TestDNSZonesClient_GetByName(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.GetByName(tt.args.ctx, tt.args.name)
+			got, resp, err := c.GetByName(
+				tt.args.ctx,
+				tt.args.name,
+				testRequestOption,
+			)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -972,6 +984,7 @@ func TestDNSZonesClient_Create(t *testing.T) {
 					assert.Equal(t, "POST", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.reqBody != nil {
 						reqBody := &dnsZoneCreateRequest{}
@@ -986,7 +999,7 @@ func TestDNSZonesClient_Create(t *testing.T) {
 			)
 
 			got, resp, err := c.Create(
-				tt.args.ctx, tt.args.org, tt.args.zoneArgs,
+				tt.args.ctx, tt.args.org, tt.args.zoneArgs, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -1089,6 +1102,7 @@ func TestDNSZonesClient_Delete(t *testing.T) {
 					assert.Equal(t, "DELETE", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.wantQuery != nil {
 						assert.Equal(t, *tt.wantQuery, r.URL.Query())
@@ -1103,7 +1117,11 @@ func TestDNSZonesClient_Delete(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.Delete(tt.args.ctx, tt.args.zone)
+			got, resp, err := c.Delete(
+				tt.args.ctx,
+				tt.args.zone,
+				testRequestOption,
+			)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -1244,6 +1262,7 @@ func TestDNSZonesClient_VerificationDetails(t *testing.T) {
 					assert.Equal(t, "GET", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.wantQuery != nil {
 						assert.Equal(t, *tt.wantQuery, r.URL.Query())
@@ -1259,7 +1278,7 @@ func TestDNSZonesClient_VerificationDetails(t *testing.T) {
 			)
 
 			got, resp, err := c.VerificationDetails(
-				tt.args.ctx, tt.args.zone,
+				tt.args.ctx, tt.args.zone, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {
@@ -1392,6 +1411,7 @@ func TestDNSZonesClient_Verify(t *testing.T) {
 					assert.Equal(t, "POST", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.reqBody != nil {
 						reqBody := &dnsZoneVerifyRequest{}
@@ -1405,7 +1425,9 @@ func TestDNSZonesClient_Verify(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.Verify(tt.args.ctx, tt.args.zone)
+			got, resp, err := c.Verify(
+				tt.args.ctx, tt.args.zone, testRequestOption,
+			)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
@@ -1562,6 +1584,7 @@ func TestDNSZonesClient_UpdateTTL(t *testing.T) {
 					assert.Equal(t, "POST", r.Method)
 					assertEmptyFieldSpec(t, r)
 					assertAuthorization(t, r)
+					assertRequestOptionHeader(t, r)
 
 					if tt.reqBody != nil {
 						reqBody := &dnsZoneUpdateTTLRequest{}
@@ -1576,7 +1599,7 @@ func TestDNSZonesClient_UpdateTTL(t *testing.T) {
 			)
 
 			got, resp, err := c.UpdateTTL(
-				tt.args.ctx, tt.args.zone, tt.args.ttl,
+				tt.args.ctx, tt.args.zone, tt.args.ttl, testRequestOption,
 			)
 
 			if tt.respStatus != 0 {

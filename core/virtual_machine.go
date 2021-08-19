@@ -107,6 +107,7 @@ func (s *VirtualMachinesClient) List(
 	ctx context.Context,
 	org OrganizationRef,
 	opts *ListOptions,
+	reqOpts ...katapult.RequestOption,
 ) ([]*VirtualMachine, *katapult.Response, error) {
 	qs := queryValues(org, opts)
 	u := &url.URL{
@@ -114,7 +115,7 @@ func (s *VirtualMachinesClient) List(
 		RawQuery: qs.Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 	resp.Pagination = body.Pagination
 
 	return body.VirtualMachines, resp, err
@@ -123,13 +124,14 @@ func (s *VirtualMachinesClient) List(
 func (s *VirtualMachinesClient) Get(
 	ctx context.Context,
 	ref VirtualMachineRef,
+	reqOpts ...katapult.RequestOption,
 ) (*VirtualMachine, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "virtual_machines/_",
 		RawQuery: ref.queryValues().Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 
 	return body.VirtualMachine, resp, err
 }
@@ -137,28 +139,31 @@ func (s *VirtualMachinesClient) Get(
 func (s *VirtualMachinesClient) GetByID(
 	ctx context.Context,
 	id string,
+	reqOpts ...katapult.RequestOption,
 ) (*VirtualMachine, *katapult.Response, error) {
-	return s.Get(ctx, VirtualMachineRef{ID: id})
+	return s.Get(ctx, VirtualMachineRef{ID: id}, reqOpts...)
 }
 
 func (s *VirtualMachinesClient) GetByFQDN(
 	ctx context.Context,
 	fqdn string,
+	reqOpts ...katapult.RequestOption,
 ) (*VirtualMachine, *katapult.Response, error) {
-	return s.Get(ctx, VirtualMachineRef{FQDN: fqdn})
+	return s.Get(ctx, VirtualMachineRef{FQDN: fqdn}, reqOpts...)
 }
 
 func (s *VirtualMachinesClient) ChangePackage(
 	ctx context.Context,
 	ref VirtualMachineRef,
 	pkg VirtualMachinePackageRef,
+	reqOpts ...katapult.RequestOption,
 ) (*Task, *katapult.Response, error) {
 	u := &url.URL{Path: "virtual_machines/_/package"}
 	reqBody := &virtualMachineChangePackageRequest{
 		VirtualMachine: ref,
 		Package:        pkg,
 	}
-	body, resp, err := s.doRequest(ctx, "PUT", u, reqBody)
+	body, resp, err := s.doRequest(ctx, "PUT", u, reqBody, reqOpts...)
 
 	return body.Task, resp, err
 }
@@ -167,13 +172,14 @@ func (s *VirtualMachinesClient) Update(
 	ctx context.Context,
 	ref VirtualMachineRef,
 	args *VirtualMachineUpdateArguments,
+	reqOpts ...katapult.RequestOption,
 ) (*VirtualMachine, *katapult.Response, error) {
 	u := &url.URL{Path: "virtual_machines/_"}
 	reqBody := &virtualMachineUpdateRequest{
 		VirtualMachine: ref,
 		Properties:     args,
 	}
-	body, resp, err := s.doRequest(ctx, "PATCH", u, reqBody)
+	body, resp, err := s.doRequest(ctx, "PATCH", u, reqBody, reqOpts...)
 
 	return body.VirtualMachine, resp, err
 }
@@ -181,12 +187,13 @@ func (s *VirtualMachinesClient) Update(
 func (s *VirtualMachinesClient) Delete(
 	ctx context.Context,
 	ref VirtualMachineRef,
+	reqOpts ...katapult.RequestOption,
 ) (*TrashObject, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "virtual_machines/_",
 		RawQuery: ref.queryValues().Encode(),
 	}
-	body, resp, err := s.doRequest(ctx, "DELETE", u, nil)
+	body, resp, err := s.doRequest(ctx, "DELETE", u, nil, reqOpts...)
 
 	return body.TrashObject, resp, err
 }
@@ -194,13 +201,14 @@ func (s *VirtualMachinesClient) Delete(
 func (s *VirtualMachinesClient) Start(
 	ctx context.Context,
 	ref VirtualMachineRef,
+	reqOpts ...katapult.RequestOption,
 ) (*Task, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "virtual_machines/_/start",
 		RawQuery: ref.queryValues().Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "POST", u, nil)
+	body, resp, err := s.doRequest(ctx, "POST", u, nil, reqOpts...)
 
 	return body.Task, resp, err
 }
@@ -208,13 +216,14 @@ func (s *VirtualMachinesClient) Start(
 func (s *VirtualMachinesClient) Stop(
 	ctx context.Context,
 	ref VirtualMachineRef,
+	reqOpts ...katapult.RequestOption,
 ) (*Task, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "virtual_machines/_/stop",
 		RawQuery: ref.queryValues().Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "POST", u, nil)
+	body, resp, err := s.doRequest(ctx, "POST", u, nil, reqOpts...)
 
 	return body.Task, resp, err
 }
@@ -222,13 +231,14 @@ func (s *VirtualMachinesClient) Stop(
 func (s *VirtualMachinesClient) Shutdown(
 	ctx context.Context,
 	ref VirtualMachineRef,
+	reqOpts ...katapult.RequestOption,
 ) (*Task, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "virtual_machines/_/shutdown",
 		RawQuery: ref.queryValues().Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "POST", u, nil)
+	body, resp, err := s.doRequest(ctx, "POST", u, nil, reqOpts...)
 
 	return body.Task, resp, err
 }
@@ -236,13 +246,14 @@ func (s *VirtualMachinesClient) Shutdown(
 func (s *VirtualMachinesClient) Reset(
 	ctx context.Context,
 	ref VirtualMachineRef,
+	reqOpts ...katapult.RequestOption,
 ) (*Task, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "virtual_machines/_/reset",
 		RawQuery: ref.queryValues().Encode(),
 	}
 
-	body, resp, err := s.doRequest(ctx, "POST", u, nil)
+	body, resp, err := s.doRequest(ctx, "POST", u, nil, reqOpts...)
 
 	return body.Task, resp, err
 }
@@ -252,11 +263,12 @@ func (s *VirtualMachinesClient) doRequest(
 	method string,
 	u *url.URL,
 	body interface{},
+	reqOpts ...katapult.RequestOption,
 ) (*virtualMachinesResponseBody, *katapult.Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &virtualMachinesResponseBody{}
 
-	req := katapult.NewRequest(method, u, body)
+	req := katapult.NewRequest(method, u, body, reqOpts...)
 	resp, err := s.client.Do(ctx, req, respBody)
 	if resp == nil {
 		resp = katapult.NewResponse(nil)

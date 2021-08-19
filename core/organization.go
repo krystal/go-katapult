@@ -81,9 +81,10 @@ func NewOrganizationsClient(rm RequestMaker) *OrganizationsClient {
 
 func (s *OrganizationsClient) List(
 	ctx context.Context,
+	reqOpts ...katapult.RequestOption,
 ) ([]*Organization, *katapult.Response, error) {
 	u := &url.URL{Path: "organizations"}
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 
 	return body.Organizations, resp, err
 }
@@ -91,11 +92,12 @@ func (s *OrganizationsClient) List(
 func (s *OrganizationsClient) Get(
 	ctx context.Context,
 	ref OrganizationRef,
+	reqOpts ...katapult.RequestOption,
 ) (*Organization, *katapult.Response, error) {
 	qs := ref.queryValues()
 	u := &url.URL{Path: "organizations/_", RawQuery: qs.Encode()}
 
-	body, resp, err := s.doRequest(ctx, "GET", u, nil)
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 
 	return body.Organization, resp, err
 }
@@ -103,21 +105,24 @@ func (s *OrganizationsClient) Get(
 func (s *OrganizationsClient) GetByID(
 	ctx context.Context,
 	id string,
+	reqOpts ...katapult.RequestOption,
 ) (*Organization, *katapult.Response, error) {
-	return s.Get(ctx, OrganizationRef{ID: id})
+	return s.Get(ctx, OrganizationRef{ID: id}, reqOpts...)
 }
 
 func (s *OrganizationsClient) GetBySubDomain(
 	ctx context.Context,
 	subDomain string,
+	reqOpts ...katapult.RequestOption,
 ) (*Organization, *katapult.Response, error) {
-	return s.Get(ctx, OrganizationRef{SubDomain: subDomain})
+	return s.Get(ctx, OrganizationRef{SubDomain: subDomain}, reqOpts...)
 }
 
 func (s *OrganizationsClient) CreateManaged(
 	ctx context.Context,
 	parent OrganizationRef,
 	args *OrganizationManagedArguments,
+	reqOpts ...katapult.RequestOption,
 ) (*Organization, *katapult.Response, error) {
 	u := &url.URL{Path: "organizations/_/managed"}
 	reqBody := &organizationCreateManagedRequest{
@@ -129,7 +134,7 @@ func (s *OrganizationsClient) CreateManaged(
 		reqBody.SubDomain = args.SubDomain
 	}
 
-	body, resp, err := s.doRequest(ctx, "POST", u, reqBody)
+	body, resp, err := s.doRequest(ctx, "POST", u, reqBody, reqOpts...)
 
 	return body.Organization, resp, err
 }
@@ -139,11 +144,12 @@ func (s *OrganizationsClient) doRequest(
 	method string,
 	u *url.URL,
 	body interface{},
+	reqOpts ...katapult.RequestOption,
 ) (*organizationsResponseBody, *katapult.Response, error) {
 	u = s.basePath.ResolveReference(u)
 	respBody := &organizationsResponseBody{}
 
-	req := katapult.NewRequest(method, u, body)
+	req := katapult.NewRequest(method, u, body, reqOpts...)
 	resp, err := s.client.Do(ctx, req, respBody)
 	if resp == nil {
 		resp = katapult.NewResponse(nil)
