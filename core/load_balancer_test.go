@@ -641,7 +641,9 @@ func TestLoadBalancersClient_GetByID(t *testing.T) {
 				},
 			)
 
-			got, resp, err := c.GetByID(tt.args.ctx, tt.args.id, testRequestOption)
+			got, resp, err := c.GetByID(
+				tt.args.ctx, tt.args.id, testRequestOption,
+			)
 
 			if tt.respStatus != 0 {
 				assert.Equal(t, tt.respStatus, resp.StatusCode)
