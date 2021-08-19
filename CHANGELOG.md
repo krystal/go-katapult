@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.7](https://github.com/krystal/go-katapult/compare/v0.1.6...v0.1.7) (2021-08-19)
+
+
+### Features
+
+* add request option support ([03da1ac](https://github.com/krystal/go-katapult/commit/03da1ace0f7b9f292161bd9a076f6905301dc218))
+* add request options support ([b022bf2](https://github.com/krystal/go-katapult/commit/b022bf2b68d4e0f78e646ff1df482cf9b483d5ee))
+
 ### [0.1.6](https://github.com/krystal/go-katapult/compare/v0.1.5...v0.1.6) (2021-08-18)
 
 
