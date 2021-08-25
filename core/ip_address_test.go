@@ -321,7 +321,7 @@ func TestIPAddressesClient_List(t *testing.T) {
 	type args struct {
 		ctx  context.Context
 		org  OrganizationRef
-		opts *ListOptions
+		opts *IPAddressListOptions
 	}
 	tests := []struct {
 		name           string
@@ -373,7 +373,7 @@ func TestIPAddressesClient_List(t *testing.T) {
 			args: args{
 				ctx:  context.Background(),
 				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
-				opts: &ListOptions{Page: 1, PerPage: 2},
+				opts: &IPAddressListOptions{Page: 1, PerPage: 2},
 			},
 			want: ipAddressesList[0:2],
 			wantPagination: &katapult.Pagination{
@@ -391,7 +391,7 @@ func TestIPAddressesClient_List(t *testing.T) {
 			args: args{
 				ctx:  context.Background(),
 				org:  OrganizationRef{ID: "org_O648YDMEYeLmqdmn"},
-				opts: &ListOptions{Page: 2, PerPage: 2},
+				opts: &IPAddressListOptions{Page: 2, PerPage: 2},
 			},
 			want: ipAddressesList[2:],
 			wantPagination: &katapult.Pagination{
@@ -1509,6 +1509,47 @@ func TestIPAddressesClient_Unallocate(t *testing.T) {
 			if tt.errIs != nil {
 				assert.ErrorIs(t, err, tt.errIs)
 			}
+		})
+	}
+}
+
+func TestIPAddressListOptions_queryValues(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  *IPAddressListOptions
+		want *url.Values
+	}{
+		{
+			name: "nil",
+			obj:  nil,
+			want: &url.Values{},
+		},
+		{
+			name: "empty",
+			obj:  &IPAddressListOptions{},
+			want: &url.Values{
+				"allocated": []string{"false"},
+			},
+		},
+		{
+			name: "full",
+			obj: &IPAddressListOptions{
+				Allocated: true,
+				Page:      5,
+				PerPage:   15,
+			},
+			want: &url.Values{
+				"allocated": []string{"true"},
+				"page":      []string{"5"},
+				"per_page":  []string{"15"},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.obj.queryValues()
+
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

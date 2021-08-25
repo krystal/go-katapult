@@ -96,10 +96,36 @@ func NewIPAddressesClient(rm RequestMaker) *IPAddressesClient {
 	}
 }
 
+type IPAddressListOptions struct {
+	Allocated bool
+	Page      int
+	PerPage   int
+}
+
+func (s *IPAddressListOptions) queryValues() *url.Values {
+	if s == nil {
+		return &url.Values{}
+	}
+
+	opts := &ListOptions{
+		Page:    s.Page,
+		PerPage: s.PerPage,
+	}
+
+	values := opts.queryValues()
+	if s.Allocated {
+		values.Set("allocated", "true")
+	} else {
+		values.Set("allocated", "false")
+	}
+
+	return values
+}
+
 func (s *IPAddressesClient) List(
 	ctx context.Context,
 	org OrganizationRef,
-	opts *ListOptions,
+	opts *IPAddressListOptions,
 	reqOpts ...katapult.RequestOption,
 ) ([]*IPAddress, *katapult.Response, error) {
 	qs := queryValues(org, opts)
