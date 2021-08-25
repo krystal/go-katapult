@@ -14,9 +14,9 @@ var (
 	ErrCountryNotFound                            = fmt.Errorf("%w: country_not_found", katapult.ErrResourceNotFound)
 	ErrCountryStateNotFound                       = fmt.Errorf("%w: country_state_not_found", katapult.ErrResourceNotFound)
 	ErrCurrencyNotFound                           = fmt.Errorf("%w: currency_not_found", katapult.ErrResourceNotFound)
+	ErrDNSRecordNotFound                          = fmt.Errorf("%w: dns_zone_not_found", katapult.ErrResourceNotFound)
 	ErrDNSRecordNotFound                          = fmt.Errorf("%w: dns_record_not_found", katapult.ErrResourceNotFound)
 	ErrDNSZoneAlreadyVerified                     = fmt.Errorf("%w: dns_zone_already_verified", katapult.ErrUnprocessableEntity)
-	ErrDNSZoneNotFound                            = fmt.Errorf("%w: dns_zone_not_found", katapult.ErrResourceNotFound)
 	ErrDNSZoneNotVerified                         = fmt.Errorf("%w: dns_zone_not_verified", katapult.ErrUnprocessableEntity)
 	ErrDataCenterNotFound                         = fmt.Errorf("%w: data_center_not_found", katapult.ErrResourceNotFound)
 	ErrDeletionRestricted                         = fmt.Errorf("%w: deletion_restricted", katapult.ErrConflict)
@@ -143,6 +143,22 @@ func NewDNSRecordNotFoundError(theError *katapult.ResponseError) *DNSRecordNotFo
 	return &DNSRecordNotFoundError{
 		CommonError: katapult.NewCommonError(
 			ErrDNSRecordNotFound,
+			"dns_zone_not_found",
+			theError.Description,
+		),
+	}
+}
+
+// DNSRecordNotFoundError:
+// No DNS record was found matching any of the criteria provided in the arguments
+type DNSRecordNotFoundError struct {
+	katapult.CommonError
+}
+
+func NewDNSRecordNotFoundError(theError *katapult.ResponseError) *DNSRecordNotFoundError {
+	return &DNSRecordNotFoundError{
+		CommonError: katapult.NewCommonError(
+			ErrDNSRecordNotFound,
 			"dns_record_not_found",
 			theError.Description,
 		),
@@ -165,50 +181,20 @@ func NewDNSZoneAlreadyVerifiedError(theError *katapult.ResponseError) *DNSZoneAl
 	}
 }
 
-// DNSZoneNotFoundError:
-// No DNS zone was found matching any of the criteria provided in the arguments
-type DNSZoneNotFoundError struct {
-	katapult.CommonError
-}
-
-func NewDNSZoneNotFoundError(theError *katapult.ResponseError) *DNSZoneNotFoundError {
-	return &DNSZoneNotFoundError{
-		CommonError: katapult.NewCommonError(
-			ErrDNSZoneNotFound,
-			"dns_zone_not_found",
-			theError.Description,
-		),
-	}
-}
-
 // DNSZoneNotVerifiedError:
 // The DNS zone could not be verified, check the nameservers are set correctly
 type DNSZoneNotVerifiedError struct {
 	katapult.CommonError
-	Detail *DNSZoneNotVerifiedErrorDetail `json:"detail,omitempty"`
 }
 
 func NewDNSZoneNotVerifiedError(theError *katapult.ResponseError) *DNSZoneNotVerifiedError {
-	detail := &DNSZoneNotVerifiedErrorDetail{}
-	err := json.Unmarshal(theError.Detail, detail)
-	if err != nil {
-		detail = nil
-	}
-
 	return &DNSZoneNotVerifiedError{
 		CommonError: katapult.NewCommonError(
 			ErrDNSZoneNotVerified,
 			"dns_zone_not_verified",
 			theError.Description,
 		),
-		Detail: detail,
 	}
-}
-
-type DNSZoneNotVerifiedErrorDetail struct {
-	VerificationDetails struct {
-		Nameservers []string `json:"nameservers,omitempty"`
-	} `json:"verification_details,omitempty"`
 }
 
 // DataCenterNotFoundError:
@@ -1114,12 +1100,12 @@ func castResponseError(theError *katapult.ResponseError) error {
 		return NewCountryStateNotFoundError(theError)
 	case "currency_not_found":
 		return NewCurrencyNotFoundError(theError)
+	case "dns_zone_not_found":
+		return NewDNSRecordNotFoundError(theError)
 	case "dns_record_not_found":
 		return NewDNSRecordNotFoundError(theError)
 	case "dns_zone_already_verified":
 		return NewDNSZoneAlreadyVerifiedError(theError)
-	case "dns_zone_not_found":
-		return NewDNSZoneNotFoundError(theError)
 	case "dns_zone_not_verified":
 		return NewDNSZoneNotVerifiedError(theError)
 	case "data_center_not_found":
