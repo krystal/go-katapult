@@ -15,9 +15,17 @@ import (
 )
 
 func (g *Generator) Errors() error {
-	idMatcher, err := regexp.Compile(g.SchemaPath)
+	includeMatcher, err := regexp.Compile(g.SchemaIncludePath)
 	if err != nil {
 		return err
+	}
+
+	var excludeMatcher *regexp.Regexp
+	if g.SchemaExcludePath != "" {
+		excludeMatcher, err = regexp.Compile(g.SchemaExcludePath)
+		if err != nil {
+			return err
+		}
 	}
 
 	f := g.newFile(g.PkgName)
@@ -48,7 +56,8 @@ func (g *Generator) Errors() error {
 		var errorObjects []*apischema.Error
 		for _, e := range sortedErrors {
 			_, exists := errorCodes[e.Code]
-			if !exists && idMatcher.MatchString(e.ID) {
+			if !exists && includeMatcher.MatchString(e.ID) &&
+				(excludeMatcher == nil || !excludeMatcher.MatchString(e.ID)) {
 				errorObjects = append(errorObjects, e)
 				errorCodes[e.Code] = true
 			}
