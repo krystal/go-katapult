@@ -174,7 +174,13 @@ func (g *Generator) errCastResponseFunc(
 }
 
 func (g *Generator) errVarName(e *apischema.Error) string {
-	return "Err" + strings.TrimSuffix(filepath.Base(e.ID), "Errors")
+	name := strings.TrimSuffix(filepath.Base(e.ID), "Errors")
+
+	if !strings.HasSuffix(e.Code, "_error") {
+		name = strings.TrimSuffix(name, "Error")
+	}
+
+	return "Err" + name
 }
 
 func (g *Generator) errVar(f *jen.File, e *apischema.Error) error {
