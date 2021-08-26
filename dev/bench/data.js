@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1629373490452,
+  "lastUpdate": 1629992100832,
   "repoUrl": "https://github.com/krystal/go-katapult",
   "entries": {
     "Benchmark": [
@@ -3702,6 +3702,60 @@ window.BENCHMARK_DATA = {
             "value": 4274,
             "unit": "ns/op",
             "extra": "295296 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "contact@jimeh.me",
+            "name": "Jim Myhrberg",
+            "username": "jimeh"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "815059838d3082dbe510624a531f3ffa6d96a418",
+          "message": "Merge pull request #124 from krystal/improve-codegen\n\nchore(codegen): generate code from bundled API schema",
+          "timestamp": "2021-08-26T16:34:20+01:00",
+          "tree_id": "ba31ce6ef19ad6be5891a144cfd480ccc166ef8b",
+          "url": "https://github.com/krystal/go-katapult/commit/815059838d3082dbe510624a531f3ffa6d96a418"
+        },
+        "date": 1629992099747,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkNameGenerator_RandomHostname",
+            "value": 11035,
+            "unit": "ns/op",
+            "extra": "99817 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_NoPrefix",
+            "value": 5002,
+            "unit": "ns/op",
+            "extra": "247509 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_OnePrefix",
+            "value": 5026,
+            "unit": "ns/op",
+            "extra": "242872 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_TwoPrefixes",
+            "value": 5034,
+            "unit": "ns/op",
+            "extra": "216277 times\n2 procs"
+          },
+          {
+            "name": "BenchmarkNameGenerator_RandomName_ThreePrefixes",
+            "value": 5222,
+            "unit": "ns/op",
+            "extra": "237758 times\n2 procs"
           }
         ]
       }
