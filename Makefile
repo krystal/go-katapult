@@ -106,16 +106,36 @@ bench:
 #
 
 .PHONY: generate
-generate:
+generate: schemas
 	go generate ./...
 
 .PHONY: check-generate
 check-generate:
 	$(eval CHKDIR := $(shell mktemp -d))
-	cp -av . "$(CHKDIR)"
+	cp -a . "$(CHKDIR)"
 	make -C "$(CHKDIR)/" generate
-	( diff -rN . "$(CHKDIR)" && rm -rf "$(CHKDIR)" ) || \
-	( rm -rf "$(CHKDIR)" && exit 1 )
+	( diff -rN "$(CURDIR)" "$(CHKDIR)" && rm -rf "$(CHKDIR)" ) || \
+		( rm -rf "$(CHKDIR)" && exit 1 )
+
+#
+# Katapult API Schemas
+#
+
+.PHONY: schemas
+schemas:
+	go generate ./schemas
+
+.PHONY: update-schemas
+update-schemas:
+	SCHEMA_UPDATE=1 go generate ./schemas
+
+.PHONY: check-schemas
+check-schemas:
+	$(eval CHKDIR := $(shell mktemp -d))
+	cp -a . "$(CHKDIR)"
+	make -C "$(CHKDIR)/" update-schemas
+	( diff -rN "$(CURDIR)/schemas" "$(CHKDIR)/schemas" && rm -rf "$(CHKDIR)" ) \
+		|| ( rm -rf "$(CHKDIR)" && exit 1 )
 
 #
 # Coverage

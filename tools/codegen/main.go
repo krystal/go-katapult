@@ -60,14 +60,15 @@ func (s *stringSlice) Set(value string) error {
 }
 
 type configuration struct {
-	GenTypes    indexMap
-	PkgName     string
-	SchemaFiles stringSlice
-	SchemaNames stringSlice
-	SchemaPath  string
-	OutputDir   string
-	LogLevel    string
-	SkipCache   bool
+	GenTypes          indexMap
+	PkgName           string
+	SchemaFiles       stringSlice
+	SchemaNames       stringSlice
+	SchemaIncludePath string
+	SchemaExcludePath string
+	OutputDir         string
+	LogLevel          string
+	SkipCache         bool
 }
 
 func configure() (*configuration, *flag.FlagSet, error) {
@@ -98,7 +99,12 @@ func configure() (*configuration, *flag.FlagSet, error) {
 	fs.Var(&config.GenTypes, "t", "type of files to generate (repeatable)")
 	fs.Var(&config.SchemaFiles, "f", "path to schema files (repeatable)")
 	fs.Var(&config.SchemaNames, "n", "APIs schema name to fetch (repeatable)")
-	fs.StringVar(&config.SchemaPath, "i", ".*", "object IDs to process")
+	fs.StringVar(&config.SchemaIncludePath,
+		"i", ".*", "regexp matching object IDs to include",
+	)
+	fs.StringVar(&config.SchemaExcludePath,
+		"e", "", "regexp matching object IDs to exclude",
+	)
 	fs.StringVar(&config.OutputDir, "o", wd, "")
 	fs.StringVar(&config.PkgName, "p", "", "output package name")
 	fs.StringVar(&config.LogLevel, "l", "info", "log level")
@@ -142,11 +148,12 @@ func main() {
 	}
 
 	generator := &gen.Generator{
-		PkgName:     config.PkgName,
-		OutputDir:   config.OutputDir,
-		SchemaPath:  config.SchemaPath,
-		SchemaFiles: config.SchemaFiles,
-		Logger:      logger,
+		PkgName:           config.PkgName,
+		OutputDir:         config.OutputDir,
+		SchemaIncludePath: config.SchemaIncludePath,
+		SchemaExcludePath: config.SchemaExcludePath,
+		SchemaFiles:       config.SchemaFiles,
+		Logger:            logger,
 	}
 
 	for t := range config.GenTypes {

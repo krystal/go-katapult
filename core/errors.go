@@ -6,7 +6,7 @@ import (
 	"github.com/krystal/go-katapult"
 )
 
-//go:generate go run github.com/krystal/go-katapult/tools/codegen -t errors -p core -o . -i CoreAPI\/.* -n core/v1
+//go:generate go run github.com/krystal/go-katapult/tools/codegen -t errors -p core -o . -i CoreAPI\/.* -f ../schemas/core/v1.json
 
 var Err = fmt.Errorf("%w: core", katapult.Err)
 

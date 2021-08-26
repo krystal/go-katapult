@@ -14,10 +14,11 @@ import (
 )
 
 type Generator struct {
-	PkgName     string
-	OutputDir   string
-	SchemaPath  string
-	SchemaFiles []string
+	PkgName           string
+	OutputDir         string
+	SchemaIncludePath string
+	SchemaExcludePath string
+	SchemaFiles       []string
 
 	Logger hclog.Logger
 }
