@@ -1,6 +1,7 @@
 package gen
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -52,15 +53,32 @@ func (g *Generator) Errors() error {
 			return a < b
 		})
 
-		errorCodes := map[string]bool{}
+		errorCodes := map[string][]string{}
 		var errorObjects []*apischema.Error
 		for _, e := range sortedErrors {
-			_, exists := errorCodes[e.Code]
-			if !exists && includeMatcher.MatchString(e.ID) &&
+			if includeMatcher.MatchString(e.ID) &&
 				(excludeMatcher == nil || !excludeMatcher.MatchString(e.ID)) {
-				errorObjects = append(errorObjects, e)
-				errorCodes[e.Code] = true
+
+				if len(errorCodes[e.Code]) == 0 {
+					errorObjects = append(errorObjects, e)
+				}
+				errorCodes[e.Code] = append(errorCodes[e.Code], e.ID)
 			}
+		}
+
+		dupeCodes := false
+		for code, ids := range errorCodes {
+			if len(ids) > 1 {
+				dupeCodes = true
+				g.Logger.Error(
+					"Duplicate error code in schema",
+					"code", code, "ids", ids,
+				)
+			}
+		}
+
+		if dupeCodes {
+			return errors.New("duplicate error codes in schema")
 		}
 
 		for _, e := range errorObjects {
