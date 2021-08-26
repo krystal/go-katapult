@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-//go:generate go run github.com/krystal/go-katapult/tools/codegen -t errors -p katapult -o . -i (Apia|Rapid)\/.* -n core/v1
+//go:generate go run github.com/krystal/go-katapult/tools/codegen -t errors -p katapult -o . -i (Apia|Rapid)\/.* -f ./schemas/core/v1.json
 
 var (
 	// Err is the top-most parent of any error returned by katapult.

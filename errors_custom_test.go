@@ -23,7 +23,7 @@ func TestScopeNotGrantedError_Error(t *testing.T) {
 		{
 			name: "without detail",
 			fields: fields{
-				parent: ErrScopeNotGrantedError,
+				parent: ErrScopeNotGranted,
 				code:   "scope_not_granted",
 				description: "The scope required for this endpoint has not " +
 					"been granted to the authenticating identity",
@@ -35,7 +35,7 @@ func TestScopeNotGrantedError_Error(t *testing.T) {
 		{
 			name: "empty detail scopes",
 			fields: fields{
-				parent: ErrScopeNotGrantedError,
+				parent: ErrScopeNotGranted,
 				code:   "scope_not_granted",
 				description: "The scope required for this endpoint has not " +
 					"been granted to the authenticating identity",
@@ -48,7 +48,7 @@ func TestScopeNotGrantedError_Error(t *testing.T) {
 		{
 			name: "with detail scopes",
 			fields: fields{
-				parent: ErrScopeNotGrantedError,
+				parent: ErrScopeNotGranted,
 				code:   "scope_not_granted",
 				description: "The scope required for this endpoint has not " +
 					"been granted to the authenticating identity",
