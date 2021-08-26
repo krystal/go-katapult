@@ -181,10 +181,23 @@ func (g *Generator) errVar(f *jen.File, e *apischema.Error) error {
 		parent = g.katapult("ErrUnknown")
 	}
 
-	f.Var().Id(g.errVarName(e)).Op("=").Qual("fmt", "Errorf").Call(
+	varName := g.errVarName(e)
+
+	f.Var().Id(varName).Op("=").Qual("fmt", "Errorf").Call(
 		jen.Lit("%w: "+e.Code),
 		parent,
 	)
+
+	expectedVarName := "Err" + snakeToPascal(e.Code)
+	if varName != expectedVarName {
+		g.Logger.Warn(
+			"Error code does not match error ID basename",
+			"id", e.ID,
+			"code", e.Code,
+			"varName", varName,
+			"expected", expectedVarName,
+		)
+	}
 
 	return nil
 }
