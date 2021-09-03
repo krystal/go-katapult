@@ -8,11 +8,10 @@ import (
 )
 
 type DNSZone struct {
-	ID                 string `json:"id,omitempty"`
-	Name               string `json:"name,omitempty"`
-	TTL                int    `json:"ttl,omitempty"`
-	Verified           bool   `json:"verified,omitempty"`
-	InfrastructureZone bool   `json:"infrastructure_zone,omitempty"`
+	ID         string `json:"id,omitempty"`
+	Name       string `json:"name,omitempty"`
+	DefaultTTL int    `json:"default_ttl,omitempty"`
+	Verified   bool   `json:"verified,omitempty"`
 }
 
 func (s *DNSZone) Ref() DNSZoneRef {
@@ -37,42 +36,32 @@ func (s DNSZoneRef) queryValues() *url.Values {
 	return v
 }
 
-type DNSZoneVerificationDetails struct {
-	Nameservers []string `json:"nameservers,omitempty"`
-	TXTRecord   string   `json:"txt_record,omitempty"`
+type DNSZoneCreateArguments struct {
+	Name       string `json:"name"`
+	DefaultTTL int    `json:"default_ttl,omitempty"`
 }
 
-type DNSZoneArguments struct {
-	Name            string
-	TTL             int
-	SkipVerfication bool
-}
-
-type DNSZoneDetails struct {
-	Name string `json:"name"`
-	TTL  int    `json:"ttl,omitempty"`
+type DNSZoneUpdateArguments struct {
+	Name       string `json:"name"`
+	DefaultTTL int    `json:"default_ttl,omitempty"`
 }
 
 type dnsZoneCreateRequest struct {
-	Organization    OrganizationRef `json:"organization"`
-	Details         *DNSZoneDetails `json:"details"`
-	SkipVerfication bool            `json:"skip_verification"`
+	Organization OrganizationRef         `json:"organization"`
+	Properties   *DNSZoneCreateArguments `json:"properties"`
 }
 
-type dnsZoneVerifyRequest struct {
-	DNSZone DNSZoneRef `json:"dns_zone"`
-}
-
-type dnsZoneUpdateTTLRequest struct {
-	DNSZone DNSZoneRef `json:"dns_zone"`
-	TTL     int        `json:"ttl"`
+type dnsZoneUpdateRequest struct {
+	DNSZone    DNSZoneRef              `json:"dns_zone"`
+	Properties *DNSZoneUpdateArguments `json:"properties"`
 }
 
 type dnsZoneResponseBody struct {
-	Pagination          *katapult.Pagination        `json:"pagination,omitempty"`
-	DNSZones            []*DNSZone                  `json:"dns_zones"`
-	DNSZone             *DNSZone                    `json:"dns_zone"`
-	VerificationDetails *DNSZoneVerificationDetails `json:"details,omitempty"`
+	Pagination  *katapult.Pagination `json:"pagination,omitempty"`
+	DNSZones    []*DNSZone           `json:"dns_zones"`
+	DNSZone     *DNSZone             `json:"dns_zone"`
+	Deleted     *bool                `json:"deleted,omitempty"`
+	Nameservers []string             `json:"nameservers,omitempty"`
 }
 
 type DNSZonesClient struct {
@@ -96,7 +85,7 @@ func (s *DNSZonesClient) List(
 	qs := queryValues(org, opts)
 
 	u := &url.URL{
-		Path:     "organizations/_/dns/zones",
+		Path:     "organizations/_/dns_zones",
 		RawQuery: qs.Encode(),
 	}
 
@@ -106,12 +95,27 @@ func (s *DNSZonesClient) List(
 	return body.DNSZones, resp, err
 }
 
+func (s *DNSZonesClient) Nameservers(
+	ctx context.Context,
+	org OrganizationRef,
+	reqOpts ...katapult.RequestOption,
+) ([]string, *katapult.Response, error) {
+	u := &url.URL{
+		Path:     "organizations/_/dns_zones/nameservers",
+		RawQuery: org.queryValues().Encode(),
+	}
+
+	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
+
+	return body.Nameservers, resp, err
+}
+
 func (s *DNSZonesClient) Get(
 	ctx context.Context,
 	ref DNSZoneRef,
 	reqOpts ...katapult.RequestOption,
 ) (*DNSZone, *katapult.Response, error) {
-	u := &url.URL{Path: "dns/zones/_", RawQuery: ref.queryValues().Encode()}
+	u := &url.URL{Path: "dns_zones/_", RawQuery: ref.queryValues().Encode()}
 
 	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
 
@@ -137,23 +141,33 @@ func (s *DNSZonesClient) GetByName(
 func (s *DNSZonesClient) Create(
 	ctx context.Context,
 	org OrganizationRef,
-	args *DNSZoneArguments,
+	args *DNSZoneCreateArguments,
 	reqOpts ...katapult.RequestOption,
 ) (*DNSZone, *katapult.Response, error) {
-	u := &url.URL{Path: "organizations/_/dns/zones"}
-	reqBody := &dnsZoneCreateRequest{
-		Organization: org,
+	u := &url.URL{
+		Path:     "organizations/_/dns_zones",
+		RawQuery: org.queryValues().Encode(),
 	}
-
-	if args != nil {
-		reqBody.Details = &DNSZoneDetails{
-			Name: args.Name,
-			TTL:  args.TTL,
-		}
-		reqBody.SkipVerfication = args.SkipVerfication
-	}
+	reqBody := &dnsZoneCreateRequest{Properties: args}
 
 	body, resp, err := s.doRequest(ctx, "POST", u, reqBody, reqOpts...)
+
+	return body.DNSZone, resp, err
+}
+
+func (s *DNSZonesClient) Update(
+	ctx context.Context,
+	zone DNSZoneRef,
+	args *DNSZoneUpdateArguments,
+	reqOpts ...katapult.RequestOption,
+) (*DNSZone, *katapult.Response, error) {
+	u := &url.URL{
+		Path:     "dns_zones/_",
+		RawQuery: zone.queryValues().Encode(),
+	}
+	reqBody := &dnsZoneUpdateRequest{Properties: args}
+
+	body, resp, err := s.doRequest(ctx, "PATCH", u, reqBody, reqOpts...)
 
 	return body.DNSZone, resp, err
 }
@@ -162,28 +176,14 @@ func (s *DNSZonesClient) Delete(
 	ctx context.Context,
 	zone DNSZoneRef,
 	reqOpts ...katapult.RequestOption,
-) (*DNSZone, *katapult.Response, error) {
+) (*bool, *katapult.Response, error) {
 	u := &url.URL{
-		Path:     "dns/zones/_",
+		Path:     "dns_zones/_",
 		RawQuery: zone.queryValues().Encode(),
 	}
 	body, resp, err := s.doRequest(ctx, "DELETE", u, nil, reqOpts...)
 
-	return body.DNSZone, resp, err
-}
-
-func (s *DNSZonesClient) VerificationDetails(
-	ctx context.Context,
-	zone DNSZoneRef,
-	reqOpts ...katapult.RequestOption,
-) (*DNSZoneVerificationDetails, *katapult.Response, error) {
-	u := &url.URL{
-		Path:     "dns/zones/_/verification_details",
-		RawQuery: zone.queryValues().Encode(),
-	}
-	body, resp, err := s.doRequest(ctx, "GET", u, nil, reqOpts...)
-
-	return body.VerificationDetails, resp, err
+	return body.Deleted, resp, err
 }
 
 func (s *DNSZonesClient) Verify(
@@ -191,27 +191,12 @@ func (s *DNSZonesClient) Verify(
 	ref DNSZoneRef,
 	reqOpts ...katapult.RequestOption,
 ) (*DNSZone, *katapult.Response, error) {
-	u := &url.URL{Path: "dns/zones/_/verify"}
-	reqBody := &dnsZoneVerifyRequest{
-		DNSZone: ref,
+	u := &url.URL{
+		Path:     "dns_zones/_/verify",
+		RawQuery: ref.queryValues().Encode(),
 	}
-	body, resp, err := s.doRequest(ctx, "POST", u, reqBody, reqOpts...)
 
-	return body.DNSZone, resp, err
-}
-
-func (s *DNSZonesClient) UpdateTTL(
-	ctx context.Context,
-	ref DNSZoneRef,
-	ttl int,
-	reqOpts ...katapult.RequestOption,
-) (*DNSZone, *katapult.Response, error) {
-	u := &url.URL{Path: "dns/zones/_/update_ttl"}
-	reqBody := &dnsZoneUpdateTTLRequest{
-		DNSZone: ref,
-		TTL:     ttl,
-	}
-	body, resp, err := s.doRequest(ctx, "POST", u, reqBody, reqOpts...)
+	body, resp, err := s.doRequest(ctx, "POST", u, nil, reqOpts...)
 
 	return body.DNSZone, resp, err
 }

@@ -1,7 +1,7 @@
 {
   "dns_zone": {
     "id": "dnszone_lwz66kyviwCQyqQc",
-    "name": "test-2.example.com",
-    "ttl": 1842
+    "name": "test-1.com",
+    "default_ttl": 1842
   }
 }

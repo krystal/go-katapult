@@ -10,7 +10,7 @@
     {
       "id": "dnszone_qr9KPhSwkGNh7IMb",
       "name": "test-3.example.com",
-      "ttl": 3600
+      "default_ttl": 3600
     }
   ]
 }
