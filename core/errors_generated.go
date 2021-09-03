@@ -15,7 +15,6 @@ var (
 	ErrCountryStateNotFound                       = fmt.Errorf("%w: country_state_not_found", katapult.ErrResourceNotFound)
 	ErrCurrencyNotFound                           = fmt.Errorf("%w: currency_not_found", katapult.ErrResourceNotFound)
 	ErrDNSRecordNotFound                          = fmt.Errorf("%w: dns_record_not_found", katapult.ErrResourceNotFound)
-	ErrDNSZoneAlreadyVerified                     = fmt.Errorf("%w: dns_zone_already_verified", katapult.ErrUnprocessableEntity)
 	ErrDNSZoneNotFound                            = fmt.Errorf("%w: dns_zone_not_found", katapult.ErrResourceNotFound)
 	ErrDNSZoneNotVerified                         = fmt.Errorf("%w: dns_zone_not_verified", katapult.ErrUnprocessableEntity)
 	ErrDataCenterNotFound                         = fmt.Errorf("%w: data_center_not_found", katapult.ErrResourceNotFound)
@@ -28,7 +27,6 @@ var (
 	ErrIPAddressNotFound                          = fmt.Errorf("%w: ip_address_not_found", katapult.ErrResourceNotFound)
 	ErrIPAlreadyAllocated                         = fmt.Errorf("%w: ip_already_allocated", katapult.ErrUnprocessableEntity)
 	ErrIdentityNotLinkedToWebSession              = fmt.Errorf("%w: identity_not_linked_to_web_session", katapult.ErrBadRequest)
-	ErrInfrastructureDNSZoneCannotBeEdited        = fmt.Errorf("%w: infrastructure_dns_zone_cannot_be_edited", katapult.ErrForbidden)
 	ErrInterfaceNotFound                          = fmt.Errorf("%w: interface_not_found", katapult.ErrResourceNotFound)
 	ErrInvalidIP                                  = fmt.Errorf("%w: invalid_ip", katapult.ErrUnprocessableEntity)
 	ErrInvalidSpecXML                             = fmt.Errorf("%w: invalid_spec_xml", katapult.ErrBadRequest)
@@ -149,22 +147,6 @@ func NewDNSRecordNotFoundError(theError *katapult.ResponseError) *DNSRecordNotFo
 	}
 }
 
-// DNSZoneAlreadyVerifiedError:
-// This DNS zone is already verified, and does not require any verification details
-type DNSZoneAlreadyVerifiedError struct {
-	katapult.CommonError
-}
-
-func NewDNSZoneAlreadyVerifiedError(theError *katapult.ResponseError) *DNSZoneAlreadyVerifiedError {
-	return &DNSZoneAlreadyVerifiedError{
-		CommonError: katapult.NewCommonError(
-			ErrDNSZoneAlreadyVerified,
-			"dns_zone_already_verified",
-			theError.Description,
-		),
-	}
-}
-
 // DNSZoneNotFoundError:
 // No DNS zone was found matching any of the criteria provided in the arguments
 type DNSZoneNotFoundError struct {
@@ -185,30 +167,16 @@ func NewDNSZoneNotFoundError(theError *katapult.ResponseError) *DNSZoneNotFoundE
 // The DNS zone could not be verified, check the nameservers are set correctly
 type DNSZoneNotVerifiedError struct {
 	katapult.CommonError
-	Detail *DNSZoneNotVerifiedErrorDetail `json:"detail,omitempty"`
 }
 
 func NewDNSZoneNotVerifiedError(theError *katapult.ResponseError) *DNSZoneNotVerifiedError {
-	detail := &DNSZoneNotVerifiedErrorDetail{}
-	err := json.Unmarshal(theError.Detail, detail)
-	if err != nil {
-		detail = nil
-	}
-
 	return &DNSZoneNotVerifiedError{
 		CommonError: katapult.NewCommonError(
 			ErrDNSZoneNotVerified,
 			"dns_zone_not_verified",
 			theError.Description,
 		),
-		Detail: detail,
 	}
-}
-
-type DNSZoneNotVerifiedErrorDetail struct {
-	VerificationDetails struct {
-		Nameservers []string `json:"nameservers,omitempty"`
-	} `json:"verification_details,omitempty"`
 }
 
 // DataCenterNotFoundError:
@@ -378,22 +346,6 @@ func NewIdentityNotLinkedToWebSessionError(theError *katapult.ResponseError) *Id
 		CommonError: katapult.NewCommonError(
 			ErrIdentityNotLinkedToWebSession,
 			"identity_not_linked_to_web_session",
-			theError.Description,
-		),
-	}
-}
-
-// InfrastructureDNSZoneCannotBeEditedError:
-// Infrastructure DNS zones cannot be edited through the API. These are managed exclusively by Katapult.
-type InfrastructureDNSZoneCannotBeEditedError struct {
-	katapult.CommonError
-}
-
-func NewInfrastructureDNSZoneCannotBeEditedError(theError *katapult.ResponseError) *InfrastructureDNSZoneCannotBeEditedError {
-	return &InfrastructureDNSZoneCannotBeEditedError{
-		CommonError: katapult.NewCommonError(
-			ErrInfrastructureDNSZoneCannotBeEdited,
-			"infrastructure_dns_zone_cannot_be_edited",
 			theError.Description,
 		),
 	}
@@ -1116,8 +1068,6 @@ func castResponseError(theError *katapult.ResponseError) error {
 		return NewCurrencyNotFoundError(theError)
 	case "dns_record_not_found":
 		return NewDNSRecordNotFoundError(theError)
-	case "dns_zone_already_verified":
-		return NewDNSZoneAlreadyVerifiedError(theError)
 	case "dns_zone_not_found":
 		return NewDNSZoneNotFoundError(theError)
 	case "dns_zone_not_verified":
@@ -1142,8 +1092,6 @@ func castResponseError(theError *katapult.ResponseError) error {
 		return NewIPAlreadyAllocatedError(theError)
 	case "identity_not_linked_to_web_session":
 		return NewIdentityNotLinkedToWebSessionError(theError)
-	case "infrastructure_dns_zone_cannot_be_edited":
-		return NewInfrastructureDNSZoneCannotBeEditedError(theError)
 	case "interface_not_found":
 		return NewInterfaceNotFoundError(theError)
 	case "invalid_ip":

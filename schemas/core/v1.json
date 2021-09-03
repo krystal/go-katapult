@@ -280,88 +280,88 @@
               "group": "disk_backup_policies"
             },
             {
-              "path": "organizations/:organization/dns/zones",
+              "path": "organizations/:organization/dns_zones",
               "request_method": "GET",
-              "controller": "CoreAPI/LegacyDNS/Controllers/DNSZones",
-              "endpoint": "CoreAPI/LegacyDNS/Controllers/DNSZones/ListEndpoint",
-              "group": "dns.zones"
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/DNSZones/ListEndpoint",
+              "group": "dns_zones"
             },
             {
-              "path": "organizations/:organization/dns/zones",
+              "path": "organizations/:organization/dns_zones/nameservers",
+              "request_method": "GET",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/DNSZones/NameserversEndpoint",
+              "group": "dns_zones"
+            },
+            {
+              "path": "organizations/:organization/dns_zones",
               "request_method": "POST",
-              "controller": "CoreAPI/LegacyDNS/Controllers/DNSZones",
-              "endpoint": "CoreAPI/LegacyDNS/Controllers/DNSZones/CreateEndpoint",
-              "group": "dns.zones"
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/DNSZones/CreateEndpoint",
+              "group": "dns_zones"
             },
             {
-              "path": "dns/zones/:dns_zone",
+              "path": "dns_zones/:dns_zone",
               "request_method": "GET",
-              "controller": "CoreAPI/LegacyDNS/Controllers/DNSZones",
-              "endpoint": "CoreAPI/LegacyDNS/Controllers/DNSZones/InfoEndpoint",
-              "group": "dns.zones"
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/DNSZones/InfoEndpoint",
+              "group": "dns_zones"
             },
             {
-              "path": "dns/zones/:dns_zone",
-              "request_method": "DELETE",
-              "controller": "CoreAPI/LegacyDNS/Controllers/DNSZones",
-              "endpoint": "CoreAPI/LegacyDNS/Controllers/DNSZones/DeleteEndpoint",
-              "group": "dns.zones"
-            },
-            {
-              "path": "dns/zones/:dns_zone/verification_details",
-              "request_method": "GET",
-              "controller": "CoreAPI/LegacyDNS/Controllers/DNSZones",
-              "endpoint": "CoreAPI/LegacyDNS/Controllers/DNSZones/VerificationDetailsEndpoint",
-              "group": "dns.zones"
-            },
-            {
-              "path": "dns/zones/:dns_zone/verify",
-              "request_method": "POST",
-              "controller": "CoreAPI/LegacyDNS/Controllers/DNSZones",
-              "endpoint": "CoreAPI/LegacyDNS/Controllers/DNSZones/VerifyEndpoint",
-              "group": "dns.zones"
-            },
-            {
-              "path": "dns/zones/:dns_zone/update_ttl",
-              "request_method": "POST",
-              "controller": "CoreAPI/LegacyDNS/Controllers/DNSZones",
-              "endpoint": "CoreAPI/LegacyDNS/Controllers/DNSZones/UpdateTtlEndpoint",
-              "group": "dns.zones"
-            },
-            {
-              "path": "dns/zones/:dns_zone/records",
-              "request_method": "GET",
-              "controller": "CoreAPI/LegacyDNS/Controllers/DNSRecords",
-              "endpoint": "CoreAPI/LegacyDNS/Controllers/DNSRecords/ListEndpoint",
-              "group": "dns.records"
-            },
-            {
-              "path": "dns/zones/:dns_zone/records",
-              "request_method": "POST",
-              "controller": "CoreAPI/LegacyDNS/Controllers/DNSRecords",
-              "endpoint": "CoreAPI/LegacyDNS/Controllers/DNSRecords/CreateEndpoint",
-              "group": "dns.records"
-            },
-            {
-              "path": "dns/records/:dns_record",
-              "request_method": "GET",
-              "controller": "CoreAPI/LegacyDNS/Controllers/DNSRecords",
-              "endpoint": "CoreAPI/LegacyDNS/Controllers/DNSRecords/InfoEndpoint",
-              "group": "dns.records"
-            },
-            {
-              "path": "dns/records/:dns_record",
+              "path": "dns_zones/:dns_zone",
               "request_method": "PATCH",
-              "controller": "CoreAPI/LegacyDNS/Controllers/DNSRecords",
-              "endpoint": "CoreAPI/LegacyDNS/Controllers/DNSRecords/UpdateEndpoint",
-              "group": "dns.records"
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/DNSZones/UpdateEndpoint",
+              "group": "dns_zones"
             },
             {
-              "path": "dns/records/:dns_record",
+              "path": "dns_zones/:dns_zone",
               "request_method": "DELETE",
-              "controller": "CoreAPI/LegacyDNS/Controllers/DNSRecords",
-              "endpoint": "CoreAPI/LegacyDNS/Controllers/DNSRecords/DeleteEndpoint",
-              "group": "dns.records"
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/DNSZones/DeleteEndpoint",
+              "group": "dns_zones"
+            },
+            {
+              "path": "dns_zones/:dns_zone/verify",
+              "request_method": "POST",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/DNSZones/VerifyEndpoint",
+              "group": "dns_zones"
+            },
+            {
+              "path": "dns_zones/:dns_zone/records",
+              "request_method": "GET",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/DNSRecords/ListEndpoint",
+              "group": "dns_zones.dns_records"
+            },
+            {
+              "path": "dns_zones/:dns_zone/records",
+              "request_method": "POST",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/DNSRecords/CreateEndpoint",
+              "group": "dns_zones.dns_records"
+            },
+            {
+              "path": "dns_records/:dns_record",
+              "request_method": "GET",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/DNSRecords/InfoEndpoint",
+              "group": "dns_zones.dns_records"
+            },
+            {
+              "path": "dns_records/:dns_record",
+              "request_method": "PATCH",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/DNSRecords/UpdateEndpoint",
+              "group": "dns_zones.dns_records"
+            },
+            {
+              "path": "dns_records/:dns_record",
+              "request_method": "DELETE",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/DNSRecords/DeleteEndpoint",
+              "group": "dns_zones.dns_records"
             },
             {
               "path": "organizations/:organization/security_groups",
@@ -908,20 +908,14 @@
               "groups": []
             },
             {
-              "id": "dns",
-              "name": "DNS/Domains",
-              "description": null,
+              "id": "dns_zones",
+              "name": "DNS zones",
+              "description": "Endpoints for managing DNS zones",
               "groups": [
                 {
-                  "id": "dns.zones",
-                  "name": "DNS Zones",
-                  "description": "Endpoints for managing DNS zones/domains",
-                  "groups": []
-                },
-                {
-                  "id": "dns.records",
-                  "name": "DNS Records",
-                  "description": "Endpoints for managing DNS records beloning to existing DNS zones/domains",
+                  "id": "dns_zones.dns_records",
+                  "name": "Records",
+                  "description": "Endpoints for managing DNS records",
                   "groups": []
                 }
               ]
@@ -1131,7 +1125,7 @@
           },
           {
             "name": "virtual_machines:power_actions",
-            "description": "Start & stop virtual machines"
+            "description": "Start \u0026 stop virtual machines"
           },
           {
             "name": "virtual_machines:console",
@@ -1769,7 +1763,7 @@
             "array": true,
             "spec": {
               "all": false,
-              "spec": "id, name, sub_domain, infrastructure_domain, personal, managed, created_at, suspended"
+              "spec": "id, name, sub_domain, infrastructure_domain, managed, created_at, suspended"
             }
           }
         ],
@@ -1836,18 +1830,6 @@
             "name": "infrastructure_domain",
             "description": null,
             "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/Organization/PersonalField",
-            "name": "personal",
-            "description": null,
-            "type": "Apia/Scalars/Boolean",
             "null": false,
             "array": false,
             "spec": {
@@ -9772,6 +9754,2209 @@
             "name": "dns_record",
             "description": "The DNS record to destroy",
             "type": "CoreAPI/LegacyDNS/ArgumentSets/DNSRecordLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/DNSZones/ListEndpoint",
+        "name": "List DNS zones",
+        "description": "Return a list of all DNS zones",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/DNSZones/ListEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "organization",
+              "description": null,
+              "type": "CoreAPI/ArgumentSets/OrganizationLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            },
+            {
+              "name": "page",
+              "description": null,
+              "type": "Apia/Scalars/Integer",
+              "required": false,
+              "array": false,
+              "default": "1"
+            },
+            {
+              "name": "per_page",
+              "description": null,
+              "type": "Apia/Scalars/Integer",
+              "required": false,
+              "array": false,
+              "default": "30"
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/DNSZones/ListEndpoint/PaginationField",
+            "name": "pagination",
+            "description": null,
+            "type": "Apia/PaginationObject",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Endpoints/DNSZones/ListEndpoint/DnsZonesField",
+            "name": "dns_zones",
+            "description": "The DNS zones for the provided organization",
+            "type": "CoreAPI/Objects/DNSZone",
+            "null": false,
+            "array": true,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Errors/PermissionDenied"
+        ],
+        "scopes": [
+          "dns",
+          "dns:read"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/DNSZones/ListEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "organization",
+            "description": null,
+            "type": "CoreAPI/ArgumentSets/OrganizationLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "page",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "required": false,
+            "array": false,
+            "default": "1"
+          },
+          {
+            "name": "per_page",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "required": false,
+            "array": false,
+            "default": "30"
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/DNSZone",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/DNSZone/IdField",
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DNSZone/NameField",
+            "name": "name",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DNSZone/DefaultTtlField",
+            "name": "default_ttl",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DNSZone/VerifiedField",
+            "name": "verified",
+            "description": null,
+            "type": "Apia/Scalars/Boolean",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/DNSZones/NameserversEndpoint",
+        "name": "List nameservers",
+        "description": "Return a list of nameservers that should be used for DNS zones within a given organization",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/DNSZones/NameserversEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "organization",
+              "description": null,
+              "type": "CoreAPI/ArgumentSets/OrganizationLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/DNSZones/NameserversEndpoint/NameserversField",
+            "name": "nameservers",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": true,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Errors/PermissionDenied"
+        ],
+        "scopes": [
+          "dns",
+          "dns:read"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/DNSZones/NameserversEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "organization",
+            "description": null,
+            "type": "CoreAPI/ArgumentSets/OrganizationLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/DNSZones/CreateEndpoint",
+        "name": "Create DNS zone",
+        "description": "Create a new DNS zone within an existing organization",
+        "http_status": 201,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/DNSZones/CreateEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "organization",
+              "description": "The organization to create the new DNS zone inside of",
+              "type": "CoreAPI/ArgumentSets/OrganizationLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            },
+            {
+              "name": "properties",
+              "description": "The details for the new DNS zone",
+              "type": "CoreAPI/ArgumentSets/DNSZoneArguments",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/DNSZones/CreateEndpoint/DnsZoneField",
+            "name": "dns_zone",
+            "description": "The new DNS zone that has been created",
+            "type": "CoreAPI/Objects/DNSZone",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Errors/ValidationError",
+          "CoreAPI/Errors/PermissionDenied",
+          "CoreAPI/Errors/ResourceCreationRestricted"
+        ],
+        "scopes": [
+          "dns"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/DNSZones/CreateEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "organization",
+            "description": "The organization to create the new DNS zone inside of",
+            "type": "CoreAPI/ArgumentSets/OrganizationLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "properties",
+            "description": "The details for the new DNS zone",
+            "type": "CoreAPI/ArgumentSets/DNSZoneArguments",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/ArgumentSets/DNSZoneArguments",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "name",
+            "description": "The name of the zone (only available for creation)",
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "default_ttl",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "required": false,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/DNSZones/InfoEndpoint",
+        "name": "Get DNS zone",
+        "description": "Return details for a specific DNS zone",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/DNSZones/InfoEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "dns_zone",
+              "description": null,
+              "type": "CoreAPI/ArgumentSets/DNSZoneLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/DNSZones/InfoEndpoint/DnsZoneField",
+            "name": "dns_zone",
+            "description": "The DNS zones for the provided organization",
+            "type": "CoreAPI/Objects/DNSZone",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ],
+        "potential_errors": [],
+        "scopes": [
+          "dns",
+          "dns:read"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/DNSZones/InfoEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "dns_zone",
+            "description": null,
+            "type": "CoreAPI/ArgumentSets/DNSZoneLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "lookup_argument_set",
+      "value": {
+        "id": "CoreAPI/ArgumentSets/DNSZoneLookup",
+        "name": "DNS Zone Lookup",
+        "description": "Provides for DNS zones to be looked up",
+        "arguments": [
+          {
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "name",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/ArgumentSets/DNSZoneLookup/DNSZoneNotFound"
+        ]
+      }
+    },
+    {
+      "type": "error",
+      "value": {
+        "id": "CoreAPI/ArgumentSets/DNSZoneLookup/DNSZoneNotFound",
+        "name": null,
+        "description": "No DNS zone was found matching any of the criteria provided in the arguments",
+        "code": "dns_zone_not_found",
+        "http_status": 404,
+        "fields": []
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/DNSZones/UpdateEndpoint",
+        "name": "Update DNS zone",
+        "description": "Update properties for a DNS zone",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/DNSZones/UpdateEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "dns_zone",
+              "description": null,
+              "type": "CoreAPI/ArgumentSets/DNSZoneLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            },
+            {
+              "name": "properties",
+              "description": null,
+              "type": "CoreAPI/ArgumentSets/DNSZoneArguments",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/DNSZones/UpdateEndpoint/DnsZoneField",
+            "name": "dns_zone",
+            "description": "The DNS zones for the provided organization",
+            "type": "CoreAPI/Objects/DNSZone",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Errors/ValidationError"
+        ],
+        "scopes": [
+          "dns"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/DNSZones/UpdateEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "dns_zone",
+            "description": null,
+            "type": "CoreAPI/ArgumentSets/DNSZoneLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "properties",
+            "description": null,
+            "type": "CoreAPI/ArgumentSets/DNSZoneArguments",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/DNSZones/DeleteEndpoint",
+        "name": "Delete DNS zone",
+        "description": "Delete a DNS zone",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/DNSZones/DeleteEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "dns_zone",
+              "description": null,
+              "type": "CoreAPI/ArgumentSets/DNSZoneLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/DNSZones/DeleteEndpoint/DeletedField",
+            "name": "deleted",
+            "description": null,
+            "type": "Apia/Scalars/Boolean",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ],
+        "potential_errors": [],
+        "scopes": [
+          "dns"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/DNSZones/DeleteEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "dns_zone",
+            "description": null,
+            "type": "CoreAPI/ArgumentSets/DNSZoneLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/DNSZones/VerifyEndpoint",
+        "name": "Verify DNS zone",
+        "description": "Attempt to verify the nameservers for a given DNS zone",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/DNSZones/VerifyEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "dns_zone",
+              "description": null,
+              "type": "CoreAPI/ArgumentSets/DNSZoneLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/DNSZones/VerifyEndpoint/DnsZoneField",
+            "name": "dns_zone",
+            "description": "The DNS zones for the provided organization",
+            "type": "CoreAPI/Objects/DNSZone",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Endpoints/DNSZones/VerifyEndpoint/DNSZoneNotVerified"
+        ],
+        "scopes": [
+          "dns"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/DNSZones/VerifyEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "dns_zone",
+            "description": null,
+            "type": "CoreAPI/ArgumentSets/DNSZoneLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "error",
+      "value": {
+        "id": "CoreAPI/Endpoints/DNSZones/VerifyEndpoint/DNSZoneNotVerified",
+        "name": null,
+        "description": "The DNS zone could not be verified, check the nameservers are set correctly",
+        "code": "dns_zone_not_verified",
+        "http_status": 422,
+        "fields": []
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/DNSRecords/ListEndpoint",
+        "name": "List DNS records",
+        "description": "Return a list of all DNS records in a zone",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/DNSRecords/ListEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "dns_zone",
+              "description": null,
+              "type": "CoreAPI/ArgumentSets/DNSZoneLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/DNSRecords/ListEndpoint/DnsRecordsField",
+            "name": "dns_records",
+            "description": "The DNS record for the provided zone",
+            "type": "CoreAPI/Objects/DNSRecord",
+            "null": false,
+            "array": true,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Errors/PermissionDenied"
+        ],
+        "scopes": [
+          "dns",
+          "dns:read"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/DNSRecords/ListEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "dns_zone",
+            "description": null,
+            "type": "CoreAPI/ArgumentSets/DNSZoneLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/DNSRecord",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/DNSRecord/IdField",
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DNSRecord/NameField",
+            "name": "name",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DNSRecord/FullNameField",
+            "name": "full_name",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DNSRecord/TtlField",
+            "name": "ttl",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DNSRecord/TypeField",
+            "name": "type",
+            "description": null,
+            "type": "CoreAPI/Objects/DNSRecordTypesEnum",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DNSRecord/PriorityField",
+            "name": "priority",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DNSRecord/ContentField",
+            "name": "content",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DNSRecord/ContentAttributesField",
+            "name": "content_attributes",
+            "description": null,
+            "type": "CoreAPI/Objects/DNSRecordContentAttributes",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "enum",
+      "value": {
+        "id": "CoreAPI/Objects/DNSRecordTypesEnum",
+        "name": "DNS record types",
+        "description": "These are the options that are available as a type for any records.",
+        "values": [
+          {
+            "name": "A",
+            "description": "An A record"
+          },
+          {
+            "name": "AAAA",
+            "description": "An AAAA record"
+          },
+          {
+            "name": "ALIAS",
+            "description": "An ALIAS record"
+          },
+          {
+            "name": "CAA",
+            "description": "A CAA record"
+          },
+          {
+            "name": "CNAME",
+            "description": "A CNAME record"
+          },
+          {
+            "name": "IPS",
+            "description": "An IPS record"
+          },
+          {
+            "name": "MX",
+            "description": "A MX record"
+          },
+          {
+            "name": "NS",
+            "description": "A NS record"
+          },
+          {
+            "name": "PTR",
+            "description": "A PTR record"
+          },
+          {
+            "name": "SOA",
+            "description": "A SOA record"
+          },
+          {
+            "name": "SRV",
+            "description": "A SRV record"
+          },
+          {
+            "name": "SSHFP",
+            "description": "A SSHFP record"
+          },
+          {
+            "name": "TXT",
+            "description": "A TXT record"
+          },
+          {
+            "name": "VirtualMachine",
+            "description": "A VirtualMachine record"
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/DNSRecordContentAttributes",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/DNSRecordContentAttributes/AField",
+            "name": "A",
+            "description": null,
+            "type": "RecordContentAttributesForA",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DNSRecordContentAttributes/AAAAField",
+            "name": "AAAA",
+            "description": null,
+            "type": "RecordContentAttributesForAAAA",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DNSRecordContentAttributes/ALIASField",
+            "name": "ALIAS",
+            "description": null,
+            "type": "RecordContentAttributesForALIAS",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DNSRecordContentAttributes/CAAField",
+            "name": "CAA",
+            "description": null,
+            "type": "RecordContentAttributesForCAA",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DNSRecordContentAttributes/CNAMEField",
+            "name": "CNAME",
+            "description": null,
+            "type": "RecordContentAttributesForCNAME",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DNSRecordContentAttributes/IPSField",
+            "name": "IPS",
+            "description": null,
+            "type": "RecordContentAttributesForIPS",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DNSRecordContentAttributes/MXField",
+            "name": "MX",
+            "description": null,
+            "type": "RecordContentAttributesForMX",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DNSRecordContentAttributes/NSField",
+            "name": "NS",
+            "description": null,
+            "type": "RecordContentAttributesForNS",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DNSRecordContentAttributes/PTRField",
+            "name": "PTR",
+            "description": null,
+            "type": "RecordContentAttributesForPTR",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DNSRecordContentAttributes/SOAField",
+            "name": "SOA",
+            "description": null,
+            "type": "RecordContentAttributesForSOA",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DNSRecordContentAttributes/SRVField",
+            "name": "SRV",
+            "description": null,
+            "type": "RecordContentAttributesForSRV",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DNSRecordContentAttributes/SSHFPField",
+            "name": "SSHFP",
+            "description": null,
+            "type": "RecordContentAttributesForSSHFP",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DNSRecordContentAttributes/TXTField",
+            "name": "TXT",
+            "description": null,
+            "type": "RecordContentAttributesForTXT",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DNSRecordContentAttributes/VirtualMachineField",
+            "name": "VirtualMachine",
+            "description": null,
+            "type": "RecordContentAttributesForVirtualMachine",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "RecordContentAttributesForA",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "RecordContentAttributesForA/IpAddressField",
+            "name": "ip_address",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "RecordContentAttributesForAAAA",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "RecordContentAttributesForAAAA/IpAddressField",
+            "name": "ip_address",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "RecordContentAttributesForALIAS",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "RecordContentAttributesForALIAS/HostnameField",
+            "name": "hostname",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "RecordContentAttributesForCAA",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "RecordContentAttributesForCAA/FlagField",
+            "name": "flag",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "RecordContentAttributesForCAA/TagField",
+            "name": "tag",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "RecordContentAttributesForCAA/ValueField",
+            "name": "value",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "RecordContentAttributesForCNAME",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "RecordContentAttributesForCNAME/HostnameField",
+            "name": "hostname",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "RecordContentAttributesForIPS",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "RecordContentAttributesForIPS/IpAddressesField",
+            "name": "ip_addresses",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "RecordContentAttributesForMX",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "RecordContentAttributesForMX/HostnameField",
+            "name": "hostname",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "RecordContentAttributesForNS",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "RecordContentAttributesForNS/HostnameField",
+            "name": "hostname",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "RecordContentAttributesForPTR",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "RecordContentAttributesForPTR/HostnameField",
+            "name": "hostname",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "RecordContentAttributesForSOA",
+        "name": null,
+        "description": null,
+        "fields": []
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "RecordContentAttributesForSRV",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "RecordContentAttributesForSRV/WeightField",
+            "name": "weight",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "RecordContentAttributesForSRV/PortField",
+            "name": "port",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "RecordContentAttributesForSRV/TargetField",
+            "name": "target",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "RecordContentAttributesForSSHFP",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "RecordContentAttributesForSSHFP/AlgorithmField",
+            "name": "algorithm",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "RecordContentAttributesForSSHFP/FingerprintTypeField",
+            "name": "fingerprint_type",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "RecordContentAttributesForSSHFP/FingerprintField",
+            "name": "fingerprint",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "RecordContentAttributesForTXT",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "RecordContentAttributesForTXT/ContentField",
+            "name": "content",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "RecordContentAttributesForVirtualMachine",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "RecordContentAttributesForVirtualMachine/VirtualMachineField",
+            "name": "virtual_machine",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/DNSRecords/CreateEndpoint",
+        "name": "Create DNS record",
+        "description": "Create a new DNS record",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/DNSRecords/CreateEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "dns_zone",
+              "description": null,
+              "type": "CoreAPI/ArgumentSets/DNSZoneLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            },
+            {
+              "name": "properties",
+              "description": null,
+              "type": "CoreAPI/ArgumentSets/DNSRecordArguments",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/DNSRecords/CreateEndpoint/DnsRecordField",
+            "name": "dns_record",
+            "description": null,
+            "type": "CoreAPI/Objects/DNSRecord",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Errors/PermissionDenied",
+          "CoreAPI/Errors/ValidationError"
+        ],
+        "scopes": [
+          "dns"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/DNSRecords/CreateEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "dns_zone",
+            "description": null,
+            "type": "CoreAPI/ArgumentSets/DNSZoneLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "properties",
+            "description": null,
+            "type": "CoreAPI/ArgumentSets/DNSRecordArguments",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/ArgumentSets/DNSRecordArguments",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "name",
+            "description": "The name of the record",
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "type",
+            "description": null,
+            "type": "CoreAPI/Objects/DNSRecordTypesEnum",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "ttl",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "content",
+            "description": null,
+            "type": "CoreAPI/ArgumentSets/DNSRecordContentArguments",
+            "required": false,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/ArgumentSets/DNSRecordContentArguments",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "A",
+            "description": null,
+            "type": "DNSRecordContentArgumentsForA",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "AAAA",
+            "description": null,
+            "type": "DNSRecordContentArgumentsForAAAA",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "ALIAS",
+            "description": null,
+            "type": "DNSRecordContentArgumentsForALIAS",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "CAA",
+            "description": null,
+            "type": "DNSRecordContentArgumentsForCAA",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "CNAME",
+            "description": null,
+            "type": "DNSRecordContentArgumentsForCNAME",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "IPS",
+            "description": null,
+            "type": "DNSRecordContentArgumentsForIPS",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "MX",
+            "description": null,
+            "type": "DNSRecordContentArgumentsForMX",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "NS",
+            "description": null,
+            "type": "DNSRecordContentArgumentsForNS",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "PTR",
+            "description": null,
+            "type": "DNSRecordContentArgumentsForPTR",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "SOA",
+            "description": null,
+            "type": "DNSRecordContentArgumentsForSOA",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "SRV",
+            "description": null,
+            "type": "DNSRecordContentArgumentsForSRV",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "SSHFP",
+            "description": null,
+            "type": "DNSRecordContentArgumentsForSSHFP",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "TXT",
+            "description": null,
+            "type": "DNSRecordContentArgumentsForTXT",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "VirtualMachine",
+            "description": null,
+            "type": "DNSRecordContentArgumentsForVirtualMachine",
+            "required": false,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "DNSRecordContentArgumentsForA",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "ip_address",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "DNSRecordContentArgumentsForAAAA",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "ip_address",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "DNSRecordContentArgumentsForALIAS",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "hostname",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "DNSRecordContentArgumentsForCAA",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "flag",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "tag",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "value",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "DNSRecordContentArgumentsForCNAME",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "hostname",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "DNSRecordContentArgumentsForIPS",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "ip_addresses",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "DNSRecordContentArgumentsForMX",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "hostname",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "DNSRecordContentArgumentsForNS",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "hostname",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "DNSRecordContentArgumentsForPTR",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "hostname",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "DNSRecordContentArgumentsForSOA",
+        "name": null,
+        "description": null,
+        "arguments": []
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "DNSRecordContentArgumentsForSRV",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "weight",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "port",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "target",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "DNSRecordContentArgumentsForSSHFP",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "algorithm",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "fingerprint_type",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "fingerprint",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "DNSRecordContentArgumentsForTXT",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "content",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "DNSRecordContentArgumentsForVirtualMachine",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "virtual_machine",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/DNSRecords/InfoEndpoint",
+        "name": "Get DNS record",
+        "description": "Return details for a specific DNS record",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/DNSRecords/InfoEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "dns_record",
+              "description": null,
+              "type": "CoreAPI/ArgumentSets/DNSRecordLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/DNSRecords/InfoEndpoint/DnsRecordField",
+            "name": "dns_record",
+            "description": "The DNS record for the provided organization",
+            "type": "CoreAPI/Objects/DNSRecord",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ],
+        "potential_errors": [],
+        "scopes": [
+          "dns",
+          "dns:read"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/DNSRecords/InfoEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "dns_record",
+            "description": null,
+            "type": "CoreAPI/ArgumentSets/DNSRecordLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "lookup_argument_set",
+      "value": {
+        "id": "CoreAPI/ArgumentSets/DNSRecordLookup",
+        "name": "DNS Record Lookup",
+        "description": "Provides for DNS records to be looked up",
+        "arguments": [
+          {
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/ArgumentSets/DNSRecordLookup/DNSRecordNotFound"
+        ]
+      }
+    },
+    {
+      "type": "error",
+      "value": {
+        "id": "CoreAPI/ArgumentSets/DNSRecordLookup/DNSRecordNotFound",
+        "name": null,
+        "description": "No DNS record was found matching any of the criteria provided in the arguments",
+        "code": "dns_record_not_found",
+        "http_status": 404,
+        "fields": []
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/DNSRecords/UpdateEndpoint",
+        "name": "Update DNS record",
+        "description": "Update a DNS record properties",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/DNSRecords/UpdateEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "dns_record",
+              "description": null,
+              "type": "CoreAPI/ArgumentSets/DNSRecordLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            },
+            {
+              "name": "properties",
+              "description": null,
+              "type": "CoreAPI/ArgumentSets/DNSRecordArguments",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/DNSRecords/UpdateEndpoint/DnsRecordField",
+            "name": "dns_record",
+            "description": "The DNS record that has been updated",
+            "type": "CoreAPI/Objects/DNSRecord",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Errors/ValidationError"
+        ],
+        "scopes": [
+          "dns"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/DNSRecords/UpdateEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "dns_record",
+            "description": null,
+            "type": "CoreAPI/ArgumentSets/DNSRecordLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "properties",
+            "description": null,
+            "type": "CoreAPI/ArgumentSets/DNSRecordArguments",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/DNSRecords/DeleteEndpoint",
+        "name": "Delete DNS record",
+        "description": "Delete a DNS record",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/DNSRecords/DeleteEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "dns_record",
+              "description": null,
+              "type": "CoreAPI/ArgumentSets/DNSRecordLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/DNSRecords/DeleteEndpoint/DeletedField",
+            "name": "deleted",
+            "description": null,
+            "type": "Apia/Scalars/Boolean",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ],
+        "potential_errors": [],
+        "scopes": [
+          "dns"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/DNSRecords/DeleteEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "dns_record",
+            "description": null,
+            "type": "CoreAPI/ArgumentSets/DNSRecordLookup",
             "required": true,
             "array": false,
             "default": null
