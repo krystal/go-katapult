@@ -2,6 +2,6 @@
   "dns_zone": {
     "id": "dnszone_yqflWVIdu5vnirLq",
     "name": "test-1.com",
-    "ttl": 1800
+    "default_ttl": 1800
   }
 }

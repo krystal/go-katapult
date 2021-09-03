@@ -9,18 +9,6 @@ import (
 // errors_generated.go, allowing customized error messages based on the Detail
 // fields available for each specific type.
 
-func (s *DNSZoneNotVerifiedError) Error() string {
-	if s.Detail == nil || len(s.Detail.VerificationDetails.Nameservers) == 0 {
-		return s.CommonError.Error()
-	}
-
-	return fmt.Sprintf(
-		"%s -- nameservers: %s",
-		s.CommonError.Error(),
-		strings.Join(s.Detail.VerificationDetails.Nameservers, ", "),
-	)
-}
-
 func (s *InvalidSpecXMLError) Error() string {
 	if s.Detail == nil || s.Detail.Errors == "" {
 		return s.CommonError.Error()

@@ -1,7 +1,0 @@
-{
-  "error": {
-    "code": "infrastructure_dns_zone_cannot_be_edited",
-    "description": "Infrastructure DNS zones cannot be edited through the API. These are managed exclusively by Katapult.",
-    "detail": {}
-  }
-}
