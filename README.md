@@ -1,3 +1,7 @@
+<p align="center">
+  <img alt="logo" height="114px" src="https://github.com/krystal/go-katapult/raw/main/img/logo.svg" />
+</p>
+
 <h1 align="center">
   go-katapult
 </h1>
