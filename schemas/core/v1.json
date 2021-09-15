@@ -98,6 +98,13 @@
               "group": "disk_template_versions"
             },
             {
+              "path": "disk_template_versions/:disk_template_version/spec",
+              "request_method": "GET",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/DiskTemplateVersions/SpecEndpoint",
+              "group": "disk_template_versions"
+            },
+            {
               "path": "organizations/:organization/virtual_machines",
               "request_method": "GET",
               "controller": null,
@@ -3102,6 +3109,18 @@
               "all": true,
               "spec": null
             }
+          },
+          {
+            "id": "CoreAPI/Objects/DiskTemplateVersion/DiskTemplateField",
+            "name": "disk_template",
+            "description": null,
+            "type": "CoreAPI/Objects/DiskTemplate",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
           }
         ]
       }
@@ -3266,8 +3285,8 @@
             "null": false,
             "array": false,
             "spec": {
-              "all": true,
-              "spec": null
+              "all": false,
+              "spec": "*,operating_system[*,badge[url]],latest_version[id,name,permalink]"
             }
           }
         ],
@@ -3377,6 +3396,18 @@
         },
         "fields": [
           {
+            "id": "CoreAPI/Endpoints/DiskTemplateVersions/ListEndpoint/DiskTemplateField",
+            "name": "disk_template",
+            "description": null,
+            "type": "CoreAPI/Objects/DiskTemplate",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": false,
+              "spec": "id,name,permalink"
+            }
+          },
+          {
             "id": "CoreAPI/Endpoints/DiskTemplateVersions/ListEndpoint/PaginationField",
             "name": "pagination",
             "description": null,
@@ -3396,8 +3427,8 @@
             "null": false,
             "array": true,
             "spec": {
-              "all": true,
-              "spec": null
+              "all": false,
+              "spec": "*,-disk_template"
             }
           }
         ],
@@ -3474,8 +3505,8 @@
             "null": false,
             "array": false,
             "spec": {
-              "all": true,
-              "spec": null
+              "all": false,
+              "spec": "*,disk_template[id,name,permalink]"
             }
           }
         ],
@@ -3534,6 +3565,222 @@
         "code": "disk_template_version_not_found",
         "http_status": 404,
         "fields": []
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/DiskTemplateVersions/SpecEndpoint",
+        "name": "Get disk template version spec",
+        "description": "Return details provided by this template's specification",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/DiskTemplateVersions/SpecEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "disk_template_version",
+              "description": "The disk template version to return",
+              "type": "CoreAPI/ArgumentSets/DiskTemplateVersionLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/DiskTemplateVersions/SpecEndpoint/DiskTemplateVersionField",
+            "name": "disk_template_version",
+            "description": "The disk template version details",
+            "type": "CoreAPI/Objects/DiskTemplateVersion",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": false,
+              "spec": "*,disk_template[id,name,permalink]"
+            }
+          },
+          {
+            "id": "CoreAPI/Endpoints/DiskTemplateVersions/SpecEndpoint/SpecField",
+            "name": "spec",
+            "description": null,
+            "type": "CoreAPI/Objects/TemplateSpec",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ],
+        "potential_errors": [],
+        "scopes": [
+          "disk_templates",
+          "disk_templates:read"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/DiskTemplateVersions/SpecEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "disk_template_version",
+            "description": "The disk template version to return",
+            "type": "CoreAPI/ArgumentSets/DiskTemplateVersionLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/TemplateSpec",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/TemplateSpec/FieldsField",
+            "name": "fields",
+            "description": null,
+            "type": "CoreAPI/Objects/TemplateSpecField",
+            "null": false,
+            "array": true,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/TemplateSpecField",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/TemplateSpecField/NameField",
+            "name": "name",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/TemplateSpecField/TypeField",
+            "name": "type",
+            "description": null,
+            "type": "CoreAPI/Objects/TemplateSpecField/TemplateSpecFieldTypeEnum",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/TemplateSpecField/LabelField",
+            "name": "label",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/TemplateSpecField/DescriptionField",
+            "name": "description",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/TemplateSpecField/RequiredField",
+            "name": "required",
+            "description": null,
+            "type": "Apia/Scalars/Boolean",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/TemplateSpecField/PlaceholderField",
+            "name": "placeholder",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/TemplateSpecField/PrefillField",
+            "name": "prefill",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "enum",
+      "value": {
+        "id": "CoreAPI/Objects/TemplateSpecField/TemplateSpecFieldTypeEnum",
+        "name": "Template spec field type",
+        "description": null,
+        "values": [
+          {
+            "name": "Text",
+            "description": null
+          },
+          {
+            "name": "Boolean",
+            "description": null
+          },
+          {
+            "name": "Password",
+            "description": null
+          },
+          {
+            "name": "Keyboard",
+            "description": null
+          }
+        ]
       }
     },
     {
