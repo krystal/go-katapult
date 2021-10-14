@@ -4053,6 +4053,30 @@
             }
           },
           {
+            "id": "CoreAPI/Objects/VirtualMachine/MemoryInGbField",
+            "name": "memory_in_gb",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachine/CpuCoresField",
+            "name": "cpu_cores",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
             "id": "CoreAPI/Objects/VirtualMachine/TagsField",
             "name": "tags",
             "description": null,
