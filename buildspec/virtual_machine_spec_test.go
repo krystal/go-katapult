@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/xml"
 	"errors"
+	"os"
 	"testing"
 
 	"github.com/jimeh/undent"
@@ -174,14 +175,23 @@ func TestVirtualMachineSpec_Marshaling(t *testing.T) {
 	}
 }
 
-func TestVirtualMachineSpec_UnmarshalXML_Name(t *testing.T) {
+func TestVirtualMachineSpec_UnmarshalXML(t *testing.T) {
+	f, err := os.CreateTemp(t.TempDir(), "secret")
+	require.NoError(t, err)
+
+	_, err = f.WriteString("this is a secret")
+	require.NoError(t, err)
+	err = f.Close()
+	require.NoError(t, err)
+
 	tests := []struct {
-		name string
-		xml  string
-		want *VirtualMachineSpec
+		name    string
+		xml     string
+		want    *VirtualMachineSpec
+		wantErr string
 	}{
 		{
-			name: "not nested",
+			name: "non-nested Name",
 			xml: undent.String(`
 				<VirtualMachineSpec>
 					<Name>database-2</Name>
@@ -190,7 +200,7 @@ func TestVirtualMachineSpec_UnmarshalXML_Name(t *testing.T) {
 			want: &VirtualMachineSpec{Name: "database-2"},
 		},
 		{
-			name: "nested",
+			name: "nested Name",
 			xml: undent.String(`
 				<VirtualMachineSpec>
 					<Name>
@@ -200,15 +210,148 @@ func TestVirtualMachineSpec_UnmarshalXML_Name(t *testing.T) {
 			),
 			want: &VirtualMachineSpec{Name: "database-2"},
 		},
+		{
+			name: "plain text entity substitution",
+			xml: undent.String(`
+				<?xml version="1.0"?>
+				<!DOCTYPE foo [<!ENTITY example "awesome-web-server">]>
+				<VirtualMachineSpec>
+					<Name>
+						<Name>foo</Name>
+					</Name>
+					<Hostname>
+						<Hostname>&example;</Hostname>
+					</Hostname>
+				</VirtualMachineSpec>`,
+			),
+			wantErr: "XML syntax error on line 8: invalid character " +
+				"entity &example;",
+		},
+		{
+			name: "SYSTEM entity substitution without scheme",
+			xml: undent.Stringf(`
+				<?xml version="1.0"?>
+				<!DOCTYPE foo [<!ENTITY example SYSTEM "%s">]>
+				<VirtualMachineSpec>
+					<Name>
+						<Name>foo</Name>
+					</Name>
+					<Hostname>
+						<Hostname>&example;</Hostname>
+					</Hostname>
+				</VirtualMachineSpec>`,
+				f.Name(),
+			),
+			want: &VirtualMachineSpec{
+				Name:     "awesome-web-server",
+				Hostname: "awesome-web-server",
+			},
+			wantErr: "XML syntax error on line 8: invalid character " +
+				"entity &example;",
+		},
+		{
+			name: "SYSTEM entity substitution with file scheme",
+			xml: undent.Stringf(`
+				<?xml version="1.0"?>
+				<!DOCTYPE foo [<!ENTITY example SYSTEM "file://%s">]>
+				<VirtualMachineSpec>
+					<Name>
+						<Name>foo</Name>
+					</Name>
+					<Hostname>
+						<Hostname>&example;</Hostname>
+					</Hostname>
+				</VirtualMachineSpec>`,
+				f.Name(),
+			),
+			want: &VirtualMachineSpec{
+				Name:     "awesome-web-server",
+				Hostname: "awesome-web-server",
+			},
+			wantErr: "XML syntax error on line 8: invalid character " +
+				"entity &example;",
+		},
+		{
+			name: "SYSTEM entity substitution with http scheme",
+			//nolint:lll
+			xml: undent.Stringf(`
+				<?xml version="1.0"?>
+				<!DOCTYPE foo [<!ENTITY example SYSTEM "http://whatismyip.akamai.com">]>
+				<VirtualMachineSpec>
+					<Name>
+						<Name>foo</Name>
+					</Name>
+					<Hostname>
+						<Hostname>&example;</Hostname>
+					</Hostname>
+				</VirtualMachineSpec>`,
+				f.Name(),
+			),
+			want: &VirtualMachineSpec{
+				Name:     "awesome-web-server",
+				Hostname: "awesome-web-server",
+			},
+			wantErr: "XML syntax error on line 8: invalid character " +
+				"entity &example;",
+		},
+		{
+			name: "SYSTEM entity substitution with https scheme",
+			xml: undent.Stringf(`
+				<?xml version="1.0"?>
+				<!DOCTYPE foo [<!ENTITY example SYSTEM "https://katapult.io">]>
+				<VirtualMachineSpec>
+					<Name>
+						<Name>foo</Name>
+					</Name>
+					<Hostname>
+						<Hostname>&example;</Hostname>
+					</Hostname>
+				</VirtualMachineSpec>`,
+				f.Name(),
+			),
+			want: &VirtualMachineSpec{
+				Name:     "awesome-web-server",
+				Hostname: "awesome-web-server",
+			},
+			wantErr: "XML syntax error on line 8: invalid character " +
+				"entity &example;",
+		},
+		{
+			name: "SYSTEM entity substitution with https scheme",
+			//nolint:lll
+			xml: undent.Stringf(`
+				<?xml version="1.0"?>
+				<!DOCTYPE foo [<!ENTITY example SYSTEM "ftp://ftp.mozilla.org">]>
+				<VirtualMachineSpec>
+					<Name>
+						<Name>foo</Name>
+					</Name>
+					<Hostname>
+						<Hostname>&example;</Hostname>
+					</Hostname>
+				</VirtualMachineSpec>`,
+				f.Name(),
+			),
+			want: &VirtualMachineSpec{
+				Name:     "awesome-web-server",
+				Hostname: "awesome-web-server",
+			},
+			wantErr: "XML syntax error on line 8: invalid character " +
+				"entity &example;",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			v := &VirtualMachineSpec{}
 
 			err := xml.Unmarshal([]byte(tt.xml), v)
-			require.NoError(t, err)
 
-			assert.Equal(t, "database-2", v.Name)
+			if tt.wantErr == "" {
+				require.NoError(t, err)
+				assert.Equal(t, "database-2", v.Name)
+			} else {
+				assert.EqualError(t, err, tt.wantErr)
+			}
 		})
 	}
 }

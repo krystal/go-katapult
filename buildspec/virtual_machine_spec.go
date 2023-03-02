@@ -165,7 +165,10 @@ func (s *VirtualMachineSpec) UnmarshalXML(
 	start xml.StartElement,
 ) error {
 	x := &xmlVirtualMachineSpec{}
-	_ = d.DecodeElement(x, &start)
+	err := d.DecodeElement(x, &start)
+	if err != nil {
+		return err
+	}
 
 	v := VirtualMachineSpec{
 		Zone:           x.Zone,
