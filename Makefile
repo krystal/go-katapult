@@ -34,25 +34,19 @@ SHELL := env \
 # Tools
 #
 
-TOOLS += $(TOOLDIR)/gobin
-gobin: $(TOOLDIR)/gobin
-$(TOOLDIR)/gobin:
-	GO111MODULE=off go get -u github.com/myitcv/gobin
-
 # external tool
 define tool # 1: binary-name, 2: go-import-path
 TOOLS += $(TOOLDIR)/$(1)
 
-.PHONY: $(1)
-$(1): $(TOOLDIR)/$(1)
-
-$(TOOLDIR)/$(1): $(TOOLDIR)/gobin Makefile
-	gobin $(V) "$(2)"
+$(TOOLDIR)/$(1): Makefile
+	GOBIN="$(CURDIR)/$(TOOLDIR)" go install "$(2)"
 endef
 
-$(eval $(call tool,godoc,golang.org/x/tools/cmd/godoc))
-$(eval $(call tool,gofumports,mvdan.cc/gofumpt/gofumports))
+$(eval $(call tool,godoc,golang.org/x/tools/cmd/godoc@latest))
+$(eval $(call tool,gofumpt,mvdan.cc/gofumpt@latest))
+$(eval $(call tool,goimports,golang.org/x/tools/cmd/goimports@latest))
 $(eval $(call tool,golangci-lint,github.com/golangci/golangci-lint/cmd/golangci-lint@v1.33))
+$(eval $(call tool,gomod,github.com/Helcaraxan/gomod@latest))
 
 .PHONY: tools
 tools: $(TOOLS)
@@ -62,10 +56,12 @@ tools: $(TOOLS)
 #
 
 BENCH ?= .
+TESTARGS ?=
+TESTTARGET ?= ./...
 
 .PHONY: clean
 clean:
-	rm -f $(TOOLS)
+	rm -f $(BINS) $(TOOLS)
 	rm -f ./coverage.out ./go.mod.tidy-check ./go.sum.tidy-check
 
 .PHONY: clean-golden
@@ -75,31 +71,31 @@ clean-golden:
 
 .PHONY: test
 test:
-	go test $(V) -count=1 -race $(TESTARGS) ./...
-
-.PHONY: test-update-golden
-test-update-golden:
-	@$(MAKE) test UPDATE_GOLDEN=1
-
-.PHONY: regen-golden
-regen-golden: clean-golden test-update-golden
+	go test $(V) -count=1 -race $(TESTARGS) $(TESTTARGET)
 
 .PHONY: test-deps
 test-deps:
-	go test all
+	@$(MAKE) test TESTTARGET=all
 
 .PHONY: lint
-lint: golangci-lint
-	GOGC=off golangci-lint $(V) run
+lint: $(TOOLDIR)/golangci-lint
+	golangci-lint $(V) run --timeout=5m
 
 .PHONY: format
-format: gofumports
-	gofumports -w .
+format: $(TOOLDIR)/goimports $(TOOLDIR)/gofumpt
+	goimports -w . && gofumpt -w .
 
 .SILENT: bench
 .PHONY: bench
 bench:
-	go test $(V) -count=1 -bench=$(BENCH) $(TESTARGS) ./...
+	@$(MAKE) test TESTARGS="-bench=$(BENCH) -benchmem"
+
+.PHONY: update-golden
+update-golden:
+	@$(MAKE) test UPDATE_GOLDEN=1
+
+.PHONY: regen-golden
+regen-golden: clean-golden update-golden
 
 #
 # Code Generation
@@ -153,7 +149,7 @@ cov-func: coverage.out
 	go tool cover -func=./coverage.out
 
 coverage.out: $(SOURCES)
-	go test $(V) -covermode=count -coverprofile=./coverage.out ./...
+	@$(MAKE) test TESTARGS="-covermode=atomic -coverprofile=./coverage.out"
 
 #
 # Dependencies
@@ -163,6 +159,14 @@ coverage.out: $(SOURCES)
 deps:
 	$(info Downloading dependencies)
 	go mod download
+
+.PHONY: deps-update
+deps-update:
+	go get -u -t ./...
+
+.PHONY: deps-analyze
+deps-analyze: $(TOOLDIR)/gomod
+	gomod analyze
 
 .PHONY: tidy
 tidy:
@@ -197,7 +201,7 @@ check-tidy:
 
 # Serve docs
 .PHONY: docs
-docs: godoc
+docs: $(TOOLDIR)/godoc
 	$(info serviing docs on http://127.0.0.1:6060/pkg/$(GOMODNAME)/)
 	@godoc -http=127.0.0.1:6060
 
