@@ -9,12 +9,13 @@ import (
 )
 
 type SecurityGroupRule struct {
-	ID        string   `json:"id,omitempty"`
-	Direction string   `json:"direction,omitempty"`
-	Protocol  string   `json:"protocol,omitempty"`
-	Ports     string   `json:"ports,omitempty"`
-	Targets   []string `json:"targets,omitempty"`
-	Notes     string   `json:"notes,omitempty"`
+	ID            string            `json:"id,omitempty"`
+	SecurityGroup *SecurityGroupRef `json:"security_group,omitempty"`
+	Direction     string            `json:"direction,omitempty"`
+	Protocol      string            `json:"protocol,omitempty"`
+	Ports         string            `json:"ports,omitempty"`
+	Targets       []string          `json:"targets,omitempty"`
+	Notes         string            `json:"notes,omitempty"`
 }
 
 func (sgr *SecurityGroupRule) Ref() SecurityGroupRuleRef {

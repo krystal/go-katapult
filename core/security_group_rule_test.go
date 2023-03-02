@@ -82,7 +82,10 @@ func TestSecurityGroupRule_JSONMarshalling(t *testing.T) {
 		{
 			name: "full",
 			obj: &SecurityGroupRule{
-				ID:        "arbitrary string",
+				ID: "arbitrary string",
+				SecurityGroup: &SecurityGroupRef{
+					ID: "sg_8cJxXwLSlzVrT32b",
+				},
 				Direction: "inbound",
 				Protocol:  "TCP",
 				Ports:     port,
