@@ -14,7 +14,7 @@
 
 <p align="center">
   <a href="https://github.com/krystal/go-katapult/actions">
-    <img src="https://img.shields.io/github/workflow/status/krystal/go-katapult/CI.svg?logo=github" alt="Actions Status">
+    <img src="https://img.shields.io/github/actions/workflow/status/krystal/go-katapult/ci.yml?logo=github" alt="Actions Status">
   </a>
   <a href="https://codeclimate.com/github/krystal/go-katapult">
     <img src="https://img.shields.io/codeclimate/coverage/krystal/go-katapult.svg?logo=code%20climate" alt="Coverage">
