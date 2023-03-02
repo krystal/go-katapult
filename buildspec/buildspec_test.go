@@ -114,12 +114,12 @@ func isNil(i interface{}) bool {
 		return true
 	}
 
-	switch reflect.TypeOf(i).Kind() {
+	switch reflect.TypeOf(i).Kind() { //nolint:exhaustive
 	case reflect.Ptr, reflect.Map, reflect.Array, reflect.Chan, reflect.Slice:
 		return reflect.ValueOf(i).IsNil()
+	default:
+		return false
 	}
-
-	return false
 }
 
 //

@@ -74,7 +74,7 @@ func (g *Generator) errorsForSchema(f *jen.File, filename string) error {
 		return err
 	}
 
-	var sortedErrors []*apischema.Error
+	sortedErrors := make([]*apischema.Error, 0, len(schema.Errors))
 	for _, e := range schema.Errors {
 		sortedErrors = append(sortedErrors, e)
 	}
@@ -255,8 +255,13 @@ func (g *Generator) errStruct(f *jen.File, e *apischema.Error) error {
 		)
 	}
 
+	desc := e.Description
+	if len(desc) > 0 && desc[len(desc)-1] != '.' {
+		desc += "."
+	}
+
 	f.Comment(name + ":")
-	f.Comment(e.Description)
+	f.Comment(desc)
 	f.Type().Id(name).Struct(
 		g.katapult("CommonError"),
 		detailField,

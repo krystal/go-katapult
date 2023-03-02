@@ -61,7 +61,9 @@ func (s *Client) Do(
 ) (*katapult.Response, error) {
 	call, err := newDoCall(ctx, req, v)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %s", Err, err.Error())
+		msg := err.Error()
+
+		return nil, fmt.Errorf("%w: %s", Err, msg)
 	}
 
 	// if it's the first call to Do, assign the convenience argument fields.
@@ -83,7 +85,9 @@ func (s *Client) Do(
 		}
 		err := s.marshalTransfer(retV, v)
 		if err != nil {
-			return nil, fmt.Errorf("%w: %s", Err, err.Error())
+			msg := err.Error()
+
+			return nil, fmt.Errorf("%w: %s", Err, msg)
 		}
 		retResp = s.ensureResponse(retResp)
 
@@ -143,7 +147,7 @@ func newDoCall(
 	req *katapult.Request,
 	v interface{},
 ) (*DoCall, error) {
-	copy, err := copystructure.Copy(&DoCall{
+	dup, err := copystructure.Copy(&DoCall{
 		Request: req,
 		V:       v,
 	})
@@ -151,7 +155,7 @@ func newDoCall(
 		return nil, err
 	}
 
-	call := copy.(*DoCall)
+	call := dup.(*DoCall)
 	call.Ctx = ctx
 
 	return call, nil

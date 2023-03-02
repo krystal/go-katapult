@@ -10,7 +10,7 @@ import (
 var ErrScopeNotGranted = fmt.Errorf("%w: scope_not_granted", ErrForbidden)
 
 // ScopeNotGrantedError:
-// The scope required for this endpoint has not been granted to the authenticating identity
+// The scope required for this endpoint has not been granted to the authenticating identity.
 type ScopeNotGrantedError struct {
 	CommonError
 	Detail *ScopeNotGrantedErrorDetail `json:"detail,omitempty"`

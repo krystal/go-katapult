@@ -1,6 +1,7 @@
 package core
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/krystal/go-katapult"
@@ -15,8 +16,9 @@ func handleResponseError(err error) error {
 		return nil
 	}
 
-	if r, ok := err.(*katapult.ResponseError); ok {
-		return castResponseError(r)
+	var target *katapult.ResponseError
+	if ok := errors.As(err, &target); ok {
+		return castResponseError(target)
 	}
 
 	return err

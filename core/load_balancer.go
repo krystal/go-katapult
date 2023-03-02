@@ -23,7 +23,7 @@ func (lb *LoadBalancer) Ref() LoadBalancerRef {
 	return LoadBalancerRef{ID: lb.ID}
 }
 
-// LoadBalancerRef allows a reference to a load balancer
+// LoadBalancerRef allows a reference to a load balancer.
 type LoadBalancerRef struct {
 	ID string `json:"id,omitempty"`
 }

@@ -68,7 +68,7 @@ var (
 )
 
 // CertificateNotFoundError:
-// No certificate was found matching any of the criteria provided in the arguments
+// No certificate was found matching any of the criteria provided in the arguments.
 type CertificateNotFoundError struct {
 	katapult.CommonError
 }
@@ -84,7 +84,7 @@ func NewCertificateNotFoundError(theError *katapult.ResponseError) *CertificateN
 }
 
 // CountryNotFoundError:
-// No countries was found matching any of the criteria provided in the arguments
+// No countries was found matching any of the criteria provided in the arguments.
 type CountryNotFoundError struct {
 	katapult.CommonError
 }
@@ -100,7 +100,7 @@ func NewCountryNotFoundError(theError *katapult.ResponseError) *CountryNotFoundE
 }
 
 // CountryStateNotFoundError:
-// No country state was found matching any of the criteria provided in the arguments
+// No country state was found matching any of the criteria provided in the arguments.
 type CountryStateNotFoundError struct {
 	katapult.CommonError
 }
@@ -116,7 +116,7 @@ func NewCountryStateNotFoundError(theError *katapult.ResponseError) *CountryStat
 }
 
 // CurrencyNotFoundError:
-// No currencies was found matching any of the criteria provided in the arguments
+// No currencies was found matching any of the criteria provided in the arguments.
 type CurrencyNotFoundError struct {
 	katapult.CommonError
 }
@@ -132,7 +132,7 @@ func NewCurrencyNotFoundError(theError *katapult.ResponseError) *CurrencyNotFoun
 }
 
 // DNSRecordNotFoundError:
-// No DNS record was found matching any of the criteria provided in the arguments
+// No DNS record was found matching any of the criteria provided in the arguments.
 type DNSRecordNotFoundError struct {
 	katapult.CommonError
 }
@@ -148,7 +148,7 @@ func NewDNSRecordNotFoundError(theError *katapult.ResponseError) *DNSRecordNotFo
 }
 
 // DNSZoneNotFoundError:
-// No DNS zone was found matching any of the criteria provided in the arguments
+// No DNS zone was found matching any of the criteria provided in the arguments.
 type DNSZoneNotFoundError struct {
 	katapult.CommonError
 }
@@ -164,7 +164,7 @@ func NewDNSZoneNotFoundError(theError *katapult.ResponseError) *DNSZoneNotFoundE
 }
 
 // DNSZoneNotVerifiedError:
-// The DNS zone could not be verified, check the nameservers are set correctly
+// The DNS zone could not be verified, check the nameservers are set correctly.
 type DNSZoneNotVerifiedError struct {
 	katapult.CommonError
 }
@@ -180,7 +180,7 @@ func NewDNSZoneNotVerifiedError(theError *katapult.ResponseError) *DNSZoneNotVer
 }
 
 // DataCenterNotFoundError:
-// No data centers was found matching any of the criteria provided in the arguments
+// No data centers was found matching any of the criteria provided in the arguments.
 type DataCenterNotFoundError struct {
 	katapult.CommonError
 }
@@ -196,7 +196,7 @@ func NewDataCenterNotFoundError(theError *katapult.ResponseError) *DataCenterNot
 }
 
 // DeletionRestrictedError:
-// Object cannot be deleted
+// Object cannot be deleted.
 type DeletionRestrictedError struct {
 	katapult.CommonError
 	Detail *DeletionRestrictedErrorDetail `json:"detail,omitempty"`
@@ -224,7 +224,7 @@ type DeletionRestrictedErrorDetail struct {
 }
 
 // DiskBackupPolicyNotFoundError:
-// No disk backup policies was found matching any of the criteria provided in the arguments
+// No disk backup policies was found matching any of the criteria provided in the arguments.
 type DiskBackupPolicyNotFoundError struct {
 	katapult.CommonError
 }
@@ -240,7 +240,7 @@ func NewDiskBackupPolicyNotFoundError(theError *katapult.ResponseError) *DiskBac
 }
 
 // DiskNotFoundError:
-// No disks was found matching any of the criteria provided in the arguments
+// No disks was found matching any of the criteria provided in the arguments.
 type DiskNotFoundError struct {
 	katapult.CommonError
 }
@@ -256,7 +256,7 @@ func NewDiskNotFoundError(theError *katapult.ResponseError) *DiskNotFoundError {
 }
 
 // DiskTemplateNotFoundError:
-// No disk template was found matching any of the criteria provided in the arguments
+// No disk template was found matching any of the criteria provided in the arguments.
 type DiskTemplateNotFoundError struct {
 	katapult.CommonError
 }
@@ -272,7 +272,7 @@ func NewDiskTemplateNotFoundError(theError *katapult.ResponseError) *DiskTemplat
 }
 
 // DiskTemplateVersionNotFoundError:
-// No disk template version was found matching any of the criteria provided in the arguments
+// No disk template version was found matching any of the criteria provided in the arguments.
 type DiskTemplateVersionNotFoundError struct {
 	katapult.CommonError
 }
@@ -288,7 +288,7 @@ func NewDiskTemplateVersionNotFoundError(theError *katapult.ResponseError) *Disk
 }
 
 // FlexibleResourcesUnavailableToOrganizationError:
-// The organization is not permitted to use flexible resources
+// The organization is not permitted to use flexible resources.
 type FlexibleResourcesUnavailableToOrganizationError struct {
 	katapult.CommonError
 }
@@ -304,7 +304,7 @@ func NewFlexibleResourcesUnavailableToOrganizationError(theError *katapult.Respo
 }
 
 // IPAddressNotFoundError:
-// No IP addresses were found matching any of the criteria provided in the arguments
+// No IP addresses were found matching any of the criteria provided in the arguments.
 type IPAddressNotFoundError struct {
 	katapult.CommonError
 }
@@ -320,7 +320,7 @@ func NewIPAddressNotFoundError(theError *katapult.ResponseError) *IPAddressNotFo
 }
 
 // IPAlreadyAllocatedError:
-// This IP address has already been allocated to another resource
+// This IP address has already been allocated to another resource.
 type IPAlreadyAllocatedError struct {
 	katapult.CommonError
 }
@@ -336,7 +336,7 @@ func NewIPAlreadyAllocatedError(theError *katapult.ResponseError) *IPAlreadyAllo
 }
 
 // IdentityNotLinkedToWebSessionError:
-// The authenticated identity is not linked to a web session
+// The authenticated identity is not linked to a web session.
 type IdentityNotLinkedToWebSessionError struct {
 	katapult.CommonError
 }
@@ -352,7 +352,7 @@ func NewIdentityNotLinkedToWebSessionError(theError *katapult.ResponseError) *Id
 }
 
 // InterfaceNotFoundError:
-// An interface could not be found for the specified network
+// An interface could not be found for the specified network.
 type InterfaceNotFoundError struct {
 	katapult.CommonError
 }
@@ -384,7 +384,7 @@ func NewInvalidIPError(theError *katapult.ResponseError) *InvalidIPError {
 }
 
 // InvalidSpecXMLError:
-// The spec XML provided is invalid
+// The spec XML provided is invalid.
 type InvalidSpecXMLError struct {
 	katapult.CommonError
 	Detail *InvalidSpecXMLErrorDetail `json:"detail,omitempty"`
@@ -412,7 +412,7 @@ type InvalidSpecXMLErrorDetail struct {
 }
 
 // LoadBalancerNotFoundError:
-// No load balancer was found matching any of the criteria provided in the arguments
+// No load balancer was found matching any of the criteria provided in the arguments.
 type LoadBalancerNotFoundError struct {
 	katapult.CommonError
 }
@@ -428,7 +428,7 @@ func NewLoadBalancerNotFoundError(theError *katapult.ResponseError) *LoadBalance
 }
 
 // LoadBalancerRuleNotFoundError:
-// No load balancer rule was found matching any of the criteria provided in the arguments
+// No load balancer rule was found matching any of the criteria provided in the arguments.
 type LoadBalancerRuleNotFoundError struct {
 	katapult.CommonError
 }
@@ -444,7 +444,7 @@ func NewLoadBalancerRuleNotFoundError(theError *katapult.ResponseError) *LoadBal
 }
 
 // LocationRequiredError:
-// A zone or a data_center argument must be provided
+// A zone or a data_center argument must be provided.
 type LocationRequiredError struct {
 	katapult.CommonError
 }
@@ -460,7 +460,7 @@ func NewLocationRequiredError(theError *katapult.ResponseError) *LocationRequire
 }
 
 // NetworkNotFoundError:
-// No network was found matching any of the criteria provided in the arguments
+// No network was found matching any of the criteria provided in the arguments.
 type NetworkNotFoundError struct {
 	katapult.CommonError
 }
@@ -476,7 +476,7 @@ func NewNetworkNotFoundError(theError *katapult.ResponseError) *NetworkNotFoundE
 }
 
 // NetworkSpeedProfileNotFoundError:
-// No network speed profile was found matching any of the criteria provided in the arguments
+// No network speed profile was found matching any of the criteria provided in the arguments.
 type NetworkSpeedProfileNotFoundError struct {
 	katapult.CommonError
 }
@@ -524,7 +524,7 @@ func NewNoAvailableAddressesError(theError *katapult.ResponseError) *NoAvailable
 }
 
 // NoInterfaceAvailableError:
-// This virtual machine does not have a network interface that is compatible with the provided IP address
+// This virtual machine does not have a network interface that is compatible with the provided IP address.
 type NoInterfaceAvailableError struct {
 	katapult.CommonError
 }
@@ -540,7 +540,7 @@ func NewNoInterfaceAvailableError(theError *katapult.ResponseError) *NoInterface
 }
 
 // NoUserAssociatedWithIdentityError:
-// There is no user associated with this API token
+// There is no user associated with this API token.
 type NoUserAssociatedWithIdentityError struct {
 	katapult.CommonError
 }
@@ -584,7 +584,7 @@ type ObjectInTrashErrorDetail struct {
 }
 
 // OperatingSystemNotFoundError:
-// No operating system was found matching any of the criteria provided in the arguments
+// No operating system was found matching any of the criteria provided in the arguments.
 type OperatingSystemNotFoundError struct {
 	katapult.CommonError
 }
@@ -600,7 +600,7 @@ func NewOperatingSystemNotFoundError(theError *katapult.ResponseError) *Operatin
 }
 
 // OrganizationLimitReachedError:
-// The maxmium number of organizations that can be created has been reached
+// The maxmium number of organizations that can be created has been reached.
 type OrganizationLimitReachedError struct {
 	katapult.CommonError
 }
@@ -616,7 +616,7 @@ func NewOrganizationLimitReachedError(theError *katapult.ResponseError) *Organiz
 }
 
 // OrganizationNotActivatedError:
-// An organization was found from the arguments provided but it wasn't activated yet
+// An organization was found from the arguments provided but it wasn't activated yet.
 type OrganizationNotActivatedError struct {
 	katapult.CommonError
 }
@@ -632,7 +632,7 @@ func NewOrganizationNotActivatedError(theError *katapult.ResponseError) *Organiz
 }
 
 // OrganizationNotFoundError:
-// No organization was found matching any of the criteria provided in the arguments
+// No organization was found matching any of the criteria provided in the arguments.
 type OrganizationNotFoundError struct {
 	katapult.CommonError
 }
@@ -648,7 +648,7 @@ func NewOrganizationNotFoundError(theError *katapult.ResponseError) *Organizatio
 }
 
 // OrganizationSuspendedError:
-// An organization was found from the arguments provided but it was suspended
+// An organization was found from the arguments provided but it was suspended.
 type OrganizationSuspendedError struct {
 	katapult.CommonError
 }
@@ -664,7 +664,7 @@ func NewOrganizationSuspendedError(theError *katapult.ResponseError) *Organizati
 }
 
 // PermissionDeniedError:
-// The authenticated identity is not permitted to perform this action
+// The authenticated identity is not permitted to perform this action.
 type PermissionDeniedError struct {
 	katapult.CommonError
 	Detail *PermissionDeniedErrorDetail `json:"detail,omitempty"`
@@ -692,7 +692,7 @@ type PermissionDeniedErrorDetail struct {
 }
 
 // RateLimitReachedError:
-// You have reached the rate limit for this type of request
+// You have reached the rate limit for this type of request.
 type RateLimitReachedError struct {
 	katapult.CommonError
 	Detail *RateLimitReachedErrorDetail `json:"detail,omitempty"`
@@ -720,7 +720,7 @@ type RateLimitReachedErrorDetail struct {
 }
 
 // ResourceCreationRestrictedError:
-// The organization chosen is not permitted to create resources
+// The organization chosen is not permitted to create resources.
 type ResourceCreationRestrictedError struct {
 	katapult.CommonError
 	Detail *ResourceCreationRestrictedErrorDetail `json:"detail,omitempty"`
@@ -764,7 +764,7 @@ func NewResourceDoesNotSupportUnallocationError(theError *katapult.ResponseError
 }
 
 // SSHKeyNotFoundError:
-// No SSH keys was found matching any of the criteria provided in the arguments
+// No SSH keys was found matching any of the criteria provided in the arguments.
 type SSHKeyNotFoundError struct {
 	katapult.CommonError
 }
@@ -780,7 +780,7 @@ func NewSSHKeyNotFoundError(theError *katapult.ResponseError) *SSHKeyNotFoundErr
 }
 
 // SecurityGroupNotFoundError:
-// No security group was found matching any of the criteria provided in the arguments
+// No security group was found matching any of the criteria provided in the arguments.
 type SecurityGroupNotFoundError struct {
 	katapult.CommonError
 }
@@ -796,7 +796,7 @@ func NewSecurityGroupNotFoundError(theError *katapult.ResponseError) *SecurityGr
 }
 
 // SecurityGroupRuleNotFoundError:
-// No security group rule was found matching any of the criteria provided in the arguments
+// No security group rule was found matching any of the criteria provided in the arguments.
 type SecurityGroupRuleNotFoundError struct {
 	katapult.CommonError
 }
@@ -828,7 +828,7 @@ func NewSpeedProfileAlreadyAssignedError(theError *katapult.ResponseError) *Spee
 }
 
 // TagNotFoundError:
-// No tags was found matching any of the criteria provided in the arguments
+// No tags was found matching any of the criteria provided in the arguments.
 type TagNotFoundError struct {
 	katapult.CommonError
 }
@@ -844,7 +844,7 @@ func NewTagNotFoundError(theError *katapult.ResponseError) *TagNotFoundError {
 }
 
 // TaskNotFoundError:
-// No task was found matching any of the criteria provided in the arguments
+// No task was found matching any of the criteria provided in the arguments.
 type TaskNotFoundError struct {
 	katapult.CommonError
 }
@@ -860,7 +860,7 @@ func NewTaskNotFoundError(theError *katapult.ResponseError) *TaskNotFoundError {
 }
 
 // TaskQueueingError:
-// This error means that a background task that was needed to complete your request could not be queued
+// This error means that a background task that was needed to complete your request could not be queued.
 type TaskQueueingError struct {
 	katapult.CommonError
 	Detail *TaskQueueingErrorDetail `json:"detail,omitempty"`
@@ -888,7 +888,7 @@ type TaskQueueingErrorDetail struct {
 }
 
 // TrashObjectNotFoundError:
-// No trash object was found matching any of the criteria provided in the arguments
+// No trash object was found matching any of the criteria provided in the arguments.
 type TrashObjectNotFoundError struct {
 	katapult.CommonError
 }
@@ -904,7 +904,7 @@ func NewTrashObjectNotFoundError(theError *katapult.ResponseError) *TrashObjectN
 }
 
 // ValidationError:
-// A validation error occurred with the object that was being created/updated/deleted
+// A validation error occurred with the object that was being created/updated/deleted.
 type ValidationError struct {
 	katapult.CommonError
 	Detail *ValidationErrorDetail `json:"detail,omitempty"`
@@ -932,7 +932,7 @@ type ValidationErrorDetail struct {
 }
 
 // VirtualMachineBuildNotFoundError:
-// No build was found matching any of the criteria provided in the arguments
+// No build was found matching any of the criteria provided in the arguments.
 type VirtualMachineBuildNotFoundError struct {
 	katapult.CommonError
 }
@@ -948,7 +948,7 @@ func NewVirtualMachineBuildNotFoundError(theError *katapult.ResponseError) *Virt
 }
 
 // VirtualMachineGroupNotFoundError:
-// No virtual machine group was found matching any of the criteria provided in the arguments
+// No virtual machine group was found matching any of the criteria provided in the arguments.
 type VirtualMachineGroupNotFoundError struct {
 	katapult.CommonError
 }
@@ -964,7 +964,7 @@ func NewVirtualMachineGroupNotFoundError(theError *katapult.ResponseError) *Virt
 }
 
 // VirtualMachineMustBeStartedError:
-// Virtual machines must be in a started state to create console sessions
+// Virtual machines must be in a started state to create console sessions.
 type VirtualMachineMustBeStartedError struct {
 	katapult.CommonError
 	Detail *VirtualMachineMustBeStartedErrorDetail `json:"detail,omitempty"`
@@ -992,7 +992,7 @@ type VirtualMachineMustBeStartedErrorDetail struct {
 }
 
 // VirtualMachineNetworkInterfaceNotFoundError:
-// No network interface was found matching any of the criteria provided in the arguments
+// No network interface was found matching any of the criteria provided in the arguments.
 type VirtualMachineNetworkInterfaceNotFoundError struct {
 	katapult.CommonError
 }
@@ -1008,7 +1008,7 @@ func NewVirtualMachineNetworkInterfaceNotFoundError(theError *katapult.ResponseE
 }
 
 // VirtualMachineNotFoundError:
-// No virtual machine was found matching any of the criteria provided in the arguments
+// No virtual machine was found matching any of the criteria provided in the arguments.
 type VirtualMachineNotFoundError struct {
 	katapult.CommonError
 }
@@ -1024,7 +1024,7 @@ func NewVirtualMachineNotFoundError(theError *katapult.ResponseError) *VirtualMa
 }
 
 // VirtualMachinePackageNotFoundError:
-// No package was found matching any of the criteria provided in the arguments
+// No package was found matching any of the criteria provided in the arguments.
 type VirtualMachinePackageNotFoundError struct {
 	katapult.CommonError
 }
@@ -1040,7 +1040,7 @@ func NewVirtualMachinePackageNotFoundError(theError *katapult.ResponseError) *Vi
 }
 
 // ZoneNotFoundError:
-// No zone was found matching any of the criteria provided in the arguments
+// No zone was found matching any of the criteria provided in the arguments.
 type ZoneNotFoundError struct {
 	katapult.CommonError
 }

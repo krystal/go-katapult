@@ -92,14 +92,14 @@ func configure() (*configuration, *flag.FlagSet, error) {
 }
 
 func main() {
-	err := realMain()
+	err := mainE()
 	if err != nil {
 		logger.Error(err.Error())
 		os.Exit(127)
 	}
 }
 
-func realMain() error {
+func mainE() error {
 	config, fs, err := configure()
 	if err != nil {
 		return err
@@ -175,7 +175,7 @@ func realMain() error {
 	//nolint:gosec
 	err = ioutil.WriteFile(targetFile, buf.Bytes(), 0o644)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	return nil

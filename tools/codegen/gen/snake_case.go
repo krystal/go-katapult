@@ -1,6 +1,11 @@
 package gen
 
-import "strings"
+import (
+	"strings"
+
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
+)
 
 var camelAcronyms = map[string]bool{
 	"AAAA":  true,
@@ -23,6 +28,8 @@ var camelAcronyms = map[string]bool{
 	"YAML":  true,
 }
 
+var titler = cases.Title(language.English)
+
 func snakeToPascal(snake string) string {
 	parts := strings.Split(snake, "_")
 	r := []string{}
@@ -36,7 +43,7 @@ func snakeToPascal(snake string) string {
 		if camelAcronyms[upper] {
 			r = append(r, upper)
 		} else {
-			r = append(r, strings.Title(part))
+			r = append(r, titler.String(part))
 		}
 	}
 

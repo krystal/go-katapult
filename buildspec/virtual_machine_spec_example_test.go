@@ -25,7 +25,6 @@ func ExampleVirtualMachineSpec_JSON() {
 	// {"data_center":{"permalink":"london"},"resources":{"package":{"permalink":"rock-3"}},"disk_template":{"permalink":"templates/ubuntu-18-04"},"hostname":"web-3"}
 }
 
-//nolint:lll
 func ExampleVirtualMachineSpec_JSONIndent() {
 	spec := &buildspec.VirtualMachineSpec{
 		DataCenter: &buildspec.DataCenter{Permalink: "london"},
