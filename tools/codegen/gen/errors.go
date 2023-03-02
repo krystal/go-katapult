@@ -255,8 +255,13 @@ func (g *Generator) errStruct(f *jen.File, e *apischema.Error) error {
 		)
 	}
 
+	desc := e.Description
+	if len(desc) > 0 && desc[len(desc)-1] != '.' {
+		desc += "."
+	}
+
 	f.Comment(name + ":")
-	f.Comment(e.Description)
+	f.Comment(desc)
 	f.Type().Id(name).Struct(
 		g.katapult("CommonError"),
 		detailField,
