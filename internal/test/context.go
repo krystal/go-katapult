@@ -46,9 +46,10 @@ func Context(parent context.Context) context.Context {
 	return WithContext(parent, uniq)
 }
 
-//nolint:golint
 // AssertContext asserts that both given contexts has the same test key value
 // set.
+//
+//nolint:golint,revive
 func AssertContext(t *testing.T, want, got context.Context) {
 	assert.NotNil(t, want, "wanted context is nil")
 	assert.NotNil(t, got, "got context is nil")

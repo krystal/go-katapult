@@ -1034,8 +1034,8 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateIP(t *testing.T) {
 					assertRequestOptionHeader(t, r)
 
 					if tt.wantReqBody != nil {
-						reqBody :=
-							&virtualMachineNetworkInterfaceAllocateIPRequest{}
+						//nolint:lll
+						reqBody := &virtualMachineNetworkInterfaceAllocateIPRequest{}
 						err := strictUmarshal(r.Body, reqBody)
 						assert.NoError(t, err)
 						assert.Equal(t, tt.wantReqBody, reqBody)
@@ -1229,8 +1229,7 @@ func TestVirtualMachineNetworkInterfacesClient_AllocateNewIP(t *testing.T) {
 
 					if tt.wantReqBody != nil {
 						//nolint:lll
-						reqBody :=
-							&virtualMachineNetworkInterfaceAllocateNewIPRequest{}
+						reqBody := &virtualMachineNetworkInterfaceAllocateNewIPRequest{}
 						err := strictUmarshal(r.Body, reqBody)
 						assert.NoError(t, err)
 						assert.Equal(t, tt.wantReqBody, reqBody)
@@ -1453,8 +1452,7 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 
 					if tt.wantReqBody != nil {
 						//nolint:lll
-						reqBody :=
-							&virtualMachineNetworkInterfaceUpdateSpeedProfileRequest{}
+						reqBody := &virtualMachineNetworkInterfaceUpdateSpeedProfileRequest{}
 						err := strictUmarshal(r.Body, reqBody)
 						assert.NoError(t, err)
 						assert.Equal(t, tt.wantReqBody, reqBody)
@@ -1465,7 +1463,6 @@ func TestVirtualMachineNetworkInterfacesClient_UpdateSpeedProfile(
 				},
 			)
 
-			//nolint:lll
 			got, resp, err := c.UpdateSpeedProfile(
 				tt.args.ctx,
 				tt.args.vmnet,

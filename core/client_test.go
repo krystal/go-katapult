@@ -24,20 +24,19 @@ var (
 		Detail: json.RawMessage(`{}`),
 	}
 
-	//nolint:lll
 	fixturePermissionDeniedErr = "katapult: unauthorized: permission_denied: " +
 		"Additional information regarding the reason why permission was denied"
 	fixturePermissionDeniedResponseError = &katapult.ResponseError{
 		Code: "permission_denied",
 		Description: "The authenticated identity is not permitted to perform " +
 			"this action",
-		//nolint:lll
-		Detail: json.RawMessage(`{
-      "details": "Additional information regarding the reason why permission was denied"
-    }`),
+		Detail: json.RawMessage(
+			"{\n" +
+				"      \"details\": \"Additional information regarding the " +
+				"reason why permission was denied\"\n" +
+				"    }"),
 	}
 
-	//nolint:lll
 	fixtureValidationErrorErr = "katapult: unprocessable_entity: " +
 		"validation_error: Failed reticulating 3-dimensional splines, " +
 		"Failed preparing captive simulators"
@@ -45,12 +44,13 @@ var (
 		Code: "validation_error",
 		Description: "A validation error occurred with the object that was " +
 			"being created/updated/deleted",
-		Detail: json.RawMessage(`{
-      "errors": [
-        "Failed reticulating 3-dimensional splines",
-        "Failed preparing captive simulators"
-      ]
-    }`,
+		Detail: json.RawMessage(
+			"{\n" +
+				"      \"errors\": [\n" +
+				"        \"Failed reticulating 3-dimensional splines\",\n" +
+				"        \"Failed preparing captive simulators\"\n" +
+				"      ]\n" +
+				"    }",
 		),
 	}
 

@@ -362,7 +362,7 @@ func TestVirtualMachineSpec_ToFromXML(t *testing.T) {
 }
 
 func TestVirtualMachineSpec_WriteXML_Error(t *testing.T) {
-	errStr := "failed to write" //nolint:goconst
+	errStr := "failed to write"
 	spec := &VirtualMachineSpec{Name: "web-3"}
 	w := &badWriter{err: errors.New(errStr)}
 
@@ -419,7 +419,7 @@ func TestVirtualMachineSpec_ToFromYAML(t *testing.T) {
 }
 
 func TestVirtualMachineSpec_WriteYAML_Error(t *testing.T) {
-	errStr := "failed to write" //nolint:goconst
+	errStr := "failed to write"
 	spec := &VirtualMachineSpec{Name: "web-3"}
 	w := &badWriter{err: errors.New(errStr)}
 

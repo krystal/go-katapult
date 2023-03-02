@@ -334,9 +334,8 @@ func (s *NameGenerator) RandomHostname() string {
 func (s *NameGenerator) RandomName(prefixes ...string) string {
 	adj, _ := s.adjectives.getRandom()
 	noun, _ := s.nouns.getRandom()
-	parts := append(prefixes, adj, noun)
 
-	return strings.Join(parts, "-")
+	return strings.Join(append(prefixes, adj, noun), "-")
 }
 
 type wordList struct {

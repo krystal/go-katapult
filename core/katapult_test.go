@@ -86,7 +86,7 @@ func testQueryableEncoding(t *testing.T, obj queryable) {
 func prepareTestClient(t *testing.T) (
 	client *katapult.Client,
 	mux *http.ServeMux,
-	serverURL string,
+	serverURL string, //nolint:unparam
 	teardown func(),
 ) {
 	t.Helper()

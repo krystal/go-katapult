@@ -152,7 +152,7 @@ func (s *TrashObjectsClient) doRequest(
 	ctx context.Context,
 	method string,
 	u *url.URL,
-	body interface{},
+	body interface{}, //nolint:unparam
 	reqOpts ...katapult.RequestOption,
 ) (*trashObjectsResponseBody, *katapult.Response, error) {
 	u = s.basePath.ResolveReference(u)

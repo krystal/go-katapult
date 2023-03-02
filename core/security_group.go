@@ -19,7 +19,7 @@ func (sg *SecurityGroup) Ref() SecurityGroupRef {
 	return SecurityGroupRef{ID: sg.ID}
 }
 
-// allows a reference to a security group
+// allows a reference to a security group.
 type SecurityGroupRef struct {
 	ID string `json:"id,omitempty"`
 }

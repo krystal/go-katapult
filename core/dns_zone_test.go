@@ -35,7 +35,7 @@ var (
 		Detail: json.RawMessage(`{}`),
 	}
 
-	// Correlates to fixtures/dns_zone_get.json
+	// Correlates to fixtures/dns_zone_get.json.
 	fixtureDNSZone = &DNSZone{
 		ID:         "dnszone_k75eFc4UBOgeE5Zy",
 		Name:       "test1.example.com",

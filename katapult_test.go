@@ -38,7 +38,7 @@ func (s *testErrorHTTPClient) Do(req *http.Request) (*http.Response, error) {
 
 //nolint:gocyclo
 func TestClient_Do(t *testing.T) {
-	defaultAPIKey := "7b6eb137-2ce3-4959-9b81-d7aca1428fe1"
+	testAPIKey := "7b6eb137-2ce3-4959-9b81-d7aca1428fe1" //nolint:gosec
 	type testCtxKey int
 
 	type reqBody struct {
@@ -112,7 +112,7 @@ func TestClient_Do(t *testing.T) {
 				url:    &url.URL{Path: "/core/v1/data_centers"},
 				header: http.Header{
 					"Accept":         []string{"application/json"},
-					"Authorization":  []string{"Bearer " + defaultAPIKey},
+					"Authorization":  []string{"Bearer " + testAPIKey},
 					"Content-Length": []string(nil),
 					"User-Agent":     []string{DefaultUserAgent},
 				},
@@ -601,7 +601,7 @@ func TestClient_Do(t *testing.T) {
 				_ = WithHTTPClient(tt.fields.HTTPClient)(c)
 			}
 
-			apiKey := defaultAPIKey
+			apiKey := testAPIKey
 			if tt.fields.APIKey != nil {
 				apiKey = *tt.fields.APIKey
 			}
@@ -725,6 +725,7 @@ func TestClient_Do(t *testing.T) {
 
 func TestNew(t *testing.T) {
 	t.Parallel()
+
 	tests := []struct {
 		name          string
 		opts          []Option
@@ -764,7 +765,10 @@ func TestNew(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			c, err := New(tt.opts...)
 			if tt.wantErr != "" {
 				assert.EqualError(t, err, tt.wantErr)
