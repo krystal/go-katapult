@@ -59,7 +59,7 @@ func TestSecurityGroupRuleRef_JSONMarshaling(t *testing.T) {
 		{
 			name: "full",
 			obj: &SecurityGroupRuleRef{
-				ID: "sg_3uXbmANw4sQiF1J3",
+				ID: "sgr_3uXbmANw4sQiF1J3",
 			},
 		},
 	}
