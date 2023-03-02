@@ -19,7 +19,7 @@ jobs:
           key: ${{ runner.os }}-golangcilint-${{ hashFiles('**/Makefile') }}
           restore-keys: |
             ${{ runner.os }}-golangcilint-
-      - name: Check if mods are tidy
+      - name: Run make lint
         run: make lint
         env:
           GOLANGCILINTARGS: --out-format=github-actions
