@@ -41,7 +41,7 @@ type SecurityGroupRuleArguments struct {
 type securityGroupRulesResponseBody struct {
 	Pagination         *katapult.Pagination `json:"pagination,omitempty"`
 	SecurityGroupRule  *SecurityGroupRule   `json:"security_group_rule,omitempty"`
-	SecurityGroupRules []SecurityGroupRule  `json:"security_group_rules,omitempty"`
+	SecurityGroupRules []*SecurityGroupRule `json:"security_group_rules,omitempty"`
 }
 
 type SecurityGroupRulesClient struct {
@@ -64,7 +64,7 @@ func (s *SecurityGroupRulesClient) List(
 	sg SecurityGroupRef,
 	opts *ListOptions,
 	reqOpts ...katapult.RequestOption,
-) ([]SecurityGroupRule, *katapult.Response, error) {
+) ([]*SecurityGroupRule, *katapult.Response, error) {
 	qs := queryValues(opts, sg)
 	u := &url.URL{
 		Path:     "security_groups/_/rules",
