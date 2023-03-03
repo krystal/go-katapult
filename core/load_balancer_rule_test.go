@@ -147,7 +147,7 @@ func Test_loadBalancerRulesResponseBody_JSONMarshalling(t *testing.T) {
 					LargeSet: true,
 				},
 				LoadBalancerRule: &LoadBalancerRule{ID: "foobar"},
-				LoadBalancerRules: []LoadBalancerRule{
+				LoadBalancerRules: []*LoadBalancerRule{
 					{
 						ID: "barfoo",
 					},
@@ -228,7 +228,7 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 		respErr  error
 		respV    *loadBalancerRulesResponseBody
 		wantReq  *katapult.Request
-		want     []LoadBalancerRule
+		want     []*LoadBalancerRule
 		wantResp *katapult.Response
 		wantErr  string
 	}{
@@ -247,7 +247,7 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 			},
 			respV: &loadBalancerRulesResponseBody{
 				Pagination: &katapult.Pagination{Total: 394},
-				LoadBalancerRules: []LoadBalancerRule{
+				LoadBalancerRules: []*LoadBalancerRule{
 					{ID: "lbrule_3W0eRZLQYHpTCPNX", DestinationPort: 666},
 				},
 			},
@@ -264,7 +264,7 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 					}.Encode(),
 				},
 			},
-			want: []LoadBalancerRule{{
+			want: []*LoadBalancerRule{{
 				ID:              "lbrule_3W0eRZLQYHpTCPNX",
 				DestinationPort: 666,
 			}},
@@ -285,7 +285,7 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 			},
 			respV: &loadBalancerRulesResponseBody{
 				Pagination: &katapult.Pagination{Total: 333},
-				LoadBalancerRules: []LoadBalancerRule{
+				LoadBalancerRules: []*LoadBalancerRule{
 					{ID: "lbrule_3W0eRZLQYHpTCPNX", DestinationPort: 666},
 				},
 			},
@@ -300,7 +300,7 @@ func TestLoadBalancerRulesClient_List(t *testing.T) {
 					}.Encode(),
 				},
 			},
-			want: []LoadBalancerRule{{
+			want: []*LoadBalancerRule{{
 				ID:              "lbrule_3W0eRZLQYHpTCPNX",
 				DestinationPort: 666,
 			}},

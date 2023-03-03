@@ -78,7 +78,7 @@ type LoadBalancerRuleArguments struct {
 type loadBalancerRulesResponseBody struct {
 	Pagination        *katapult.Pagination `json:"pagination,omitempty"`
 	LoadBalancerRule  *LoadBalancerRule    `json:"load_balancer_rule,omitempty"`
-	LoadBalancerRules []LoadBalancerRule   `json:"load_balancer_rules,omitempty"`
+	LoadBalancerRules []*LoadBalancerRule  `json:"load_balancer_rules,omitempty"`
 }
 
 type LoadBalancerRulesClient struct {
@@ -101,7 +101,7 @@ func (s *LoadBalancerRulesClient) List(
 	lb LoadBalancerRef,
 	opts *ListOptions,
 	reqOpts ...katapult.RequestOption,
-) ([]LoadBalancerRule, *katapult.Response, error) {
+) ([]*LoadBalancerRule, *katapult.Response, error) {
 	qs := queryValues(opts, lb)
 	u := &url.URL{
 		Path:     "load_balancers/_/rules",

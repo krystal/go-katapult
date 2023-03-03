@@ -164,7 +164,7 @@ func Test_securityGroupRulesResponseBody_JSONMarshalling(t *testing.T) {
 					LargeSet: true,
 				},
 				SecurityGroupRule: &SecurityGroupRule{ID: "foobar"},
-				SecurityGroupRules: []SecurityGroupRule{
+				SecurityGroupRules: []*SecurityGroupRule{
 					{
 						ID: "barfoo",
 					},
@@ -253,7 +253,7 @@ func TestSecurityGroupRulesClient_List(t *testing.T) {
 		respErr  error
 		respV    *securityGroupRulesResponseBody
 		wantReq  *katapult.Request
-		want     []SecurityGroupRule
+		want     []*SecurityGroupRule
 		wantResp *katapult.Response
 		wantErr  string
 	}{
@@ -272,7 +272,7 @@ func TestSecurityGroupRulesClient_List(t *testing.T) {
 			},
 			respV: &securityGroupRulesResponseBody{
 				Pagination: &katapult.Pagination{Total: 333},
-				SecurityGroupRules: []SecurityGroupRule{
+				SecurityGroupRules: []*SecurityGroupRule{
 					{ID: "sgr_WbCly1EHB3jNMQNC", Direction: "inbound"},
 				},
 			},
@@ -287,7 +287,7 @@ func TestSecurityGroupRulesClient_List(t *testing.T) {
 					}.Encode(),
 				},
 			},
-			want: []SecurityGroupRule{
+			want: []*SecurityGroupRule{
 				{ID: "sgr_WbCly1EHB3jNMQNC", Direction: "inbound"},
 			},
 			wantResp: &katapult.Response{
@@ -307,7 +307,7 @@ func TestSecurityGroupRulesClient_List(t *testing.T) {
 			},
 			respV: &securityGroupRulesResponseBody{
 				Pagination: &katapult.Pagination{Total: 124},
-				SecurityGroupRules: []SecurityGroupRule{
+				SecurityGroupRules: []*SecurityGroupRule{
 					{ID: "sgr_WbCly1EHB3jNMQNC", Direction: "inbound"},
 				},
 			},
@@ -320,7 +320,7 @@ func TestSecurityGroupRulesClient_List(t *testing.T) {
 					}.Encode(),
 				},
 			},
-			want: []SecurityGroupRule{
+			want: []*SecurityGroupRule{
 				{ID: "sgr_WbCly1EHB3jNMQNC", Direction: "inbound"},
 			},
 			wantResp: &katapult.Response{
