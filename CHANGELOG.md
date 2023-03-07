@@ -1,5 +1,35 @@
 # Changelog
 
+## [0.2.0](https://github.com/krystal/go-katapult/compare/v0.1.7...v0.2.0) (2023-03-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* **core:** Changed return type of SecurityGroupRules.List().
+* **core:** Changed return type of LoadBalancerRules.List().
+* **deps:** Minimum required Go version changed from 1.15 to 1.18.
+* **dns_zones:** DNS Zone related methods have been changed due to upstream deprecation and changes in Katapult's API.
+* **errors:** katapult.ErrScopeNotGrantedError is now named katapult.ErrScopeNotGranted
+
+### Features
+
+* **core/SecurityGroupRule:** add SecurityGroup ref field ([467011a](https://github.com/krystal/go-katapult/commit/467011a68124cb0b35ac21ab60b0c78defd08355))
+* **dns_zones:** implement new DNS Zone endpoints ([fea6d83](https://github.com/krystal/go-katapult/commit/fea6d83abe18519ff28a7464671c6e65930a52a1))
+* **errors:** re-generate error types from bundled API schema ([1363d69](https://github.com/krystal/go-katapult/commit/1363d6989c2b30fe128050be939278ea8e135c5b))
+
+
+### Bug Fixes
+
+* **buildspec:** add tests to verify XML entity substitution is not supported ([68d7e0d](https://github.com/krystal/go-katapult/commit/68d7e0d98f747a36fea9efa2984c4698ac4de1d7))
+* **codegen:** improve error variable naming ([f59cb42](https://github.com/krystal/go-katapult/commit/f59cb425d94da7b6e3682e7ade2fab14450e5808))
+* **core:** change return type of LoadBalancerRules.List() method ([7689e27](https://github.com/krystal/go-katapult/commit/7689e278b25222a0e42dbe289fbd9a1ef33f3040))
+* **core:** change return type of SecurityGroupRules.List() method ([731e89b](https://github.com/krystal/go-katapult/commit/731e89b2cc6731637c7904b9296eb046a82ba793))
+
+
+### Miscellaneous Chores
+
+* **deps:** minimum required Go version changed from 1.15 to 1.18 ([a09c267](https://github.com/krystal/go-katapult/commit/a09c2673127ce9e9e71c379e361f90006622789a))
+
 ### [0.1.7](https://github.com/krystal/go-katapult/compare/v0.1.6...v0.1.7) (2021-08-19)
 
 
