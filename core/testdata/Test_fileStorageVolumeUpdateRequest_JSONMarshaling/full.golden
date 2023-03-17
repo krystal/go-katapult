@@ -1,0 +1,12 @@
+{
+  "security_group": {
+    "id": "sg_3uXbmANw4sQiF1J3"
+  },
+  "properties": {
+    "name": "updated",
+    "associations": [
+      "assoc1",
+      "assoc2"
+    ]
+  }
+}

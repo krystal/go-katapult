@@ -1,0 +1,15 @@
+{
+  "organization": {
+    "id": "org1"
+  },
+  "properties": {
+    "name": "created",
+    "data_center": {
+      "id": "dc1"
+    },
+    "associations": [
+      "assoc1",
+      "assoc2"
+    ]
+  }
+}

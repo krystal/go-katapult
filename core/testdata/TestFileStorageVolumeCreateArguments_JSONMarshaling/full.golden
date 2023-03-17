@@ -1,0 +1,10 @@
+{
+  "name": "volume_name",
+  "data_center": {
+    "id": "dc1"
+  },
+  "associations": [
+    "assoc1",
+    "assoc2"
+  ]
+}

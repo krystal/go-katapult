@@ -11,6 +11,7 @@ type Client struct {
 	DNSZones                        *DNSZonesClient
 	DataCenters                     *DataCentersClient
 	DiskTemplates                   *DiskTemplatesClient
+	FileStorageVolumes              *FileStorageVolumesClient
 	IPAddresses                     *IPAddressesClient
 	LoadBalancers                   *LoadBalancersClient
 	LoadBalancerRules               *LoadBalancerRulesClient
@@ -47,6 +48,7 @@ func New(rm RequestMaker) *Client {
 		DNSZones:             NewDNSZonesClient(rm),
 		DataCenters:          NewDataCentersClient(rm),
 		DiskTemplates:        NewDiskTemplatesClient(rm),
+		FileStorageVolumes:   NewFileStorageVolumesClient(rm),
 		IPAddresses:          NewIPAddressesClient(rm),
 		LoadBalancers:        NewLoadBalancersClient(rm),
 		LoadBalancerRules:    NewLoadBalancerRulesClient(rm),
