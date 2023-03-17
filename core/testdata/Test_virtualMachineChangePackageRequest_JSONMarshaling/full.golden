@@ -1,1 +1,8 @@
-{"virtual_machine":{"id":"id1"},"virtual_machine_package":{"id":"id2"}}
+{
+  "virtual_machine": {
+    "id": "id1"
+  },
+  "virtual_machine_package": {
+    "id": "id2"
+  }
+}

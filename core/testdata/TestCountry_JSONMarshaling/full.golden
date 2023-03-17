@@ -1,1 +1,8 @@
-{"id":"id","name":"name","iso_code2":"iso2","iso_code3":"iso3","time_zone":"tz","eu":true}
+{
+  "id": "id",
+  "name": "name",
+  "iso_code2": "iso2",
+  "iso_code3": "iso3",
+  "time_zone": "tz",
+  "eu": true
+}

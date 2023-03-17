@@ -1,1 +1,7 @@
-{"id":"id1","name":"name","operating_system":{"id":"id2"}}
+{
+  "id": "id1",
+  "name": "name",
+  "operating_system": {
+    "id": "id2"
+  }
+}

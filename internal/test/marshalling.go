@@ -32,6 +32,7 @@ func CustomJSONMarshaling(
 	var buf bytes.Buffer
 	enc := json.NewEncoder(&buf)
 	enc.SetEscapeHTML(false)
+	enc.SetIndent("", "  ")
 	err := enc.Encode(input)
 	require.NoError(t, err, "encoding failed")
 
@@ -40,7 +41,7 @@ func CustomJSONMarshaling(
 	}
 
 	g := golden.Get(t)
-	assert.Equal(t, string(g), buf.String(), "encoding does not match golden")
+	assert.JSONEq(t, string(g), buf.String(), "encoding does not match golden")
 
 	want := decoded
 	if isNil(want) {

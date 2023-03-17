@@ -1,1 +1,10 @@
-{"virtual_machine_groups":[{"id":"id2"}],"virtual_machine_group":{"id":"id1"}}
+{
+  "virtual_machine_groups": [
+    {
+      "id": "id2"
+    }
+  ],
+  "virtual_machine_group": {
+    "id": "id1"
+  }
+}

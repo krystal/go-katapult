@@ -1,1 +1,6 @@
-{"id":"trsh_NRhMtSdZbNRVafj3","keep_until":93043,"object_id":"vm_pxrHYFpOW88ka39h","object_type":"VirtualMachine"}
+{
+  "id": "trsh_NRhMtSdZbNRVafj3",
+  "keep_until": 93043,
+  "object_id": "vm_pxrHYFpOW88ka39h",
+  "object_type": "VirtualMachine"
+}

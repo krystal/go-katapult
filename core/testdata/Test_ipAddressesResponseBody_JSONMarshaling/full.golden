@@ -1,1 +1,13 @@
-{"pagination":{"current_page":345},"ip_address":{"id":"id1"},"ip_addresses":[{"id":"id2"}]}
+{
+  "pagination": {
+    "current_page": 345
+  },
+  "ip_address": {
+    "id": "id1"
+  },
+  "ip_addresses": [
+    {
+      "id": "id2"
+    }
+  ]
+}

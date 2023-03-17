@@ -1,1 +1,8 @@
-{"virtual_machine":{"id":"id1"},"properties":{"name":"hi"}}
+{
+  "virtual_machine": {
+    "id": "id1"
+  },
+  "properties": {
+    "name": "hi"
+  }
+}

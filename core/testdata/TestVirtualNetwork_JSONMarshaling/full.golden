@@ -1,1 +1,7 @@
-{"id":"id1","name":"name","data_center":{"id":"id2"}}
+{
+  "id": "id1",
+  "name": "name",
+  "data_center": {
+    "id": "id2"
+  }
+}

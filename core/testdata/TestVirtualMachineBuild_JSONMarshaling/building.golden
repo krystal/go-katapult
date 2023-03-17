@@ -1,1 +1,4 @@
-{"id":"id1","state":"building"}
+{
+  "id": "id1",
+  "state": "building"
+}

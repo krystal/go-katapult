@@ -1,1 +1,8 @@
-{"id":"dc_25d48761871e4bf","name":"Shirebury","permalink":"shirebury","country":{"id":"id2"}}
+{
+  "id": "dc_25d48761871e4bf",
+  "name": "Shirebury",
+  "permalink": "shirebury",
+  "country": {
+    "id": "id2"
+  }
+}

@@ -1,1 +1,12 @@
-{"pagination":{"current_page":1,"per_page":40},"network_speed_profiles":[{"id":"nsp_CReSzkaCt01kWoi7","name":"1 Gbps"}]}
+{
+  "pagination": {
+    "current_page": 1,
+    "per_page": 40
+  },
+  "network_speed_profiles": [
+    {
+      "id": "nsp_CReSzkaCt01kWoi7",
+      "name": "1 Gbps"
+    }
+  ]
+}

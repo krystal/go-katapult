@@ -1,1 +1,5 @@
-{"id":"a","name":"b","fingerprint":"c"}
+{
+  "id": "a",
+  "name": "b",
+  "fingerprint": "c"
+}
