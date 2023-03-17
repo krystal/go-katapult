@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/krystal/go-katapult/internal/golden"
+	"github.com/jimeh/go-golden"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

@@ -6,6 +6,7 @@ require (
 	github.com/augurysys/timestamp v0.3.2
 	github.com/dave/jennifer v1.6.0
 	github.com/hashicorp/go-hclog v1.4.0
+	github.com/jimeh/go-golden v0.1.0
 	github.com/jimeh/rands v0.3.0
 	github.com/jimeh/undent v1.1.1
 	github.com/mitchellh/copystructure v1.2.0

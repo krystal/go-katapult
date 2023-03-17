@@ -92,7 +92,7 @@ bench:
 
 .PHONY: update-golden
 update-golden:
-	@$(MAKE) test UPDATE_GOLDEN=1
+	@$(MAKE) test GOLDEN_UPDATE=1
 
 .PHONY: regen-golden
 regen-golden: clean-golden update-golden
