@@ -1,1 +1,9 @@
-{"id":"task_wZgsjyVjrYEtw0Wl","name":"Purge items from trash","status":"pending","created_at":1599412748,"started_at":1591636763,"finished_at":1598203165,"progress":42}
+{
+  "id": "task_wZgsjyVjrYEtw0Wl",
+  "name": "Purge items from trash",
+  "status": "pending",
+  "created_at": 1599412748,
+  "started_at": 1591636763,
+  "finished_at": 1598203165,
+  "progress": 42
+}

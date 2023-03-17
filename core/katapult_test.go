@@ -15,7 +15,7 @@ import (
 	"github.com/krystal/go-katapult"
 
 	"github.com/augurysys/timestamp"
-	"github.com/krystal/go-katapult/internal/golden"
+	"github.com/jimeh/go-golden"
 	"github.com/krystal/go-katapult/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

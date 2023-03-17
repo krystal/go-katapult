@@ -1,1 +1,3 @@
-{"allow_all_outbound":false}
+{
+  "allow_all_outbound": false
+}

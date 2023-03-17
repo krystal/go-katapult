@@ -1,1 +1,4 @@
-{"id":"id1","state":"pending"}
+{
+  "id": "id1",
+  "state": "pending"
+}

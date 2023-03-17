@@ -145,7 +145,7 @@ func TestResponseError_JSONMarshaling(t *testing.T) {
 			obj: &ResponseError{
 				Code:        "code",
 				Description: "desc",
-				Detail:      json.RawMessage(`[{}]`),
+				Detail:      json.RawMessage("[\n    {}\n  ]"),
 			},
 		},
 	}

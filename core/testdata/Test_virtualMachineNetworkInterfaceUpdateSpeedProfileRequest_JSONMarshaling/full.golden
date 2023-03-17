@@ -1,1 +1,8 @@
-{"virtual_machine_network_interface":{"id":"id1"},"speed_profile":{"id":"id2"}}
+{
+  "virtual_machine_network_interface": {
+    "id": "id1"
+  },
+  "speed_profile": {
+    "id": "id2"
+  }
+}

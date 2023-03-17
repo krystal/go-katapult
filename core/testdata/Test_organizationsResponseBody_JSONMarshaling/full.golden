@@ -1,1 +1,10 @@
-{"organization":{"id":"id1"},"organizations":[{"id":"id2"}]}
+{
+  "organization": {
+    "id": "id1"
+  },
+  "organizations": [
+    {
+      "id": "id2"
+    }
+  ]
+}

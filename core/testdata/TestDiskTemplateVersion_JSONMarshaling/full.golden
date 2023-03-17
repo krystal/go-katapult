@@ -1,1 +1,6 @@
-{"id":"id2","number":398,"stable":true,"size_in_gb":434}
+{
+  "id": "id2",
+  "number": 398,
+  "stable": true,
+  "size_in_gb": 434
+}

@@ -10,8 +10,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/jimeh/go-golden"
 	"github.com/jimeh/undent"
-	"github.com/krystal/go-katapult/internal/golden"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v3"

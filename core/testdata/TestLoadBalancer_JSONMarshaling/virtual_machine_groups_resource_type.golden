@@ -1,1 +1,7 @@
-{"resource_type":"virtual_machine_groups","resource_ids":["id2","id3"]}
+{
+  "resource_type": "virtual_machine_groups",
+  "resource_ids": [
+    "id2",
+    "id3"
+  ]
+}

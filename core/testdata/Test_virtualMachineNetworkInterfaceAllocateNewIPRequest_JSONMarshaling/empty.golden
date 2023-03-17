@@ -1,1 +1,4 @@
-{"virtual_machine_network_interface":{},"address_version":""}
+{
+  "virtual_machine_network_interface": {},
+  "address_version": ""
+}

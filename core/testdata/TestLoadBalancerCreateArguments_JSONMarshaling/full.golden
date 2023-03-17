@@ -1,1 +1,12 @@
-{"data_center":{"id":"id4"},"name":"helper","resource_type":"tags","resource_ids":["id1","id2"],"https_redirect":true}
+{
+  "data_center": {
+    "id": "id4"
+  },
+  "name": "helper",
+  "resource_type": "tags",
+  "resource_ids": [
+    "id1",
+    "id2"
+  ],
+  "https_redirect": true
+}

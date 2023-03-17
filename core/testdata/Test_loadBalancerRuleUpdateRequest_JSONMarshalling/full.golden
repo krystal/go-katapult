@@ -1,1 +1,5 @@
-{"properties":{"protocol":"TCP"}}
+{
+  "properties": {
+    "protocol": "TCP"
+  }
+}

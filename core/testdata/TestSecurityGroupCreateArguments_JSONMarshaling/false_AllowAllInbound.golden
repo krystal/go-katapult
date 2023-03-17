@@ -1,1 +1,3 @@
-{"allow_all_inbound":false}
+{
+  "allow_all_inbound": false
+}

@@ -1,1 +1,12 @@
-{"task":{"id":"id1"},"build":{"id":"id2"},"virtual_machine_build":{"id":"id3"},"hostname":"host.example.com"}
+{
+  "task": {
+    "id": "id1"
+  },
+  "build": {
+    "id": "id2"
+  },
+  "virtual_machine_build": {
+    "id": "id3"
+  },
+  "hostname": "host.example.com"
+}

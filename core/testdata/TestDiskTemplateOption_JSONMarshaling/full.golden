@@ -1,1 +1,4 @@
-{"key":"hello","value":"world"}
+{
+  "key": "hello",
+  "value": "world"
+}

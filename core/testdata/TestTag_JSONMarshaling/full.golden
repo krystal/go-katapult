@@ -1,1 +1,6 @@
-{"id":"id1","name":"name","color":"color","created_at":3043009}
+{
+  "id": "id1",
+  "name": "name",
+  "color": "color",
+  "created_at": 3043009
+}

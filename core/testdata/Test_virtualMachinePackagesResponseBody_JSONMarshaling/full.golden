@@ -1,1 +1,13 @@
-{"pagination":{"current_page":392},"virtual_machine_package":{"id":"id1"},"virtual_machine_packages":[{"id":"id2"}]}
+{
+  "pagination": {
+    "current_page": 392
+  },
+  "virtual_machine_package": {
+    "id": "id1"
+  },
+  "virtual_machine_packages": [
+    {
+      "id": "id2"
+    }
+  ]
+}

@@ -1,1 +1,7 @@
-{"resource_type":"tags","resource_ids":["id2","id3"]}
+{
+  "resource_type": "tags",
+  "resource_ids": [
+    "id2",
+    "id3"
+  ]
+}
