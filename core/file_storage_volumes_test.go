@@ -57,7 +57,7 @@ func TestFileStorageVolume_JSONMarshaling(t *testing.T) {
 					ID: "dc_1",
 				},
 				Associations: []string{"assoc1", "assoc1"},
-				State:        "ready",
+				State:        FileStorageVolumeReady,
 				NFSLocation:  "foo:/mnt/nfs/volume1",
 				Size:         1024,
 			},
@@ -110,6 +110,40 @@ func TestFileStorageVolumeRef_queryValues(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			testQueryableEncoding(t, tt.obj)
+		})
+	}
+}
+
+func TestFileStorageVolumeStates(t *testing.T) {
+	tests := []struct {
+		name  string
+		enum  FileStorageVolumeState
+		value string
+	}{
+		{
+			name:  "FileStorageVolumePending",
+			enum:  FileStorageVolumePending,
+			value: "pending",
+		},
+		{
+			name:  "FileStorageVolumeFailed",
+			enum:  FileStorageVolumeFailed,
+			value: "failed",
+		},
+		{
+			name:  "FileStorageVolumeReady",
+			enum:  FileStorageVolumeReady,
+			value: "ready",
+		},
+		{
+			name:  "FileStorageVolumeConfiguring",
+			enum:  FileStorageVolumeConfiguring,
+			value: "configuring",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.value, string(tt.enum))
 		})
 	}
 }
