@@ -123,7 +123,7 @@ schemas:
 
 .PHONY: update-schemas
 update-schemas:
-	SCHEMA_UPDATE=1 go generate ./schemas
+	SCHEMA_FORCE_UPDATE=1 go generate ./schemas
 
 .PHONY: check-schemas
 check-schemas:

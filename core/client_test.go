@@ -15,8 +15,9 @@ import (
 )
 
 var (
-	fixtureInvalidAPITokenErr = "invalid_api_token: The API token provided " +
-		"was not valid (it may not exist or have expired)"
+	fixtureInvalidAPITokenErr = "katapult: unauthorized: invalid_api_token: " +
+		"The API token provided was not valid " +
+		"(it may not exist or have expired)"
 	fixtureInvalidAPITokenResponseError = &katapult.ResponseError{
 		Code: "invalid_api_token",
 		Description: "The API token provided was not valid " +

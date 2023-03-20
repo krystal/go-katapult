@@ -28,11 +28,14 @@ var (
 	ErrIPAlreadyAllocated                         = fmt.Errorf("%w: ip_already_allocated", katapult.ErrUnprocessableEntity)
 	ErrIdentityNotLinkedToWebSession              = fmt.Errorf("%w: identity_not_linked_to_web_session", katapult.ErrBadRequest)
 	ErrInterfaceNotFound                          = fmt.Errorf("%w: interface_not_found", katapult.ErrResourceNotFound)
+	ErrInvalidAPIToken                            = fmt.Errorf("%w: invalid_api_token", katapult.ErrForbidden)
 	ErrInvalidIP                                  = fmt.Errorf("%w: invalid_ip", katapult.ErrUnprocessableEntity)
 	ErrInvalidSpecXML                             = fmt.Errorf("%w: invalid_spec_xml", katapult.ErrBadRequest)
+	ErrInvalidTimestamp                           = fmt.Errorf("%w: invalid_timestamp", katapult.ErrBadRequest)
 	ErrLoadBalancerNotFound                       = fmt.Errorf("%w: load_balancer_not_found", katapult.ErrResourceNotFound)
 	ErrLoadBalancerRuleNotFound                   = fmt.Errorf("%w: load_balancer_rule_not_found", katapult.ErrResourceNotFound)
 	ErrLocationRequired                           = fmt.Errorf("%w: location_required", katapult.ErrUnprocessableEntity)
+	ErrMissingAPIToken                            = fmt.Errorf("%w: missing_api_token", katapult.ErrBadRequest)
 	ErrNetworkNotFound                            = fmt.Errorf("%w: network_not_found", katapult.ErrResourceNotFound)
 	ErrNetworkSpeedProfileNotFound                = fmt.Errorf("%w: network_speed_profile_not_found", katapult.ErrResourceNotFound)
 	ErrNoAllocation                               = fmt.Errorf("%w: no_allocation", katapult.ErrUnprocessableEntity)
@@ -57,6 +60,7 @@ var (
 	ErrTaskNotFound                               = fmt.Errorf("%w: task_not_found", katapult.ErrResourceNotFound)
 	ErrTaskQueueingError                          = fmt.Errorf("%w: task_queueing_error", katapult.ErrNotAcceptable)
 	ErrTrashObjectNotFound                        = fmt.Errorf("%w: trash_object_not_found", katapult.ErrResourceNotFound)
+	ErrUnauthorizedNetworkForAPIToken             = fmt.Errorf("%w: unauthorized_network_for_api_token", katapult.ErrForbidden)
 	ErrValidationError                            = fmt.Errorf("%w: validation_error", katapult.ErrUnprocessableEntity)
 	ErrVirtualMachineBuildNotFound                = fmt.Errorf("%w: build_not_found", katapult.ErrResourceNotFound)
 	ErrVirtualMachineGroupNotFound                = fmt.Errorf("%w: virtual_machine_group_not_found", katapult.ErrResourceNotFound)
@@ -84,7 +88,7 @@ func NewCertificateNotFoundError(theError *katapult.ResponseError) *CertificateN
 }
 
 // CountryNotFoundError:
-// No countries was found matching any of the criteria provided in the arguments.
+// No country was found matching any of the criteria provided in the arguments.
 type CountryNotFoundError struct {
 	katapult.CommonError
 }
@@ -116,7 +120,7 @@ func NewCountryStateNotFoundError(theError *katapult.ResponseError) *CountryStat
 }
 
 // CurrencyNotFoundError:
-// No currencies was found matching any of the criteria provided in the arguments.
+// No currency was found matching any of the criteria provided in the arguments.
 type CurrencyNotFoundError struct {
 	katapult.CommonError
 }
@@ -180,7 +184,7 @@ func NewDNSZoneNotVerifiedError(theError *katapult.ResponseError) *DNSZoneNotVer
 }
 
 // DataCenterNotFoundError:
-// No data centers was found matching any of the criteria provided in the arguments.
+// No data center was found matching any of the criteria provided in the arguments.
 type DataCenterNotFoundError struct {
 	katapult.CommonError
 }
@@ -224,7 +228,7 @@ type DeletionRestrictedErrorDetail struct {
 }
 
 // DiskBackupPolicyNotFoundError:
-// No disk backup policies was found matching any of the criteria provided in the arguments.
+// No disk backup policy was found matching any of the criteria provided in the arguments.
 type DiskBackupPolicyNotFoundError struct {
 	katapult.CommonError
 }
@@ -240,7 +244,7 @@ func NewDiskBackupPolicyNotFoundError(theError *katapult.ResponseError) *DiskBac
 }
 
 // DiskNotFoundError:
-// No disks was found matching any of the criteria provided in the arguments.
+// No disk was found matching any of the criteria provided in the arguments.
 type DiskNotFoundError struct {
 	katapult.CommonError
 }
@@ -367,6 +371,34 @@ func NewInterfaceNotFoundError(theError *katapult.ResponseError) *InterfaceNotFo
 	}
 }
 
+// InvalidAPITokenError:
+// The API token provided was not valid (it may not exist or have expired).
+type InvalidAPITokenError struct {
+	katapult.CommonError
+	Detail *InvalidAPITokenErrorDetail `json:"detail,omitempty"`
+}
+
+func NewInvalidAPITokenError(theError *katapult.ResponseError) *InvalidAPITokenError {
+	detail := &InvalidAPITokenErrorDetail{}
+	err := json.Unmarshal(theError.Detail, detail)
+	if err != nil {
+		detail = nil
+	}
+
+	return &InvalidAPITokenError{
+		CommonError: katapult.NewCommonError(
+			ErrInvalidAPIToken,
+			"invalid_api_token",
+			theError.Description,
+		),
+		Detail: detail,
+	}
+}
+
+type InvalidAPITokenErrorDetail struct {
+	Details *string `json:"details,omitempty"`
+}
+
 // InvalidIPError:
 // This IP address is not valid for this network interface.
 type InvalidIPError struct {
@@ -409,6 +441,22 @@ func NewInvalidSpecXMLError(theError *katapult.ResponseError) *InvalidSpecXMLErr
 
 type InvalidSpecXMLErrorDetail struct {
 	Errors string `json:"errors,omitempty"`
+}
+
+// InvalidTimestampError:
+// Timestamp must be at least 5 minutes in the future. If you want to delete something immediately, you use can use the delete endpoint.
+type InvalidTimestampError struct {
+	katapult.CommonError
+}
+
+func NewInvalidTimestampError(theError *katapult.ResponseError) *InvalidTimestampError {
+	return &InvalidTimestampError{
+		CommonError: katapult.NewCommonError(
+			ErrInvalidTimestamp,
+			"invalid_timestamp",
+			theError.Description,
+		),
+	}
 }
 
 // LoadBalancerNotFoundError:
@@ -454,6 +502,22 @@ func NewLocationRequiredError(theError *katapult.ResponseError) *LocationRequire
 		CommonError: katapult.NewCommonError(
 			ErrLocationRequired,
 			"location_required",
+			theError.Description,
+		),
+	}
+}
+
+// MissingAPITokenError:
+// No API token was provided in the Authorization header. Ensure a token is provided prefixed with Bearer.
+type MissingAPITokenError struct {
+	katapult.CommonError
+}
+
+func NewMissingAPITokenError(theError *katapult.ResponseError) *MissingAPITokenError {
+	return &MissingAPITokenError{
+		CommonError: katapult.NewCommonError(
+			ErrMissingAPIToken,
+			"missing_api_token",
 			theError.Description,
 		),
 	}
@@ -764,7 +828,7 @@ func NewResourceDoesNotSupportUnallocationError(theError *katapult.ResponseError
 }
 
 // SSHKeyNotFoundError:
-// No SSH keys was found matching any of the criteria provided in the arguments.
+// No SSH key was found matching any of the criteria provided in the arguments.
 type SSHKeyNotFoundError struct {
 	katapult.CommonError
 }
@@ -828,7 +892,7 @@ func NewSpeedProfileAlreadyAssignedError(theError *katapult.ResponseError) *Spee
 }
 
 // TagNotFoundError:
-// No tags was found matching any of the criteria provided in the arguments.
+// No tag was found matching any of the criteria provided in the arguments.
 type TagNotFoundError struct {
 	katapult.CommonError
 }
@@ -901,6 +965,34 @@ func NewTrashObjectNotFoundError(theError *katapult.ResponseError) *TrashObjectN
 			theError.Description,
 		),
 	}
+}
+
+// UnauthorizedNetworkForAPITokenError:
+// Network is not allowed to access the API with this API token.
+type UnauthorizedNetworkForAPITokenError struct {
+	katapult.CommonError
+	Detail *UnauthorizedNetworkForAPITokenErrorDetail `json:"detail,omitempty"`
+}
+
+func NewUnauthorizedNetworkForAPITokenError(theError *katapult.ResponseError) *UnauthorizedNetworkForAPITokenError {
+	detail := &UnauthorizedNetworkForAPITokenErrorDetail{}
+	err := json.Unmarshal(theError.Detail, detail)
+	if err != nil {
+		detail = nil
+	}
+
+	return &UnauthorizedNetworkForAPITokenError{
+		CommonError: katapult.NewCommonError(
+			ErrUnauthorizedNetworkForAPIToken,
+			"unauthorized_network_for_api_token",
+			theError.Description,
+		),
+		Detail: detail,
+	}
+}
+
+type UnauthorizedNetworkForAPITokenErrorDetail struct {
+	IpAddress string `json:"ip_address,omitempty"`
 }
 
 // ValidationError:
@@ -1094,16 +1186,22 @@ func castResponseError(theError *katapult.ResponseError) error {
 		return NewIdentityNotLinkedToWebSessionError(theError)
 	case "interface_not_found":
 		return NewInterfaceNotFoundError(theError)
+	case "invalid_api_token":
+		return NewInvalidAPITokenError(theError)
 	case "invalid_ip":
 		return NewInvalidIPError(theError)
 	case "invalid_spec_xml":
 		return NewInvalidSpecXMLError(theError)
+	case "invalid_timestamp":
+		return NewInvalidTimestampError(theError)
 	case "load_balancer_not_found":
 		return NewLoadBalancerNotFoundError(theError)
 	case "load_balancer_rule_not_found":
 		return NewLoadBalancerRuleNotFoundError(theError)
 	case "location_required":
 		return NewLocationRequiredError(theError)
+	case "missing_api_token":
+		return NewMissingAPITokenError(theError)
 	case "network_not_found":
 		return NewNetworkNotFoundError(theError)
 	case "network_speed_profile_not_found":
@@ -1152,6 +1250,8 @@ func castResponseError(theError *katapult.ResponseError) error {
 		return NewTaskQueueingError(theError)
 	case "trash_object_not_found":
 		return NewTrashObjectNotFoundError(theError)
+	case "unauthorized_network_for_api_token":
+		return NewUnauthorizedNetworkForAPITokenError(theError)
 	case "validation_error":
 		return NewValidationError(theError)
 	case "build_not_found":
