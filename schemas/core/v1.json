@@ -70,6 +70,27 @@
               "group": "organizations.managed"
             },
             {
+              "path": "organizations/:organization/disks",
+              "request_method": "GET",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/Disks/ListEndpoint",
+              "group": "disks"
+            },
+            {
+              "path": "disks/:disk",
+              "request_method": "GET",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/Disks/InfoEndpoint",
+              "group": "disks"
+            },
+            {
+              "path": "virtual_machines/:virtual_machine/disks",
+              "request_method": "GET",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/Disks/ListForVirtualMachineEndpoint",
+              "group": "disks"
+            },
+            {
               "path": "organizations/:organization/disk_templates",
               "request_method": "GET",
               "controller": null,
@@ -252,6 +273,20 @@
               "group": "disk_backup_policies"
             },
             {
+              "path": "virtual_machines/:virtual_machine/disk_backup_policies",
+              "request_method": "GET",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/DiskBackupPolicies/ListForVirtualMachineEndpoint",
+              "group": "disk_backup_policies"
+            },
+            {
+              "path": "disks/:disk/disk_backup_policies",
+              "request_method": "GET",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/DiskBackupPolicies/ListForDiskEndpoint",
+              "group": "disk_backup_policies"
+            },
+            {
               "path": "disk_backup_policies/:disk_backup_policy",
               "request_method": "GET",
               "controller": null,
@@ -263,6 +298,13 @@
               "request_method": "DELETE",
               "controller": null,
               "endpoint": "CoreAPI/Endpoints/DiskBackupPolicies/DeleteEndpoint",
+              "group": "disk_backup_policies"
+            },
+            {
+              "path": "disk_backup_policies/:disk_backup_policy/schedule",
+              "request_method": "DELETE",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/DiskBackupPolicies/ScheduleDeleteEndpoint",
               "group": "disk_backup_policies"
             },
             {
@@ -860,6 +902,12 @@
               ]
             },
             {
+              "id": "disks",
+              "name": "Disks",
+              "description": null,
+              "groups": []
+            },
+            {
               "id": "disk_templates",
               "name": "Disk templates",
               "description": null,
@@ -1059,6 +1107,14 @@
             "description": "Read-only access to certificates"
           },
           {
+            "name": "disks",
+            "description": "Manage disks"
+          },
+          {
+            "name": "disks:read",
+            "description": "Read-only access to disks"
+          },
+          {
             "name": "disk_templates",
             "description": "Manage disk templates"
           },
@@ -1150,11 +1206,70 @@
       }
     },
     {
+      "type": "error",
+      "value": {
+        "id": "CoreAPI/Authenticator/MissingAPIToken",
+        "name": null,
+        "description": "No API token was provided in the Authorization header. Ensure a token is provided prefixed with Bearer",
+        "code": "missing_api_token",
+        "http_status": 400,
+        "fields": []
+      }
+    },
+    {
+      "type": "error",
+      "value": {
+        "id": "CoreAPI/Authenticator/UnauthorizedNetworkForAPIToken",
+        "name": null,
+        "description": "Network is not allowed to access the API with this API token",
+        "code": "unauthorized_network_for_api_token",
+        "http_status": 403,
+        "fields": [
+          {
+            "id": "CoreAPI/Authenticator/UnauthorizedNetworkForAPIToken/IpAddressField",
+            "name": "ip_address",
+            "description": "The IP address the request was received from",
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
       "type": "scalar",
       "value": {
         "id": "Apia/Scalars/String",
         "name": "String",
         "description": null
+      }
+    },
+    {
+      "type": "error",
+      "value": {
+        "id": "CoreAPI/Authenticator/InvalidAPIToken",
+        "name": null,
+        "description": "The API token provided was not valid (it may not exist or have expired)",
+        "code": "invalid_api_token",
+        "http_status": 403,
+        "fields": [
+          {
+            "id": "CoreAPI/Authenticator/InvalidAPIToken/DetailsField",
+            "name": "details",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
       }
     },
     {
@@ -1313,30 +1428,6 @@
           {
             "id": "Apia/Schema/ScopeType/DescriptionField",
             "name": "description",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          }
-        ]
-      }
-    },
-    {
-      "type": "error",
-      "value": {
-        "id": "InternalAPI/ProxyReflectionEndpoint/InvalidRequestHeader",
-        "name": null,
-        "description": "The X-Katapult-API-Request was invalid",
-        "code": "invalid_request_header",
-        "http_status": 400,
-        "fields": [
-          {
-            "id": "InternalAPI/ProxyReflectionEndpoint/InvalidRequestHeader/DetailsField",
-            "name": "details",
             "description": null,
             "type": "Apia/Scalars/String",
             "null": false,
@@ -1623,7 +1714,7 @@
       "value": {
         "id": "CoreAPI/ArgumentSets/DataCenterLookup/DataCenterNotFound",
         "name": null,
-        "description": "No data centers was found matching any of the criteria provided in the arguments",
+        "description": "No data center was found matching any of the criteria provided in the arguments",
         "code": "data_center_not_found",
         "http_status": 404,
         "fields": []
@@ -2794,6 +2885,2095 @@
     {
       "type": "endpoint",
       "value": {
+        "id": "CoreAPI/Endpoints/Disks/ListEndpoint",
+        "name": "List disks",
+        "description": "Return a list of all disks owned by an organization",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/Disks/ListEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "organization",
+              "description": "The organization to find disks for",
+              "type": "CoreAPI/ArgumentSets/OrganizationLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            },
+            {
+              "name": "page",
+              "description": null,
+              "type": "Apia/Scalars/Integer",
+              "required": false,
+              "array": false,
+              "default": "1"
+            },
+            {
+              "name": "per_page",
+              "description": null,
+              "type": "Apia/Scalars/Integer",
+              "required": false,
+              "array": false,
+              "default": "30"
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/Disks/ListEndpoint/PaginationField",
+            "name": "pagination",
+            "description": null,
+            "type": "Apia/PaginationObject",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Endpoints/Disks/ListEndpoint/DiskField",
+            "name": "disk",
+            "description": "The list of disks",
+            "type": "CoreAPI/Objects/Disk",
+            "null": false,
+            "array": true,
+            "spec": {
+              "all": false,
+              "spec": "id,name,size_in_gb,state,virtual_machine_disk[virtual_machine[id,fqdn]]"
+            }
+          }
+        ],
+        "potential_errors": [],
+        "scopes": [
+          "disks",
+          "disks:read"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/Disks/ListEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "organization",
+            "description": "The organization to find disks for",
+            "type": "CoreAPI/ArgumentSets/OrganizationLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "page",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "required": false,
+            "array": false,
+            "default": "1"
+          },
+          {
+            "name": "per_page",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "required": false,
+            "array": false,
+            "default": "30"
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/Disk",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/Disk/IdField",
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/Disk/NameField",
+            "name": "name",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/Disk/SizeInGbField",
+            "name": "size_in_gb",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/Disk/StateField",
+            "name": "state",
+            "description": null,
+            "type": "CoreAPI/Objects/DiskStateEnum",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/Disk/CreatedAtField",
+            "name": "created_at",
+            "description": null,
+            "type": "Apia/Scalars/UnixTime",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/Disk/StorageSpeedField",
+            "name": "storage_speed",
+            "description": null,
+            "type": "CoreAPI/Objects/StorageSpeedEnum",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/Disk/IoProfileField",
+            "name": "io_profile",
+            "description": null,
+            "type": "CoreAPI/Objects/DiskIOProfile",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/Disk/VirtualMachineDiskField",
+            "name": "virtual_machine_disk",
+            "description": null,
+            "type": "CoreAPI/Objects/VirtualMachineDisk",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/Disk/InstallationField",
+            "name": "installation",
+            "description": null,
+            "type": "CoreAPI/Objects/DiskInstallation",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "enum",
+      "value": {
+        "id": "CoreAPI/Objects/DiskStateEnum",
+        "name": null,
+        "description": null,
+        "values": [
+          {
+            "name": "not_built",
+            "description": null
+          },
+          {
+            "name": "failed",
+            "description": null
+          },
+          {
+            "name": "built",
+            "description": null
+          },
+          {
+            "name": "building",
+            "description": null
+          },
+          {
+            "name": "installing",
+            "description": null
+          },
+          {
+            "name": "restoring",
+            "description": null
+          },
+          {
+            "name": "formatting",
+            "description": null
+          },
+          {
+            "name": "resizing",
+            "description": null
+          },
+          {
+            "name": "configuring",
+            "description": null
+          },
+          {
+            "name": "importing",
+            "description": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "enum",
+      "value": {
+        "id": "CoreAPI/Objects/StorageSpeedEnum",
+        "name": null,
+        "description": null,
+        "values": [
+          {
+            "name": "nvme",
+            "description": "NVMe"
+          },
+          {
+            "name": "ssd",
+            "description": "SSD"
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/DiskIOProfile",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/DiskIOProfile/IdField",
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DiskIOProfile/NameField",
+            "name": "name",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DiskIOProfile/PermalinkField",
+            "name": "permalink",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DiskIOProfile/SpeedInMbField",
+            "name": "speed_in_mb",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DiskIOProfile/IopsField",
+            "name": "iops",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/VirtualMachineDisk",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/VirtualMachineDisk/VirtualMachineField",
+            "name": "virtual_machine",
+            "description": null,
+            "type": "CoreAPI/Objects/VirtualMachine",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachineDisk/DiskField",
+            "name": "disk",
+            "description": null,
+            "type": "CoreAPI/Objects/Disk",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachineDisk/AttachOnBootField",
+            "name": "attach_on_boot",
+            "description": null,
+            "type": "Apia/Scalars/Boolean",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachineDisk/BootField",
+            "name": "boot",
+            "description": null,
+            "type": "Apia/Scalars/Boolean",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachineDisk/StateField",
+            "name": "state",
+            "description": null,
+            "type": "CoreAPI/Objects/VirtualMachineDiskAttachmentStateEnum",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/VirtualMachine",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/VirtualMachine/IdField",
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachine/NameField",
+            "name": "name",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachine/HostnameField",
+            "name": "hostname",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachine/FqdnField",
+            "name": "fqdn",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachine/DescriptionField",
+            "name": "description",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachine/CreatedAtField",
+            "name": "created_at",
+            "description": null,
+            "type": "Apia/Scalars/UnixTime",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachine/InitialRootPasswordField",
+            "name": "initial_root_password",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachine/StateField",
+            "name": "state",
+            "description": null,
+            "type": "CoreAPI/Objects/VirtualMachineStateEnum",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachine/ZoneField",
+            "name": "zone",
+            "description": null,
+            "type": "CoreAPI/Objects/Zone",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachine/OrganizationField",
+            "name": "organization",
+            "description": null,
+            "type": "CoreAPI/Objects/Organization",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachine/GroupField",
+            "name": "group",
+            "description": null,
+            "type": "CoreAPI/Objects/VirtualMachineGroup",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachine/PackageField",
+            "name": "package",
+            "description": null,
+            "type": "CoreAPI/Objects/VirtualMachinePackage",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachine/AttachedIsoField",
+            "name": "attached_iso",
+            "description": null,
+            "type": "CoreAPI/Objects/ISO",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachine/MemoryInGbField",
+            "name": "memory_in_gb",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachine/CpuCoresField",
+            "name": "cpu_cores",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachine/TagsField",
+            "name": "tags",
+            "description": null,
+            "type": "CoreAPI/Objects/Tag",
+            "null": false,
+            "array": true,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachine/TagNamesField",
+            "name": "tag_names",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": true,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachine/IpAddressesField",
+            "name": "ip_addresses",
+            "description": null,
+            "type": "CoreAPI/Objects/IPAddress",
+            "null": false,
+            "array": true,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "enum",
+      "value": {
+        "id": "CoreAPI/Objects/VirtualMachineStateEnum",
+        "name": null,
+        "description": null,
+        "values": [
+          {
+            "name": "stopped",
+            "description": null
+          },
+          {
+            "name": "failed",
+            "description": null
+          },
+          {
+            "name": "started",
+            "description": null
+          },
+          {
+            "name": "starting",
+            "description": null
+          },
+          {
+            "name": "resetting",
+            "description": null
+          },
+          {
+            "name": "migrating",
+            "description": null
+          },
+          {
+            "name": "stopping",
+            "description": null
+          },
+          {
+            "name": "shutting_down",
+            "description": null
+          },
+          {
+            "name": "orphaned",
+            "description": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/Zone",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/Zone/IdField",
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/Zone/NameField",
+            "name": "name",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/Zone/PermalinkField",
+            "name": "permalink",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/Zone/DataCenterField",
+            "name": "data_center",
+            "description": null,
+            "type": "CoreAPI/Objects/DataCenter",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/VirtualMachineGroup",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/VirtualMachineGroup/IdField",
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachineGroup/NameField",
+            "name": "name",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachineGroup/SegregateField",
+            "name": "segregate",
+            "description": null,
+            "type": "Apia/Scalars/Boolean",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachineGroup/CreatedAtField",
+            "name": "created_at",
+            "description": null,
+            "type": "Apia/Scalars/UnixTime",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/VirtualMachinePackage",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/VirtualMachinePackage/IdField",
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachinePackage/NameField",
+            "name": "name",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachinePackage/PermalinkField",
+            "name": "permalink",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachinePackage/CpuCoresField",
+            "name": "cpu_cores",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachinePackage/Ipv4AddressesField",
+            "name": "ipv4_addresses",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachinePackage/MemoryInGbField",
+            "name": "memory_in_gb",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachinePackage/StorageInGbField",
+            "name": "storage_in_gb",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachinePackage/MonthlyBandwidthAllowanceInGbField",
+            "name": "monthly_bandwidth_allowance_in_gb",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachinePackage/PrivacyField",
+            "name": "privacy",
+            "description": null,
+            "type": "CoreAPI/Objects/PrivacyTypesEnum",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachinePackage/IconField",
+            "name": "icon",
+            "description": null,
+            "type": "CoreAPI/Objects/Attachment",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "enum",
+      "value": {
+        "id": "CoreAPI/Objects/PrivacyTypesEnum",
+        "name": null,
+        "description": null,
+        "values": [
+          {
+            "name": "public",
+            "description": "Public"
+          },
+          {
+            "name": "private",
+            "description": "Private"
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/Attachment",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/Attachment/UrlField",
+            "name": "url",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/Attachment/FileNameField",
+            "name": "file_name",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/Attachment/FileTypeField",
+            "name": "file_type",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/Attachment/FileSizeField",
+            "name": "file_size",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/Attachment/DigestField",
+            "name": "digest",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/Attachment/TokenField",
+            "name": "token",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/ISO",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/ISO/IdField",
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/ISO/NameField",
+            "name": "name",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/ISO/OperatingSystemField",
+            "name": "operating_system",
+            "description": null,
+            "type": "CoreAPI/Objects/OperatingSystem",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/OperatingSystem",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/OperatingSystem/IdField",
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/OperatingSystem/NameField",
+            "name": "name",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/OperatingSystem/BadgeField",
+            "name": "badge",
+            "description": null,
+            "type": "CoreAPI/Objects/Attachment",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/Tag",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/Tag/IdField",
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/Tag/NameField",
+            "name": "name",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/Tag/ColorField",
+            "name": "color",
+            "description": null,
+            "type": "CoreAPI/Objects/TagColorsEnum",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/Tag/CreatedAtField",
+            "name": "created_at",
+            "description": null,
+            "type": "Apia/Scalars/UnixTime",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "enum",
+      "value": {
+        "id": "CoreAPI/Objects/TagColorsEnum",
+        "name": null,
+        "description": null,
+        "values": [
+          {
+            "name": "red",
+            "description": "Red"
+          },
+          {
+            "name": "pink",
+            "description": "Pink"
+          },
+          {
+            "name": "purple",
+            "description": "Purple"
+          },
+          {
+            "name": "dark_blue",
+            "description": "Dark blue"
+          },
+          {
+            "name": "green",
+            "description": "Green"
+          },
+          {
+            "name": "teal",
+            "description": "Teal"
+          },
+          {
+            "name": "aqua",
+            "description": "Aqua"
+          },
+          {
+            "name": "light_blue",
+            "description": "Light blue"
+          },
+          {
+            "name": "yellow",
+            "description": "Yellow"
+          },
+          {
+            "name": "orange",
+            "description": "Orange"
+          },
+          {
+            "name": "orange_red",
+            "description": "Orange red"
+          },
+          {
+            "name": "brown",
+            "description": "Brown"
+          },
+          {
+            "name": "black",
+            "description": "Black"
+          },
+          {
+            "name": "dark_gray",
+            "description": "Dark gray"
+          },
+          {
+            "name": "light_gray",
+            "description": "Light gray"
+          },
+          {
+            "name": "light_brown",
+            "description": "Light brown"
+          },
+          {
+            "name": "pastel_red",
+            "description": "Pastel red"
+          },
+          {
+            "name": "pastel_pink",
+            "description": "Pastel pink"
+          },
+          {
+            "name": "pastel_purple",
+            "description": "Pastel purple"
+          },
+          {
+            "name": "pastel_dark_blue",
+            "description": "Pastel dark blue"
+          },
+          {
+            "name": "pastel_green",
+            "description": "Pastel green"
+          },
+          {
+            "name": "pastel_teal",
+            "description": "Pastel teal"
+          },
+          {
+            "name": "pastel_aqua",
+            "description": "Pastel aqua"
+          },
+          {
+            "name": "pastel_light_blue",
+            "description": "Pastel light blue"
+          },
+          {
+            "name": "pastel_yellow",
+            "description": "Pastel yellow"
+          },
+          {
+            "name": "pastel_orange",
+            "description": "Pastel orange"
+          },
+          {
+            "name": "pastel_orange_red",
+            "description": "Pastel orange red"
+          },
+          {
+            "name": "pastel_brown",
+            "description": "Pastel brown"
+          },
+          {
+            "name": "pastel_black",
+            "description": "Pastel black"
+          },
+          {
+            "name": "pastel_dark_gray",
+            "description": "Pastel dark gray"
+          },
+          {
+            "name": "pastel_light_gray",
+            "description": "Pastel light gray"
+          },
+          {
+            "name": "pastel_light_brown",
+            "description": "Pastel light brown"
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/IPAddress",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/IPAddress/IdField",
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/IPAddress/AddressField",
+            "name": "address",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/IPAddress/ReverseDnsField",
+            "name": "reverse_dns",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/IPAddress/VipField",
+            "name": "vip",
+            "description": null,
+            "type": "Apia/Scalars/Boolean",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/IPAddress/LabelField",
+            "name": "label",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/IPAddress/AddressWithMaskField",
+            "name": "address_with_mask",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/IPAddress/NetworkField",
+            "name": "network",
+            "description": null,
+            "type": "CoreAPI/Objects/Network",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/IPAddress/AllocationIdField",
+            "name": "allocation_id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/IPAddress/AllocationTypeField",
+            "name": "allocation_type",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "enum",
+      "value": {
+        "id": "CoreAPI/Objects/VirtualMachineDiskAttachmentStateEnum",
+        "name": null,
+        "description": null,
+        "values": [
+          {
+            "name": "detached",
+            "description": null
+          },
+          {
+            "name": "failed",
+            "description": null
+          },
+          {
+            "name": "attached",
+            "description": null
+          },
+          {
+            "name": "attaching",
+            "description": null
+          },
+          {
+            "name": "detaching",
+            "description": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/DiskInstallation",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/DiskInstallation/IdField",
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DiskInstallation/DiskTemplateVersionField",
+            "name": "disk_template_version",
+            "description": null,
+            "type": "CoreAPI/Objects/DiskTemplateVersion",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DiskInstallation/AttributesField",
+            "name": "attributes",
+            "description": null,
+            "type": "CoreAPI/Objects/DiskInstallationAttribute",
+            "null": false,
+            "array": true,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/DiskTemplateVersion",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/DiskTemplateVersion/IdField",
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DiskTemplateVersion/NumberField",
+            "name": "number",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DiskTemplateVersion/StableField",
+            "name": "stable",
+            "description": null,
+            "type": "Apia/Scalars/Boolean",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DiskTemplateVersion/SizeInGbField",
+            "name": "size_in_gb",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DiskTemplateVersion/DiskTemplateField",
+            "name": "disk_template",
+            "description": null,
+            "type": "CoreAPI/Objects/DiskTemplate",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/DiskTemplate",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/DiskTemplate/IdField",
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DiskTemplate/NameField",
+            "name": "name",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DiskTemplate/DescriptionField",
+            "name": "description",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DiskTemplate/PermalinkField",
+            "name": "permalink",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DiskTemplate/UniversalField",
+            "name": "universal",
+            "description": null,
+            "type": "Apia/Scalars/Boolean",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DiskTemplate/LatestVersionField",
+            "name": "latest_version",
+            "description": null,
+            "type": "CoreAPI/Objects/DiskTemplateVersion",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DiskTemplate/OperatingSystemField",
+            "name": "operating_system",
+            "description": null,
+            "type": "CoreAPI/Objects/OperatingSystem",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/DiskInstallationAttribute",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/DiskInstallationAttribute/KeyField",
+            "name": "key",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DiskInstallationAttribute/LabelField",
+            "name": "label",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DiskInstallationAttribute/ValueField",
+            "name": "value",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DiskInstallationAttribute/DescriptionField",
+            "name": "description",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DiskInstallationAttribute/ProtectField",
+            "name": "protect",
+            "description": null,
+            "type": "Apia/Scalars/Boolean",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/Disks/InfoEndpoint",
+        "name": "Get disk",
+        "description": "Return details for a specific disk",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/Disks/InfoEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "disk",
+              "description": "The disk to return",
+              "type": "CoreAPI/ArgumentSets/DiskLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/Disks/InfoEndpoint/DiskField",
+            "name": "disk",
+            "description": "The disk details",
+            "type": "CoreAPI/Objects/Disk",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": false,
+              "spec": "id,\n                                                    name,\n                                                    size_in_gb,\n                                                    state,\n                                                    created_at,\n                                                    storage_speed,\n                                                    io_profile[*],\n                                                    virtual_machine_disk[\n                                                        state,\n                                                        attach_on_boot,\n                                                        boot,\n                                                        virtual_machine[\n                                                          id,\n                                                          fqdn\n                                                        ]\n                                                    ],\n                                                    installation[\n                                                      id,\n                                                      attributes[*],\n                                                      disk_template_version[\n                                                          number,\n                                                          stable,\n                                                          disk_template[\n                                                              id,\n                                                              name,\n                                                              permalink,\n                                                              operating_system[\n                                                                  id,\n                                                                  name\n                                                              ]\n                                                          ]\n                                                      ]\n                                                  ]"
+            }
+          }
+        ],
+        "potential_errors": [],
+        "scopes": [
+          "disks",
+          "disks:read"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/Disks/InfoEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "disk",
+            "description": "The disk to return",
+            "type": "CoreAPI/ArgumentSets/DiskLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "lookup_argument_set",
+      "value": {
+        "id": "CoreAPI/ArgumentSets/DiskLookup",
+        "name": "Disk Lookup",
+        "description": "Provides for disks to be looked up",
+        "arguments": [
+          {
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/ArgumentSets/DiskLookup/DiskNotFound"
+        ]
+      }
+    },
+    {
+      "type": "error",
+      "value": {
+        "id": "CoreAPI/ArgumentSets/DiskLookup/DiskNotFound",
+        "name": null,
+        "description": "No disk was found matching any of the criteria provided in the arguments",
+        "code": "disk_not_found",
+        "http_status": 404,
+        "fields": []
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/Disks/ListForVirtualMachineEndpoint",
+        "name": "List virtual machine disks",
+        "description": "Return a list of all disks for a given virtual machine",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/Disks/ListForVirtualMachineEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "virtual_machine",
+              "description": "The virtual machine to find disks for",
+              "type": "CoreAPI/ArgumentSets/VirtualMachineLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            },
+            {
+              "name": "page",
+              "description": null,
+              "type": "Apia/Scalars/Integer",
+              "required": false,
+              "array": false,
+              "default": "1"
+            },
+            {
+              "name": "per_page",
+              "description": null,
+              "type": "Apia/Scalars/Integer",
+              "required": false,
+              "array": false,
+              "default": "30"
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/Disks/ListForVirtualMachineEndpoint/PaginationField",
+            "name": "pagination",
+            "description": null,
+            "type": "Apia/PaginationObject",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Endpoints/Disks/ListForVirtualMachineEndpoint/DisksField",
+            "name": "disks",
+            "description": "The list of disks",
+            "type": "CoreAPI/Objects/VirtualMachineDisk",
+            "null": false,
+            "array": true,
+            "spec": {
+              "all": false,
+              "spec": "state,boot,attach_on_boot,disk[id,state,name,size_in_gb,created_at]"
+            }
+          }
+        ],
+        "potential_errors": [],
+        "scopes": [
+          "disks",
+          "disks:read"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/Disks/ListForVirtualMachineEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "virtual_machine",
+            "description": "The virtual machine to find disks for",
+            "type": "CoreAPI/ArgumentSets/VirtualMachineLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "page",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "required": false,
+            "array": false,
+            "default": "1"
+          },
+          {
+            "name": "per_page",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "required": false,
+            "array": false,
+            "default": "30"
+          }
+        ]
+      }
+    },
+    {
+      "type": "lookup_argument_set",
+      "value": {
+        "id": "CoreAPI/ArgumentSets/VirtualMachineLookup",
+        "name": "VirtualMachine Lookup",
+        "description": "Provides for virtual machines to be looked up",
+        "arguments": [
+          {
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "fqdn",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Errors/ObjectInTrash",
+          "CoreAPI/ArgumentSets/VirtualMachineLookup/VirtualMachineNotFound"
+        ]
+      }
+    },
+    {
+      "type": "error",
+      "value": {
+        "id": "CoreAPI/Errors/ObjectInTrash",
+        "name": null,
+        "description": "The object found is in the trash and therefore cannot be manipulated through the API. It should be restored in order to run this operation.",
+        "code": "object_in_trash",
+        "http_status": 406,
+        "fields": [
+          {
+            "id": "CoreAPI/Errors/ObjectInTrash/TrashObjectField",
+            "name": "trash_object",
+            "description": "The trash object for this item",
+            "type": "CoreAPI/Objects/TrashObject",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/TrashObject",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/TrashObject/IdField",
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/TrashObject/KeepUntilField",
+            "name": "keep_until",
+            "description": null,
+            "type": "Apia/Scalars/UnixTime",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/TrashObject/ObjectIdField",
+            "name": "object_id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/TrashObject/ObjectTypeField",
+            "name": "object_type",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "error",
+      "value": {
+        "id": "CoreAPI/ArgumentSets/VirtualMachineLookup/VirtualMachineNotFound",
+        "name": null,
+        "description": "No virtual machine was found matching any of the criteria provided in the arguments",
+        "code": "virtual_machine_not_found",
+        "http_status": 404,
+        "fields": []
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
         "id": "CoreAPI/Endpoints/DiskTemplates/ListEndpoint",
         "name": "List disk templates",
         "description": "Return a list of all disk templates owned by an organization",
@@ -2959,298 +5139,6 @@
         "code": "operating_system_not_found",
         "http_status": 404,
         "fields": []
-      }
-    },
-    {
-      "type": "object",
-      "value": {
-        "id": "CoreAPI/Objects/DiskTemplate",
-        "name": null,
-        "description": null,
-        "fields": [
-          {
-            "id": "CoreAPI/Objects/DiskTemplate/IdField",
-            "name": "id",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/DiskTemplate/NameField",
-            "name": "name",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/DiskTemplate/DescriptionField",
-            "name": "description",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": true,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/DiskTemplate/PermalinkField",
-            "name": "permalink",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/DiskTemplate/UniversalField",
-            "name": "universal",
-            "description": null,
-            "type": "Apia/Scalars/Boolean",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/DiskTemplate/LatestVersionField",
-            "name": "latest_version",
-            "description": null,
-            "type": "CoreAPI/Objects/DiskTemplateVersion",
-            "null": true,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/DiskTemplate/OperatingSystemField",
-            "name": "operating_system",
-            "description": null,
-            "type": "CoreAPI/Objects/OperatingSystem",
-            "null": true,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          }
-        ]
-      }
-    },
-    {
-      "type": "object",
-      "value": {
-        "id": "CoreAPI/Objects/DiskTemplateVersion",
-        "name": null,
-        "description": null,
-        "fields": [
-          {
-            "id": "CoreAPI/Objects/DiskTemplateVersion/IdField",
-            "name": "id",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/DiskTemplateVersion/NumberField",
-            "name": "number",
-            "description": null,
-            "type": "Apia/Scalars/Integer",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/DiskTemplateVersion/StableField",
-            "name": "stable",
-            "description": null,
-            "type": "Apia/Scalars/Boolean",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/DiskTemplateVersion/SizeInGbField",
-            "name": "size_in_gb",
-            "description": null,
-            "type": "Apia/Scalars/Integer",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/DiskTemplateVersion/DiskTemplateField",
-            "name": "disk_template",
-            "description": null,
-            "type": "CoreAPI/Objects/DiskTemplate",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          }
-        ]
-      }
-    },
-    {
-      "type": "object",
-      "value": {
-        "id": "CoreAPI/Objects/OperatingSystem",
-        "name": null,
-        "description": null,
-        "fields": [
-          {
-            "id": "CoreAPI/Objects/OperatingSystem/IdField",
-            "name": "id",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/OperatingSystem/NameField",
-            "name": "name",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/OperatingSystem/BadgeField",
-            "name": "badge",
-            "description": null,
-            "type": "CoreAPI/Objects/Attachment",
-            "null": true,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          }
-        ]
-      }
-    },
-    {
-      "type": "object",
-      "value": {
-        "id": "CoreAPI/Objects/Attachment",
-        "name": null,
-        "description": null,
-        "fields": [
-          {
-            "id": "CoreAPI/Objects/Attachment/UrlField",
-            "name": "url",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/Attachment/FileNameField",
-            "name": "file_name",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/Attachment/FileTypeField",
-            "name": "file_type",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/Attachment/FileSizeField",
-            "name": "file_size",
-            "description": null,
-            "type": "Apia/Scalars/Integer",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/Attachment/DigestField",
-            "name": "digest",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/Attachment/TokenField",
-            "name": "token",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          }
-        ]
       }
     },
     {
@@ -3890,890 +5778,6 @@
       }
     },
     {
-      "type": "object",
-      "value": {
-        "id": "CoreAPI/Objects/VirtualMachine",
-        "name": null,
-        "description": null,
-        "fields": [
-          {
-            "id": "CoreAPI/Objects/VirtualMachine/IdField",
-            "name": "id",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachine/NameField",
-            "name": "name",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachine/HostnameField",
-            "name": "hostname",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachine/FqdnField",
-            "name": "fqdn",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachine/DescriptionField",
-            "name": "description",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": true,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachine/CreatedAtField",
-            "name": "created_at",
-            "description": null,
-            "type": "Apia/Scalars/UnixTime",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachine/InitialRootPasswordField",
-            "name": "initial_root_password",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": true,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachine/StateField",
-            "name": "state",
-            "description": null,
-            "type": "CoreAPI/Objects/VirtualMachineStateEnum",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachine/ZoneField",
-            "name": "zone",
-            "description": null,
-            "type": "CoreAPI/Objects/Zone",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachine/OrganizationField",
-            "name": "organization",
-            "description": null,
-            "type": "CoreAPI/Objects/Organization",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachine/GroupField",
-            "name": "group",
-            "description": null,
-            "type": "CoreAPI/Objects/VirtualMachineGroup",
-            "null": true,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachine/PackageField",
-            "name": "package",
-            "description": null,
-            "type": "CoreAPI/Objects/VirtualMachinePackage",
-            "null": true,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachine/AttachedIsoField",
-            "name": "attached_iso",
-            "description": null,
-            "type": "CoreAPI/Objects/ISO",
-            "null": true,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachine/MemoryInGbField",
-            "name": "memory_in_gb",
-            "description": null,
-            "type": "Apia/Scalars/Integer",
-            "null": true,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachine/CpuCoresField",
-            "name": "cpu_cores",
-            "description": null,
-            "type": "Apia/Scalars/Integer",
-            "null": true,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachine/TagsField",
-            "name": "tags",
-            "description": null,
-            "type": "CoreAPI/Objects/Tag",
-            "null": false,
-            "array": true,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachine/TagNamesField",
-            "name": "tag_names",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": true,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachine/IpAddressesField",
-            "name": "ip_addresses",
-            "description": null,
-            "type": "CoreAPI/Objects/IPAddress",
-            "null": false,
-            "array": true,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          }
-        ]
-      }
-    },
-    {
-      "type": "enum",
-      "value": {
-        "id": "CoreAPI/Objects/VirtualMachineStateEnum",
-        "name": null,
-        "description": null,
-        "values": [
-          {
-            "name": "stopped",
-            "description": null
-          },
-          {
-            "name": "failed",
-            "description": null
-          },
-          {
-            "name": "started",
-            "description": null
-          },
-          {
-            "name": "starting",
-            "description": null
-          },
-          {
-            "name": "resetting",
-            "description": null
-          },
-          {
-            "name": "migrating",
-            "description": null
-          },
-          {
-            "name": "stopping",
-            "description": null
-          },
-          {
-            "name": "shutting_down",
-            "description": null
-          },
-          {
-            "name": "orphaned",
-            "description": null
-          }
-        ]
-      }
-    },
-    {
-      "type": "object",
-      "value": {
-        "id": "CoreAPI/Objects/Zone",
-        "name": null,
-        "description": null,
-        "fields": [
-          {
-            "id": "CoreAPI/Objects/Zone/IdField",
-            "name": "id",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/Zone/NameField",
-            "name": "name",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/Zone/PermalinkField",
-            "name": "permalink",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": true,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/Zone/DataCenterField",
-            "name": "data_center",
-            "description": null,
-            "type": "CoreAPI/Objects/DataCenter",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          }
-        ]
-      }
-    },
-    {
-      "type": "object",
-      "value": {
-        "id": "CoreAPI/Objects/VirtualMachineGroup",
-        "name": null,
-        "description": null,
-        "fields": [
-          {
-            "id": "CoreAPI/Objects/VirtualMachineGroup/IdField",
-            "name": "id",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachineGroup/NameField",
-            "name": "name",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachineGroup/SegregateField",
-            "name": "segregate",
-            "description": null,
-            "type": "Apia/Scalars/Boolean",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachineGroup/CreatedAtField",
-            "name": "created_at",
-            "description": null,
-            "type": "Apia/Scalars/UnixTime",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          }
-        ]
-      }
-    },
-    {
-      "type": "object",
-      "value": {
-        "id": "CoreAPI/Objects/VirtualMachinePackage",
-        "name": null,
-        "description": null,
-        "fields": [
-          {
-            "id": "CoreAPI/Objects/VirtualMachinePackage/IdField",
-            "name": "id",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachinePackage/NameField",
-            "name": "name",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachinePackage/PermalinkField",
-            "name": "permalink",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachinePackage/CpuCoresField",
-            "name": "cpu_cores",
-            "description": null,
-            "type": "Apia/Scalars/Integer",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachinePackage/Ipv4AddressesField",
-            "name": "ipv4_addresses",
-            "description": null,
-            "type": "Apia/Scalars/Integer",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachinePackage/MemoryInGbField",
-            "name": "memory_in_gb",
-            "description": null,
-            "type": "Apia/Scalars/Integer",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachinePackage/StorageInGbField",
-            "name": "storage_in_gb",
-            "description": null,
-            "type": "Apia/Scalars/Integer",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachinePackage/PrivacyField",
-            "name": "privacy",
-            "description": null,
-            "type": "CoreAPI/Objects/PrivacyTypesEnum",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/VirtualMachinePackage/IconField",
-            "name": "icon",
-            "description": null,
-            "type": "CoreAPI/Objects/Attachment",
-            "null": true,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          }
-        ]
-      }
-    },
-    {
-      "type": "enum",
-      "value": {
-        "id": "CoreAPI/Objects/PrivacyTypesEnum",
-        "name": null,
-        "description": null,
-        "values": [
-          {
-            "name": "public",
-            "description": "Public"
-          },
-          {
-            "name": "private",
-            "description": "Private"
-          }
-        ]
-      }
-    },
-    {
-      "type": "object",
-      "value": {
-        "id": "CoreAPI/Objects/ISO",
-        "name": null,
-        "description": null,
-        "fields": [
-          {
-            "id": "CoreAPI/Objects/ISO/IdField",
-            "name": "id",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/ISO/NameField",
-            "name": "name",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/ISO/OperatingSystemField",
-            "name": "operating_system",
-            "description": null,
-            "type": "CoreAPI/Objects/OperatingSystem",
-            "null": true,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          }
-        ]
-      }
-    },
-    {
-      "type": "object",
-      "value": {
-        "id": "CoreAPI/Objects/Tag",
-        "name": null,
-        "description": null,
-        "fields": [
-          {
-            "id": "CoreAPI/Objects/Tag/IdField",
-            "name": "id",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/Tag/NameField",
-            "name": "name",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/Tag/ColorField",
-            "name": "color",
-            "description": null,
-            "type": "CoreAPI/Objects/TagColorsEnum",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/Tag/CreatedAtField",
-            "name": "created_at",
-            "description": null,
-            "type": "Apia/Scalars/UnixTime",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          }
-        ]
-      }
-    },
-    {
-      "type": "enum",
-      "value": {
-        "id": "CoreAPI/Objects/TagColorsEnum",
-        "name": null,
-        "description": null,
-        "values": [
-          {
-            "name": "red",
-            "description": "Red"
-          },
-          {
-            "name": "pink",
-            "description": "Pink"
-          },
-          {
-            "name": "purple",
-            "description": "Purple"
-          },
-          {
-            "name": "dark_blue",
-            "description": "Dark blue"
-          },
-          {
-            "name": "green",
-            "description": "Green"
-          },
-          {
-            "name": "teal",
-            "description": "Teal"
-          },
-          {
-            "name": "aqua",
-            "description": "Aqua"
-          },
-          {
-            "name": "light_blue",
-            "description": "Light blue"
-          },
-          {
-            "name": "yellow",
-            "description": "Yellow"
-          },
-          {
-            "name": "orange",
-            "description": "Orange"
-          },
-          {
-            "name": "orange_red",
-            "description": "Orange red"
-          },
-          {
-            "name": "brown",
-            "description": "Brown"
-          },
-          {
-            "name": "black",
-            "description": "Black"
-          },
-          {
-            "name": "dark_gray",
-            "description": "Dark gray"
-          },
-          {
-            "name": "light_gray",
-            "description": "Light gray"
-          },
-          {
-            "name": "light_brown",
-            "description": "Light brown"
-          },
-          {
-            "name": "pastel_red",
-            "description": "Pastel red"
-          },
-          {
-            "name": "pastel_pink",
-            "description": "Pastel pink"
-          },
-          {
-            "name": "pastel_purple",
-            "description": "Pastel purple"
-          },
-          {
-            "name": "pastel_dark_blue",
-            "description": "Pastel dark blue"
-          },
-          {
-            "name": "pastel_green",
-            "description": "Pastel green"
-          },
-          {
-            "name": "pastel_teal",
-            "description": "Pastel teal"
-          },
-          {
-            "name": "pastel_aqua",
-            "description": "Pastel aqua"
-          },
-          {
-            "name": "pastel_light_blue",
-            "description": "Pastel light blue"
-          },
-          {
-            "name": "pastel_yellow",
-            "description": "Pastel yellow"
-          },
-          {
-            "name": "pastel_orange",
-            "description": "Pastel orange"
-          },
-          {
-            "name": "pastel_orange_red",
-            "description": "Pastel orange red"
-          },
-          {
-            "name": "pastel_brown",
-            "description": "Pastel brown"
-          },
-          {
-            "name": "pastel_black",
-            "description": "Pastel black"
-          },
-          {
-            "name": "pastel_dark_gray",
-            "description": "Pastel dark gray"
-          },
-          {
-            "name": "pastel_light_gray",
-            "description": "Pastel light gray"
-          },
-          {
-            "name": "pastel_light_brown",
-            "description": "Pastel light brown"
-          }
-        ]
-      }
-    },
-    {
-      "type": "object",
-      "value": {
-        "id": "CoreAPI/Objects/IPAddress",
-        "name": null,
-        "description": null,
-        "fields": [
-          {
-            "id": "CoreAPI/Objects/IPAddress/IdField",
-            "name": "id",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/IPAddress/AddressField",
-            "name": "address",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/IPAddress/ReverseDnsField",
-            "name": "reverse_dns",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/IPAddress/VipField",
-            "name": "vip",
-            "description": null,
-            "type": "Apia/Scalars/Boolean",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/IPAddress/LabelField",
-            "name": "label",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": true,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/IPAddress/AddressWithMaskField",
-            "name": "address_with_mask",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/IPAddress/NetworkField",
-            "name": "network",
-            "description": null,
-            "type": "CoreAPI/Objects/Network",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/IPAddress/AllocationIdField",
-            "name": "allocation_id",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": true,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/IPAddress/AllocationTypeField",
-            "name": "allocation_type",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": true,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          }
-        ]
-      }
-    },
-    {
       "type": "endpoint",
       "value": {
         "id": "CoreAPI/Endpoints/VirtualMachines/InfoEndpoint",
@@ -4833,129 +5837,6 @@
             "default": null
           }
         ]
-      }
-    },
-    {
-      "type": "lookup_argument_set",
-      "value": {
-        "id": "CoreAPI/ArgumentSets/VirtualMachineLookup",
-        "name": "VirtualMachine Lookup",
-        "description": "Provides for virtual machines to be looked up",
-        "arguments": [
-          {
-            "name": "id",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "required": false,
-            "array": false,
-            "default": null
-          },
-          {
-            "name": "fqdn",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "required": false,
-            "array": false,
-            "default": null
-          }
-        ],
-        "potential_errors": [
-          "CoreAPI/Errors/ObjectInTrash",
-          "CoreAPI/ArgumentSets/VirtualMachineLookup/VirtualMachineNotFound"
-        ]
-      }
-    },
-    {
-      "type": "error",
-      "value": {
-        "id": "CoreAPI/Errors/ObjectInTrash",
-        "name": null,
-        "description": "The object found is in the trash and therefore cannot be manipulated through the API. It should be restored in order to run this operation.",
-        "code": "object_in_trash",
-        "http_status": 406,
-        "fields": [
-          {
-            "id": "CoreAPI/Errors/ObjectInTrash/TrashObjectField",
-            "name": "trash_object",
-            "description": "The trash object for this item",
-            "type": "CoreAPI/Objects/TrashObject",
-            "null": true,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          }
-        ]
-      }
-    },
-    {
-      "type": "object",
-      "value": {
-        "id": "CoreAPI/Objects/TrashObject",
-        "name": null,
-        "description": null,
-        "fields": [
-          {
-            "id": "CoreAPI/Objects/TrashObject/IdField",
-            "name": "id",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/TrashObject/KeepUntilField",
-            "name": "keep_until",
-            "description": null,
-            "type": "Apia/Scalars/UnixTime",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/TrashObject/ObjectIdField",
-            "name": "object_id",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/TrashObject/ObjectTypeField",
-            "name": "object_type",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          }
-        ]
-      }
-    },
-    {
-      "type": "error",
-      "value": {
-        "id": "CoreAPI/ArgumentSets/VirtualMachineLookup/VirtualMachineNotFound",
-        "name": null,
-        "description": "No virtual machine was found matching any of the criteria provided in the arguments",
-        "code": "virtual_machine_not_found",
-        "http_status": 404,
-        "fields": []
       }
     },
     {
@@ -7346,7 +8227,7 @@
       "value": {
         "id": "CoreAPI/ArgumentSets/AuthSSHKeyLookup/SSHKeyNotFound",
         "name": null,
-        "description": "No SSH keys was found matching any of the criteria provided in the arguments",
+        "description": "No SSH key was found matching any of the criteria provided in the arguments",
         "code": "ssh_key_not_found",
         "http_status": 404,
         "fields": []
@@ -7550,6 +8431,18 @@
               "all": true,
               "spec": null
             }
+          },
+          {
+            "id": "CoreAPI/Objects/DiskBackupPolicy/AutoMoveToTrashAtField",
+            "name": "auto_move_to_trash_at",
+            "description": null,
+            "type": "Apia/Scalars/UnixTime",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
           }
         ]
       }
@@ -7576,52 +8469,6 @@
           {
             "name": "Disk",
             "type": "CoreAPI/Objects/Disk"
-          }
-        ]
-      }
-    },
-    {
-      "type": "object",
-      "value": {
-        "id": "CoreAPI/Objects/Disk",
-        "name": null,
-        "description": null,
-        "fields": [
-          {
-            "id": "CoreAPI/Objects/Disk/IdField",
-            "name": "id",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/Disk/NameField",
-            "name": "name",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          },
-          {
-            "id": "CoreAPI/Objects/Disk/SizeInGbField",
-            "name": "size_in_gb",
-            "description": null,
-            "type": "Apia/Scalars/Integer",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
           }
         ]
       }
@@ -7725,6 +8572,238 @@
     {
       "type": "endpoint",
       "value": {
+        "id": "CoreAPI/Endpoints/DiskBackupPolicies/ListForVirtualMachineEndpoint",
+        "name": "List disk backup policies for virtual machine",
+        "description": "Returns a list of all disk backup policies for a given virtual machine",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/DiskBackupPolicies/ListForVirtualMachineEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "virtual_machine",
+              "description": "The virtual machine to return disk backup policies for",
+              "type": "CoreAPI/ArgumentSets/VirtualMachineLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            },
+            {
+              "name": "include_disks",
+              "description": "If true, the returned list will include backup policies owned by disks assigned to this virtual machine in addition to those that belong to the whole virtual machine",
+              "type": "Apia/Scalars/Boolean",
+              "required": false,
+              "array": false,
+              "default": null
+            },
+            {
+              "name": "page",
+              "description": null,
+              "type": "Apia/Scalars/Integer",
+              "required": false,
+              "array": false,
+              "default": "1"
+            },
+            {
+              "name": "per_page",
+              "description": null,
+              "type": "Apia/Scalars/Integer",
+              "required": false,
+              "array": false,
+              "default": "30"
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/DiskBackupPolicies/ListForVirtualMachineEndpoint/PaginationField",
+            "name": "pagination",
+            "description": null,
+            "type": "Apia/PaginationObject",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Endpoints/DiskBackupPolicies/ListForVirtualMachineEndpoint/DiskBackupPoliciesField",
+            "name": "disk_backup_policies",
+            "description": "The disk backup policies for the provided virtual machine",
+            "type": "CoreAPI/Objects/DiskBackupPolicy",
+            "null": false,
+            "array": true,
+            "spec": {
+              "all": false,
+              "spec": "id,retention,total_size,target[id,name],schedule[interval,next_invocation_at]"
+            }
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Errors/PermissionDenied"
+        ],
+        "scopes": [
+          "disk_backup_policies",
+          "disk_backup_policies:read"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/DiskBackupPolicies/ListForVirtualMachineEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "virtual_machine",
+            "description": "The virtual machine to return disk backup policies for",
+            "type": "CoreAPI/ArgumentSets/VirtualMachineLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "include_disks",
+            "description": "If true, the returned list will include backup policies owned by disks assigned to this virtual machine in addition to those that belong to the whole virtual machine",
+            "type": "Apia/Scalars/Boolean",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "page",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "required": false,
+            "array": false,
+            "default": "1"
+          },
+          {
+            "name": "per_page",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "required": false,
+            "array": false,
+            "default": "30"
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/DiskBackupPolicies/ListForDiskEndpoint",
+        "name": "List disk backup policies for disk",
+        "description": "Returns a list of all disk backup policies for a given disk",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/DiskBackupPolicies/ListForDiskEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "disk",
+              "description": "The disk to return disk backup policies for",
+              "type": "CoreAPI/ArgumentSets/DiskLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            },
+            {
+              "name": "page",
+              "description": null,
+              "type": "Apia/Scalars/Integer",
+              "required": false,
+              "array": false,
+              "default": "1"
+            },
+            {
+              "name": "per_page",
+              "description": null,
+              "type": "Apia/Scalars/Integer",
+              "required": false,
+              "array": false,
+              "default": "30"
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/DiskBackupPolicies/ListForDiskEndpoint/PaginationField",
+            "name": "pagination",
+            "description": null,
+            "type": "Apia/PaginationObject",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Endpoints/DiskBackupPolicies/ListForDiskEndpoint/DiskBackupPoliciesField",
+            "name": "disk_backup_policies",
+            "description": "The disk backup policies for the provided disk",
+            "type": "CoreAPI/Objects/DiskBackupPolicy",
+            "null": false,
+            "array": true,
+            "spec": {
+              "all": false,
+              "spec": "id,retention,total_size,target[id,name],schedule[interval,next_invocation_at]"
+            }
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Errors/PermissionDenied"
+        ],
+        "scopes": [
+          "disk_backup_policies",
+          "disk_backup_policies:read"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/DiskBackupPolicies/ListForDiskEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "disk",
+            "description": "The disk to return disk backup policies for",
+            "type": "CoreAPI/ArgumentSets/DiskLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "page",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "required": false,
+            "array": false,
+            "default": "1"
+          },
+          {
+            "name": "per_page",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "required": false,
+            "array": false,
+            "default": "30"
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
         "id": "CoreAPI/Endpoints/DiskBackupPolicies/InfoEndpoint",
         "name": "Get disk backup policy",
         "description": "Returns information about a specific disk backup policy",
@@ -7811,7 +8890,7 @@
       "value": {
         "id": "CoreAPI/ArgumentSets/DiskBackupPolicyLookup/DiskBackupPolicyNotFound",
         "name": null,
-        "description": "No disk backup policies was found matching any of the criteria provided in the arguments",
+        "description": "No disk backup policy was found matching any of the criteria provided in the arguments",
         "code": "disk_backup_policy_not_found",
         "http_status": 404,
         "fields": []
@@ -7878,6 +8957,97 @@
             "default": null
           }
         ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/DiskBackupPolicies/ScheduleDeleteEndpoint",
+        "name": "Schedule delete disk backup policy",
+        "description": "Schedules a disk backup policy to be moved to the trash at a specific time. The backup policy will continue to function as normal until this time is reached.",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/DiskBackupPolicies/ScheduleDeleteEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "disk_backup_policy",
+              "description": "The disk backup policy to move to the trash",
+              "type": "CoreAPI/ArgumentSets/DiskBackupPolicyLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            },
+            {
+              "name": "timestamp",
+              "description": "The time the disk backup policy will be moved to the trash automatically.",
+              "type": "Apia/Scalars/UnixTime",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/DiskBackupPolicies/ScheduleDeleteEndpoint/DiskBackupPolicyField",
+            "name": "disk_backup_policy",
+            "description": "The disk backup policy that has been scheduled for deletion",
+            "type": "CoreAPI/Objects/DiskBackupPolicy",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": false,
+              "spec": "id,auto_move_to_trash_at,target[id]"
+            }
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Errors/PermissionDenied",
+          "CoreAPI/Endpoints/DiskBackupPolicies/ScheduleDeleteEndpoint/InvalidTimestamp"
+        ],
+        "scopes": [
+          "disk_backup_policies"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/DiskBackupPolicies/ScheduleDeleteEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "disk_backup_policy",
+            "description": "The disk backup policy to move to the trash",
+            "type": "CoreAPI/ArgumentSets/DiskBackupPolicyLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "timestamp",
+            "description": "The time the disk backup policy will be moved to the trash automatically.",
+            "type": "Apia/Scalars/UnixTime",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "error",
+      "value": {
+        "id": "CoreAPI/Endpoints/DiskBackupPolicies/ScheduleDeleteEndpoint/InvalidTimestamp",
+        "name": null,
+        "description": "Timestamp must be at least 5 minutes in the future. If you want to delete something immediately, you use can use the delete endpoint.",
+        "code": "invalid_timestamp",
+        "http_status": 400,
+        "fields": []
       }
     },
     {
@@ -8186,38 +9356,6 @@
             "default": null
           }
         ]
-      }
-    },
-    {
-      "type": "lookup_argument_set",
-      "value": {
-        "id": "CoreAPI/ArgumentSets/DiskLookup",
-        "name": "Disk Lookup",
-        "description": "Provides for disks to be looked up",
-        "arguments": [
-          {
-            "name": "id",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "required": false,
-            "array": false,
-            "default": null
-          }
-        ],
-        "potential_errors": [
-          "CoreAPI/ArgumentSets/DiskLookup/DiskNotFound"
-        ]
-      }
-    },
-    {
-      "type": "error",
-      "value": {
-        "id": "CoreAPI/ArgumentSets/DiskLookup/DiskNotFound",
-        "name": null,
-        "description": "No disks was found matching any of the criteria provided in the arguments",
-        "code": "disk_not_found",
-        "http_status": 404,
-        "fields": []
       }
     },
     {
@@ -11571,6 +12709,14 @@
           },
           {
             "name": "ttl",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "priority",
             "description": null,
             "type": "Apia/Scalars/Integer",
             "required": false,
@@ -17401,7 +18547,7 @@
       "value": {
         "id": "CoreAPI/ArgumentSets/TagLookup/TagNotFound",
         "name": null,
-        "description": "No tags was found matching any of the criteria provided in the arguments",
+        "description": "No tag was found matching any of the criteria provided in the arguments",
         "code": "tag_not_found",
         "http_status": 404,
         "fields": []
@@ -18759,7 +19905,7 @@
       "value": {
         "id": "CoreAPI/ArgumentSets/CountryLookup/CountryNotFound",
         "name": null,
-        "description": "No countries was found matching any of the criteria provided in the arguments",
+        "description": "No country was found matching any of the criteria provided in the arguments",
         "code": "country_not_found",
         "http_status": 404,
         "fields": []
@@ -19139,7 +20285,7 @@
       "value": {
         "id": "CoreAPI/ArgumentSets/CurrencyLookup/CurrencyNotFound",
         "name": null,
-        "description": "No currencies was found matching any of the criteria provided in the arguments",
+        "description": "No currency was found matching any of the criteria provided in the arguments",
         "code": "currency_not_found",
         "http_status": 404,
         "fields": []

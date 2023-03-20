@@ -41,7 +41,7 @@ func CustomJSONMarshaling(
 	}
 
 	g := golden.Get(t)
-	assert.JSONEq(t, string(g), buf.String(), "encoding does not match golden")
+	assert.Equal(t, string(g), buf.String(), "encoding does not match golden")
 
 	want := decoded
 	if isNil(want) {

@@ -28,18 +28,21 @@ var logger = hclog.New(&hclog.LoggerOptions{
 	Color:      hclog.AutoColor,
 })
 
-const defaultSchemaTemplate = "https://api.katapult.io/" +
-	"{{ .Name }}/{{ .Version }}/schema"
-const defaultFileNameTemplate = "{{ .Name }}/{{ .Version }}.json"
+const (
+	defaultBaseURL          = "https://api.katapult.io"
+	defaultSchemaTemplate   = "{{ .BaseURL }}/{{ .Name }}/{{ .Version }}/schema"
+	defaultFileNameTemplate = "{{ .Name }}/{{ .Version }}.json"
+)
 
 type configuration struct {
 	Name             string
 	Version          string
+	BaseURL          string
 	outputDir        string
-	update           bool
+	forceUpdate      bool
 	urlTemplate      string
 	fileNameTemplate string
-	LogLevel         string
+	logLevel         string
 }
 
 func configure() (*configuration, *flag.FlagSet, error) {
@@ -69,23 +72,29 @@ func configure() (*configuration, *flag.FlagSet, error) {
 		"name of schema to fetch (required)")
 	fs.StringVar(&config.Version, "v", "",
 		"version of schema to fetch (required)")
+	fs.StringVar(&config.BaseURL, "u", defaultBaseURL,
+		"base URL of Katapult API to fetch schema from")
 	fs.StringVar(&config.outputDir, "o", wd,
 		"output directory to write schema files to")
-	fs.BoolVar(&config.update, "u", false, "force update existing file")
+	fs.BoolVar(&config.forceUpdate, "F", false, "force update existing file")
 	fs.StringVar(&config.urlTemplate, "s", defaultSchemaTemplate,
 		"schema URL template")
 	fs.StringVar(&config.fileNameTemplate, "f", defaultFileNameTemplate,
 		"schema filename template")
-	fs.StringVar(&config.LogLevel, "l", "info", "log level")
+	fs.StringVar(&config.logLevel, "l", "info", "log level")
 
 	err = fs.Parse(os.Args[1:])
 	if err != nil {
 		return nil, nil, err
 	}
 
-	switch strings.ToLower(os.Getenv("SCHEMA_UPDATE")) {
+	switch strings.ToLower(os.Getenv("SCHEMA_FORCE_UPDATE")) {
 	case "yes", "true", "1":
-		config.update = true
+		config.forceUpdate = true
+	}
+
+	if v := os.Getenv("SCHEMA_BASE_URL"); v != "" {
+		config.BaseURL = v
 	}
 
 	return config, fs, nil
@@ -105,9 +114,9 @@ func mainE() error {
 		return err
 	}
 
-	logLevel := hclog.LevelFromString(config.LogLevel)
+	logLevel := hclog.LevelFromString(config.logLevel)
 	if logLevel == hclog.NoLevel {
-		return fmt.Errorf("invalid log level \"%s\"", config.LogLevel)
+		return fmt.Errorf("invalid log level \"%s\"", config.logLevel)
 	}
 	logger.SetLevel(logLevel)
 
@@ -134,9 +143,9 @@ func mainE() error {
 
 	targetFile := filepath.Join(config.outputDir, filename)
 
-	if !config.update && fileExists(targetFile) {
+	if !config.forceUpdate && fileExists(targetFile) {
 		logger.Info("no action: schema file already exists, "+
-			"set -u or SCHEMA_UPDATE env var to update",
+			"set -u or SCHEMA_FORCE_UPDATE env var to update",
 			"file", targetFile,
 		)
 
@@ -188,8 +197,6 @@ func fileExists(path string) bool {
 }
 
 func getSchema(u string) ([]byte, error) {
-	// Check for local cache file to avoid repeatedly downloading schema.
-
 	req, err := http.NewRequestWithContext(context.Background(), "GET", u, nil)
 	if err != nil {
 		return nil, err
