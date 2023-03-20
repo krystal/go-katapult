@@ -1,0 +1,13 @@
+{
+  "pagination": {
+    "current_page": 344
+  },
+  "file_storage_volumes": [
+    {
+      "id": "id2"
+    }
+  ],
+  "file_storage_volume": {
+    "id": "id1"
+  }
+}

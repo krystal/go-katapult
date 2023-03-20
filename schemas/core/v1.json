@@ -483,6 +483,41 @@
               "group": "security_groups.rules"
             },
             {
+              "path": "organizations/:organization/file_storage_volumes",
+              "request_method": "GET",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/FileStorageVolumes/ListEndpoint",
+              "group": "file_storage_volumes"
+            },
+            {
+              "path": "file_storage_volumes/:file_storage_volume",
+              "request_method": "GET",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/FileStorageVolumes/InfoEndpoint",
+              "group": "file_storage_volumes"
+            },
+            {
+              "path": "organizations/:organization/file_storage_volumes",
+              "request_method": "POST",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/FileStorageVolumes/CreateEndpoint",
+              "group": "file_storage_volumes"
+            },
+            {
+              "path": "file_storage_volumes/:file_storage_volume",
+              "request_method": "PATCH",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/FileStorageVolumes/UpdateEndpoint",
+              "group": "file_storage_volumes"
+            },
+            {
+              "path": "file_storage_volumes/:file_storage_volume",
+              "request_method": "DELETE",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/FileStorageVolumes/DeleteEndpoint",
+              "group": "file_storage_volumes"
+            },
+            {
               "path": "organizations/:organization/available_networks",
               "request_method": "GET",
               "controller": null,
@@ -989,6 +1024,12 @@
               ]
             },
             {
+              "id": "file_storage_volumes",
+              "name": "File storage volumes",
+              "description": null,
+              "groups": []
+            },
+            {
               "id": "networks",
               "name": "Networks",
               "description": null,
@@ -1123,6 +1164,14 @@
             "description": "Read-only access to disk templates"
           },
           {
+            "name": "file_storage_volumes",
+            "description": "Manage security groups"
+          },
+          {
+            "name": "file_storage_volumes:read",
+            "description": "Read-only access to security groups"
+          },
+          {
             "name": "ip_addresses",
             "description": "Manage IP addresses"
           },
@@ -1137,6 +1186,14 @@
           {
             "name": "managed_organizations",
             "description": "Manage managed organizations"
+          },
+          {
+            "name": "security_groups",
+            "description": "Manage security groups"
+          },
+          {
+            "name": "security_groups:read",
+            "description": "Read-only access to security groups"
           },
           {
             "name": "tags",
@@ -14524,6 +14581,602 @@
             "name": "security_group_rule",
             "description": "The security group rule to destroy",
             "type": "CoreAPI/ArgumentSets/SecurityGroupRuleLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/FileStorageVolumes/ListEndpoint",
+        "name": "List file storage volumes",
+        "description": "Returns a list of all file storage volumes for a given organization",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/FileStorageVolumes/ListEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "organization",
+              "description": "The organization to return all file storage volumes for.",
+              "type": "CoreAPI/ArgumentSets/OrganizationLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            },
+            {
+              "name": "page",
+              "description": null,
+              "type": "Apia/Scalars/Integer",
+              "required": false,
+              "array": false,
+              "default": "1"
+            },
+            {
+              "name": "per_page",
+              "description": null,
+              "type": "Apia/Scalars/Integer",
+              "required": false,
+              "array": false,
+              "default": "30"
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/FileStorageVolumes/ListEndpoint/PaginationField",
+            "name": "pagination",
+            "description": null,
+            "type": "Apia/PaginationObject",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Endpoints/FileStorageVolumes/ListEndpoint/FileStorageVolumesField",
+            "name": "file_storage_volumes",
+            "description": "A list of all file storage volumes for the given organization.",
+            "type": "CoreAPI/Objects/FileStorageVolume",
+            "null": false,
+            "array": true,
+            "spec": {
+              "all": false,
+              "spec": "*,data_center[id,name,permalink]"
+            }
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Errors/PermissionDenied"
+        ],
+        "scopes": [
+          "file_storage_volumes",
+          "file_storage_volumes:read"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/FileStorageVolumes/ListEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "organization",
+            "description": "The organization to return all file storage volumes for.",
+            "type": "CoreAPI/ArgumentSets/OrganizationLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "page",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "required": false,
+            "array": false,
+            "default": "1"
+          },
+          {
+            "name": "per_page",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "required": false,
+            "array": false,
+            "default": "30"
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/FileStorageVolume",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/FileStorageVolume/IdField",
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/FileStorageVolume/NameField",
+            "name": "name",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/FileStorageVolume/DataCenterField",
+            "name": "data_center",
+            "description": null,
+            "type": "CoreAPI/Objects/DataCenter",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/FileStorageVolume/AssociationsField",
+            "name": "associations",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": true,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/FileStorageVolume/StateField",
+            "name": "state",
+            "description": null,
+            "type": "CoreAPI/Objects/FileStorageVolumeStateEnum",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/FileStorageVolume/NfsLocationField",
+            "name": "nfs_location",
+            "description": "The NFS location of where to mount the volume from.",
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/FileStorageVolume/SizeField",
+            "name": "size",
+            "description": "The size of the volume in bytes.",
+            "type": "Apia/Scalars/Integer",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "enum",
+      "value": {
+        "id": "CoreAPI/Objects/FileStorageVolumeStateEnum",
+        "name": null,
+        "description": null,
+        "values": [
+          {
+            "name": "pending",
+            "description": null
+          },
+          {
+            "name": "failed",
+            "description": null
+          },
+          {
+            "name": "ready",
+            "description": null
+          },
+          {
+            "name": "configuring",
+            "description": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/FileStorageVolumes/InfoEndpoint",
+        "name": "Get file storage volume",
+        "description": "Returns details for a file storage volume.",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/FileStorageVolumes/InfoEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "file_storage_volume",
+              "description": "The file storage volume to return.",
+              "type": "CoreAPI/ArgumentSets/FileStorageVolumeLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/FileStorageVolumes/InfoEndpoint/FileStorageVolumeField",
+            "name": "file_storage_volume",
+            "description": "The file storage volume.",
+            "type": "CoreAPI/Objects/FileStorageVolume",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": false,
+              "spec": "*,data_center[id,name,permalink]"
+            }
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Errors/PermissionDenied"
+        ],
+        "scopes": [
+          "file_storage_volumes",
+          "file_storage_volumes:read"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/FileStorageVolumes/InfoEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "file_storage_volume",
+            "description": "The file storage volume to return.",
+            "type": "CoreAPI/ArgumentSets/FileStorageVolumeLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "lookup_argument_set",
+      "value": {
+        "id": "CoreAPI/ArgumentSets/FileStorageVolumeLookup",
+        "name": "File Storage Volume Lookup",
+        "description": "Provides for file storage volumes to be looked up.",
+        "arguments": [
+          {
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Errors/ObjectInTrash",
+          "CoreAPI/ArgumentSets/FileStorageVolumeLookup/FileStorageVolumeNotFound"
+        ]
+      }
+    },
+    {
+      "type": "error",
+      "value": {
+        "id": "CoreAPI/ArgumentSets/FileStorageVolumeLookup/FileStorageVolumeNotFound",
+        "name": null,
+        "description": "No file storage volume was found matching any of the criteria provided in the arguments.",
+        "code": "file_storage_volume_not_found",
+        "http_status": 404,
+        "fields": []
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/FileStorageVolumes/CreateEndpoint",
+        "name": "Create file storage volume",
+        "description": "Create a new file storage volume for a given organization.",
+        "http_status": 201,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/FileStorageVolumes/CreateEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "organization",
+              "description": "The organization to create the file storage volume for.",
+              "type": "CoreAPI/ArgumentSets/OrganizationLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            },
+            {
+              "name": "properties",
+              "description": "The properties for the new file storage volume.",
+              "type": "CoreAPI/ArgumentSets/FileStorageVolumeArguments",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/FileStorageVolumes/CreateEndpoint/FileStorageVolumeField",
+            "name": "file_storage_volume",
+            "description": "The file storage volume.",
+            "type": "CoreAPI/Objects/FileStorageVolume",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": false,
+              "spec": "*,data_center[id,name,permalink]"
+            }
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Errors/ValidationError",
+          "CoreAPI/Errors/PermissionDenied",
+          "CoreAPI/Errors/ResourceCreationRestricted"
+        ],
+        "scopes": [
+          "file_storage_volumes"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/FileStorageVolumes/CreateEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "organization",
+            "description": "The organization to create the file storage volume for.",
+            "type": "CoreAPI/ArgumentSets/OrganizationLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "properties",
+            "description": "The properties for the new file storage volume.",
+            "type": "CoreAPI/ArgumentSets/FileStorageVolumeArguments",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/ArgumentSets/FileStorageVolumeArguments",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "name",
+            "description": "Unique name to help identify the volume.",
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "data_center",
+            "description": "The data center for the file storage volume. Cannot be changed on existing volumes.",
+            "type": "CoreAPI/ArgumentSets/DataCenterLookup",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "associations",
+            "description": "The virtual machine IDs which can access this volume.",
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": true,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/FileStorageVolumes/UpdateEndpoint",
+        "name": "Update file storage volume",
+        "description": "Update a file storage volume with new properties.",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/FileStorageVolumes/UpdateEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "file_storage_volume",
+              "description": "The file storage volume to update.",
+              "type": "CoreAPI/ArgumentSets/FileStorageVolumeLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            },
+            {
+              "name": "properties",
+              "description": "The properties for the new file storage volume.",
+              "type": "CoreAPI/ArgumentSets/FileStorageVolumeArguments",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/FileStorageVolumes/UpdateEndpoint/FileStorageVolumeField",
+            "name": "file_storage_volume",
+            "description": "The file storage volume.",
+            "type": "CoreAPI/Objects/FileStorageVolume",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": false,
+              "spec": "*,data_center[id,name,permalink]"
+            }
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Errors/ValidationError",
+          "CoreAPI/Errors/PermissionDenied"
+        ],
+        "scopes": [
+          "file_storage_volumes"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/FileStorageVolumes/UpdateEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "file_storage_volume",
+            "description": "The file storage volume to update.",
+            "type": "CoreAPI/ArgumentSets/FileStorageVolumeLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "properties",
+            "description": "The properties for the new file storage volume.",
+            "type": "CoreAPI/ArgumentSets/FileStorageVolumeArguments",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/FileStorageVolumes/DeleteEndpoint",
+        "name": "Delete file storage volume",
+        "description": "Delete a file storage volume.",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/FileStorageVolumes/DeleteEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "file_storage_volume",
+              "description": "The file storage volume to destroy.",
+              "type": "CoreAPI/ArgumentSets/FileStorageVolumeLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/FileStorageVolumes/DeleteEndpoint/TrashObjectField",
+            "name": "trash_object",
+            "description": null,
+            "type": "CoreAPI/Objects/TrashObject",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Endpoints/FileStorageVolumes/DeleteEndpoint/FileStorageVolumeField",
+            "name": "file_storage_volume",
+            "description": "The file storage volume that has been destroyed.",
+            "type": "CoreAPI/Objects/FileStorageVolume",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": false,
+              "spec": "*,data_center[id,name,permalink]"
+            }
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Errors/ValidationError",
+          "CoreAPI/Errors/PermissionDenied"
+        ],
+        "scopes": [
+          "file_storage_volumes"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/FileStorageVolumes/DeleteEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "file_storage_volume",
+            "description": "The file storage volume to destroy.",
+            "type": "CoreAPI/ArgumentSets/FileStorageVolumeLookup",
             "required": true,
             "array": false,
             "default": null
