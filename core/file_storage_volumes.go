@@ -8,13 +8,13 @@ import (
 )
 
 type FileStorageVolume struct {
-	ID           string      `json:"id,omitempty"`
-	Name         string      `json:"name,omitempty"`
-	DataCenter   *DataCenter `json:"data_center,omitempty"`
-	Associations []string    `json:"associations,omitempty"`
-	State        string      `json:"state,omitempty"`
-	NFSLocation  string      `json:"nfs_location,omitempty"`
-	Size         int64       `json:"size,omitempty"`
+	ID           string                 `json:"id,omitempty"`
+	Name         string                 `json:"name,omitempty"`
+	DataCenter   *DataCenter            `json:"data_center,omitempty"`
+	Associations []string               `json:"associations,omitempty"`
+	State        FileStorageVolumeState `json:"state,omitempty"`
+	NFSLocation  string                 `json:"nfs_location,omitempty"`
+	Size         int64                  `json:"size,omitempty"`
 }
 
 func (fsv *FileStorageVolume) Ref() FileStorageVolumeRef {
@@ -28,6 +28,15 @@ type FileStorageVolumeRef struct {
 func (fsr FileStorageVolumeRef) queryValues() *url.Values {
 	return &url.Values{"file_storage_volume[id]": []string{fsr.ID}}
 }
+
+type FileStorageVolumeState string
+
+const (
+	FileStorageVolumePending     FileStorageVolumeState = "pending"
+	FileStorageVolumeFailed      FileStorageVolumeState = "failed"
+	FileStorageVolumeReady       FileStorageVolumeState = "ready"
+	FileStorageVolumeConfiguring FileStorageVolumeState = "configuring"
+)
 
 type FileStorageVolumesClient struct {
 	client   RequestMaker
