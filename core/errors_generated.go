@@ -23,6 +23,7 @@ var (
 	ErrDiskNotFound                               = fmt.Errorf("%w: disk_not_found", katapult.ErrResourceNotFound)
 	ErrDiskTemplateNotFound                       = fmt.Errorf("%w: disk_template_not_found", katapult.ErrResourceNotFound)
 	ErrDiskTemplateVersionNotFound                = fmt.Errorf("%w: disk_template_version_not_found", katapult.ErrResourceNotFound)
+	ErrFileStorageVolumeNotFound                  = fmt.Errorf("%w: file_storage_volume_not_found", katapult.ErrResourceNotFound)
 	ErrFlexibleResourcesUnavailableToOrganization = fmt.Errorf("%w: flexible_resources_unavailable_to_organization", katapult.ErrForbidden)
 	ErrIPAddressNotFound                          = fmt.Errorf("%w: ip_address_not_found", katapult.ErrResourceNotFound)
 	ErrIPAlreadyAllocated                         = fmt.Errorf("%w: ip_already_allocated", katapult.ErrUnprocessableEntity)
@@ -286,6 +287,22 @@ func NewDiskTemplateVersionNotFoundError(theError *katapult.ResponseError) *Disk
 		CommonError: katapult.NewCommonError(
 			ErrDiskTemplateVersionNotFound,
 			"disk_template_version_not_found",
+			theError.Description,
+		),
+	}
+}
+
+// FileStorageVolumeNotFoundError:
+// No file storage volume was found matching any of the criteria provided in the arguments.
+type FileStorageVolumeNotFoundError struct {
+	katapult.CommonError
+}
+
+func NewFileStorageVolumeNotFoundError(theError *katapult.ResponseError) *FileStorageVolumeNotFoundError {
+	return &FileStorageVolumeNotFoundError{
+		CommonError: katapult.NewCommonError(
+			ErrFileStorageVolumeNotFound,
+			"file_storage_volume_not_found",
 			theError.Description,
 		),
 	}
@@ -1176,6 +1193,8 @@ func castResponseError(theError *katapult.ResponseError) error {
 		return NewDiskTemplateNotFoundError(theError)
 	case "disk_template_version_not_found":
 		return NewDiskTemplateVersionNotFoundError(theError)
+	case "file_storage_volume_not_found":
+		return NewFileStorageVolumeNotFoundError(theError)
 	case "flexible_resources_unavailable_to_organization":
 		return NewFlexibleResourcesUnavailableToOrganizationError(theError)
 	case "ip_address_not_found":
