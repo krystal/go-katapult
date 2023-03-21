@@ -1,5 +1,5 @@
 {
-  "security_group": {
+  "file_storage_volume": {
     "id": "sg_3uXbmANw4sQiF1J3"
   },
   "properties": {

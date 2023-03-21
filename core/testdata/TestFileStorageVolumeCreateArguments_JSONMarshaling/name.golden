@@ -1,3 +1,4 @@
 {
-  "name": "volume_name"
+  "name": "volume_name",
+  "data_center": {}
 }

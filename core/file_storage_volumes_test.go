@@ -607,7 +607,7 @@ func TestFileStorageVolumeCreateArguments_JSONMarshaling(t *testing.T) {
 		{
 			name: "data_center",
 			obj: &FileStorageVolumeCreateArguments{
-				DataCenter: &DataCenterRef{ID: "dc1"},
+				DataCenter: DataCenterRef{ID: "dc1"},
 			},
 		},
 		{
@@ -620,7 +620,7 @@ func TestFileStorageVolumeCreateArguments_JSONMarshaling(t *testing.T) {
 			name: "full",
 			obj: &FileStorageVolumeCreateArguments{
 				Name:         "volume_name",
-				DataCenter:   &DataCenterRef{ID: "dc1"},
+				DataCenter:   DataCenterRef{ID: "dc1"},
 				Associations: []string{"assoc1", "assoc2"},
 			},
 		},
@@ -647,7 +647,7 @@ func Test_fileStorageVolumeCreateRequest_JSONMarshaling(t *testing.T) {
 				Organization: OrganizationRef{ID: "org1"},
 				Properties: &FileStorageVolumeCreateArguments{
 					Name:         "created",
-					DataCenter:   &DataCenterRef{ID: "dc1"},
+					DataCenter:   DataCenterRef{ID: "dc1"},
 					Associations: []string{"assoc1", "assoc2"},
 				},
 			},
@@ -685,7 +685,7 @@ func TestFileStorageVolumesClient_Create(t *testing.T) {
 				ref: OrganizationRef{ID: "org_rTya1qPVE3WlT3yf"},
 				args: &FileStorageVolumeCreateArguments{
 					Name: "cache data",
-					DataCenter: &DataCenterRef{
+					DataCenter: DataCenterRef{
 						ID: "dc_W5WpI8fRyV4KGx77",
 					},
 					Associations: []string{"vm_vkbs4CqMOLPja4OK"},
@@ -718,7 +718,7 @@ func TestFileStorageVolumesClient_Create(t *testing.T) {
 					Organization: OrganizationRef{ID: "org_rTya1qPVE3WlT3yf"},
 					Properties: &FileStorageVolumeCreateArguments{
 						Name: "cache data",
-						DataCenter: &DataCenterRef{
+						DataCenter: DataCenterRef{
 							ID: "dc_W5WpI8fRyV4KGx77",
 						},
 						Associations: []string{"vm_vkbs4CqMOLPja4OK"},
@@ -830,14 +830,14 @@ func TestFileStorageVolumeUpdateArguments_JSONMarshaling(t *testing.T) {
 		{
 			name: "associations",
 			obj: &FileStorageVolumeUpdateArguments{
-				Associations: []string{"assoc1", "assoc2"},
+				Associations: &[]string{"assoc1", "assoc2"},
 			},
 		},
 		{
 			name: "full",
 			obj: &FileStorageVolumeUpdateArguments{
 				Name:         "volume_name",
-				Associations: []string{"assoc1", "assoc2"},
+				Associations: &[]string{"assoc1", "assoc2"},
 			},
 		},
 	}
@@ -865,7 +865,7 @@ func Test_fileStorageVolumeUpdateRequest_JSONMarshaling(t *testing.T) {
 				},
 				Properties: &FileStorageVolumeUpdateArguments{
 					Name:         "updated",
-					Associations: []string{"assoc1", "assoc2"},
+					Associations: &[]string{"assoc1", "assoc2"},
 				},
 			},
 		},
@@ -902,7 +902,7 @@ func TestFileStorageVolumesClient_Update(t *testing.T) {
 				ref: FileStorageVolumeRef{ID: "fsv_JtyrhImi5jBjn5ig"},
 				args: &FileStorageVolumeUpdateArguments{
 					Name:         "updated volume name",
-					Associations: []string{"vm_riYl1387Fdt2bcMA"},
+					Associations: &[]string{"vm_riYl1387Fdt2bcMA"},
 				},
 			},
 			resp: &katapult.Response{
@@ -930,7 +930,7 @@ func TestFileStorageVolumesClient_Update(t *testing.T) {
 					},
 					Properties: &FileStorageVolumeUpdateArguments{
 						Name:         "updated volume name",
-						Associations: []string{"vm_riYl1387Fdt2bcMA"},
+						Associations: &[]string{"vm_riYl1387Fdt2bcMA"},
 					},
 				},
 			},
@@ -975,7 +975,7 @@ func TestFileStorageVolumesClient_Update(t *testing.T) {
 				ref: FileStorageVolumeRef{ID: "fsv_JtyrhImi5jBjn5ig"},
 				args: &FileStorageVolumeUpdateArguments{
 					Name:         "",
-					Associations: []string{},
+					Associations: &[]string{},
 				},
 			},
 			resp: &katapult.Response{
@@ -998,7 +998,7 @@ func TestFileStorageVolumesClient_Update(t *testing.T) {
 				ref: FileStorageVolumeRef{ID: "fsv_JtyrhImi5jBjn5ig"},
 				args: &FileStorageVolumeUpdateArguments{
 					Name:         "",
-					Associations: []string{},
+					Associations: &[]string{},
 				},
 			},
 			resp:    nil,

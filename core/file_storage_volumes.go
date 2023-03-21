@@ -91,9 +91,9 @@ func (fsvc *FileStorageVolumesClient) GetByID(
 }
 
 type FileStorageVolumeCreateArguments struct {
-	Name         string         `json:"name,omitempty"`
-	DataCenter   *DataCenterRef `json:"data_center,omitempty"`
-	Associations []string       `json:"associations,omitempty"`
+	Name         string        `json:"name,omitempty"`
+	DataCenter   DataCenterRef `json:"data_center,omitempty"`
+	Associations []string      `json:"associations,omitempty"`
 }
 
 type fileStorageVolumeCreateRequest struct {
@@ -119,12 +119,12 @@ func (fsvc *FileStorageVolumesClient) Create(
 }
 
 type FileStorageVolumeUpdateArguments struct {
-	Name         string   `json:"name,omitempty"`
-	Associations []string `json:"associations,omitempty"`
+	Name         string    `json:"name,omitempty"`
+	Associations *[]string `json:"associations,omitempty"`
 }
 
 type fileStorageVolumeUpdateRequest struct {
-	FileStorageVolume FileStorageVolumeRef              `json:"security_group"`
+	FileStorageVolume FileStorageVolumeRef              `json:"file_storage_volume"`
 	Properties        *FileStorageVolumeUpdateArguments `json:"properties,omitempty"`
 }
 
