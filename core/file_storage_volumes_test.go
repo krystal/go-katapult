@@ -1059,8 +1059,9 @@ func Test_fileStorageVolumesResponseBody_JSONMarshaling(t *testing.T) {
 			name: "full",
 			obj: &fileStorageVolumesResponseBody{
 				Pagination:         &katapult.Pagination{CurrentPage: 344},
-				FileStorageVolume:  &FileStorageVolume{ID: "id1"},
-				FileStorageVolumes: []*FileStorageVolume{{ID: "id2"}},
+				TrashObject:        &TrashObject{ID: "id1"},
+				FileStorageVolume:  &FileStorageVolume{ID: "id2"},
+				FileStorageVolumes: []*FileStorageVolume{{ID: "id3"}},
 			},
 		},
 	}
@@ -1084,6 +1085,7 @@ func TestFileStorageVolumesClient_Delete(t *testing.T) {
 		respV     *fileStorageVolumesResponseBody
 		wantReq   *katapult.Request
 		want      *FileStorageVolume
+		wantTrash *TrashObject
 		wantResp  *katapult.Response
 		wantErr   string
 		wantErrIs []error
@@ -1098,8 +1100,14 @@ func TestFileStorageVolumesClient_Delete(t *testing.T) {
 				Response: &http.Response{StatusCode: http.StatusOK},
 			},
 			respV: &fileStorageVolumesResponseBody{
+				TrashObject: &TrashObject{
+					ID:         "trsh_Bl2vmvd6kqvGfYkC",
+					ObjectID:   "fsv_vSOkKO1NuPoDuZqR",
+					ObjectType: "FileStorageVolume",
+				},
 				FileStorageVolume: &FileStorageVolume{
-					ID: "fsv_vSOkKO1NuPoDuZqR",
+					ID:   "fsv_vSOkKO1NuPoDuZqR",
+					Name: "My File Storage Volume",
 				},
 			},
 			wantReq: &katapult.Request{
@@ -1114,8 +1122,15 @@ func TestFileStorageVolumesClient_Delete(t *testing.T) {
 				},
 			},
 			want: &FileStorageVolume{
-				ID: "fsv_vSOkKO1NuPoDuZqR",
-			}, wantResp: &katapult.Response{
+				ID:   "fsv_vSOkKO1NuPoDuZqR",
+				Name: "My File Storage Volume",
+			},
+			wantTrash: &TrashObject{
+				ID:         "trsh_Bl2vmvd6kqvGfYkC",
+				ObjectID:   "fsv_vSOkKO1NuPoDuZqR",
+				ObjectType: "FileStorageVolume",
+			},
+			wantResp: &katapult.Response{
 				Response: &http.Response{StatusCode: http.StatusOK},
 			},
 		},
@@ -1175,12 +1190,15 @@ func TestFileStorageVolumesClient_Delete(t *testing.T) {
 			c := NewFileStorageVolumesClient(tc)
 			ctx := test.Context(tt.args.ctx)
 
-			got, resp, err := c.Delete(ctx, tt.args.ref, testRequestOption)
+			got, gotTrash, resp, err := c.Delete(
+				ctx, tt.args.ref, testRequestOption,
+			)
 
 			assert.Equal(t, 1, len(tc.Calls), "only 1 request should be made")
 			test.AssertContext(t, ctx, tc.Ctx)
 
 			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.wantTrash, gotTrash)
 
 			if tt.wantResp != nil {
 				assert.Equal(t, tt.wantResp, resp)

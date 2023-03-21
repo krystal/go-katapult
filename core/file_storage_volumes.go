@@ -149,18 +149,19 @@ func (fsvc *FileStorageVolumesClient) Delete(
 	ctx context.Context,
 	ref FileStorageVolumeRef,
 	reqOpts ...katapult.RequestOption,
-) (*FileStorageVolume, *katapult.Response, error) {
+) (*FileStorageVolume, *TrashObject, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "file_storage_volumes/_",
 		RawQuery: ref.queryValues().Encode(),
 	}
 	body, resp, err := fsvc.doRequest(ctx, "DELETE", u, nil, reqOpts...)
 
-	return body.FileStorageVolume, resp, err
+	return body.FileStorageVolume, body.TrashObject, resp, err
 }
 
 type fileStorageVolumesResponseBody struct {
 	Pagination         *katapult.Pagination `json:"pagination,omitempty"`
+	TrashObject        *TrashObject         `json:"trash_object,omitempty"`
 	FileStorageVolumes []*FileStorageVolume `json:"file_storage_volumes,omitempty"`
 	FileStorageVolume  *FileStorageVolume   `json:"file_storage_volume,omitempty"`
 }
