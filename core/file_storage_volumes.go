@@ -91,9 +91,9 @@ func (fsvc *FileStorageVolumesClient) GetByID(
 }
 
 type FileStorageVolumeCreateArguments struct {
-	Name         string         `json:"name,omitempty"`
-	DataCenter   *DataCenterRef `json:"data_center,omitempty"`
-	Associations []string       `json:"associations,omitempty"`
+	Name         string        `json:"name,omitempty"`
+	DataCenter   DataCenterRef `json:"data_center,omitempty"`
+	Associations []string      `json:"associations,omitempty"`
 }
 
 type fileStorageVolumeCreateRequest struct {
@@ -119,12 +119,12 @@ func (fsvc *FileStorageVolumesClient) Create(
 }
 
 type FileStorageVolumeUpdateArguments struct {
-	Name         string   `json:"name,omitempty"`
-	Associations []string `json:"associations,omitempty"`
+	Name         string    `json:"name,omitempty"`
+	Associations *[]string `json:"associations,omitempty"`
 }
 
 type fileStorageVolumeUpdateRequest struct {
-	FileStorageVolume FileStorageVolumeRef              `json:"security_group"`
+	FileStorageVolume FileStorageVolumeRef              `json:"file_storage_volume"`
 	Properties        *FileStorageVolumeUpdateArguments `json:"properties,omitempty"`
 }
 
@@ -149,18 +149,19 @@ func (fsvc *FileStorageVolumesClient) Delete(
 	ctx context.Context,
 	ref FileStorageVolumeRef,
 	reqOpts ...katapult.RequestOption,
-) (*FileStorageVolume, *katapult.Response, error) {
+) (*FileStorageVolume, *TrashObject, *katapult.Response, error) {
 	u := &url.URL{
 		Path:     "file_storage_volumes/_",
 		RawQuery: ref.queryValues().Encode(),
 	}
 	body, resp, err := fsvc.doRequest(ctx, "DELETE", u, nil, reqOpts...)
 
-	return body.FileStorageVolume, resp, err
+	return body.FileStorageVolume, body.TrashObject, resp, err
 }
 
 type fileStorageVolumesResponseBody struct {
 	Pagination         *katapult.Pagination `json:"pagination,omitempty"`
+	TrashObject        *TrashObject         `json:"trash_object,omitempty"`
 	FileStorageVolumes []*FileStorageVolume `json:"file_storage_volumes,omitempty"`
 	FileStorageVolume  *FileStorageVolume   `json:"file_storage_volume,omitempty"`
 }
