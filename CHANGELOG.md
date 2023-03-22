@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.1](https://github.com/krystal/go-katapult/compare/v0.2.0...v0.2.1) (2023-03-21)
+
+
+### Features
+
+* **file_storage_volume:** add concrete type and constants for state ([56162b4](https://github.com/krystal/go-katapult/commit/56162b42cb8f515a177ad3e88cc1abecd510d91d))
+* **file_storage_volumes:** add *TrashObject return value to Delete method ([232b1d4](https://github.com/krystal/go-katapult/commit/232b1d4a817a671c26aa5a065a5bc426fb4fe30c))
+* **file_storage_volumes:** add all expected CRUD+List operations ([91acddf](https://github.com/krystal/go-katapult/commit/91acddf742bfbeafd28e02395dde292176b73c66))
+
+
+### Bug Fixes
+
+* **file_storage_volume:** enabling updating associations to empty list ([7869f80](https://github.com/krystal/go-katapult/commit/7869f802e3349b6451fe4d1edf8010a0a404003a))
+
 ## [0.2.0](https://github.com/krystal/go-katapult/compare/v0.1.7...v0.2.0) (2023-03-07)
 
 
