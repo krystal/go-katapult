@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/krystal/go-katapult/compare/v0.2.1...v0.2.2) (2023-11-16)
+
+
+### Features
+
+* **load-balancer-rule:** add CheckHTTPStatuses field ([#143](https://github.com/krystal/go-katapult/issues/143)) ([fe2f754](https://github.com/krystal/go-katapult/commit/fe2f7549d9a181f1e43d648d6c98fc6f1a5f15a9))
+
 ## [0.2.1](https://github.com/krystal/go-katapult/compare/v0.2.0...v0.2.1) (2023-03-21)
 
 
