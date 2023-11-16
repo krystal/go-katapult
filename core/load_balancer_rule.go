@@ -25,23 +25,32 @@ const (
 	HTTPProtocol  Protocol = "HTTP"
 )
 
+type HTTPStatuses string
+
+const (
+	HTTPStatusesAll2xx             HTTPStatuses = "2"
+	HTTPStatusesAll2xxAnd3xx       HTTPStatuses = "23"
+	HTTPStatusesAll2xxAnd3xxAnd4xx HTTPStatuses = "234"
+)
+
 type LoadBalancerRule struct {
-	ID              string                    `json:"id,omitempty"`
-	Algorithm       LoadBalancerRuleAlgorithm `json:"algorithm,omitempty"`
-	DestinationPort int                       `json:"destination_port,omitempty"`
-	ListenPort      int                       `json:"listen_port,omitempty"`
-	Protocol        Protocol                  `json:"protocol,omitempty"`
-	ProxyProtocol   bool                      `json:"proxy_protocol,omitempty"`
-	Certificates    []Certificate             `json:"certificates,omitempty"`
-	BackendSSL      bool                      `json:"backend_ssl,omitempty"`
-	PassthroughSSL  bool                      `json:"passthrough_ssl,omitempty"`
-	CheckEnabled    bool                      `json:"check_enabled,omitempty"`
-	CheckFall       int                       `json:"check_fall,omitempty"`
-	CheckInterval   int                       `json:"check_interval,omitempty"`
-	CheckPath       string                    `json:"check_path,omitempty"`
-	CheckProtocol   Protocol                  `json:"check_protocol,omitempty"`
-	CheckRise       int                       `json:"check_rise,omitempty"`
-	CheckTimeout    int                       `json:"check_timeout,omitempty"`
+	ID                string                    `json:"id,omitempty"`
+	Algorithm         LoadBalancerRuleAlgorithm `json:"algorithm,omitempty"`
+	DestinationPort   int                       `json:"destination_port,omitempty"`
+	ListenPort        int                       `json:"listen_port,omitempty"`
+	Protocol          Protocol                  `json:"protocol,omitempty"`
+	ProxyProtocol     bool                      `json:"proxy_protocol,omitempty"`
+	Certificates      []Certificate             `json:"certificates,omitempty"`
+	BackendSSL        bool                      `json:"backend_ssl,omitempty"`
+	PassthroughSSL    bool                      `json:"passthrough_ssl,omitempty"`
+	CheckEnabled      bool                      `json:"check_enabled,omitempty"`
+	CheckFall         int                       `json:"check_fall,omitempty"`
+	CheckInterval     int                       `json:"check_interval,omitempty"`
+	CheckPath         string                    `json:"check_path,omitempty"`
+	CheckProtocol     Protocol                  `json:"check_protocol,omitempty"`
+	CheckRise         int                       `json:"check_rise,omitempty"`
+	CheckTimeout      int                       `json:"check_timeout,omitempty"`
+	CheckHTTPStatuses HTTPStatuses              `json:"check_http_statuses,omitempty"`
 }
 
 func (lbr *LoadBalancerRule) Ref() LoadBalancerRuleRef {
@@ -60,19 +69,20 @@ func (lbr LoadBalancerRuleRef) queryValues() *url.Values {
 }
 
 type LoadBalancerRuleArguments struct {
-	Algorithm       LoadBalancerRuleAlgorithm `json:"algorithm,omitempty"`
-	DestinationPort int                       `json:"destination_port,omitempty"`
-	ListenPort      int                       `json:"listen_port,omitempty"`
-	Protocol        Protocol                  `json:"protocol,omitempty"`
-	ProxyProtocol   *bool                     `json:"proxy_protocol,omitempty"`
-	Certificates    *[]CertificateRef         `json:"certificates,omitempty"`
-	CheckEnabled    *bool                     `json:"check_enabled,omitempty"`
-	CheckFall       int                       `json:"check_fall,omitempty"`
-	CheckInterval   int                       `json:"check_interval,omitempty"`
-	CheckPath       string                    `json:"check_path,omitempty"`
-	CheckProtocol   Protocol                  `json:"check_protocol,omitempty"`
-	CheckRise       int                       `json:"check_rise,omitempty"`
-	CheckTimeout    int                       `json:"check_timeout,omitempty"`
+	Algorithm         LoadBalancerRuleAlgorithm `json:"algorithm,omitempty"`
+	DestinationPort   int                       `json:"destination_port,omitempty"`
+	ListenPort        int                       `json:"listen_port,omitempty"`
+	Protocol          Protocol                  `json:"protocol,omitempty"`
+	ProxyProtocol     *bool                     `json:"proxy_protocol,omitempty"`
+	Certificates      *[]CertificateRef         `json:"certificates,omitempty"`
+	CheckEnabled      *bool                     `json:"check_enabled,omitempty"`
+	CheckFall         int                       `json:"check_fall,omitempty"`
+	CheckInterval     int                       `json:"check_interval,omitempty"`
+	CheckPath         string                    `json:"check_path,omitempty"`
+	CheckProtocol     Protocol                  `json:"check_protocol,omitempty"`
+	CheckRise         int                       `json:"check_rise,omitempty"`
+	CheckTimeout      int                       `json:"check_timeout,omitempty"`
+	CheckHTTPStatuses HTTPStatuses              `json:"check_http_statuses,omitempty"`
 }
 
 type loadBalancerRulesResponseBody struct {
