@@ -19,5 +19,6 @@
   "check_path": "/healthz",
   "check_protocol": "HTTP",
   "check_rise": 12,
-  "check_timeout": 3
+  "check_timeout": 3,
+  "check_http_statuses": "2"
 }
