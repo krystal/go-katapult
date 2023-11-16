@@ -115,7 +115,8 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
-      - uses: google-github-actions/release-please-action@v3
+      - uses: krystal/release-please-manifest-action@v1
         id: release-please
         with:
-          command: manifest
+          app-id: ${{ vars.RELEASE_PLEASE_GITHUB_APP_ID }}
+          private-key: ${{ secrets.RELEASE_PLEASE_GITHUB_APP_PRIVATE_KEY }}
