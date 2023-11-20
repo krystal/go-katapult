@@ -74,6 +74,8 @@ type LoadBalancerRuleArguments struct {
 	ListenPort        int                       `json:"listen_port,omitempty"`
 	Protocol          Protocol                  `json:"protocol,omitempty"`
 	ProxyProtocol     *bool                     `json:"proxy_protocol,omitempty"`
+	BackendSSL        *bool                     `json:"backend_ssl,omitempty"`
+	PassthroughSSL    *bool                     `json:"passthrough_ssl,omitempty"`
 	Certificates      *[]CertificateRef         `json:"certificates,omitempty"`
 	CheckEnabled      *bool                     `json:"check_enabled,omitempty"`
 	CheckFall         int                       `json:"check_fall,omitempty"`

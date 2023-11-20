@@ -13,6 +13,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func ptr[T any](x T) *T { return &x }
+
 func TestClient_LoadBalancerRules(t *testing.T) {
 	c := New(&testclient.Client{})
 
@@ -759,9 +761,13 @@ func TestLoadBalancerRulesClient_Update(t *testing.T) {
 		{
 			name: "success",
 			args: args{
-				ctx:  context.Background(),
-				ref:  LoadBalancerRuleRef{ID: "lbrule_GDPBAqW3dm71i4ol"},
-				args: &LoadBalancerRuleArguments{DestinationPort: 3000},
+				ctx: context.Background(),
+				ref: LoadBalancerRuleRef{ID: "lbrule_GDPBAqW3dm71i4ol"},
+				args: &LoadBalancerRuleArguments{
+					DestinationPort: 3000,
+					BackendSSL:      ptr(true),
+					PassthroughSSL:  ptr(true),
+				},
 			},
 			resp: &katapult.Response{
 				Response: &http.Response{StatusCode: http.StatusOK},
@@ -772,6 +778,8 @@ func TestLoadBalancerRulesClient_Update(t *testing.T) {
 					DestinationPort: 3000,
 					ListenPort:      80,
 					Protocol:        HTTPProtocol,
+					BackendSSL:      true,
+					PassthroughSSL:  true,
 				},
 			},
 			wantReq: &katapult.Request{
@@ -787,6 +795,8 @@ func TestLoadBalancerRulesClient_Update(t *testing.T) {
 				Body: &loadBalancerRuleUpdateRequest{
 					Properties: &LoadBalancerRuleArguments{
 						DestinationPort: 3000,
+						BackendSSL:      ptr(true),
+						PassthroughSSL:  ptr(true),
 					},
 				},
 			},
@@ -795,6 +805,8 @@ func TestLoadBalancerRulesClient_Update(t *testing.T) {
 				DestinationPort: 3000,
 				ListenPort:      80,
 				Protocol:        HTTPProtocol,
+				BackendSSL:      true,
+				PassthroughSSL:  true,
 			},
 			wantResp: &katapult.Response{
 				Response: &http.Response{StatusCode: http.StatusOK},
