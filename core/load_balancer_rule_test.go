@@ -13,8 +13,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func ptr[T any](x T) *T { return &x }
-
 func TestClient_LoadBalancerRules(t *testing.T) {
 	c := New(&testclient.Client{})
 
@@ -765,8 +763,8 @@ func TestLoadBalancerRulesClient_Update(t *testing.T) {
 				ref: LoadBalancerRuleRef{ID: "lbrule_GDPBAqW3dm71i4ol"},
 				args: &LoadBalancerRuleArguments{
 					DestinationPort: 3000,
-					BackendSSL:      ptr(true),
-					PassthroughSSL:  ptr(true),
+					BackendSSL:      boolPtr(true),
+					PassthroughSSL:  boolPtr(true),
 				},
 			},
 			resp: &katapult.Response{
@@ -795,8 +793,8 @@ func TestLoadBalancerRulesClient_Update(t *testing.T) {
 				Body: &loadBalancerRuleUpdateRequest{
 					Properties: &LoadBalancerRuleArguments{
 						DestinationPort: 3000,
-						BackendSSL:      ptr(true),
-						PassthroughSSL:  ptr(true),
+						BackendSSL:      boolPtr(true),
+						PassthroughSSL:  boolPtr(true),
 					},
 				},
 			},
