@@ -4,6 +4,8 @@
   "listen_port": 1337,
   "protocol": "HTTP",
   "proxy_protocol": false,
+  "backend_ssl": true,
+  "passthrough_ssl": true,
   "certificates": [
     {
       "id": "another abitrary string"

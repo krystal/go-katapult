@@ -108,6 +108,8 @@ func TestLoadBalancerRuleArguments_JSONMarshalling(t *testing.T) {
 						ID: "another abitrary string",
 					},
 				},
+				BackendSSL:        boolPtr(true),
+				PassthroughSSL:    boolPtr(true),
 				CheckEnabled:      boolPtr(false),
 				CheckFall:         3,
 				CheckInterval:     50,
