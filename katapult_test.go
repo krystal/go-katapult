@@ -24,7 +24,7 @@ type testErrorWriter struct {
 	err error
 }
 
-func (s *testErrorWriter) Write(p []byte) (int, error) {
+func (s *testErrorWriter) Write(_ []byte) (int, error) {
 	return 0, s.err
 }
 
@@ -32,7 +32,7 @@ type testErrorHTTPClient struct {
 	err error
 }
 
-func (s *testErrorHTTPClient) Do(req *http.Request) (*http.Response, error) {
+func (s *testErrorHTTPClient) Do(_ *http.Request) (*http.Response, error) {
 	return nil, s.err
 }
 
