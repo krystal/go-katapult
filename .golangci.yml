@@ -24,7 +24,6 @@ linters:
   enable:
     - asciicheck
     - bodyclose
-    - depguard
     - durationcheck
     - errcheck
     - errorlint

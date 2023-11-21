@@ -25,7 +25,7 @@ type badWriter struct {
 	err error
 }
 
-func (s *badWriter) Write(p []byte) (int, error) {
+func (s *badWriter) Write(_ []byte) (int, error) {
 	return 0, s.err
 }
 
