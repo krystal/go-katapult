@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.3](https://github.com/krystal/go-katapult/compare/v0.2.2...v0.2.3) (2023-11-21)
+
+
+### Features
+
+* **load-balancer-rule:** add backend + passthrough SSL ([#146](https://github.com/krystal/go-katapult/issues/146)) ([df37ff7](https://github.com/krystal/go-katapult/commit/df37ff78690b406d9f4f764e51bfeb82635db511))
+
 ## [0.2.2](https://github.com/krystal/go-katapult/compare/v0.2.1...v0.2.2) (2023-11-16)
 
 
