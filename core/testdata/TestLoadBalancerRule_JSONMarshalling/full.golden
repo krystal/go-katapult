@@ -20,5 +20,8 @@
   "check_protocol": "HTTP",
   "check_rise": 12,
   "check_timeout": 3,
-  "check_http_statuses": "2"
+  "check_http_statuses": "2",
+  "load_balancer": {
+    "id": "yet another abitrary string"
+  }
 }

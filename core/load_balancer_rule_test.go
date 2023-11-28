@@ -75,6 +75,9 @@ func TestLoadBalancerRule_JSONMarshalling(t *testing.T) {
 				CheckRise:         12,
 				CheckTimeout:      3,
 				CheckHTTPStatuses: HTTPStatusesAll2xx,
+				LoadBalancer: &LoadBalancerRef{
+					ID: "yet another abitrary string",
+				},
 			},
 		},
 	}
