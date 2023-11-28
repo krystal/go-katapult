@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.4](https://github.com/krystal/go-katapult/compare/v0.2.3...v0.2.4) (2023-11-28)
+
+
+### Features
+
+* **load-balancer-rule:** add load balancer ref ([#148](https://github.com/krystal/go-katapult/issues/148)) ([1fe7076](https://github.com/krystal/go-katapult/commit/1fe7076f69d834a01dc106aebc83090a3a0a7dd8))
+
 ## [0.2.3](https://github.com/krystal/go-katapult/compare/v0.2.2...v0.2.3) (2023-11-21)
 
 
