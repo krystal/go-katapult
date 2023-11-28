@@ -51,6 +51,7 @@ type LoadBalancerRule struct {
 	CheckRise         int                       `json:"check_rise,omitempty"`
 	CheckTimeout      int                       `json:"check_timeout,omitempty"`
 	CheckHTTPStatuses HTTPStatuses              `json:"check_http_statuses,omitempty"`
+	LoadBalancer      *LoadBalancerRef          `json:"load_balancer,omitempty"`
 }
 
 func (lbr *LoadBalancerRule) Ref() LoadBalancerRuleRef {
