@@ -1,7 +1,0 @@
-{
-  "error": {
-    "code": "object_in_trash",
-    "description": "The object found is in the trash and therefore cannot be manipulated through the API. It should be restored in order to run this operation.",
-    "detail": {}
-  }
-}

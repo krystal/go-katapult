@@ -1,9 +1,0 @@
-{
-  "name": "db 3",
-  "hostname": "db-3",
-  "description": "Database server #3",
-  "tag_names": [
-    "db",
-    "east"
-  ]
-}

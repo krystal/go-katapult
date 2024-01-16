@@ -1,7 +1,0 @@
-{
-  "error": {
-    "code": "invalid_argument",
-    "description": "The 'X' argument is invalid",
-    "detail": {}
-  }
-}

@@ -1,7 +1,0 @@
-{
-  "error": {
-    "code": "network_not_found",
-    "description": "No network was found matching any of the criteria provided in the arguments",
-    "detail": {}
-  }
-}

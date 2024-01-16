@@ -1,7 +1,0 @@
-{
-  "certificate": {
-    "id": "cert_Xr8jREhulOP3UJoM",
-    "name": "test-1.example.com",
-    "additional_names": ["test1.domain.com"]
-  }
-}

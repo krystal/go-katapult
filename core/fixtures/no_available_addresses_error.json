@@ -1,7 +1,0 @@
-{
-  "error": {
-    "code": "no_available_addresses",
-    "description": "We don't have any available IPs for that network and address version at the moment. Please contact support for assistance.",
-    "detail": {}
-  }
-}

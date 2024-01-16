@@ -1,7 +1,0 @@
-{
-  "error": {
-    "code": "task_queueing_error",
-    "description": "This error means that a background task that was needed to complete your request could not be queued",
-    "detail": {}
-  }
-}

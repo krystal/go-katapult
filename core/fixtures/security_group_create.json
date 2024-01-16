@@ -1,9 +1,0 @@
-{
-  "security_group": {
-    "id": "sg_3uXbmANw4sQiF1J3",
-    "name": "api-test",
-    "allow_all_inbound": true,
-    "allow_all_outbound": true,
-    "associations": ["id1", "id2"]
-  }
-}

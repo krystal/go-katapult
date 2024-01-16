@@ -1,7 +1,0 @@
-{
-  "error": {
-    "code": "dns_zone_not_verified",
-    "description": "The DNS zone could not be verified, check the nameservers are set correctly",
-    "detail": {}
-  }
-}

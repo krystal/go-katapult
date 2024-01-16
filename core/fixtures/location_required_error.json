@@ -1,7 +1,0 @@
-{
-  "error": {
-    "code": "location_required",
-    "description": "A zone or a data_center argument must be provided",
-    "detail": {}
-  }
-}

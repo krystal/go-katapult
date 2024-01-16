@@ -1,7 +1,0 @@
-{
-  "error": {
-    "code": "ip_address_not_found",
-    "description": "No IP addresses were found matching any of the criteria provided in the arguments",
-    "detail": {}
-  }
-}

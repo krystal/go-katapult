@@ -1,9 +1,0 @@
-{
-  "id": "id1",
-  "spec_xml": "<xml/>",
-  "state": "draft",
-  "virtual_machine": {
-    "id": "id2"
-  },
-  "created_at": 1600192008
-}

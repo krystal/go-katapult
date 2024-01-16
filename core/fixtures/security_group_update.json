@@ -1,9 +1,0 @@
-{
-  "security_group": {
-    "id": "sg_3uXbmANw4sQiF1J3",
-    "name": "updated",
-    "allow_all_inbound": false,
-    "allow_all_outbound": false,
-    "associations": ["id3", "id4"]
-  }
-}

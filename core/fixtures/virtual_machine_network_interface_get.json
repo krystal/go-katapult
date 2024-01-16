@@ -1,9 +1,0 @@
-{
-  "virtual_machine_network_interface": {
-    "id": "vmnet_olNAz8ThH0emHvdr",
-    "name": "Public Network on bitter-beautiful-mango",
-    "network": {
-      "id": "net_4s5J6gMQXhcwqIqs"
-    }
-  }
-}

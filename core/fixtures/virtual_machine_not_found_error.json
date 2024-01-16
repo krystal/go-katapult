@@ -1,7 +1,0 @@
-{
-  "error": {
-    "code": "virtual_machine_not_found",
-    "description": "No virtual machine was found matching any of the criteria provided in the arguments",
-    "detail": {}
-  }
-}

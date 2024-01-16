@@ -1,7 +1,0 @@
-{
-  "name": "volume_name",
-  "associations": [
-    "assoc1",
-    "assoc2"
-  ]
-}

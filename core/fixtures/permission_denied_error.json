@@ -1,9 +1,0 @@
-{
-  "error": {
-    "code": "permission_denied",
-    "description": "The authenticated identity is not permitted to perform this action",
-    "detail": {
-      "details": "Additional information regarding the reason why permission was denied"
-    }
-  }
-}

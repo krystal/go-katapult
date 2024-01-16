@@ -1,7 +1,0 @@
-{
-  "error": {
-    "code": "trash_object_not_found",
-    "description": "No trash object was found matching any of the criteria provided in the arguments",
-    "detail": {}
-  }
-}

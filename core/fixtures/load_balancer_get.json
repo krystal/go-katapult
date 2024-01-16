@@ -1,7 +1,0 @@
-{
-  "load_balancer": {
-    "id": "lb_7vClpn0rlUegGPDS",
-    "name": "web",
-    "resource_type": "tags"
-  }
-}

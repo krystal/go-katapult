@@ -1,9 +1,0 @@
-{
-  "error": {
-    "code": "invalid_spec_xml",
-    "description": "The spec XML provided is invalid",
-    "detail": {
-      "errors": "1:21: FATAL: EndTag: '</' not found"
-    }
-  }
-}

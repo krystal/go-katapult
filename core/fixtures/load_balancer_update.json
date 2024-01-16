@@ -1,8 +1,0 @@
-{
-  "load_balancer": {
-    "id": "lb_7vClpn0rlUegGPDS",
-    "name": "web-east-1",
-    "resource_type": "tags",
-    "resource_ids": ["tag2", "tag4"]
-  }
-}

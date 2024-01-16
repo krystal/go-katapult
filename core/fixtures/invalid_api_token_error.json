@@ -1,7 +1,0 @@
-{
-  "error": {
-    "code": "invalid_api_token",
-    "description": "The API token provided was not valid (it may not exist or have expired)",
-    "detail": {}
-  }
-}

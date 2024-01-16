@@ -1,8 +1,0 @@
-{
-  "load_balancer": {
-    "id": "lb_0krMCRl7DIZr0XV2"
-  },
-  "properties": {
-    "name": "web-east-1"
-  }
-}

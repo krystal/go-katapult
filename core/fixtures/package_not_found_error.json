@@ -1,7 +1,0 @@
-{
-  "error": {
-    "code": "package_not_found",
-    "description": "No package was found matching any of the criteria provided in the arguments",
-    "detail": {}
-  }
-}

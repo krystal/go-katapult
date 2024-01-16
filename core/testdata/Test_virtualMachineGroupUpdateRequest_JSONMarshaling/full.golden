@@ -1,7 +1,0 @@
-{
-  "virtual_machine_group": {},
-  "properties": {
-    "name": "vm group test",
-    "segregate": true
-  }
-}

@@ -1,9 +1,0 @@
-{
-  "name": "new-group",
-  "associations": [
-    "id1",
-    "id2"
-  ],
-  "allow_all_inbound": true,
-  "allow_all_outbound": true
-}

@@ -1,7 +1,0 @@
-{
-  "error": {
-    "code": "organization_not_found",
-    "description": "No organization was found matching any of the criteria provided in the arguments",
-    "detail": {}
-  }
-}
