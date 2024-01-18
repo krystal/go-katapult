@@ -52,104 +52,26 @@ $(eval $(call tool,gomod,github.com/Helcaraxan/gomod@latest))
 tools: $(TOOLS)
 
 #
-# Development
+# Generate
 #
 
-BENCH ?= .
-TESTARGS ?=
-TESTTARGET ?= ./...
-
-.PHONY: clean
-clean:
-	rm -f $(BINS) $(TOOLS)
-	rm -f ./coverage.out ./go.mod.tidy-check ./go.sum.tidy-check
-
-.PHONY: clean-golden
-clean-golden:
-	rm -f $(shell find * -path '*/testdata/*' -name "*.golden" \
-		-exec echo "'{}'" \;)
-
-.PHONY: test
-test:
-	go test $(V) -count=1 -race $(TESTARGS) $(TESTTARGET)
-
-.PHONY: test-deps
-test-deps:
-	@$(MAKE) test TESTTARGET=all
-
-.PHONY: lint
-lint: $(TOOLDIR)/golangci-lint
-	golangci-lint $(V) run --timeout=5m
-
-.PHONY: format
-format: $(TOOLDIR)/goimports $(TOOLDIR)/gofumpt
-	goimports -w . && gofumpt -w .
-
-.SILENT: bench
-.PHONY: bench
-bench:
-	@$(MAKE) test TESTARGS="-bench=$(BENCH) -benchmem"
-
-.PHONY: update-golden
-update-golden:
-	@$(MAKE) test GOLDEN_UPDATE=1
-
-.PHONY: regen-golden
-regen-golden: clean-golden update-golden
-
-#
-# Code Generation
-#
+.PHONY: refresh-schema
+refresh-schema:
+	@curl https://my.katapult.io/core/v1/schema/openapi.json > katapult-openapi.json
+	
 
 .PHONY: generate
-generate: schemas
-	go generate ./...
+generate: 
+	@docker run \
+  --user "$$(id -u):$$(id -g)" \
+  -v "$$(pwd):/local" \
+  --rm \
+  "$$(docker build -f container_images/oapi-codegen.Dockerfile --build-arg GO_VERSION="$$(grep goVersion generator-config.yml | cut -d':' -f2 | tr -d '[:space:]')" --build-arg GENERATOR_VERSION="$$(grep generatorVersion generator-config.yml | cut -d':' -f2 | tr -d '[:space:]')" -q .)" \
+  -generate types,client \
+  -package katapult \
+  -templates /local/templates \
+   /local/katapult-openapi.json > client.go
 
-.PHONY: check-generate
-check-generate:
-	$(eval CHKDIR := $(shell mktemp -d))
-	cp -a . "$(CHKDIR)"
-	make -C "$(CHKDIR)/" generate
-	( diff -rN "$(CURDIR)" "$(CHKDIR)" && rm -rf "$(CHKDIR)" ) || \
-		( rm -rf "$(CHKDIR)" && exit 1 )
-
-#
-# Katapult API Schemas
-#
-
-.PHONY: schemas
-schemas:
-	go generate ./schemas
-
-.PHONY: update-schemas
-update-schemas:
-	SCHEMA_FORCE_UPDATE=1 go generate ./schemas
-
-.PHONY: check-schemas
-check-schemas:
-	$(eval CHKDIR := $(shell mktemp -d))
-	cp -a . "$(CHKDIR)"
-	make -C "$(CHKDIR)/" update-schemas
-	( diff -rN "$(CURDIR)/schemas" "$(CHKDIR)/schemas" && rm -rf "$(CHKDIR)" ) \
-		|| ( rm -rf "$(CHKDIR)" && exit 1 )
-
-#
-# Coverage
-#
-
-.PHONY: cov
-cov: coverage.out
-
-.PHONY: cov-html
-cov-html: coverage.out
-	go tool cover -html=./coverage.out
-
-.PHONY: cov-func
-cov-func: coverage.out
-	go tool cover -func=./coverage.out
-
-coverage.out: $(SOURCES)
-	@$(MAKE) test TESTARGS="-covermode=atomic -coverprofile=./coverage.out"
 
 #
 # Dependencies
