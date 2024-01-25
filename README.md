@@ -46,3 +46,33 @@ Documentation:
 
 - [API Documentation](https://developers.katapult.io/api/docs/latest/)
 - [Katapult Documentation](https://docs.katapult.io/)
+
+
+## Usage Guidance
+
+Each endpoint has multiple functions for calling it. 
+Typically `FunctionName` and `FunctionNameWithResponse` are provided.
+
+It is recommended to use the `FunctionNameWithResponse` functions as they
+return a response object that contains the response data and the HTTP response
+object.
+
+The `FunctionName` functions are provided for convenience and return only the
+response data.
+
+## Example
+
+```go
+res, err := client.GetDataCenterDefaultNetworkWithResponse(ctx,
+	&katapult.GetDataCenterDefaultNetworkParams{
+		DataCenterPermalink: "perma-link",
+	},
+)
+
+/* 
+
+*/
+
+```
+
+
