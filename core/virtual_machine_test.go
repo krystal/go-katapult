@@ -153,6 +153,16 @@ func TestVirtualMachineStates(t *testing.T) {
 			value: "failed",
 		},
 		{
+			name:  "VirtualMachineAllocating",
+			enum:  VirtualMachineAllocating,
+			value: "allocating",
+		},
+		{
+			name:  "VirtualMachineAllocated",
+			enum:  VirtualMachineAllocated,
+			value: "allocated",
+		},
+		{
 			name:  "VirtualMachineStarted",
 			enum:  VirtualMachineStarted,
 			value: "started",
