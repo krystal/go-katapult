@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.5](https://github.com/krystal/go-katapult/compare/v0.2.4...v0.2.5) (2024-03-07)
+
+
+### Features
+
+* **core/virtual-machine:** add new "allocating" and "allocated" states ([64e75f2](https://github.com/krystal/go-katapult/commit/64e75f2b2dc58259cbca39413704053ac1b9884c))
+
 ## [0.2.4](https://github.com/krystal/go-katapult/compare/v0.2.3...v0.2.4) (2023-11-28)
 
 
