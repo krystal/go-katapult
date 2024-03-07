@@ -54,6 +54,8 @@ type VirtualMachineState string
 const (
 	VirtualMachineStopped      VirtualMachineState = "stopped"
 	VirtualMachineFailed       VirtualMachineState = "failed"
+	VirtualMachineAllocating   VirtualMachineState = "allocating"
+	VirtualMachineAllocated    VirtualMachineState = "allocated"
 	VirtualMachineStarted      VirtualMachineState = "started"
 	VirtualMachineStarting     VirtualMachineState = "starting"
 	VirtualMachineResetting    VirtualMachineState = "resetting"
