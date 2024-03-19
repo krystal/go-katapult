@@ -755,7 +755,7 @@ func TestNew(t *testing.T) {
 		{
 			name: "err propagates",
 			opts: []Option{
-				func(c *Client) error {
+				func(_ *Client) error {
 					return errors.New("tribbles in the vents")
 				},
 			},

@@ -426,7 +426,7 @@ func TestVirtualMachineSpec_ToFromJSON(t *testing.T) {
 }
 
 func TestVirtualMachineSpec_WriteJSON_Error(t *testing.T) {
-	errStr := "failed to write" 
+	errStr := "failed to write"
 	spec := &VirtualMachineSpec{Name: "web-3"}
 	w := &badWriter{err: errors.New(errStr)}
 
