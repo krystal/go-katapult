@@ -48,6 +48,12 @@ Documentation:
 - [Katapult Documentation](https://docs.katapult.io/)
 
 
+
+# Next Client 
+A more feature complete client is being generated in the `next` package.
+The aim for this client is to be generated from an openapi spec and should 
+offer access to everything that is documented / exposed in our API documentation.
+
 ## Usage Guidance
 
 Each endpoint has multiple functions for calling it. 
@@ -68,11 +74,6 @@ res, err := client.GetDataCenterDefaultNetworkWithResponse(ctx,
 		DataCenterPermalink: "perma-link",
 	},
 )
-
-/* 
-
-*/
-
 ```
 
 
