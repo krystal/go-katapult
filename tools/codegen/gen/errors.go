@@ -3,8 +3,8 @@ package gen
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"net/http"
+	"os"
 	"path/filepath"
 	"regexp"
 	"sort"
@@ -44,7 +44,7 @@ func (g *Generator) Errors() error {
 		"size", hclog.Fmt("%d bytes", len(b)),
 	)
 	//nolint:gosec
-	err = ioutil.WriteFile(
+	err = os.WriteFile(
 		filepath.Join(outdir, "errors_generated.go"), b, 0o644,
 	)
 	if err != nil {

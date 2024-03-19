@@ -71,6 +71,7 @@ issues:
       linters:
         - funlen
         - dupl
+        - goconst
     - path: "_generated\\.go"
       linters:
         - funlen

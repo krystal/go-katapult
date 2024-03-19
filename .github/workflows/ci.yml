@@ -7,37 +7,23 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-go@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
         with:
-          go-version: "1.19" # golangci-lint requires 1.19+
-      - uses: actions/cache@v3
+          go-version: "1.20"
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v4
         with:
-          path: |
-            bin/tools
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-golangcilint-${{ hashFiles('**/Makefile') }}
-          restore-keys: |
-            ${{ runner.os }}-golangcilint-
-      - name: Run make lint
-        run: make lint
-        env:
-          GOLANGCILINTARGS: --out-format=github-actions
+          version: v1.56
 
   tidy:
     name: Tidy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-go@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
         with:
-          go-version: "1.18"
-      - uses: actions/cache@v3
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
+          go-version: "1.20"
       - name: Check if mods are tidy
         run: make check-tidy
 
@@ -45,16 +31,10 @@ jobs:
     name: Generate
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-go@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
         with:
-          go-version: "1.18"
-      - uses: actions/cache@v3
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
+          go-version: "1.20"
       - name: Check if generate results are up to date
         run: make check-generate
 
@@ -62,18 +42,12 @@ jobs:
     name: Coverage
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-go@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
         with:
-          go-version: "1.18"
-      - uses: actions/cache@v3
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
+          go-version: "1.20"
       - name: Publish coverage
-        uses: paambaati/codeclimate-action@v3.2.0
+        uses: paambaati/codeclimate-action@v5.0.0
         env:
           VERBOSE: "true"
           GOMAXPROCS: 4
@@ -90,21 +64,15 @@ jobs:
       fail-fast: false
       matrix:
         go_version:
-          - "1.18"
-          - "1.19"
           - "1.20"
+          - "1.21"
+          - "1.22"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-go@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
         with:
           go-version: "${{ matrix.go_version }}"
-      - uses: actions/cache@v3
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
       - name: Run tests
         run: make test
         env:

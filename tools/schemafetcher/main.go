@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -182,7 +182,7 @@ func mainE() error {
 	}
 
 	//nolint:gosec
-	err = ioutil.WriteFile(targetFile, buf.Bytes(), 0o644)
+	err = os.WriteFile(targetFile, buf.Bytes(), 0o644)
 	if err != nil {
 		return err
 	}
@@ -216,7 +216,7 @@ func getSchema(u string) ([]byte, error) {
 	}
 	defer resp.Body.Close()
 
-	b, err := ioutil.ReadAll(resp.Body)
+	b, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}

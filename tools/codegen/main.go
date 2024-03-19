@@ -5,7 +5,7 @@ import (
 	"crypto/sha256"
 	"flag"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -219,7 +219,7 @@ func getSchema(name string, skipCache bool) (string, error) {
 	}
 	defer resp.Body.Close()
 
-	b, err := ioutil.ReadAll(resp.Body)
+	b, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return "", err
 	}
@@ -229,7 +229,7 @@ func getSchema(name string, skipCache bool) (string, error) {
 		"cache_file", tmpFile, "size", hclog.Fmt("%d bytes", len(b)),
 	)
 	//nolint:gosec
-	err = ioutil.WriteFile(tmpFile, b, 0o644)
+	err = os.WriteFile(tmpFile, b, 0o644)
 	if err != nil {
 		return "", err
 	}
