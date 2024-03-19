@@ -2,7 +2,7 @@ package katapult
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"math"
 	"net/url"
 	"testing"
@@ -227,7 +227,7 @@ func TestRequest_bodyContent(t *testing.T) {
 				if tt.wantBody == nil {
 					assert.Nil(t, body)
 				} else {
-					b, err := ioutil.ReadAll(body)
+					b, err := io.ReadAll(body)
 					require.NoError(t, err)
 					assert.Equal(t, *tt.wantBody, string(b))
 				}

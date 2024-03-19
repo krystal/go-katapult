@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -53,7 +52,7 @@ func strictUmarshal(r io.Reader, v interface{}) error {
 
 func fixture(name string) []byte {
 	file := fmt.Sprintf("fixtures/%s.json", name)
-	c, err := ioutil.ReadFile(file)
+	c, err := os.ReadFile(file)
 	if err != nil {
 		panic(err)
 	}

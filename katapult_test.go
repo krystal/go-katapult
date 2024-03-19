@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -636,7 +635,7 @@ func TestClient_Do(t *testing.T) {
 							}
 						}
 
-						receivedReqBody, _ := ioutil.ReadAll(r.Body)
+						receivedReqBody, _ := io.ReadAll(r.Body)
 						assert.Equal(t,
 							tt.wantReq.body, string(receivedReqBody),
 						)
@@ -712,7 +711,7 @@ func TestClient_Do(t *testing.T) {
 
 			if tt.want != nil {
 				if r, ok := tt.args.v.(io.Reader); ok {
-					b, err := ioutil.ReadAll(r)
+					b, err := io.ReadAll(r)
 					require.NoError(t, err)
 					assert.Equal(t, tt.want, string(b))
 				} else {
@@ -756,7 +755,7 @@ func TestNew(t *testing.T) {
 		{
 			name: "err propagates",
 			opts: []Option{
-				func(c *Client) error {
+				func(_ *Client) error {
 					return errors.New("tribbles in the vents")
 				},
 			},

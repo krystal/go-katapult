@@ -3,7 +3,7 @@ package core
 import (
 	"context"
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"testing"
@@ -1637,7 +1637,7 @@ func TestDNSZonesClient_Verify(t *testing.T) {
 						)
 					}
 
-					b, err := ioutil.ReadAll(r.Body)
+					b, err := io.ReadAll(r.Body)
 					require.NoError(t, err)
 					defer r.Body.Close()
 
