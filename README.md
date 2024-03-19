@@ -49,7 +49,7 @@ Documentation:
 
 
 
-# Next Client 
+# Experimental "next" Client 
 A more feature complete client is being generated in the `next` package.
 The aim for this client is to be generated from an openapi spec and should 
 offer access to everything that is documented / exposed in our API documentation.

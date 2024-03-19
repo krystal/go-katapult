@@ -968,6 +968,7 @@ type DeleteVirtualMachine200ResponseVirtualMachine struct {
 	State               *VirtualMachineStateEnum         `json:"state,omitempty"`
 	TagNames            *[]string                        `json:"tag_names,omitempty"`
 	Tags                *[]Tag                           `json:"tags,omitempty"`
+	UseDedicatedCpus    *bool                            `json:"use_dedicated_cpus"`
 	Zone                *Zone                            `json:"zone,omitempty"`
 }
 
@@ -1799,6 +1800,7 @@ type GetVirtualMachine200ResponseVirtualMachine struct {
 	State               *VirtualMachineStateEnum      `json:"state,omitempty"`
 	TagNames            *[]string                     `json:"tag_names,omitempty"`
 	Tags                *[]Tag                        `json:"tags,omitempty"`
+	UseDedicatedCpus    *bool                         `json:"use_dedicated_cpus"`
 	Zone                *Zone                         `json:"zone,omitempty"`
 }
 
@@ -2613,6 +2615,7 @@ type PatchVirtualMachine200ResponseVirtualMachine struct {
 	State               *VirtualMachineStateEnum        `json:"state,omitempty"`
 	TagNames            *[]string                       `json:"tag_names,omitempty"`
 	Tags                *[]Tag                          `json:"tags,omitempty"`
+	UseDedicatedCpus    *bool                           `json:"use_dedicated_cpus"`
 	Zone                *Zone                           `json:"zone,omitempty"`
 }
 
@@ -3233,6 +3236,7 @@ type VirtualMachine struct {
 	State               *VirtualMachineStateEnum `json:"state,omitempty"`
 	TagNames            *[]string                `json:"tag_names,omitempty"`
 	Tags                *[]Tag                   `json:"tags,omitempty"`
+	UseDedicatedCpus    *bool                    `json:"use_dedicated_cpus"`
 	Zone                *Zone                    `json:"zone,omitempty"`
 }
 
@@ -3270,8 +3274,9 @@ type VirtualMachineDiskAttachmentStateEnum string
 
 // VirtualMachineFlexibleResources All 'resources[]' params are mutually exclusive, only one can be provided.
 type VirtualMachineFlexibleResources struct {
-	CpuCores   int `json:"cpu_cores"`
-	MemoryInGb int `json:"memory_in_gb"`
+	CpuCores         int   `json:"cpu_cores"`
+	MemoryInGb       int   `json:"memory_in_gb"`
+	UseDedicatedCpus *bool `json:"use_dedicated_cpus,omitempty"`
 }
 
 // VirtualMachineGPU defines model for VirtualMachineGPU.
@@ -3374,6 +3379,7 @@ type VirtualMachinePackage struct {
 	Permalink                     *string           `json:"permalink,omitempty"`
 	Privacy                       *PrivacyTypesEnum `json:"privacy,omitempty"`
 	StorageInGb                   *int              `json:"storage_in_gb,omitempty"`
+	UseDedicatedCpus              *bool             `json:"use_dedicated_cpus,omitempty"`
 }
 
 // VirtualMachinePackageLookup All 'virtual_machine_package[]' params are mutually exclusive, only one can be provided.

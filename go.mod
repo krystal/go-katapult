@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/augurysys/timestamp v0.3.2
 	github.com/dave/jennifer v1.6.0
-	github.com/deepmap/oapi-codegen/v2 v2.0.0
+	github.com/deepmap/oapi-codegen/v2 v2.1.0
 	github.com/hashicorp/go-hclog v1.4.0
 	github.com/jimeh/go-golden v0.1.0
 	github.com/jimeh/rands v0.3.0

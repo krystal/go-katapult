@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "http://katapult-api.localhost/core/v1"
+      "url": "https://api.katapult.io/core/v1"
     }
   ],
   "paths": {
@@ -10133,6 +10133,10 @@
             "type": "integer",
             "nullable": true
           },
+          "use_dedicated_cpus": {
+            "type": "boolean",
+            "nullable": true
+          },
           "gpu_type": {
             "allOf": [
               {
@@ -10241,6 +10245,9 @@
               }
             ],
             "nullable": true
+          },
+          "use_dedicated_cpus": {
+            "type": "boolean"
           }
         }
       },
@@ -10606,6 +10613,10 @@
             "type": "integer",
             "nullable": true
           },
+          "use_dedicated_cpus": {
+            "type": "boolean",
+            "nullable": true
+          },
           "gpu_type": {
             "allOf": [
               {
@@ -10728,6 +10739,10 @@
           },
           "cpu_cores": {
             "type": "integer",
+            "nullable": true
+          },
+          "use_dedicated_cpus": {
+            "type": "boolean",
             "nullable": true
           },
           "gpu_type": {
@@ -10992,6 +11007,9 @@
           },
           "memory_in_gb": {
             "type": "integer"
+          },
+          "use_dedicated_cpus": {
+            "type": "boolean"
           }
         },
         "required": [
@@ -11925,6 +11943,10 @@
           },
           "cpu_cores": {
             "type": "integer",
+            "nullable": true
+          },
+          "use_dedicated_cpus": {
+            "type": "boolean",
             "nullable": true
           },
           "gpu_type": {
