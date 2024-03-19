@@ -113,6 +113,10 @@ check-generate:
 	( diff -rN "$(CURDIR)" "$(CHKDIR)" && rm -rf "$(CHKDIR)" ) || \
 		( rm -rf "$(CHKDIR)" && exit 1 )
 
+.PHONY: generate-next
+generate-next:
+	( cd ./next && ./generate.sh )
+
 #
 # Katapult API Schemas
 #
@@ -132,6 +136,10 @@ check-schemas:
 	make -C "$(CHKDIR)/" update-schemas
 	( diff -rN "$(CURDIR)/schemas" "$(CHKDIR)/schemas" && rm -rf "$(CHKDIR)" ) \
 		|| ( rm -rf "$(CHKDIR)" && exit 1 )
+
+.PHONY: retrieve-openapi-schema
+retrieve-openapi-schema:
+	wget -O next/katapult-openapi.json https://api.katapult.io/core/v1/schema/openapi.json
 
 #
 # Coverage
