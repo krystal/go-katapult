@@ -25,6 +25,7 @@ var (
 	ErrDiskTemplateVersionNotFound                = fmt.Errorf("%w: disk_template_version_not_found", katapult.ErrResourceNotFound)
 	ErrFileStorageVolumeNotFound                  = fmt.Errorf("%w: file_storage_volume_not_found", katapult.ErrResourceNotFound)
 	ErrFlexibleResourcesUnavailableToOrganization = fmt.Errorf("%w: flexible_resources_unavailable_to_organization", katapult.ErrForbidden)
+	ErrGPUTypeNotFound                            = fmt.Errorf("%w: gpu_type_not_found", katapult.ErrResourceNotFound)
 	ErrIPAddressNotFound                          = fmt.Errorf("%w: ip_address_not_found", katapult.ErrResourceNotFound)
 	ErrIPAlreadyAllocated                         = fmt.Errorf("%w: ip_already_allocated", katapult.ErrUnprocessableEntity)
 	ErrIdentityNotLinkedToWebSession              = fmt.Errorf("%w: identity_not_linked_to_web_session", katapult.ErrBadRequest)
@@ -319,6 +320,22 @@ func NewFlexibleResourcesUnavailableToOrganizationError(theError *katapult.Respo
 		CommonError: katapult.NewCommonError(
 			ErrFlexibleResourcesUnavailableToOrganization,
 			"flexible_resources_unavailable_to_organization",
+			theError.Description,
+		),
+	}
+}
+
+// GPUTypeNotFoundError:
+// No GPU type was found matching any of the criteria provided in the arguments.
+type GPUTypeNotFoundError struct {
+	katapult.CommonError
+}
+
+func NewGPUTypeNotFoundError(theError *katapult.ResponseError) *GPUTypeNotFoundError {
+	return &GPUTypeNotFoundError{
+		CommonError: katapult.NewCommonError(
+			ErrGPUTypeNotFound,
+			"gpu_type_not_found",
 			theError.Description,
 		),
 	}
@@ -1197,6 +1214,8 @@ func castResponseError(theError *katapult.ResponseError) error {
 		return NewFileStorageVolumeNotFoundError(theError)
 	case "flexible_resources_unavailable_to_organization":
 		return NewFlexibleResourcesUnavailableToOrganizationError(theError)
+	case "gpu_type_not_found":
+		return NewGPUTypeNotFoundError(theError)
 	case "ip_address_not_found":
 		return NewIPAddressNotFoundError(theError)
 	case "ip_already_allocated":

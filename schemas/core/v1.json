@@ -49,6 +49,13 @@
               "group": "organizations"
             },
             {
+              "path": "organizations/:organization/policy_limits",
+              "request_method": "GET",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/Organizations/PolicyLimitsEndpoint",
+              "group": "organizations"
+            },
+            {
               "path": "organizations/:organization/users_with_access",
               "request_method": "GET",
               "controller": null,
@@ -124,6 +131,27 @@
               "controller": null,
               "endpoint": "CoreAPI/Endpoints/DiskTemplateVersions/SpecEndpoint",
               "group": "disk_template_versions"
+            },
+            {
+              "path": "gpu_types",
+              "request_method": "GET",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/GPUTypes/ListEndpoint",
+              "group": "gpu_types"
+            },
+            {
+              "path": "gpu_types/:gpu_type",
+              "request_method": "GET",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/GPUTypes/InfoEndpoint",
+              "group": "gpu_types"
+            },
+            {
+              "path": "data_centers/:data_center/gpu_types",
+              "request_method": "GET",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/GPUTypes/ListForDataCenterEndpoint",
+              "group": "gpu_types"
             },
             {
               "path": "organizations/:organization/virtual_machines",
@@ -462,21 +490,21 @@
               "group": "security_groups.rules"
             },
             {
-              "path": "security_groups/rules/:rule",
+              "path": "security_groups/rules/:security_group_rule",
               "request_method": "GET",
               "controller": null,
               "endpoint": "CoreAPI/Endpoints/SecurityGroupRules/InfoEndpoint",
               "group": "security_groups.rules"
             },
             {
-              "path": "security_groups/rules/:rule",
+              "path": "security_groups/rules/:security_group_rule",
               "request_method": "PATCH",
               "controller": null,
               "endpoint": "CoreAPI/Endpoints/SecurityGroupRules/UpdateEndpoint",
               "group": "security_groups.rules"
             },
             {
-              "path": "security_groups/rules/:rule",
+              "path": "security_groups/rules/:security_group_rule",
               "request_method": "DELETE",
               "controller": null,
               "endpoint": "CoreAPI/Endpoints/SecurityGroupRules/DeleteEndpoint",
@@ -955,6 +983,12 @@
               "groups": []
             },
             {
+              "id": "gpu_types",
+              "name": "GPU types",
+              "description": null,
+              "groups": []
+            },
+            {
               "id": "virtual_machines",
               "name": "Virtual machines",
               "description": null,
@@ -1134,132 +1168,7 @@
             }
           ]
         },
-        "scopes": [
-          {
-            "name": "disk_backup_policies",
-            "description": "Manage disk backup policies"
-          },
-          {
-            "name": "disk_backup_policies:read",
-            "description": "Read-only access to disk backup policies"
-          },
-          {
-            "name": "certificates:read",
-            "description": "Read-only access to certificates"
-          },
-          {
-            "name": "disks",
-            "description": "Manage disks"
-          },
-          {
-            "name": "disks:read",
-            "description": "Read-only access to disks"
-          },
-          {
-            "name": "disk_templates",
-            "description": "Manage disk templates"
-          },
-          {
-            "name": "disk_templates:read",
-            "description": "Read-only access to disk templates"
-          },
-          {
-            "name": "file_storage_volumes",
-            "description": "Manage security groups"
-          },
-          {
-            "name": "file_storage_volumes:read",
-            "description": "Read-only access to security groups"
-          },
-          {
-            "name": "ip_addresses",
-            "description": "Manage IP addresses"
-          },
-          {
-            "name": "ip_addresses:read",
-            "description": "Read-only access to IP addresses"
-          },
-          {
-            "name": "organizations:read",
-            "description": "View organizations"
-          },
-          {
-            "name": "managed_organizations",
-            "description": "Manage managed organizations"
-          },
-          {
-            "name": "security_groups",
-            "description": "Manage security groups"
-          },
-          {
-            "name": "security_groups:read",
-            "description": "Read-only access to security groups"
-          },
-          {
-            "name": "tags",
-            "description": "Manage tags"
-          },
-          {
-            "name": "tags:read",
-            "description": "Read-only access to tags"
-          },
-          {
-            "name": "tasks:read",
-            "description": "View tasks"
-          },
-          {
-            "name": "trash_objects:read",
-            "description": "View objects in the trash"
-          },
-          {
-            "name": "trash_objects:purge",
-            "description": "Purge items from the trash"
-          },
-          {
-            "name": "trash_objects:restore",
-            "description": "Restore items from the trash"
-          },
-          {
-            "name": "dns",
-            "description": "Manage DNS zones/records"
-          },
-          {
-            "name": "dns:read",
-            "description": "Read-only access to DNS zones/records"
-          },
-          {
-            "name": "load_balancers",
-            "description": "Manage load balancers"
-          },
-          {
-            "name": "load_balancers:read",
-            "description": "Read-only access to load balancers"
-          },
-          {
-            "name": "virtual_machines",
-            "description": "Manage virtual machines"
-          },
-          {
-            "name": "virtual_machines:read",
-            "description": "Read-only access to virtual machines"
-          },
-          {
-            "name": "virtual_machines:power_actions",
-            "description": "Start \u0026 stop virtual machines"
-          },
-          {
-            "name": "virtual_machines:console",
-            "description": "Access virtual machine consoles"
-          },
-          {
-            "name": "virtual_machine_groups",
-            "description": "Manage virtual machine groups"
-          },
-          {
-            "name": "virtual_machine_groups:read",
-            "description": "Read-only access to virtual machine groups"
-          }
-        ]
+        "scopes": []
       }
     },
     {
@@ -2113,6 +2022,18 @@
             }
           },
           {
+            "id": "CoreAPI/Objects/Organization/PhoneNumberField",
+            "name": "phone_number",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
             "id": "CoreAPI/Objects/Organization/CurrencyField",
             "name": "currency",
             "description": null,
@@ -2398,6 +2319,345 @@
         "code": "organization_not_activated",
         "http_status": 403,
         "fields": []
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/Organizations/PolicyLimitsEndpoint",
+        "name": "Get organization policy limits",
+        "description": "Returns the computed policy limits for a organization",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/Organizations/PolicyLimitsEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "organization",
+              "description": null,
+              "type": "CoreAPI/ArgumentSets/OrganizationLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/Organizations/PolicyLimitsEndpoint/PolicyLimitsField",
+            "name": "policy_limits",
+            "description": null,
+            "type": "CoreAPI/Objects/OrganizationPolicy",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ],
+        "potential_errors": [],
+        "scopes": [
+          "organizations:read"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/Organizations/PolicyLimitsEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "organization",
+            "description": null,
+            "type": "CoreAPI/ArgumentSets/OrganizationLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/OrganizationPolicy",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/OrganizationPolicy/MaximumUninvoicedBalanceField",
+            "name": "maximum_uninvoiced_balance",
+            "description": null,
+            "type": "CoreAPI/Objects/DecimalOrUnlimited",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/OrganizationPolicy/MaximumVirtualMachinesField",
+            "name": "maximum_virtual_machines",
+            "description": null,
+            "type": "CoreAPI/Objects/IntegerOrUnlimited",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/OrganizationPolicy/MaximumVirtualMachineMemoryField",
+            "name": "maximum_virtual_machine_memory",
+            "description": null,
+            "type": "CoreAPI/Objects/IntegerOrUnlimited",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/OrganizationPolicy/MaximumDiskSpaceField",
+            "name": "maximum_disk_space",
+            "description": null,
+            "type": "CoreAPI/Objects/IntegerOrUnlimited",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/OrganizationPolicy/MaximumManagedOrganizationsField",
+            "name": "maximum_managed_organizations",
+            "description": null,
+            "type": "CoreAPI/Objects/IntegerOrUnlimited",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/OrganizationPolicy/MaximumUnallocatedIpAddressesField",
+            "name": "maximum_unallocated_ip_addresses",
+            "description": null,
+            "type": "CoreAPI/Objects/IntegerOrUnlimited",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/OrganizationPolicy/MaximumSecurityGroupsField",
+            "name": "maximum_security_groups",
+            "description": null,
+            "type": "CoreAPI/Objects/IntegerOrUnlimited",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/OrganizationPolicy/MaximumVirtualNetworksField",
+            "name": "maximum_virtual_networks",
+            "description": null,
+            "type": "CoreAPI/Objects/IntegerOrUnlimited",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/OrganizationPolicy/MaximumLoadBalancersField",
+            "name": "maximum_load_balancers",
+            "description": null,
+            "type": "CoreAPI/Objects/IntegerOrUnlimited",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/OrganizationPolicy/MaximumDnsZonesField",
+            "name": "maximum_dns_zones",
+            "description": null,
+            "type": "CoreAPI/Objects/IntegerOrUnlimited",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/OrganizationPolicy/MaximumCertificatesField",
+            "name": "maximum_certificates",
+            "description": null,
+            "type": "CoreAPI/Objects/IntegerOrUnlimited",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/OrganizationPolicy/MaximumFileStorageVolumesField",
+            "name": "maximum_file_storage_volumes",
+            "description": null,
+            "type": "CoreAPI/Objects/IntegerOrUnlimited",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/OrganizationPolicy/MaximumIsosField",
+            "name": "maximum_isos",
+            "description": null,
+            "type": "CoreAPI/Objects/IntegerOrUnlimited",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/OrganizationPolicy/FlexibleVirtualMachineResourcesField",
+            "name": "flexible_virtual_machine_resources",
+            "description": null,
+            "type": "Apia/Scalars/Boolean",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/OrganizationPolicy/AllowSuspensionField",
+            "name": "allow_suspension",
+            "description": null,
+            "type": "Apia/Scalars/Boolean",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/OrganizationPolicy/AllowRestrictedTrafficTypesField",
+            "name": "allow_restricted_traffic_types",
+            "description": null,
+            "type": "Apia/Scalars/Boolean",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/DecimalOrUnlimited",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/DecimalOrUnlimited/ValueField",
+            "name": "value",
+            "description": null,
+            "type": "Apia/Scalars/Decimal",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/DecimalOrUnlimited/UnlimitedField",
+            "name": "unlimited",
+            "description": null,
+            "type": "Apia/Scalars/Boolean",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "scalar",
+      "value": {
+        "id": "Apia/Scalars/Decimal",
+        "name": "Decimal",
+        "description": null
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/IntegerOrUnlimited",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/IntegerOrUnlimited/ValueField",
+            "name": "value",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/IntegerOrUnlimited/UnlimitedField",
+            "name": "unlimited",
+            "description": null,
+            "type": "Apia/Scalars/Boolean",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
       }
     },
     {
@@ -3000,7 +3260,7 @@
             "array": true,
             "spec": {
               "all": false,
-              "spec": "id,name,size_in_gb,state,virtual_machine_disk[virtual_machine[id,fqdn]]"
+              "spec": "id,name,size_in_gb,wwn,state,virtual_machine_disk[virtual_machine[id,fqdn]]"
             }
           }
         ],
@@ -3081,6 +3341,18 @@
             "name": "size_in_gb",
             "description": null,
             "type": "Apia/Scalars/Integer",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/Disk/WwnField",
+            "name": "wwn",
+            "description": null,
+            "type": "Apia/Scalars/String",
             "null": false,
             "array": false,
             "spec": {
@@ -3559,6 +3831,42 @@
             }
           },
           {
+            "id": "CoreAPI/Objects/VirtualMachine/UseDedicatedCpusField",
+            "name": "use_dedicated_cpus",
+            "description": null,
+            "type": "Apia/Scalars/Boolean",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachine/GpuTypeField",
+            "name": "gpu_type",
+            "description": null,
+            "type": "CoreAPI/Objects/GPUType",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachine/GpusField",
+            "name": "gpus",
+            "description": null,
+            "type": "CoreAPI/Objects/VirtualMachineGPU",
+            "null": false,
+            "array": true,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
             "id": "CoreAPI/Objects/VirtualMachine/TagsField",
             "name": "tags",
             "description": null,
@@ -3621,6 +3929,14 @@
             "description": null
           },
           {
+            "name": "allocated",
+            "description": null
+          },
+          {
+            "name": "allocating",
+            "description": null
+          },
+          {
             "name": "resetting",
             "description": null
           },
@@ -3634,6 +3950,10 @@
           },
           {
             "name": "shutting_down",
+            "description": null
+          },
+          {
+            "name": "transferring",
             "description": null
           },
           {
@@ -3735,6 +4055,18 @@
           {
             "id": "CoreAPI/Objects/VirtualMachineGroup/SegregateField",
             "name": "segregate",
+            "description": null,
+            "type": "Apia/Scalars/Boolean",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachineGroup/AutoSegregateField",
+            "name": "auto_segregate",
             "description": null,
             "type": "Apia/Scalars/Boolean",
             "null": false,
@@ -3880,6 +4212,18 @@
             "description": null,
             "type": "CoreAPI/Objects/Attachment",
             "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachinePackage/UseDedicatedCpusField",
+            "name": "use_dedicated_cpus",
+            "description": null,
+            "type": "Apia/Scalars/Boolean",
+            "null": false,
             "array": false,
             "spec": {
               "all": true,
@@ -4077,6 +4421,218 @@
               "all": true,
               "spec": null
             }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/GPUType",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/GPUType/IdField",
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/GPUType/NameField",
+            "name": "name",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/GPUType/ManufacturerField",
+            "name": "manufacturer",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/GPUType/MemoryInGbField",
+            "name": "memory_in_gb",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/GPUType/MemoryTypeField",
+            "name": "memory_type",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/GPUType/PermalinkField",
+            "name": "permalink",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/GPUType/DataCentersField",
+            "name": "data_centers",
+            "description": "List of data centers where this GPU type is available",
+            "type": "CoreAPI/Objects/DataCenter",
+            "null": true,
+            "array": true,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/VirtualMachineGPU",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/VirtualMachineGPU/IdField",
+            "name": "id",
+            "description": "Unique ID for this GPU. Not available when status is \"detached\".",
+            "type": "Apia/Scalars/String",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachineGPU/StatusField",
+            "name": "status",
+            "description": "The status of this GPU.",
+            "type": "CoreAPI/Objects/VirtualMachineGPUStatusEnum",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachineGPU/PendingActionField",
+            "name": "pending_action",
+            "description": "The pending action for this GPU.",
+            "type": "CoreAPI/Objects/VirtualMachineGPUPendingActionEnum",
+            "null": true,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachineGPU/AvailableField",
+            "name": "available",
+            "description": "When pending action is \"attach\", this indicates if there is a GPU of the relevant type available.",
+            "type": "Apia/Scalars/Boolean",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/VirtualMachineGPU/TypeField",
+            "name": "type",
+            "description": null,
+            "type": "CoreAPI/Objects/GPUType",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "enum",
+      "value": {
+        "id": "CoreAPI/Objects/VirtualMachineGPUStatusEnum",
+        "name": null,
+        "description": null,
+        "values": [
+          {
+            "name": "attached",
+            "description": "The GPU is attached to the virtual machine"
+          },
+          {
+            "name": "attaching",
+            "description": "The GPU is being attached to the virtual machine"
+          },
+          {
+            "name": "detached",
+            "description": "The GPU is detached from the virtual machine"
+          },
+          {
+            "name": "detaching",
+            "description": "The GPU is being detached from the virtual machine"
+          },
+          {
+            "name": "unknown",
+            "description": "The GPU status is unknown"
+          }
+        ]
+      }
+    },
+    {
+      "type": "enum",
+      "value": {
+        "id": "CoreAPI/Objects/VirtualMachineGPUPendingActionEnum",
+        "name": null,
+        "description": null,
+        "values": [
+          {
+            "name": "attach",
+            "description": "The GPU will be attached to the virtual machine on next start"
+          },
+          {
+            "name": "detach",
+            "description": "The GPU will be detached from the virtual machine on next shutdown"
           }
         ]
       }
@@ -4738,7 +5294,7 @@
             "array": false,
             "spec": {
               "all": false,
-              "spec": "id,\n                                                    name,\n                                                    size_in_gb,\n                                                    state,\n                                                    created_at,\n                                                    storage_speed,\n                                                    io_profile[*],\n                                                    virtual_machine_disk[\n                                                        state,\n                                                        attach_on_boot,\n                                                        boot,\n                                                        virtual_machine[\n                                                          id,\n                                                          fqdn\n                                                        ]\n                                                    ],\n                                                    installation[\n                                                      id,\n                                                      attributes[*],\n                                                      disk_template_version[\n                                                          number,\n                                                          stable,\n                                                          disk_template[\n                                                              id,\n                                                              name,\n                                                              permalink,\n                                                              operating_system[\n                                                                  id,\n                                                                  name\n                                                              ]\n                                                          ]\n                                                      ]\n                                                  ]"
+              "spec": "id,\n                                                    name,\n                                                    size_in_gb,\n                                                    wwn,\n                                                    state,\n                                                    created_at,\n                                                    storage_speed,\n                                                    io_profile[*],\n                                                    virtual_machine_disk[\n                                                        state,\n                                                        attach_on_boot,\n                                                        boot,\n                                                        virtual_machine[\n                                                          id,\n                                                          fqdn\n                                                        ]\n                                                    ],\n                                                    installation[\n                                                      id,\n                                                      attributes[*],\n                                                      disk_template_version[\n                                                          number,\n                                                          stable,\n                                                          disk_template[\n                                                              id,\n                                                              name,\n                                                              permalink,\n                                                              operating_system[\n                                                                  id,\n                                                                  name\n                                                              ]\n                                                          ]\n                                                      ]\n                                                  ]"
             }
           }
         ],
@@ -4860,7 +5416,7 @@
             "array": true,
             "spec": {
               "all": false,
-              "spec": "state,boot,attach_on_boot,disk[id,state,name,size_in_gb,created_at]"
+              "spec": "state,boot,attach_on_boot,disk[id,state,name,wwn,size_in_gb,created_at]"
             }
           }
         ],
@@ -5731,6 +6287,295 @@
     {
       "type": "endpoint",
       "value": {
+        "id": "CoreAPI/Endpoints/GPUTypes/ListEndpoint",
+        "name": "List GPU types",
+        "description": "Provides a full list of all GPU types",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/GPUTypes/ListEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "page",
+              "description": null,
+              "type": "Apia/Scalars/Integer",
+              "required": false,
+              "array": false,
+              "default": "1"
+            },
+            {
+              "name": "per_page",
+              "description": null,
+              "type": "Apia/Scalars/Integer",
+              "required": false,
+              "array": false,
+              "default": "30"
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/GPUTypes/ListEndpoint/PaginationField",
+            "name": "pagination",
+            "description": null,
+            "type": "Apia/PaginationObject",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Endpoints/GPUTypes/ListEndpoint/GpuTypesField",
+            "name": "gpu_types",
+            "description": null,
+            "type": "CoreAPI/Objects/GPUType",
+            "null": false,
+            "array": true,
+            "spec": {
+              "all": false,
+              "spec": "*,data_centers[id,name,permalink]"
+            }
+          }
+        ],
+        "potential_errors": [],
+        "scopes": []
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/GPUTypes/ListEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "page",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "required": false,
+            "array": false,
+            "default": "1"
+          },
+          {
+            "name": "per_page",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "required": false,
+            "array": false,
+            "default": "30"
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/GPUTypes/InfoEndpoint",
+        "name": "Get GPU type",
+        "description": "Provide details for a specific GPU type",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/GPUTypes/InfoEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "gpu_type",
+              "description": null,
+              "type": "CoreAPI/ArgumentSets/GPUTypeLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/GPUTypes/InfoEndpoint/GpuTypeField",
+            "name": "gpu_type",
+            "description": null,
+            "type": "CoreAPI/Objects/GPUType",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": false,
+              "spec": "*,data_centers[id,name,permalink]"
+            }
+          }
+        ],
+        "potential_errors": [],
+        "scopes": []
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/GPUTypes/InfoEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "gpu_type",
+            "description": null,
+            "type": "CoreAPI/ArgumentSets/GPUTypeLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "lookup_argument_set",
+      "value": {
+        "id": "CoreAPI/ArgumentSets/GPUTypeLookup",
+        "name": "GPU Type Lookup",
+        "description": "Provides for GPU types to be looked up",
+        "arguments": [
+          {
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "permalink",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/ArgumentSets/GPUTypeLookup/GPUTypeNotFound"
+        ]
+      }
+    },
+    {
+      "type": "error",
+      "value": {
+        "id": "CoreAPI/ArgumentSets/GPUTypeLookup/GPUTypeNotFound",
+        "name": null,
+        "description": "No GPU type was found matching any of the criteria provided in the arguments",
+        "code": "gpu_type_not_found",
+        "http_status": 404,
+        "fields": []
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/GPUTypes/ListForDataCenterEndpoint",
+        "name": "List GPU types for Data Center",
+        "description": "Provides a list of all GPU types available in a given data center",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/GPUTypes/ListForDataCenterEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "data_center",
+              "description": "The data center to list GPU types for",
+              "type": "CoreAPI/ArgumentSets/DataCenterLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            },
+            {
+              "name": "page",
+              "description": null,
+              "type": "Apia/Scalars/Integer",
+              "required": false,
+              "array": false,
+              "default": "1"
+            },
+            {
+              "name": "per_page",
+              "description": null,
+              "type": "Apia/Scalars/Integer",
+              "required": false,
+              "array": false,
+              "default": "30"
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/GPUTypes/ListForDataCenterEndpoint/PaginationField",
+            "name": "pagination",
+            "description": null,
+            "type": "Apia/PaginationObject",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Endpoints/GPUTypes/ListForDataCenterEndpoint/GpuTypesField",
+            "name": "gpu_types",
+            "description": null,
+            "type": "CoreAPI/Objects/GPUType",
+            "null": false,
+            "array": true,
+            "spec": {
+              "all": false,
+              "spec": "*,-data_centers"
+            }
+          }
+        ],
+        "potential_errors": [],
+        "scopes": []
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/GPUTypes/ListForDataCenterEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "data_center",
+            "description": "The data center to list GPU types for",
+            "type": "CoreAPI/ArgumentSets/DataCenterLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "page",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "required": false,
+            "array": false,
+            "default": "1"
+          },
+          {
+            "name": "per_page",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "required": false,
+            "array": false,
+            "default": "30"
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
         "id": "CoreAPI/Endpoints/VirtualMachines/ListEndpoint",
         "name": "List virtual machines",
         "description": "Returns a list of all virtual machines for a given organization",
@@ -5789,7 +6634,7 @@
             "array": true,
             "spec": {
               "all": false,
-              "spec": "id,name,fqdn,hostname,created_at,zone[id,name,permalink,data_center[id,name,permalink]],ip_addresses[address],package[name]"
+              "spec": "id,name,fqdn,hostname,created_at,zone[id,name,permalink,data_center[id,name,permalink]],ip_addresses[address],package[name],gpu_type[id,name,permalink]"
             }
           }
         ],
@@ -5866,8 +6711,8 @@
             "null": false,
             "array": false,
             "spec": {
-              "all": true,
-              "spec": null
+              "all": false,
+              "spec": "*,gpu_type[*,-data_centers],gpus[*,type[*,-data_centers]]"
             }
           }
         ],
@@ -5936,8 +6781,8 @@
             "null": false,
             "array": false,
             "spec": {
-              "all": true,
-              "spec": null
+              "all": false,
+              "spec": "*,gpu_type[*,-data_centers],gpus[*,type[*,-data_centers]]"
             }
           }
         ],
@@ -6010,6 +6855,14 @@
             "type": "Apia/Scalars/String",
             "required": false,
             "array": true,
+            "default": null
+          },
+          {
+            "name": "gpu_type",
+            "description": null,
+            "type": "CoreAPI/ArgumentSets/GPUTypeLookup",
+            "required": false,
+            "array": false,
             "default": null
           },
           {
@@ -6099,8 +6952,8 @@
             "null": false,
             "array": false,
             "spec": {
-              "all": true,
-              "spec": null
+              "all": false,
+              "spec": "*,gpu_type[*,-data_centers],gpus[*,type[*,-data_centers]]"
             }
           }
         ],
@@ -6519,6 +7372,14 @@
             "description": null,
             "type": "Apia/Scalars/Integer",
             "required": true,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "use_dedicated_cpus",
+            "description": null,
+            "type": "Apia/Scalars/Boolean",
+            "required": false,
             "array": false,
             "default": null
           }
@@ -8502,14 +9363,6 @@
             }
           }
         ]
-      }
-    },
-    {
-      "type": "scalar",
-      "value": {
-        "id": "Apia/Scalars/Decimal",
-        "name": "Decimal",
-        "description": null
       }
     },
     {
@@ -14142,6 +14995,18 @@
             }
           },
           {
+            "id": "CoreAPI/Objects/SecurityGroupRule/ActionField",
+            "name": "action",
+            "description": null,
+            "type": "CoreAPI/Objects/SecurityGroupRuleActionEnum",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
             "id": "CoreAPI/Objects/SecurityGroupRule/PortsField",
             "name": "ports",
             "description": null,
@@ -14215,6 +15080,24 @@
           },
           {
             "name": "ICMP",
+            "description": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "enum",
+      "value": {
+        "id": "CoreAPI/Objects/SecurityGroupRuleActionEnum",
+        "name": null,
+        "description": null,
+        "values": [
+          {
+            "name": "allow",
+            "description": null
+          },
+          {
+            "name": "deny",
             "description": null
           }
         ]
@@ -14324,6 +15207,14 @@
             "default": null
           },
           {
+            "name": "action",
+            "description": null,
+            "type": "CoreAPI/Objects/SecurityGroupRuleActionEnum",
+            "required": false,
+            "array": false,
+            "default": "allow"
+          },
+          {
             "name": "ports",
             "description": "Either single port (ie. 80), multi-port (ie. 80,443) or range (ie. 2000-3000).",
             "type": "Apia/Scalars/String",
@@ -14429,7 +15320,8 @@
           }
         ],
         "potential_errors": [
-          "CoreAPI/ArgumentSets/SecurityGroupRuleLookup/SecurityGroupRuleNotFound"
+          "CoreAPI/ArgumentSets/SecurityGroupRuleLookup/SecurityGroupRuleNotFound",
+          "CoreAPI/Errors/PermissionDenied"
         ]
       }
     },
@@ -16206,6 +17098,42 @@
               "all": true,
               "spec": null
             }
+          },
+          {
+            "id": "CoreAPI/Objects/LoadBalancer/EnableWeightingField",
+            "name": "enable_weighting",
+            "description": null,
+            "type": "Apia/Scalars/Boolean",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/LoadBalancer/WeightsField",
+            "name": "weights",
+            "description": null,
+            "type": "CoreAPI/Objects/LoadBalancerWeight",
+            "null": false,
+            "array": true,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/LoadBalancer/StandbyVmsField",
+            "name": "standby_vms",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": true,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
           }
         ]
       }
@@ -16250,6 +17178,40 @@
           {
             "name": "Tag",
             "type": "CoreAPI/Objects/Tag"
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/LoadBalancerWeight",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/LoadBalancerWeight/VirtualMachineIdField",
+            "name": "virtual_machine_id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/LoadBalancerWeight/WeightField",
+            "name": "weight",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
           }
         ]
       }
@@ -16386,6 +17348,56 @@
             "name": "https_redirect",
             "description": null,
             "type": "Apia/Scalars/Boolean",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "enable_weighting",
+            "description": null,
+            "type": "Apia/Scalars/Boolean",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "weights",
+            "description": null,
+            "type": "CoreAPI/ArgumentSets/LoadBalancerWeightsArguments",
+            "required": false,
+            "array": true,
+            "default": null
+          },
+          {
+            "name": "standby_vms",
+            "description": "The IDs of any virtual machines that should be used as standbys in a failover situation",
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": true,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/ArgumentSets/LoadBalancerWeightsArguments",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "virtual_machine_id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "weight",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
             "required": false,
             "array": false,
             "default": null
@@ -19510,6 +20522,14 @@
           },
           {
             "name": "segregate",
+            "description": null,
+            "type": "Apia/Scalars/Boolean",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "auto_segregate",
             "description": null,
             "type": "Apia/Scalars/Boolean",
             "required": false,
