@@ -203,6 +203,13 @@
               "group": "virtual_machines"
             },
             {
+              "path": "virtual_machine/authorized_keys",
+              "request_method": "GET",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/VirtualMachines/AuthorizedKeysEndpoint",
+              "group": "virtual_machines"
+            },
+            {
               "path": "organizations/:organization/virtual_machines/build",
               "request_method": "POST",
               "controller": null,
@@ -7536,6 +7543,62 @@
         "description": "This IP address has already been allocated to another resource",
         "code": "ip_already_allocated",
         "http_status": 422,
+        "fields": []
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/VirtualMachines/AuthorizedKeysEndpoint",
+        "name": "Get authorized keys for a virtual machine",
+        "description": "Return the authorized keys for the virtual machine associated with the provided API token",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/VirtualMachines/AuthorizedKeysEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": []
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/VirtualMachines/AuthorizedKeysEndpoint/AuthorizedKeysField",
+            "name": "authorized_keys",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Endpoints/VirtualMachines/AuthorizedKeysEndpoint/NoVirtualMachineForAPIToken"
+        ],
+        "scopes": [
+          "virtual_machines:authorized_keys"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/VirtualMachines/AuthorizedKeysEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": []
+      }
+    },
+    {
+      "type": "error",
+      "value": {
+        "id": "CoreAPI/Endpoints/VirtualMachines/AuthorizedKeysEndpoint/NoVirtualMachineForAPIToken",
+        "name": null,
+        "description": "No virtual machine was found for the provided API token",
+        "code": "no_virtual_machine_for_api_token",
+        "http_status": 404,
         "fields": []
       }
     },
