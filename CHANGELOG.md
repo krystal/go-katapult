@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.6](https://github.com/krystal/go-katapult/compare/v0.2.5...v0.2.6) (2024-05-17)
+
+
+### Features
+
+* **next:** introduce the openapi generated client in the next package ([#152](https://github.com/krystal/go-katapult/issues/152)) ([d3f9e3e](https://github.com/krystal/go-katapult/commit/d3f9e3e4baa7e57832e09ccf0c9b38e47b167dd1))
+
 ## [0.2.5](https://github.com/krystal/go-katapult/compare/v0.2.4...v0.2.5) (2024-03-07)
 
 
