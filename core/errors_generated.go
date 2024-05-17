@@ -44,6 +44,7 @@ var (
 	ErrNoAvailableAddresses                       = fmt.Errorf("%w: no_available_addresses", katapult.ErrServiceUnavailable)
 	ErrNoInterfaceAvailable                       = fmt.Errorf("%w: no_interface_available", katapult.ErrUnprocessableEntity)
 	ErrNoUserAssociatedWithIdentity               = fmt.Errorf("%w: no_user_associated_with_identity", katapult.ErrResourceNotFound)
+	ErrNoVirtualMachineForAPIToken                = fmt.Errorf("%w: no_virtual_machine_for_api_token", katapult.ErrResourceNotFound)
 	ErrObjectInTrash                              = fmt.Errorf("%w: object_in_trash", katapult.ErrNotAcceptable)
 	ErrOperatingSystemNotFound                    = fmt.Errorf("%w: operating_system_not_found", katapult.ErrResourceNotFound)
 	ErrOrganizationLimitReached                   = fmt.Errorf("%w: organization_limit_reached", katapult.ErrUnprocessableEntity)
@@ -653,6 +654,22 @@ func NewNoUserAssociatedWithIdentityError(theError *katapult.ResponseError) *NoU
 	}
 }
 
+// NoVirtualMachineForAPITokenError:
+// No virtual machine was found for the provided API token.
+type NoVirtualMachineForAPITokenError struct {
+	katapult.CommonError
+}
+
+func NewNoVirtualMachineForAPITokenError(theError *katapult.ResponseError) *NoVirtualMachineForAPITokenError {
+	return &NoVirtualMachineForAPITokenError{
+		CommonError: katapult.NewCommonError(
+			ErrNoVirtualMachineForAPIToken,
+			"no_virtual_machine_for_api_token",
+			theError.Description,
+		),
+	}
+}
+
 // ObjectInTrashError:
 // The object found is in the trash and therefore cannot be manipulated through the API. It should be restored in order to run this operation.
 type ObjectInTrashError struct {
@@ -1252,6 +1269,8 @@ func castResponseError(theError *katapult.ResponseError) error {
 		return NewNoInterfaceAvailableError(theError)
 	case "no_user_associated_with_identity":
 		return NewNoUserAssociatedWithIdentityError(theError)
+	case "no_virtual_machine_for_api_token":
+		return NewNoVirtualMachineForAPITokenError(theError)
 	case "object_in_trash":
 		return NewObjectInTrashError(theError)
 	case "operating_system_not_found":
