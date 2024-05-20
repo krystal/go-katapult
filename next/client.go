@@ -286,6 +286,11 @@ const (
 	NoUserAssociatedWithIdentity NoUserAssociatedWithIdentityEnum = "no_user_associated_with_identity"
 )
 
+// Defines values for NoVirtualMachineForAPITokenEnum.
+const (
+	NoVirtualMachineForApiToken NoVirtualMachineForAPITokenEnum = "no_virtual_machine_for_api_token"
+)
+
 // Defines values for ObjectInTrashEnum.
 const (
 	ObjectInTrashEnumObjectInTrash ObjectInTrashEnum = "object_in_trash"
@@ -558,6 +563,7 @@ const (
 	Starting     VirtualMachineStateEnum = "starting"
 	Stopped      VirtualMachineStateEnum = "stopped"
 	Stopping     VirtualMachineStateEnum = "stopping"
+	Transferring VirtualMachineStateEnum = "transferring"
 )
 
 // Defines values for ZoneNotFoundEnum.
@@ -888,6 +894,12 @@ type DataCenterNotFoundSchema struct {
 	Code        *DataCenterNotFoundEnum `json:"code,omitempty"`
 	Description *string                 `json:"description,omitempty"`
 	Detail      *map[string]interface{} `json:"detail,omitempty"`
+}
+
+// DecimalOrUnlimited defines model for DecimalOrUnlimited.
+type DecimalOrUnlimited struct {
+	Unlimited *bool    `json:"unlimited,omitempty"`
+	Value     *float32 `json:"value"`
 }
 
 // DeleteDiskBackupPolicy200ResponseDiskBackupPolicy defines model for DeleteDiskBackupPolicy200ResponseDiskBackupPolicy.
@@ -2006,6 +2018,12 @@ type IdentityNotLinkedToWebSessionSchema struct {
 	Detail      *map[string]interface{}            `json:"detail,omitempty"`
 }
 
+// IntegerOrUnlimited defines model for IntegerOrUnlimited.
+type IntegerOrUnlimited struct {
+	Unlimited *bool `json:"unlimited,omitempty"`
+	Value     *int  `json:"value"`
+}
+
 // InterfaceNotFoundEnum defines model for InterfaceNotFoundEnum.
 type InterfaceNotFoundEnum string
 
@@ -2246,6 +2264,9 @@ type NoInterfaceAvailableSchema struct {
 // NoUserAssociatedWithIdentityEnum defines model for NoUserAssociatedWithIdentityEnum.
 type NoUserAssociatedWithIdentityEnum string
 
+// NoVirtualMachineForAPITokenEnum defines model for NoVirtualMachineForAPITokenEnum.
+type NoVirtualMachineForAPITokenEnum string
+
 // ObjectInTrash defines model for ObjectInTrash.
 type ObjectInTrash struct {
 	TrashObject *TrashObject `json:"trash_object"`
@@ -2449,6 +2470,26 @@ type OrganizationNotFoundSchema struct {
 	Code        *OrganizationNotFoundEnum `json:"code,omitempty"`
 	Description *string                   `json:"description,omitempty"`
 	Detail      *map[string]interface{}   `json:"detail,omitempty"`
+}
+
+// OrganizationPolicy defines model for OrganizationPolicy.
+type OrganizationPolicy struct {
+	AllowRestrictedTrafficTypes     *bool               `json:"allow_restricted_traffic_types,omitempty"`
+	AllowSuspension                 *bool               `json:"allow_suspension,omitempty"`
+	FlexibleVirtualMachineResources *bool               `json:"flexible_virtual_machine_resources,omitempty"`
+	MaximumCertificates             *IntegerOrUnlimited `json:"maximum_certificates,omitempty"`
+	MaximumDiskSpace                *IntegerOrUnlimited `json:"maximum_disk_space,omitempty"`
+	MaximumDnsZones                 *IntegerOrUnlimited `json:"maximum_dns_zones,omitempty"`
+	MaximumFileStorageVolumes       *IntegerOrUnlimited `json:"maximum_file_storage_volumes,omitempty"`
+	MaximumIsos                     *IntegerOrUnlimited `json:"maximum_isos,omitempty"`
+	MaximumLoadBalancers            *IntegerOrUnlimited `json:"maximum_load_balancers,omitempty"`
+	MaximumManagedOrganizations     *IntegerOrUnlimited `json:"maximum_managed_organizations,omitempty"`
+	MaximumSecurityGroups           *IntegerOrUnlimited `json:"maximum_security_groups,omitempty"`
+	MaximumUnallocatedIpAddresses   *IntegerOrUnlimited `json:"maximum_unallocated_ip_addresses,omitempty"`
+	MaximumUninvoicedBalance        *DecimalOrUnlimited `json:"maximum_uninvoiced_balance,omitempty"`
+	MaximumVirtualMachineMemory     *IntegerOrUnlimited `json:"maximum_virtual_machine_memory,omitempty"`
+	MaximumVirtualMachines          *IntegerOrUnlimited `json:"maximum_virtual_machines,omitempty"`
+	MaximumVirtualNetworks          *IntegerOrUnlimited `json:"maximum_virtual_networks,omitempty"`
 }
 
 // OrganizationSuspendedEnum defines model for OrganizationSuspendedEnum.
@@ -3635,6 +3676,13 @@ type NoUserAssociatedWithIdentityResponse struct {
 	Detail      *map[string]interface{}           `json:"detail,omitempty"`
 }
 
+// NoVirtualMachineForAPITokenResponse defines model for NoVirtualMachineForAPITokenResponse.
+type NoVirtualMachineForAPITokenResponse struct {
+	Code        *NoVirtualMachineForAPITokenEnum `json:"code,omitempty"`
+	Description *string                          `json:"description,omitempty"`
+	Detail      *map[string]interface{}          `json:"detail,omitempty"`
+}
+
 // ObjectInTrashResponse defines model for ObjectInTrashResponse.
 type ObjectInTrashResponse struct {
 	Code        *ObjectInTrashEnum `json:"code,omitempty"`
@@ -4394,6 +4442,15 @@ type GetOrganizationNetworkSpeedProfilesParams struct {
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
 	Page                  *int    `form:"page,omitempty" json:"page,omitempty"`
 	PerPage               *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+}
+
+// GetOrganizationPolicyLimitsParams defines parameters for GetOrganizationPolicyLimits.
+type GetOrganizationPolicyLimitsParams struct {
+	// OrganizationId All 'organization[]' params are mutually exclusive, only one can be provided.
+	OrganizationId *string `form:"organization[id],omitempty" json:"organization[id],omitempty"`
+
+	// OrganizationSubDomain All 'organization[]' params are mutually exclusive, only one can be provided.
+	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
 }
 
 // GetOrganizationSecurityGroupsParams defines parameters for GetOrganizationSecurityGroups.
@@ -7601,6 +7658,9 @@ type ClientInterface interface {
 	// GetOrganizationNetworkSpeedProfiles request
 	GetOrganizationNetworkSpeedProfiles(ctx context.Context, params *GetOrganizationNetworkSpeedProfilesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetOrganizationPolicyLimits request
+	GetOrganizationPolicyLimits(ctx context.Context, params *GetOrganizationPolicyLimitsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetOrganizationSecurityGroups request
 	GetOrganizationSecurityGroups(ctx context.Context, params *GetOrganizationSecurityGroupsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -7727,6 +7787,9 @@ type ClientInterface interface {
 
 	// GetUsersCurrent request
 	GetUsersCurrent(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetVirtualMachineAuthorizedKeys request
+	GetVirtualMachineAuthorizedKeys(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeleteVirtualMachineGroupWithBody request with any body
 	DeleteVirtualMachineGroupWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -9012,6 +9075,18 @@ func (c *Client) GetOrganizationNetworkSpeedProfiles(ctx context.Context, params
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetOrganizationPolicyLimits(ctx context.Context, params *GetOrganizationPolicyLimitsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetOrganizationPolicyLimitsRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetOrganizationSecurityGroups(ctx context.Context, params *GetOrganizationSecurityGroupsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetOrganizationSecurityGroupsRequest(c.Server, params)
 	if err != nil {
@@ -9578,6 +9653,18 @@ func (c *Client) PostTrashObjectRestore(ctx context.Context, body PostTrashObjec
 
 func (c *Client) GetUsersCurrent(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetUsersCurrentRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetVirtualMachineAuthorizedKeys(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetVirtualMachineAuthorizedKeysRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -14401,6 +14488,71 @@ func NewGetOrganizationNetworkSpeedProfilesRequest(server string, params *GetOrg
 	return req, nil
 }
 
+// NewGetOrganizationPolicyLimitsRequest generates requests for GetOrganizationPolicyLimits
+func NewGetOrganizationPolicyLimitsRequest(server string, params *GetOrganizationPolicyLimitsParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/organizations/:organization/policy_limits")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "organization[id]", runtime.ParamLocationQuery, *params.OrganizationId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.OrganizationSubDomain != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "organization[sub_domain]", runtime.ParamLocationQuery, *params.OrganizationSubDomain); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetOrganizationSecurityGroupsRequest generates requests for GetOrganizationSecurityGroups
 func NewGetOrganizationSecurityGroupsRequest(server string, params *GetOrganizationSecurityGroupsParams) (*http.Request, error) {
 	var err error
@@ -16080,6 +16232,33 @@ func NewGetUsersCurrentRequest(server string) (*http.Request, error) {
 	}
 
 	operationPath := fmt.Sprintf("/users/current")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetVirtualMachineAuthorizedKeysRequest generates requests for GetVirtualMachineAuthorizedKeys
+func NewGetVirtualMachineAuthorizedKeysRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/virtual_machine/authorized_keys")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -17974,6 +18153,9 @@ type ClientWithResponsesInterface interface {
 	// GetOrganizationNetworkSpeedProfilesWithResponse request
 	GetOrganizationNetworkSpeedProfilesWithResponse(ctx context.Context, params *GetOrganizationNetworkSpeedProfilesParams, reqEditors ...RequestEditorFn) (*GetOrganizationNetworkSpeedProfilesResponse, error)
 
+	// GetOrganizationPolicyLimitsWithResponse request
+	GetOrganizationPolicyLimitsWithResponse(ctx context.Context, params *GetOrganizationPolicyLimitsParams, reqEditors ...RequestEditorFn) (*GetOrganizationPolicyLimitsResponse, error)
+
 	// GetOrganizationSecurityGroupsWithResponse request
 	GetOrganizationSecurityGroupsWithResponse(ctx context.Context, params *GetOrganizationSecurityGroupsParams, reqEditors ...RequestEditorFn) (*GetOrganizationSecurityGroupsResponse, error)
 
@@ -18100,6 +18282,9 @@ type ClientWithResponsesInterface interface {
 
 	// GetUsersCurrentWithResponse request
 	GetUsersCurrentWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetUsersCurrentResponse, error)
+
+	// GetVirtualMachineAuthorizedKeysWithResponse request
+	GetVirtualMachineAuthorizedKeysWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetVirtualMachineAuthorizedKeysResponse, error)
 
 	// DeleteVirtualMachineGroupWithBodyWithResponse request with any body
 	DeleteVirtualMachineGroupWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteVirtualMachineGroupResponse, error)
@@ -20308,6 +20493,34 @@ func (r GetOrganizationNetworkSpeedProfilesResponse) StatusCode() int {
 	return 0
 }
 
+type GetOrganizationPolicyLimitsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		PolicyLimits OrganizationPolicy `json:"policy_limits"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *OrganizationNotActivatedOrganizationSuspended403Res
+	JSON404 *OrganizationNotFoundResponse
+	JSON429 *APIAuthenticator429Response
+}
+
+// Status returns HTTPResponse.Status
+func (r GetOrganizationPolicyLimitsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetOrganizationPolicyLimitsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetOrganizationSecurityGroupsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -21227,6 +21440,34 @@ func (r GetUsersCurrentResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetUsersCurrentResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetVirtualMachineAuthorizedKeysResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		AuthorizedKeys string `json:"authorized_keys"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *APIAuthenticator403Response
+	JSON404 *NoVirtualMachineForAPITokenResponse
+	JSON429 *APIAuthenticator429Response
+}
+
+// Status returns HTTPResponse.Status
+func (r GetVirtualMachineAuthorizedKeysResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetVirtualMachineAuthorizedKeysResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -22939,6 +23180,15 @@ func (c *ClientWithResponses) GetOrganizationNetworkSpeedProfilesWithResponse(ct
 	return ParseGetOrganizationNetworkSpeedProfilesResponse(rsp)
 }
 
+// GetOrganizationPolicyLimitsWithResponse request returning *GetOrganizationPolicyLimitsResponse
+func (c *ClientWithResponses) GetOrganizationPolicyLimitsWithResponse(ctx context.Context, params *GetOrganizationPolicyLimitsParams, reqEditors ...RequestEditorFn) (*GetOrganizationPolicyLimitsResponse, error) {
+	rsp, err := c.GetOrganizationPolicyLimits(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetOrganizationPolicyLimitsResponse(rsp)
+}
+
 // GetOrganizationSecurityGroupsWithResponse request returning *GetOrganizationSecurityGroupsResponse
 func (c *ClientWithResponses) GetOrganizationSecurityGroupsWithResponse(ctx context.Context, params *GetOrganizationSecurityGroupsParams, reqEditors ...RequestEditorFn) (*GetOrganizationSecurityGroupsResponse, error) {
 	rsp, err := c.GetOrganizationSecurityGroups(ctx, params, reqEditors...)
@@ -23352,6 +23602,15 @@ func (c *ClientWithResponses) GetUsersCurrentWithResponse(ctx context.Context, r
 		return nil, err
 	}
 	return ParseGetUsersCurrentResponse(rsp)
+}
+
+// GetVirtualMachineAuthorizedKeysWithResponse request returning *GetVirtualMachineAuthorizedKeysResponse
+func (c *ClientWithResponses) GetVirtualMachineAuthorizedKeysWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetVirtualMachineAuthorizedKeysResponse, error) {
+	rsp, err := c.GetVirtualMachineAuthorizedKeys(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetVirtualMachineAuthorizedKeysResponse(rsp)
 }
 
 // DeleteVirtualMachineGroupWithBodyWithResponse request with arbitrary body returning *DeleteVirtualMachineGroupResponse
@@ -27962,6 +28221,62 @@ func ParseGetOrganizationNetworkSpeedProfilesResponse(rsp *http.Response) (*GetO
 	return response, nil
 }
 
+// ParseGetOrganizationPolicyLimitsResponse parses an HTTP response from a GetOrganizationPolicyLimitsWithResponse call
+func ParseGetOrganizationPolicyLimitsResponse(rsp *http.Response) (*GetOrganizationPolicyLimitsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetOrganizationPolicyLimitsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			PolicyLimits OrganizationPolicy `json:"policy_limits"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest OrganizationNotActivatedOrganizationSuspended403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest OrganizationNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetOrganizationSecurityGroupsResponse parses an HTTP response from a GetOrganizationSecurityGroupsWithResponse call
 func ParseGetOrganizationSecurityGroupsResponse(rsp *http.Response) (*GetOrganizationSecurityGroupsResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -29834,6 +30149,62 @@ func ParseGetUsersCurrentResponse(rsp *http.Response) (*GetUsersCurrentResponse,
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest NoUserAssociatedWithIdentityResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetVirtualMachineAuthorizedKeysResponse parses an HTTP response from a GetVirtualMachineAuthorizedKeysWithResponse call
+func ParseGetVirtualMachineAuthorizedKeysResponse(rsp *http.Response) (*GetVirtualMachineAuthorizedKeysResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetVirtualMachineAuthorizedKeysResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			AuthorizedKeys string `json:"authorized_keys"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest APIAuthenticator403Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NoVirtualMachineForAPITokenResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

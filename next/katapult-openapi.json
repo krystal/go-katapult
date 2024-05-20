@@ -271,6 +271,63 @@
         }
       }
     },
+    "/organizations/:organization/policy_limits": {
+      "get": {
+        "operationId": "get:organization_policy_limits",
+        "tags": [
+          "Core"
+        ],
+        "parameters": [
+          {
+            "name": "organization[id]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "All 'organization[]' params are mutually exclusive, only one can be provided."
+          },
+          {
+            "name": "organization[sub_domain]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "All 'organization[]' params are mutually exclusive, only one can be provided."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the computed policy limits for a organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "policy_limits": {
+                      "$ref": "#/components/schemas/OrganizationPolicy"
+                    }
+                  },
+                  "required": [
+                    "policy_limits"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/OrganizationNotActivatedOrganizationSuspended403Res"
+          },
+          "404": {
+            "$ref": "#/components/responses/OrganizationNotFoundResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      }
+    },
     "/organizations/:organization/users_with_access": {
       "get": {
         "operationId": "get:organization_users_with_access",
@@ -1700,6 +1757,48 @@
           },
           "422": {
             "$ref": "#/components/responses/IPAlreadyAllocatedNoInterfaceAvailable422Res"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      }
+    },
+    "/virtual_machine/authorized_keys": {
+      "get": {
+        "operationId": "get:virtual_machine_authorized_keys",
+        "tags": [
+          "Core"
+        ],
+        "parameters": [
+
+        ],
+        "responses": {
+          "200": {
+            "description": "Return the authorized keys for the virtual machine associated with the provided API token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "authorized_keys": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "authorized_keys"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/APIAuthenticator403Response"
+          },
+          "404": {
+            "$ref": "#/components/responses/NoVirtualMachineForAPITokenResponse"
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
@@ -8960,6 +9059,84 @@
           "organization_not_found"
         ]
       },
+      "OrganizationPolicy": {
+        "type": "object",
+        "properties": {
+          "maximum_uninvoiced_balance": {
+            "$ref": "#/components/schemas/DecimalOrUnlimited"
+          },
+          "maximum_virtual_machines": {
+            "$ref": "#/components/schemas/IntegerOrUnlimited"
+          },
+          "maximum_virtual_machine_memory": {
+            "$ref": "#/components/schemas/IntegerOrUnlimited"
+          },
+          "maximum_disk_space": {
+            "$ref": "#/components/schemas/IntegerOrUnlimited"
+          },
+          "maximum_managed_organizations": {
+            "$ref": "#/components/schemas/IntegerOrUnlimited"
+          },
+          "maximum_unallocated_ip_addresses": {
+            "$ref": "#/components/schemas/IntegerOrUnlimited"
+          },
+          "maximum_security_groups": {
+            "$ref": "#/components/schemas/IntegerOrUnlimited"
+          },
+          "maximum_virtual_networks": {
+            "$ref": "#/components/schemas/IntegerOrUnlimited"
+          },
+          "maximum_load_balancers": {
+            "$ref": "#/components/schemas/IntegerOrUnlimited"
+          },
+          "maximum_dns_zones": {
+            "$ref": "#/components/schemas/IntegerOrUnlimited"
+          },
+          "maximum_certificates": {
+            "$ref": "#/components/schemas/IntegerOrUnlimited"
+          },
+          "maximum_file_storage_volumes": {
+            "$ref": "#/components/schemas/IntegerOrUnlimited"
+          },
+          "maximum_isos": {
+            "$ref": "#/components/schemas/IntegerOrUnlimited"
+          },
+          "flexible_virtual_machine_resources": {
+            "type": "boolean"
+          },
+          "allow_suspension": {
+            "type": "boolean"
+          },
+          "allow_restricted_traffic_types": {
+            "type": "boolean"
+          }
+        }
+      },
+      "DecimalOrUnlimited": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "unlimited": {
+            "type": "boolean"
+          }
+        }
+      },
+      "IntegerOrUnlimited": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "nullable": true
+          },
+          "unlimited": {
+            "type": "boolean"
+          }
+        }
+      },
       "PaginationObject": {
         "type": "object",
         "properties": {
@@ -10184,6 +10361,7 @@
           "migrating",
           "stopping",
           "shutting_down",
+          "transferring",
           "orphaned"
         ]
       },
@@ -11150,6 +11328,12 @@
           {
             "$ref": "#/components/schemas/IPAlreadyAllocatedSchema"
           }
+        ]
+      },
+      "NoVirtualMachineForAPITokenEnum": {
+        "type": "string",
+        "enum": [
+          "no_virtual_machine_for_api_token"
         ]
       },
       "ZoneLookup": {
@@ -15626,6 +15810,26 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/OneOfIPAlreadyAllocatedNoInterfaceAvailable422Res"
+            }
+          }
+        }
+      },
+      "NoVirtualMachineForAPITokenResponse": {
+        "description": "No virtual machine was found for the provided API token",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "$ref": "#/components/schemas/NoVirtualMachineForAPITokenEnum"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "detail": {
+                  "type": "object"
+                }
+              }
             }
           }
         }
