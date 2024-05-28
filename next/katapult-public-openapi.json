@@ -1,0 +1,1024 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Katapult Public API",
+    "description": "Welcome to the documentation for the Katapult Public API"
+  },
+  "servers": [
+    {
+      "url": "https://api.katapult.io/public/v1"
+    }
+  ],
+  "paths": {
+    "/signups": {
+      "post": {
+        "operationId": "post:signups",
+        "tags": [
+          "Core"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "email_address": {
+                    "type": "string",
+                    "description": "The e-mail address that should receive the welcome e-mail"
+                  },
+                  "coupon": {
+                    "type": "string",
+                    "description": "The code for the coupon that will be applied to the first new organization created by the user"
+                  },
+                  "campaign": {
+                    "$ref": "#/components/schemas/SignupCampaignArguments"
+                  }
+                },
+                "required": [
+                  "email_address"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "This will create a new signup object and e-mail the appropriate welcome e-mail to the given email address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "The ID of the signup"
+                    },
+                    "email_address": {
+                      "type": "string",
+                      "description": "The e-mail address that was sent the welcome email"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "email_address"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/APIAuthenticator403Response"
+          },
+          "404": {
+            "$ref": "#/components/responses/InvalidCouponCodeResponse"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationErrorResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      }
+    },
+    "/stats": {
+      "get": {
+        "operationId": "get:stats",
+        "tags": [
+          "Core"
+        ],
+        "parameters": [
+
+        ],
+        "responses": {
+          "200": {
+            "description": "Return some key statistics about the platform",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "total_virtual_machines_launched": {
+                      "type": "integer",
+                      "description": "The number of virtual machines launched (all time)"
+                    },
+                    "total_virtual_machines_launched_today": {
+                      "type": "integer",
+                      "description": "The number of virtual machines launched today"
+                    },
+                    "total_memory": {
+                      "type": "integer",
+                      "description": "The total amount of memory (in GB)"
+                    },
+                    "total_cpu_cores": {
+                      "type": "integer",
+                      "description": "The total number of CPU cores"
+                    },
+                    "total_block_storage": {
+                      "type": "integer",
+                      "description": "The total amount of block storage (in GB)"
+                    },
+                    "total_organizations": {
+                      "type": "integer",
+                      "description": "The number of organizations"
+                    }
+                  },
+                  "required": [
+                    "total_virtual_machines_launched",
+                    "total_virtual_machines_launched_today",
+                    "total_memory",
+                    "total_cpu_cores",
+                    "total_block_storage",
+                    "total_organizations"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/APIAuthenticator403Response"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      }
+    },
+    "/pricing/prices": {
+      "get": {
+        "operationId": "get:pricing_prices",
+        "tags": [
+          "Core"
+        ],
+        "parameters": [
+
+        ],
+        "responses": {
+          "200": {
+            "description": "Return available prices for the system",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "prices": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/GetPricingPrices200ResponsePrices"
+                      },
+                      "description": "The prices in the default price plan"
+                    }
+                  },
+                  "required": [
+                    "prices"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/APIAuthenticator403Response"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      }
+    },
+    "/pricing/estimate": {
+      "post": {
+        "operationId": "post:pricing_estimate",
+        "tags": [
+          "Core"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "customer_name": {
+                    "type": "string",
+                    "description": "The customer's name"
+                  },
+                  "resources": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/PricingEstimateResourceArguments"
+                    }
+                  },
+                  "customer_type": {
+                    "$ref": "#/components/schemas/CustomerTypeEnum"
+                  },
+                  "currency": {
+                    "$ref": "#/components/schemas/CurrencyLookup"
+                  },
+                  "country": {
+                    "$ref": "#/components/schemas/CountryLookup"
+                  }
+                },
+                "required": [
+                  "customer_name",
+                  "resources",
+                  "customer_type",
+                  "currency",
+                  "country"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return an estimate and breakdown of the cost of a configuration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "estimate": {
+                      "description": "The estimate, including breakdown, for a Katapult configuration",
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/PricingEstimate"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "estimate"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res"
+          },
+          "403": {
+            "$ref": "#/components/responses/APIAuthenticator403Response"
+          },
+          "404": {
+            "$ref": "#/components/responses/CountryNotFoundCurrencyNotFound404Res"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      }
+    },
+    "/virtual_machine_packages": {
+      "get": {
+        "operationId": "get:virtual_machine_packages",
+        "tags": [
+          "Core"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return the currently available virtual machine packages",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "pagination": {
+                      "$ref": "#/components/schemas/PaginationObject"
+                    },
+                    "packages": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/VirtualMachinePackage"
+                      },
+                      "description": "All available virtual machine packages"
+                    }
+                  },
+                  "required": [
+                    "pagination",
+                    "packages"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/APIAuthenticator403Response"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      }
+    },
+    "/data_centers": {
+      "get": {
+        "operationId": "get:data_centers",
+        "tags": [
+          "Core"
+        ],
+        "parameters": [
+
+        ],
+        "responses": {
+          "200": {
+            "description": "Provides a full list of all data centers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data_centers": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/DataCenter"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data_centers"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/APIAuthenticator403Response"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SignupCampaignArguments": {
+        "description": "All 'campaign[]' params are mutually exclusive, only one can be provided.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "medium": {
+            "type": "string"
+          },
+          "term": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          }
+        }
+      },
+      "InternalAuthError": {
+        "type": "object",
+        "properties": {
+          "details": {
+            "type": "string"
+          }
+        }
+      },
+      "InternalAuthErrorEnum": {
+        "type": "string",
+        "enum": [
+          "internal_auth_error"
+        ]
+      },
+      "InvalidCouponCode": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          }
+        }
+      },
+      "InvalidCouponCodeEnum": {
+        "type": "string",
+        "enum": [
+          "invalid_coupon_code"
+        ]
+      },
+      "ValidationError": {
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ValidationErrorEnum": {
+        "type": "string",
+        "enum": [
+          "validation_error"
+        ]
+      },
+      "RateLimitReached": {
+        "type": "object",
+        "properties": {
+          "total_permitted": {
+            "type": "integer",
+            "description": "The total number of requests per minute that are permitted"
+          }
+        }
+      },
+      "RateLimitReachedEnum": {
+        "type": "string",
+        "enum": [
+          "rate_limit_reached"
+        ]
+      },
+      "GetPricingPrices200ResponsePrices": {
+        "type": "object",
+        "properties": {
+          "resource": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "variants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PriceVariant"
+            }
+          }
+        }
+      },
+      "PriceVariant": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "default": {
+            "type": "boolean"
+          },
+          "prices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Price"
+            }
+          }
+        }
+      },
+      "Price": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "format": "float"
+          },
+          "currency": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Currency"
+            }
+          }
+        }
+      },
+      "Currency": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "iso_code": {
+            "type": "string"
+          },
+          "symbol": {
+            "type": "string"
+          }
+        }
+      },
+      "PricingEstimateResourceArguments": {
+        "description": "All 'resources[]' params are mutually exclusive, only one can be provided.",
+        "type": "object",
+        "properties": {
+          "resource": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer"
+          }
+        }
+      },
+      "CustomerTypeEnum": {
+        "type": "string",
+        "enum": [
+          "consumer",
+          "business"
+        ]
+      },
+      "CurrencyLookup": {
+        "description": "All 'currency[]' params are mutually exclusive, only one can be provided.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "iso_code": {
+            "type": "string"
+          }
+        }
+      },
+      "CountryLookup": {
+        "description": "All 'country[]' params are mutually exclusive, only one can be provided.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "iso_code2": {
+            "type": "string"
+          },
+          "iso_code3": {
+            "type": "string"
+          }
+        }
+      },
+      "PricingEstimate": {
+        "properties": {
+          "resources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PricingEstimateResource"
+            }
+          },
+          "per_month": {
+            "type": "number",
+            "format": "float"
+          },
+          "per_month_inc_tax": {
+            "type": "number",
+            "format": "float"
+          },
+          "per_hour": {
+            "type": "number",
+            "format": "float"
+          },
+          "per_hour_inc_tax": {
+            "type": "number",
+            "format": "float"
+          },
+          "currency": {
+            "$ref": "#/components/schemas/Currency"
+          },
+          "tax_rate": {
+            "type": "number",
+            "format": "float"
+          },
+          "pdf_url": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "PricingEstimateResource": {
+        "type": "object",
+        "properties": {
+          "resource": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer"
+          },
+          "per_month": {
+            "type": "number",
+            "format": "float"
+          },
+          "per_month_inc_tax": {
+            "type": "number",
+            "format": "float"
+          },
+          "per_month_each": {
+            "type": "number",
+            "format": "float"
+          },
+          "per_hour": {
+            "type": "number",
+            "format": "float"
+          },
+          "per_hour_inc_tax": {
+            "type": "number",
+            "format": "float"
+          },
+          "per_hour_each": {
+            "type": "number",
+            "format": "float"
+          },
+          "package": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VirtualMachinePackage"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "VirtualMachinePackage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "permalink": {
+            "type": "string"
+          },
+          "cpu_cores": {
+            "type": "integer"
+          },
+          "ipv4_addresses": {
+            "type": "integer"
+          },
+          "memory_in_gb": {
+            "type": "integer"
+          },
+          "storage_in_gb": {
+            "type": "integer"
+          },
+          "monthly_bandwidth_allowance_in_gb": {
+            "type": "integer",
+            "nullable": true
+          },
+          "privacy": {
+            "$ref": "#/components/schemas/PrivacyTypesEnum"
+          },
+          "icon": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Attachment"
+              }
+            ],
+            "nullable": true
+          },
+          "use_dedicated_cpus": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PrivacyTypesEnum": {
+        "type": "string",
+        "enum": [
+          "public",
+          "private"
+        ]
+      },
+      "Attachment": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "file_name": {
+            "type": "string"
+          },
+          "file_type": {
+            "type": "string"
+          },
+          "file_size": {
+            "type": "integer"
+          },
+          "digest": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "MissingResourcesEnum": {
+        "type": "string",
+        "enum": [
+          "missing_resources"
+        ]
+      },
+      "MissingResourcesSchema": {
+        "type": "object",
+        "description": "You must provide at least one resource in the resources array",
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/MissingResourcesEnum"
+          },
+          "description": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "object"
+          }
+        }
+      },
+      "InvalidEstimateResource": {
+        "type": "object",
+        "properties": {
+          "resource": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "InvalidEstimateResourceEnum": {
+        "type": "string",
+        "enum": [
+          "invalid_estimate_resource"
+        ]
+      },
+      "InvalidEstimateResourceSchema": {
+        "type": "object",
+        "description": "The provided resource is not valid",
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/InvalidEstimateResourceEnum"
+          },
+          "description": {
+            "type": "string"
+          },
+          "detail": {
+            "$ref": "#/components/schemas/InvalidEstimateResource"
+          }
+        }
+      },
+      "InvalidEstimateQuantity": {
+        "type": "object",
+        "properties": {
+          "resource": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "InvalidEstimateQuantityEnum": {
+        "type": "string",
+        "enum": [
+          "invalid_estimate_quantity"
+        ]
+      },
+      "InvalidEstimateQuantitySchema": {
+        "type": "object",
+        "description": "The quantity for the provided resource must be greater than zero",
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/InvalidEstimateQuantityEnum"
+          },
+          "description": {
+            "type": "string"
+          },
+          "detail": {
+            "$ref": "#/components/schemas/InvalidEstimateQuantity"
+          }
+        }
+      },
+      "OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/MissingResourcesSchema"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidEstimateResourceSchema"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidEstimateQuantitySchema"
+          }
+        ]
+      },
+      "CurrencyNotFoundEnum": {
+        "type": "string",
+        "enum": [
+          "currency_not_found"
+        ]
+      },
+      "CurrencyNotFoundSchema": {
+        "type": "object",
+        "description": "No currency was found matching any of the criteria provided in the arguments",
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/CurrencyNotFoundEnum"
+          },
+          "description": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "object"
+          }
+        }
+      },
+      "CountryNotFoundEnum": {
+        "type": "string",
+        "enum": [
+          "country_not_found"
+        ]
+      },
+      "CountryNotFoundSchema": {
+        "type": "object",
+        "description": "No country was found matching any of the criteria provided in the arguments",
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/CountryNotFoundEnum"
+          },
+          "description": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "object"
+          }
+        }
+      },
+      "OneOfCountryNotFoundCurrencyNotFound404Res": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/CurrencyNotFoundSchema"
+          },
+          {
+            "$ref": "#/components/schemas/CountryNotFoundSchema"
+          }
+        ]
+      },
+      "PaginationObject": {
+        "type": "object",
+        "properties": {
+          "current_page": {
+            "type": "integer",
+            "description": "The current page"
+          },
+          "total_pages": {
+            "type": "integer",
+            "description": "The total number of pages",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "description": "The total number of items across all pages",
+            "nullable": true
+          },
+          "per_page": {
+            "type": "integer",
+            "description": "The number of items per page"
+          },
+          "large_set": {
+            "type": "boolean",
+            "description": "Is this a large set and therefore the total number of records cannot be returned?"
+          }
+        }
+      },
+      "DataCenter": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "permalink": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "responses": {
+      "APIAuthenticator403Response": {
+        "description": "403 error response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "$ref": "#/components/schemas/InternalAuthErrorEnum"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "detail": {
+                  "$ref": "#/components/schemas/InternalAuthError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "InvalidCouponCodeResponse": {
+        "description": "The provided coupon code is not valid",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "$ref": "#/components/schemas/InvalidCouponCodeEnum"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "detail": {
+                  "$ref": "#/components/schemas/InvalidCouponCode"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ValidationErrorResponse": {
+        "description": "A validation error occurred with the object that was being created/updated/deleted",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "$ref": "#/components/schemas/ValidationErrorEnum"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "detail": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "APIAuthenticator429Response": {
+        "description": "You have reached the rate limit for this type of request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "$ref": "#/components/schemas/RateLimitReachedEnum"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "detail": {
+                  "$ref": "#/components/schemas/RateLimitReached"
+                }
+              }
+            }
+          }
+        }
+      },
+      "InvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res": {
+        "description": "400 error response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res"
+            }
+          }
+        }
+      },
+      "CountryNotFoundCurrencyNotFound404Res": {
+        "description": "404 error response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/OneOfCountryNotFoundCurrencyNotFound404Res"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+
+  ]
+}
