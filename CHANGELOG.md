@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.7](https://github.com/krystal/go-katapult/compare/v0.2.6...v0.2.7) (2024-05-28)
+
+
+### Features
+
+* update next client ([#160](https://github.com/krystal/go-katapult/issues/160)) ([63df30b](https://github.com/krystal/go-katapult/commit/63df30b2a0d93ae5337d1cd47ef0b3c02480bced))
+
 ## [0.2.6](https://github.com/krystal/go-katapult/compare/v0.2.5...v0.2.6) (2024-05-17)
 
 
