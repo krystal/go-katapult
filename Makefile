@@ -137,9 +137,10 @@ check-schemas:
 	( diff -rN "$(CURDIR)/schemas" "$(CHKDIR)/schemas" && rm -rf "$(CHKDIR)" ) \
 		|| ( rm -rf "$(CHKDIR)" && exit 1 )
 
-.PHONY: retrieve-openapi-schema
-retrieve-openapi-schema:
-	wget -O next/katapult-openapi.json https://api.katapult.io/core/v1/schema/openapi.json
+.PHONY: retrieve-openapi-schemas
+retrieve-openapi-schemas:
+	wget -O next/katapult-core-openapi.json https://api.katapult.io/core/v1/schema/openapi.json
+	wget -O next/katapult-public-openapi.json https://api.katapult.io/public/v1/schema/openapi.json
 
 #
 # Coverage

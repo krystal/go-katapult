@@ -271,6 +271,63 @@
         }
       }
     },
+    "/organizations/:organization/policy_limits": {
+      "get": {
+        "operationId": "get:organization_policy_limits",
+        "tags": [
+          "Core"
+        ],
+        "parameters": [
+          {
+            "name": "organization[id]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "All 'organization[]' params are mutually exclusive, only one can be provided."
+          },
+          {
+            "name": "organization[sub_domain]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "All 'organization[]' params are mutually exclusive, only one can be provided."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the computed policy limits for a organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "policy_limits": {
+                      "$ref": "#/components/schemas/OrganizationPolicy"
+                    }
+                  },
+                  "required": [
+                    "policy_limits"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/OrganizationNotActivatedOrganizationSuspended403Res"
+          },
+          "404": {
+            "$ref": "#/components/responses/OrganizationNotFoundResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      }
+    },
     "/organizations/:organization/users_with_access": {
       "get": {
         "operationId": "get:organization_users_with_access",
@@ -1700,6 +1757,48 @@
           },
           "422": {
             "$ref": "#/components/responses/IPAlreadyAllocatedNoInterfaceAvailable422Res"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      }
+    },
+    "/virtual_machine/authorized_keys": {
+      "get": {
+        "operationId": "get:virtual_machine_authorized_keys",
+        "tags": [
+          "Core"
+        ],
+        "parameters": [
+
+        ],
+        "responses": {
+          "200": {
+            "description": "Return the authorized keys for the virtual machine associated with the provided API token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "authorized_keys": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "authorized_keys"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/APIAuthenticator403Response"
+          },
+          "404": {
+            "$ref": "#/components/responses/NoVirtualMachineForAPITokenResponse"
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
@@ -5115,6 +5214,700 @@
         }
       }
     },
+    "/address_lists": {
+      "get": {
+        "operationId": "get:address_lists",
+        "tags": [
+          "Core"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a list of all global address lists.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "pagination": {
+                      "$ref": "#/components/schemas/PaginationObject"
+                    },
+                    "address_lists": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/GetAddressLists200ResponseAddressLists"
+                      },
+                      "description": "A list of all global address lists."
+                    }
+                  },
+                  "required": [
+                    "pagination",
+                    "address_lists"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/APIAuthenticator403Response"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      }
+    },
+    "/organizations/:organization/address_lists": {
+      "get": {
+        "operationId": "get:organization_address_lists",
+        "tags": [
+          "Core"
+        ],
+        "parameters": [
+          {
+            "name": "organization[id]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The organization for which the address lists should be returned. All 'organization[]' params are mutually exclusive, only one can be provided."
+          },
+          {
+            "name": "organization[sub_domain]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The organization for which the address lists should be returned. All 'organization[]' params are mutually exclusive, only one can be provided."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a list of all address lists for a given organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "pagination": {
+                      "$ref": "#/components/schemas/PaginationObject"
+                    },
+                    "address_lists": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/GetOrganizationAddressLists200ResponseAddressLists"
+                      },
+                      "description": "A list of all address lists for the given organization."
+                    }
+                  },
+                  "required": [
+                    "pagination",
+                    "address_lists"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res"
+          },
+          "404": {
+            "$ref": "#/components/responses/OrganizationNotFoundResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      },
+      "post": {
+        "operationId": "post:organization_address_lists",
+        "tags": [
+          "Core"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "organization": {
+                    "$ref": "#/components/schemas/OrganizationLookup"
+                  },
+                  "properties": {
+                    "$ref": "#/components/schemas/AddressListArguments"
+                  }
+                },
+                "required": [
+                  "organization",
+                  "properties"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Create a new address list for a given organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "address_list": {
+                      "description": "The address list.",
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/AddressList"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "address_list"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res"
+          },
+          "404": {
+            "$ref": "#/components/responses/OrganizationNotFoundResponse"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationErrorResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      }
+    },
+    "/address_lists/:address_list": {
+      "get": {
+        "operationId": "get:address_list",
+        "tags": [
+          "Core"
+        ],
+        "parameters": [
+          {
+            "name": "address_list[id]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The address list to return. All 'address_list[]' params are mutually exclusive, only one can be provided."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns details for a address list.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "address_list": {
+                      "description": "The address list.",
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/AddressList"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "address_list"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/APIAuthenticator403Response"
+          },
+          "404": {
+            "$ref": "#/components/responses/AddressListNotFoundResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "patch:address_list",
+        "tags": [
+          "Core"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "address_list": {
+                    "$ref": "#/components/schemas/AddressListLookup"
+                  },
+                  "properties": {
+                    "$ref": "#/components/schemas/AddressListArguments"
+                  }
+                },
+                "required": [
+                  "address_list",
+                  "properties"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Update a address list with new properties.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "address_list": {
+                      "description": "The address list.",
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/AddressList"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "address_list"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/PermissionDenied403Res"
+          },
+          "404": {
+            "$ref": "#/components/responses/AddressListNotFoundResponse"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationErrorResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "delete:address_list",
+        "tags": [
+          "Core"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "address_list": {
+                    "$ref": "#/components/schemas/AddressListLookup"
+                  }
+                },
+                "required": [
+                  "address_list"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Delete a address list.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "address_list": {
+                      "description": "The address list that has been destroyed.",
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/AddressList"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "address_list"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/PermissionDenied403Res"
+          },
+          "404": {
+            "$ref": "#/components/responses/AddressListNotFoundResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      }
+    },
+    "/address_lists/:address_list/entries": {
+      "get": {
+        "operationId": "get:address_list_entries",
+        "tags": [
+          "Core"
+        ],
+        "parameters": [
+          {
+            "name": "address_list[id]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The address list for which the entries should be returned. All 'address_list[]' params are mutually exclusive, only one can be provided."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a list of all address list entries for a given address list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "pagination": {
+                      "$ref": "#/components/schemas/PaginationObject"
+                    },
+                    "address_list_entries": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AddressListEntry"
+                      },
+                      "description": "A list of all address list entries for the given address list."
+                    }
+                  },
+                  "required": [
+                    "pagination",
+                    "address_list_entries"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/PermissionDenied403Res"
+          },
+          "404": {
+            "$ref": "#/components/responses/AddressListNotFoundResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      },
+      "post": {
+        "operationId": "post:address_list_entries",
+        "tags": [
+          "Core"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "address_list": {
+                    "$ref": "#/components/schemas/AddressListLookup"
+                  },
+                  "properties": {
+                    "$ref": "#/components/schemas/AddressListEntryArguments"
+                  }
+                },
+                "required": [
+                  "address_list",
+                  "properties"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Create a new address list entry for a given address list.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "address_list_entry": {
+                      "description": "The address list entry.",
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/AddressListEntry"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "address_list_entry"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/PermissionDenied403Res"
+          },
+          "404": {
+            "$ref": "#/components/responses/AddressListNotFoundResponse"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationErrorResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      }
+    },
+    "/address_list_entries/:address_list_entry": {
+      "get": {
+        "operationId": "get:address_list_entry",
+        "tags": [
+          "Core"
+        ],
+        "parameters": [
+          {
+            "name": "address_list_entry[id]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The address list entry to return. All 'address_list_entry[]' params are mutually exclusive, only one can be provided."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns details for an address list entry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "address_list_entry": {
+                      "description": "The address list entry.",
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/AddressListEntry"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "address_list_entry"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/APIAuthenticator403Response"
+          },
+          "404": {
+            "$ref": "#/components/responses/AddressListEntryNotFoundResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "patch:address_list_entry",
+        "tags": [
+          "Core"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "address_list_entry": {
+                    "$ref": "#/components/schemas/AddressListEntryLookup"
+                  },
+                  "properties": {
+                    "$ref": "#/components/schemas/AddressListEntryArguments"
+                  }
+                },
+                "required": [
+                  "address_list_entry",
+                  "properties"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Update an address list entry with new properties.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "address_list_entry": {
+                      "description": "The address list entry.",
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/AddressListEntry"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "address_list_entry"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/PermissionDenied403Res"
+          },
+          "404": {
+            "$ref": "#/components/responses/AddressListEntryNotFoundResponse"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationErrorResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "delete:address_list_entry",
+        "tags": [
+          "Core"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "address_list_entry": {
+                    "$ref": "#/components/schemas/AddressListEntryLookup"
+                  }
+                },
+                "required": [
+                  "address_list_entry"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Delete an address list entry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "address_list_entry": {
+                      "description": "The address list entry that has been destroyed.",
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/AddressListEntry"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "address_list_entry"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/PermissionDenied403Res"
+          },
+          "404": {
+            "$ref": "#/components/responses/AddressListEntryNotFoundResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      }
+    },
     "/organizations/:organization/certificates": {
       "get": {
         "operationId": "get:organization_certificates",
@@ -6244,6 +7037,7 @@
               "application/json": {
                 "schema": {
                   "properties": {
+
                   }
                 }
               }
@@ -6296,6 +7090,7 @@
               "application/json": {
                 "schema": {
                   "properties": {
+
                   }
                 }
               }
@@ -8472,6 +9267,7 @@
             "application/json": {
               "schema": {
                 "properties": {
+
                 }
               }
             }
@@ -8959,6 +9755,84 @@
         "enum": [
           "organization_not_found"
         ]
+      },
+      "OrganizationPolicy": {
+        "type": "object",
+        "properties": {
+          "maximum_uninvoiced_balance": {
+            "$ref": "#/components/schemas/DecimalOrUnlimited"
+          },
+          "maximum_virtual_machines": {
+            "$ref": "#/components/schemas/IntegerOrUnlimited"
+          },
+          "maximum_virtual_machine_memory": {
+            "$ref": "#/components/schemas/IntegerOrUnlimited"
+          },
+          "maximum_disk_space": {
+            "$ref": "#/components/schemas/IntegerOrUnlimited"
+          },
+          "maximum_managed_organizations": {
+            "$ref": "#/components/schemas/IntegerOrUnlimited"
+          },
+          "maximum_unallocated_ip_addresses": {
+            "$ref": "#/components/schemas/IntegerOrUnlimited"
+          },
+          "maximum_security_groups": {
+            "$ref": "#/components/schemas/IntegerOrUnlimited"
+          },
+          "maximum_virtual_networks": {
+            "$ref": "#/components/schemas/IntegerOrUnlimited"
+          },
+          "maximum_load_balancers": {
+            "$ref": "#/components/schemas/IntegerOrUnlimited"
+          },
+          "maximum_dns_zones": {
+            "$ref": "#/components/schemas/IntegerOrUnlimited"
+          },
+          "maximum_certificates": {
+            "$ref": "#/components/schemas/IntegerOrUnlimited"
+          },
+          "maximum_file_storage_volumes": {
+            "$ref": "#/components/schemas/IntegerOrUnlimited"
+          },
+          "maximum_isos": {
+            "$ref": "#/components/schemas/IntegerOrUnlimited"
+          },
+          "flexible_virtual_machine_resources": {
+            "type": "boolean"
+          },
+          "allow_suspension": {
+            "type": "boolean"
+          },
+          "allow_restricted_traffic_types": {
+            "type": "boolean"
+          }
+        }
+      },
+      "DecimalOrUnlimited": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "unlimited": {
+            "type": "boolean"
+          }
+        }
+      },
+      "IntegerOrUnlimited": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "nullable": true
+          },
+          "unlimited": {
+            "type": "boolean"
+          }
+        }
       },
       "PaginationObject": {
         "type": "object",
@@ -10184,6 +11058,7 @@
           "migrating",
           "stopping",
           "shutting_down",
+          "transferring",
           "orphaned"
         ]
       },
@@ -11150,6 +12025,12 @@
           {
             "$ref": "#/components/schemas/IPAlreadyAllocatedSchema"
           }
+        ]
+      },
+      "NoVirtualMachineForAPITokenEnum": {
+        "type": "string",
+        "enum": [
+          "no_virtual_machine_for_api_token"
         ]
       },
       "ZoneLookup": {
@@ -13603,6 +14484,130 @@
           }
         }
       },
+      "GetAddressLists200ResponseAddressLists": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the address list."
+          },
+          "global": {
+            "type": "boolean",
+            "description": "Whether the address list is global or not."
+          }
+        }
+      },
+      "GetOrganizationAddressLists200ResponseAddressLists": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the address list."
+          },
+          "global": {
+            "type": "boolean",
+            "description": "Whether the address list is global or not."
+          }
+        }
+      },
+      "AddressList": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the address list."
+          },
+          "global": {
+            "type": "boolean",
+            "description": "Whether the address list is global or not."
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AddressListEntry"
+            }
+          }
+        }
+      },
+      "AddressListEntry": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string",
+            "description": "Address or network."
+          },
+          "name": {
+            "type": "string",
+            "description": "Optional name/comment."
+          }
+        }
+      },
+      "AddressListNotFoundEnum": {
+        "type": "string",
+        "enum": [
+          "address_list_not_found"
+        ]
+      },
+      "AddressListArguments": {
+        "description": "All 'properties[]' params are mutually exclusive, only one can be provided.",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the address list."
+          }
+        }
+      },
+      "AddressListLookup": {
+        "description": "All 'address_list[]' params are mutually exclusive, only one can be provided.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "AddressListEntryNotFoundEnum": {
+        "type": "string",
+        "enum": [
+          "address_list_entry_not_found"
+        ]
+      },
+      "AddressListEntryArguments": {
+        "description": "All 'properties[]' params are mutually exclusive, only one can be provided.",
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "Address or network to add to the list."
+          },
+          "name": {
+            "type": "string",
+            "description": "Optional name/comment."
+          }
+        }
+      },
+      "AddressListEntryLookup": {
+        "description": "All 'address_list_entry[]' params are mutually exclusive, only one can be provided.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      },
       "GetOrganizationCertificates200ResponseCertificates": {
         "type": "object",
         "properties": {
@@ -13739,10 +14744,7 @@
             }
           },
           "ip_address": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GetOrganizationLoadBalancersPartIPAddress"
-            }
+            "$ref": "#/components/schemas/GetOrganizationLoadBalancersPartIPAddress"
           },
           "data_center": {
             "$ref": "#/components/schemas/GetOrganizationLoadBalancersPartDataCenter"
@@ -13878,10 +14880,7 @@
             }
           },
           "ip_address": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PostOrganizationLoadBalancersPartIPAddress"
-            }
+            "$ref": "#/components/schemas/PostOrganizationLoadBalancersPartIPAddress"
           },
           "https_redirect": {
             "type": "boolean"
@@ -13978,10 +14977,7 @@
             }
           },
           "ip_address": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GetLoadBalancerPartIPAddress"
-            }
+            "$ref": "#/components/schemas/GetLoadBalancerPartIPAddress"
           },
           "https_redirect": {
             "type": "boolean"
@@ -14085,10 +15081,7 @@
             }
           },
           "ip_address": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PatchLoadBalancerPartIPAddress"
-            }
+            "$ref": "#/components/schemas/PatchLoadBalancerPartIPAddress"
           },
           "https_redirect": {
             "type": "boolean"
@@ -15630,6 +16623,26 @@
           }
         }
       },
+      "NoVirtualMachineForAPITokenResponse": {
+        "description": "No virtual machine was found for the provided API token",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "$ref": "#/components/schemas/NoVirtualMachineForAPITokenEnum"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "detail": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
       "OrganizationNotActivatedPermissionDeniedResourceCreationRestricted403Res": {
         "description": "403 error response",
         "content": {
@@ -15948,6 +16961,46 @@
               "properties": {
                 "code": {
                   "$ref": "#/components/schemas/NetworkNotFoundEnum"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "detail": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "AddressListNotFoundResponse": {
+        "description": "No address list was found matching any of the criteria provided in the arguments.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "$ref": "#/components/schemas/AddressListNotFoundEnum"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "detail": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "AddressListEntryNotFoundResponse": {
+        "description": "No address list entry was found matching any of the criteria provided in the arguments.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "$ref": "#/components/schemas/AddressListEntryNotFoundEnum"
                 },
                 "description": {
                   "type": "string"
