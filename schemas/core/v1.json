@@ -574,6 +574,83 @@
               "group": "network_speed_profiles"
             },
             {
+              "path": "address_lists",
+              "request_method": "GET",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/AddressLists/ListGlobalEndpoint",
+              "group": "address_lists"
+            },
+            {
+              "path": "organizations/:organization/address_lists",
+              "request_method": "GET",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/AddressLists/ListEndpoint",
+              "group": "address_lists"
+            },
+            {
+              "path": "address_lists/:address_list",
+              "request_method": "GET",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/AddressLists/InfoEndpoint",
+              "group": "address_lists"
+            },
+            {
+              "path": "organizations/:organization/address_lists",
+              "request_method": "POST",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/AddressLists/CreateEndpoint",
+              "group": "address_lists"
+            },
+            {
+              "path": "address_lists/:address_list",
+              "request_method": "PATCH",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/AddressLists/UpdateEndpoint",
+              "group": "address_lists"
+            },
+            {
+              "path": "address_lists/:address_list",
+              "request_method": "DELETE",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/AddressLists/DeleteEndpoint",
+              "group": "address_lists"
+            },
+            {
+              "path": "address_lists/:address_list/entries",
+              "request_method": "GET",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/AddressListEntries/ListEndpoint",
+              "group": "address_lists.entries"
+            },
+            {
+              "path": "address_list_entries/:address_list_entry",
+              "request_method": "GET",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/AddressListEntries/InfoEndpoint",
+              "group": "address_lists.entries"
+            },
+            {
+              "path": "address_lists/:address_list/entries",
+              "request_method": "POST",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/AddressListEntries/CreateEndpoint",
+              "group": "address_lists.entries"
+            },
+            {
+              "path": "address_list_entries/:address_list_entry",
+              "request_method": "PATCH",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/AddressListEntries/UpdateEndpoint",
+              "group": "address_lists.entries"
+            },
+            {
+              "path": "address_list_entries/:address_list_entry",
+              "request_method": "DELETE",
+              "controller": null,
+              "endpoint": "CoreAPI/Endpoints/AddressListEntries/DeleteEndpoint",
+              "group": "address_lists.entries"
+            },
+            {
               "path": "organizations/:organization/certificates",
               "request_method": "GET",
               "controller": null,
@@ -1081,6 +1158,19 @@
               "name": "Network speed profiles",
               "description": null,
               "groups": []
+            },
+            {
+              "id": "address_lists",
+              "name": "Address lists",
+              "description": null,
+              "groups": [
+                {
+                  "id": "address_lists.entries",
+                  "name": "Address list entries",
+                  "description": null,
+                  "groups": []
+                }
+              ]
             },
             {
               "id": "certificates",
@@ -16491,6 +16581,1094 @@
     {
       "type": "endpoint",
       "value": {
+        "id": "CoreAPI/Endpoints/AddressLists/ListGlobalEndpoint",
+        "name": "List global address lists",
+        "description": "Returns a list of all global address lists.",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/AddressLists/ListGlobalEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "page",
+              "description": null,
+              "type": "Apia/Scalars/Integer",
+              "required": false,
+              "array": false,
+              "default": "1"
+            },
+            {
+              "name": "per_page",
+              "description": null,
+              "type": "Apia/Scalars/Integer",
+              "required": false,
+              "array": false,
+              "default": "30"
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/AddressLists/ListGlobalEndpoint/PaginationField",
+            "name": "pagination",
+            "description": null,
+            "type": "Apia/PaginationObject",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Endpoints/AddressLists/ListGlobalEndpoint/AddressListsField",
+            "name": "address_lists",
+            "description": "A list of all global address lists.",
+            "type": "CoreAPI/Objects/AddressList",
+            "null": false,
+            "array": true,
+            "spec": {
+              "all": false,
+              "spec": "*,-entries"
+            }
+          }
+        ],
+        "potential_errors": [],
+        "scopes": [
+          "address_lists",
+          "address_lists:read"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/AddressLists/ListGlobalEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "page",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "required": false,
+            "array": false,
+            "default": "1"
+          },
+          {
+            "name": "per_page",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "required": false,
+            "array": false,
+            "default": "30"
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/AddressList",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/AddressList/IdField",
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/AddressList/NameField",
+            "name": "name",
+            "description": "Name of the address list.",
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/AddressList/GlobalField",
+            "name": "global",
+            "description": "Whether the address list is global or not.",
+            "type": "Apia/Scalars/Boolean",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/AddressList/EntriesField",
+            "name": "entries",
+            "description": null,
+            "type": "CoreAPI/Objects/AddressListEntry",
+            "null": false,
+            "array": true,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "object",
+      "value": {
+        "id": "CoreAPI/Objects/AddressListEntry",
+        "name": null,
+        "description": null,
+        "fields": [
+          {
+            "id": "CoreAPI/Objects/AddressListEntry/IdField",
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/AddressListEntry/AddressField",
+            "name": "address",
+            "description": "Address or network.",
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Objects/AddressListEntry/NameField",
+            "name": "name",
+            "description": "Optional name/comment.",
+            "type": "Apia/Scalars/String",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/AddressLists/ListEndpoint",
+        "name": "List address lists",
+        "description": "Returns a list of all address lists for a given organization",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/AddressLists/ListEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "organization",
+              "description": "The organization for which the address lists should be returned.",
+              "type": "CoreAPI/ArgumentSets/OrganizationLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            },
+            {
+              "name": "page",
+              "description": null,
+              "type": "Apia/Scalars/Integer",
+              "required": false,
+              "array": false,
+              "default": "1"
+            },
+            {
+              "name": "per_page",
+              "description": null,
+              "type": "Apia/Scalars/Integer",
+              "required": false,
+              "array": false,
+              "default": "30"
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/AddressLists/ListEndpoint/PaginationField",
+            "name": "pagination",
+            "description": null,
+            "type": "Apia/PaginationObject",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Endpoints/AddressLists/ListEndpoint/AddressListsField",
+            "name": "address_lists",
+            "description": "A list of all address lists for the given organization.",
+            "type": "CoreAPI/Objects/AddressList",
+            "null": false,
+            "array": true,
+            "spec": {
+              "all": false,
+              "spec": "*,-entries"
+            }
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Errors/PermissionDenied"
+        ],
+        "scopes": [
+          "address_lists",
+          "address_lists:read"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/AddressLists/ListEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "organization",
+            "description": "The organization for which the address lists should be returned.",
+            "type": "CoreAPI/ArgumentSets/OrganizationLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "page",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "required": false,
+            "array": false,
+            "default": "1"
+          },
+          {
+            "name": "per_page",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "required": false,
+            "array": false,
+            "default": "30"
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/AddressLists/InfoEndpoint",
+        "name": "Get address list",
+        "description": "Returns details for a address list.",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/AddressLists/InfoEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "address_list",
+              "description": "The address list to return.",
+              "type": "CoreAPI/ArgumentSets/AddressListLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/AddressLists/InfoEndpoint/AddressListField",
+            "name": "address_list",
+            "description": "The address list.",
+            "type": "CoreAPI/Objects/AddressList",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ],
+        "potential_errors": [],
+        "scopes": [
+          "address_lists",
+          "address_lists:read"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/AddressLists/InfoEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "address_list",
+            "description": "The address list to return.",
+            "type": "CoreAPI/ArgumentSets/AddressListLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "lookup_argument_set",
+      "value": {
+        "id": "CoreAPI/ArgumentSets/AddressListLookup",
+        "name": "Address List Lookup",
+        "description": "Provides for address lists to be looked up.",
+        "arguments": [
+          {
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/ArgumentSets/AddressListLookup/AddressListNotFound"
+        ]
+      }
+    },
+    {
+      "type": "error",
+      "value": {
+        "id": "CoreAPI/ArgumentSets/AddressListLookup/AddressListNotFound",
+        "name": null,
+        "description": "No address list was found matching any of the criteria provided in the arguments.",
+        "code": "address_list_not_found",
+        "http_status": 404,
+        "fields": []
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/AddressLists/CreateEndpoint",
+        "name": "Create address list",
+        "description": "Create a new address list for a given organization.",
+        "http_status": 201,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/AddressLists/CreateEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "organization",
+              "description": "The organization to create the address list for.",
+              "type": "CoreAPI/ArgumentSets/OrganizationLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            },
+            {
+              "name": "properties",
+              "description": "The properties for the new address list.",
+              "type": "CoreAPI/ArgumentSets/AddressListArguments",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/AddressLists/CreateEndpoint/AddressListField",
+            "name": "address_list",
+            "description": "The address list.",
+            "type": "CoreAPI/Objects/AddressList",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Errors/ValidationError",
+          "CoreAPI/Errors/PermissionDenied"
+        ],
+        "scopes": [
+          "address_lists"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/AddressLists/CreateEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "organization",
+            "description": "The organization to create the address list for.",
+            "type": "CoreAPI/ArgumentSets/OrganizationLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "properties",
+            "description": "The properties for the new address list.",
+            "type": "CoreAPI/ArgumentSets/AddressListArguments",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/ArgumentSets/AddressListArguments",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "name",
+            "description": "Name of the address list.",
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/AddressLists/UpdateEndpoint",
+        "name": "Update address list",
+        "description": "Update a address list with new properties.",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/AddressLists/UpdateEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "address_list",
+              "description": "The address list to update.",
+              "type": "CoreAPI/ArgumentSets/AddressListLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            },
+            {
+              "name": "properties",
+              "description": "The updated properties for the address list.",
+              "type": "CoreAPI/ArgumentSets/AddressListArguments",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/AddressLists/UpdateEndpoint/AddressListField",
+            "name": "address_list",
+            "description": "The address list.",
+            "type": "CoreAPI/Objects/AddressList",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Errors/ValidationError",
+          "CoreAPI/Errors/PermissionDenied"
+        ],
+        "scopes": [
+          "address_lists"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/AddressLists/UpdateEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "address_list",
+            "description": "The address list to update.",
+            "type": "CoreAPI/ArgumentSets/AddressListLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "properties",
+            "description": "The updated properties for the address list.",
+            "type": "CoreAPI/ArgumentSets/AddressListArguments",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/AddressLists/DeleteEndpoint",
+        "name": "Delete address list",
+        "description": "Delete a address list.",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/AddressLists/DeleteEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "address_list",
+              "description": "The address list to destroy.",
+              "type": "CoreAPI/ArgumentSets/AddressListLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/AddressLists/DeleteEndpoint/AddressListField",
+            "name": "address_list",
+            "description": "The address list that has been destroyed.",
+            "type": "CoreAPI/Objects/AddressList",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Errors/PermissionDenied"
+        ],
+        "scopes": [
+          "address_lists"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/AddressLists/DeleteEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "address_list",
+            "description": "The address list to destroy.",
+            "type": "CoreAPI/ArgumentSets/AddressListLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/AddressListEntries/ListEndpoint",
+        "name": "List address list entries",
+        "description": "Returns a list of all address list entries for a given address list",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/AddressListEntries/ListEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "address_list",
+              "description": "The address list for which the entries should be returned.",
+              "type": "CoreAPI/ArgumentSets/AddressListLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            },
+            {
+              "name": "page",
+              "description": null,
+              "type": "Apia/Scalars/Integer",
+              "required": false,
+              "array": false,
+              "default": "1"
+            },
+            {
+              "name": "per_page",
+              "description": null,
+              "type": "Apia/Scalars/Integer",
+              "required": false,
+              "array": false,
+              "default": "30"
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/AddressListEntries/ListEndpoint/PaginationField",
+            "name": "pagination",
+            "description": null,
+            "type": "Apia/PaginationObject",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          },
+          {
+            "id": "CoreAPI/Endpoints/AddressListEntries/ListEndpoint/AddressListEntriesField",
+            "name": "address_list_entries",
+            "description": "A list of all address list entries for the given address list.",
+            "type": "CoreAPI/Objects/AddressListEntry",
+            "null": false,
+            "array": true,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Errors/PermissionDenied"
+        ],
+        "scopes": [
+          "address_lists",
+          "address_lists:read"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/AddressListEntries/ListEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "address_list",
+            "description": "The address list for which the entries should be returned.",
+            "type": "CoreAPI/ArgumentSets/AddressListLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "page",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "required": false,
+            "array": false,
+            "default": "1"
+          },
+          {
+            "name": "per_page",
+            "description": null,
+            "type": "Apia/Scalars/Integer",
+            "required": false,
+            "array": false,
+            "default": "30"
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/AddressListEntries/InfoEndpoint",
+        "name": "Get address list entry",
+        "description": "Returns details for an address list entry.",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/AddressListEntries/InfoEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "address_list_entry",
+              "description": "The address list entry to return.",
+              "type": "CoreAPI/ArgumentSets/AddressListEntryLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/AddressListEntries/InfoEndpoint/AddressListEntryField",
+            "name": "address_list_entry",
+            "description": "The address list entry.",
+            "type": "CoreAPI/Objects/AddressListEntry",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ],
+        "potential_errors": [],
+        "scopes": [
+          "address_lists",
+          "address_lists:read"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/AddressListEntries/InfoEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "address_list_entry",
+            "description": "The address list entry to return.",
+            "type": "CoreAPI/ArgumentSets/AddressListEntryLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "lookup_argument_set",
+      "value": {
+        "id": "CoreAPI/ArgumentSets/AddressListEntryLookup",
+        "name": "Address List Entry Lookup",
+        "description": "Provides for address list entries to be looked up.",
+        "arguments": [
+          {
+            "name": "id",
+            "description": null,
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/ArgumentSets/AddressListEntryLookup/AddressListEntryNotFound"
+        ]
+      }
+    },
+    {
+      "type": "error",
+      "value": {
+        "id": "CoreAPI/ArgumentSets/AddressListEntryLookup/AddressListEntryNotFound",
+        "name": null,
+        "description": "No address list entry was found matching any of the criteria provided in the arguments.",
+        "code": "address_list_entry_not_found",
+        "http_status": 404,
+        "fields": []
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/AddressListEntries/CreateEndpoint",
+        "name": "Create address list entry",
+        "description": "Create a new address list entry for a given address list.",
+        "http_status": 201,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/AddressListEntries/CreateEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "address_list",
+              "description": "The address list under which the new entry should be created.",
+              "type": "CoreAPI/ArgumentSets/AddressListLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            },
+            {
+              "name": "properties",
+              "description": "The properties for the new address list entry.",
+              "type": "CoreAPI/ArgumentSets/AddressListEntryArguments",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/AddressListEntries/CreateEndpoint/AddressListEntryField",
+            "name": "address_list_entry",
+            "description": "The address list entry.",
+            "type": "CoreAPI/Objects/AddressListEntry",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Errors/ValidationError",
+          "CoreAPI/Errors/PermissionDenied"
+        ],
+        "scopes": [
+          "address_lists"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/AddressListEntries/CreateEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "address_list",
+            "description": "The address list under which the new entry should be created.",
+            "type": "CoreAPI/ArgumentSets/AddressListLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "properties",
+            "description": "The properties for the new address list entry.",
+            "type": "CoreAPI/ArgumentSets/AddressListEntryArguments",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/ArgumentSets/AddressListEntryArguments",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "address",
+            "description": "Address or network to add to the list.",
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "name",
+            "description": "Optional name/comment.",
+            "type": "Apia/Scalars/String",
+            "required": false,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/AddressListEntries/UpdateEndpoint",
+        "name": "Update address list entry",
+        "description": "Update an address list entry with new properties.",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/AddressListEntries/UpdateEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "address_list_entry",
+              "description": "The address list entry to update.",
+              "type": "CoreAPI/ArgumentSets/AddressListEntryLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            },
+            {
+              "name": "properties",
+              "description": "The updated properties for the address list entry.",
+              "type": "CoreAPI/ArgumentSets/AddressListEntryArguments",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/AddressListEntries/UpdateEndpoint/AddressListEntryField",
+            "name": "address_list_entry",
+            "description": "The address list entry.",
+            "type": "CoreAPI/Objects/AddressListEntry",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Errors/ValidationError",
+          "CoreAPI/Errors/PermissionDenied"
+        ],
+        "scopes": [
+          "address_lists"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/AddressListEntries/UpdateEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "address_list_entry",
+            "description": "The address list entry to update.",
+            "type": "CoreAPI/ArgumentSets/AddressListEntryLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          },
+          {
+            "name": "properties",
+            "description": "The updated properties for the address list entry.",
+            "type": "CoreAPI/ArgumentSets/AddressListEntryArguments",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
+        "id": "CoreAPI/Endpoints/AddressListEntries/DeleteEndpoint",
+        "name": "Delete address list entry",
+        "description": "Delete an address list entry.",
+        "http_status": 200,
+        "authenticator": null,
+        "argument_set": {
+          "id": "CoreAPI/Endpoints/AddressListEntries/DeleteEndpoint/BaseArgumentSet",
+          "name": null,
+          "description": null,
+          "arguments": [
+            {
+              "name": "address_list_entry",
+              "description": "The address list entry to destroy.",
+              "type": "CoreAPI/ArgumentSets/AddressListEntryLookup",
+              "required": true,
+              "array": false,
+              "default": null
+            }
+          ]
+        },
+        "fields": [
+          {
+            "id": "CoreAPI/Endpoints/AddressListEntries/DeleteEndpoint/AddressListEntryField",
+            "name": "address_list_entry",
+            "description": "The address list entry that has been destroyed.",
+            "type": "CoreAPI/Objects/AddressListEntry",
+            "null": false,
+            "array": false,
+            "spec": {
+              "all": true,
+              "spec": null
+            }
+          }
+        ],
+        "potential_errors": [
+          "CoreAPI/Errors/PermissionDenied"
+        ],
+        "scopes": [
+          "address_lists"
+        ]
+      }
+    },
+    {
+      "type": "argument_set",
+      "value": {
+        "id": "CoreAPI/Endpoints/AddressListEntries/DeleteEndpoint/BaseArgumentSet",
+        "name": null,
+        "description": null,
+        "arguments": [
+          {
+            "name": "address_list_entry",
+            "description": "The address list entry to destroy.",
+            "type": "CoreAPI/ArgumentSets/AddressListEntryLookup",
+            "required": true,
+            "array": false,
+            "default": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "endpoint",
+      "value": {
         "id": "CoreAPI/Endpoints/Certificates/ListEndpoint",
         "name": "List certificates",
         "description": "Provides a full list of certificates",
@@ -17108,7 +18286,7 @@
             "description": null,
             "type": "CoreAPI/Objects/IPAddress",
             "null": false,
-            "array": true,
+            "array": false,
             "spec": {
               "all": true,
               "spec": null
