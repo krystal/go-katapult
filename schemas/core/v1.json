@@ -7650,20 +7650,7 @@
           "description": null,
           "arguments": []
         },
-        "fields": [
-          {
-            "id": "CoreAPI/Endpoints/VirtualMachines/AuthorizedKeysEndpoint/AuthorizedKeysField",
-            "name": "authorized_keys",
-            "description": null,
-            "type": "Apia/Scalars/String",
-            "null": false,
-            "array": false,
-            "spec": {
-              "all": true,
-              "spec": null
-            }
-          }
-        ],
+        "fields": [],
         "potential_errors": [
           "CoreAPI/Endpoints/VirtualMachines/AuthorizedKeysEndpoint/NoVirtualMachineForAPIToken"
         ],
@@ -18463,7 +18450,7 @@
         "id": "CoreAPI/Endpoints/LoadBalancers/CreateEndpoint",
         "name": "Create load balancer",
         "description": "Create a new load balancer for a given organization",
-        "http_status": 200,
+        "http_status": 201,
         "authenticator": null,
         "argument_set": {
           "id": "CoreAPI/Endpoints/LoadBalancers/CreateEndpoint/BaseArgumentSet",
