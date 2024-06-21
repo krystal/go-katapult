@@ -2837,8 +2837,8 @@ type PostOrganizationFileStorageVolumesPartDataCenter struct {
 	Permalink *string `json:"permalink"`
 }
 
-// PostOrganizationLoadBalancers200ResponseLoadBalancer defines model for PostOrganizationLoadBalancers200ResponseLoadBalancer.
-type PostOrganizationLoadBalancers200ResponseLoadBalancer struct {
+// PostOrganizationLoadBalancers201ResponseLoadBalancer defines model for PostOrganizationLoadBalancers201ResponseLoadBalancer.
+type PostOrganizationLoadBalancers201ResponseLoadBalancer struct {
 	ApiReference          *string                                      `json:"api_reference"`
 	BackendCertificate    *string                                      `json:"backend_certificate,omitempty"`
 	BackendCertificateKey *string                                      `json:"backend_certificate_key,omitempty"`
@@ -21778,9 +21778,9 @@ func (r GetOrganizationLoadBalancersResponse) StatusCode() int {
 type PostOrganizationLoadBalancersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *struct {
+	JSON201      *struct {
 		// LoadBalancer The load balancer that has been created
-		LoadBalancer PostOrganizationLoadBalancers200ResponseLoadBalancer `json:"load_balancer"`
+		LoadBalancer PostOrganizationLoadBalancers201ResponseLoadBalancer `json:"load_balancer"`
 	}
 	JSON400 *APIAuthenticator400Response
 	JSON403 *OrganizationNotActivatedPermissionDeniedResourceCreationRestricted403Res
@@ -22849,13 +22849,10 @@ func (r GetUsersCurrentResponse) StatusCode() int {
 type GetVirtualMachineAuthorizedKeysResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *struct {
-		AuthorizedKeys string `json:"authorized_keys"`
-	}
-	JSON400 *APIAuthenticator400Response
-	JSON403 *APIAuthenticator403Response
-	JSON404 *NoVirtualMachineForAPITokenResponse
-	JSON429 *APIAuthenticator429Response
+	JSON400      *APIAuthenticator400Response
+	JSON403      *APIAuthenticator403Response
+	JSON404      *NoVirtualMachineForAPITokenResponse
+	JSON429      *APIAuthenticator429Response
 }
 
 // Status returns HTTPResponse.Status
@@ -30191,15 +30188,15 @@ func ParsePostOrganizationLoadBalancersResponse(rsp *http.Response) (*PostOrgani
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest struct {
 			// LoadBalancer The load balancer that has been created
-			LoadBalancer PostOrganizationLoadBalancers200ResponseLoadBalancer `json:"load_balancer"`
+			LoadBalancer PostOrganizationLoadBalancers201ResponseLoadBalancer `json:"load_balancer"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
-		response.JSON200 = &dest
+		response.JSON201 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest APIAuthenticator400Response
@@ -32378,15 +32375,6 @@ func ParseGetVirtualMachineAuthorizedKeysResponse(rsp *http.Response) (*GetVirtu
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest struct {
-			AuthorizedKeys string `json:"authorized_keys"`
-		}
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest APIAuthenticator400Response
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {

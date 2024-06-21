@@ -1777,16 +1777,9 @@
           "200": {
             "description": "Return the authorized keys for the virtual machine associated with the provided API token",
             "content": {
-              "application/json": {
+              "text/plain": {
                 "schema": {
-                  "properties": {
-                    "authorized_keys": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "authorized_keys"
-                  ]
+                  "type": "string"
                 }
               }
             }
@@ -6145,7 +6138,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Create a new load balancer for a given organization",
             "content": {
               "application/json": {
@@ -6155,7 +6148,7 @@
                       "description": "The load balancer that has been created",
                       "allOf": [
                         {
-                          "$ref": "#/components/schemas/PostOrganizationLoadBalancers200ResponseLoadBalancer"
+                          "$ref": "#/components/schemas/PostOrganizationLoadBalancers201ResponseLoadBalancer"
                         }
                       ]
                     }
@@ -14851,7 +14844,7 @@
           }
         }
       },
-      "PostOrganizationLoadBalancers200ResponseLoadBalancer": {
+      "PostOrganizationLoadBalancers201ResponseLoadBalancer": {
         "type": "object",
         "properties": {
           "id": {
