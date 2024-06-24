@@ -1,2 +1,2 @@
-goVersion: 1.20
-generatorVersion: 2.1.0
+goVersion: 1.22
+generatorVersion: 2.3.0
