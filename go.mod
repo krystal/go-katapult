@@ -13,6 +13,7 @@ require (
 	github.com/oapi-codegen/oapi-codegen/v2 v2.3.0
 	github.com/oapi-codegen/runtime v1.1.1
 	github.com/stretchr/testify v1.9.0
+	go.uber.org/mock v0.4.0
 	golang.org/x/text v0.15.0
 	gopkg.in/yaml.v3 v3.0.1
 	mvdan.cc/gofumpt v0.4.0

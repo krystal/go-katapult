@@ -1,5 +1,8 @@
 package next
 
+//go:generate go run go.uber.org/mock/mockgen@v0.4.0 -source=./public/public.go -destination=./public/mock/public.go
+//go:generate go run go.uber.org/mock/mockgen@v0.4.0 -source=./core/core.go -destination=./core/mock/core.go
+
 import (
 	"fmt"
 
