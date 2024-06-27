@@ -23,3 +23,5 @@ docker run \
   -package public \
   -templates /local/templates \
    /local/katapult-public-openapi.json > "./public/public.go" 
+
+go generate ./...
