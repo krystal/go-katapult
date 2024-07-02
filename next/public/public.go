@@ -1237,11 +1237,16 @@ func (c *ClientWithResponses) GetDataCentersWithResponse(ctx context.Context, re
 		return nil, err
 	}
 
-	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
-		return nil, ErrRequestFailed
+	res, err := ParseGetDataCentersResponse(rsp)
+	if err != nil {
+		return nil, err
 	}
 
-	return ParseGetDataCentersResponse(rsp)
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
 }
 
 // PostPricingEstimateWithBodyWithResponse request with arbitrary body returning *PostPricingEstimateResponse
@@ -1251,11 +1256,16 @@ func (c *ClientWithResponses) PostPricingEstimateWithBodyWithResponse(ctx contex
 		return nil, err
 	}
 
-	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
-		return nil, ErrRequestFailed
+	res, err := ParsePostPricingEstimateResponse(rsp)
+	if err != nil {
+		return nil, err
 	}
 
-	return ParsePostPricingEstimateResponse(rsp)
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
 }
 
 func (c *ClientWithResponses) PostPricingEstimateWithResponse(ctx context.Context, body PostPricingEstimateJSONRequestBody, reqEditors ...RequestEditorFn) (*PostPricingEstimateResponse, error) {
@@ -1264,11 +1274,16 @@ func (c *ClientWithResponses) PostPricingEstimateWithResponse(ctx context.Contex
 		return nil, err
 	}
 
-	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
-		return nil, ErrRequestFailed
+	res, err := ParsePostPricingEstimateResponse(rsp)
+	if err != nil {
+		return nil, err
 	}
 
-	return ParsePostPricingEstimateResponse(rsp)
+	if res.StatusCode() < 200 || res.StatusCode() >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
 }
 
 // GetPricingPricesWithResponse request returning *GetPricingPricesResponse
@@ -1278,11 +1293,16 @@ func (c *ClientWithResponses) GetPricingPricesWithResponse(ctx context.Context, 
 		return nil, err
 	}
 
-	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
-		return nil, ErrRequestFailed
+	res, err := ParseGetPricingPricesResponse(rsp)
+	if err != nil {
+		return nil, err
 	}
 
-	return ParseGetPricingPricesResponse(rsp)
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
 }
 
 // PostSignupsWithBodyWithResponse request with arbitrary body returning *PostSignupsResponse
@@ -1292,11 +1312,16 @@ func (c *ClientWithResponses) PostSignupsWithBodyWithResponse(ctx context.Contex
 		return nil, err
 	}
 
-	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
-		return nil, ErrRequestFailed
+	res, err := ParsePostSignupsResponse(rsp)
+	if err != nil {
+		return nil, err
 	}
 
-	return ParsePostSignupsResponse(rsp)
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
 }
 
 func (c *ClientWithResponses) PostSignupsWithResponse(ctx context.Context, body PostSignupsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostSignupsResponse, error) {
@@ -1305,11 +1330,16 @@ func (c *ClientWithResponses) PostSignupsWithResponse(ctx context.Context, body 
 		return nil, err
 	}
 
-	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
-		return nil, ErrRequestFailed
+	res, err := ParsePostSignupsResponse(rsp)
+	if err != nil {
+		return nil, err
 	}
 
-	return ParsePostSignupsResponse(rsp)
+	if res.StatusCode() < 200 || res.StatusCode() >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
 }
 
 // GetStatsWithResponse request returning *GetStatsResponse
@@ -1319,11 +1349,16 @@ func (c *ClientWithResponses) GetStatsWithResponse(ctx context.Context, reqEdito
 		return nil, err
 	}
 
-	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
-		return nil, ErrRequestFailed
+	res, err := ParseGetStatsResponse(rsp)
+	if err != nil {
+		return nil, err
 	}
 
-	return ParseGetStatsResponse(rsp)
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
 }
 
 // GetVirtualMachinePackagesWithResponse request returning *GetVirtualMachinePackagesResponse
@@ -1333,11 +1368,16 @@ func (c *ClientWithResponses) GetVirtualMachinePackagesWithResponse(ctx context.
 		return nil, err
 	}
 
-	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
-		return nil, ErrRequestFailed
+	res, err := ParseGetVirtualMachinePackagesResponse(rsp)
+	if err != nil {
+		return nil, err
 	}
 
-	return ParseGetVirtualMachinePackagesResponse(rsp)
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
 }
 
 // ParseGetDataCentersResponse parses an HTTP response from a GetDataCentersWithResponse call
