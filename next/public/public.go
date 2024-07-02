@@ -549,6 +549,7 @@ const (
 
 var (
 	ErrRequestFailed = errors.New("request was not successful")
+	ErrNotFound      = errors.New("resource not found")
 )
 
 // RequestEditorFn  is the function signature for the RequestEditor callback function
@@ -1243,6 +1244,10 @@ func (c *ClientWithResponses) GetDataCentersWithResponse(ctx context.Context, re
 		return nil, err
 	}
 
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
 	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
 		return res, ErrRequestFailed
 	}
@@ -1260,6 +1265,10 @@ func (c *ClientWithResponses) PostPricingEstimateWithBodyWithResponse(ctx contex
 	res, err := ParsePostPricingEstimateResponse(rsp)
 	if err != nil {
 		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
 	}
 
 	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
@@ -1280,7 +1289,11 @@ func (c *ClientWithResponses) PostPricingEstimateWithResponse(ctx context.Contex
 		return nil, err
 	}
 
-	if res.StatusCode() < 200 || res.StatusCode() >= 300 {
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
 		return res, ErrRequestFailed
 	}
 
@@ -1297,6 +1310,10 @@ func (c *ClientWithResponses) GetPricingPricesWithResponse(ctx context.Context, 
 	res, err := ParseGetPricingPricesResponse(rsp)
 	if err != nil {
 		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
 	}
 
 	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
@@ -1318,6 +1335,10 @@ func (c *ClientWithResponses) PostSignupsWithBodyWithResponse(ctx context.Contex
 		return nil, err
 	}
 
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
 	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
 		return res, ErrRequestFailed
 	}
@@ -1336,7 +1357,11 @@ func (c *ClientWithResponses) PostSignupsWithResponse(ctx context.Context, body 
 		return nil, err
 	}
 
-	if res.StatusCode() < 200 || res.StatusCode() >= 300 {
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
 		return res, ErrRequestFailed
 	}
 
@@ -1353,6 +1378,10 @@ func (c *ClientWithResponses) GetStatsWithResponse(ctx context.Context, reqEdito
 	res, err := ParseGetStatsResponse(rsp)
 	if err != nil {
 		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
 	}
 
 	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
@@ -1372,6 +1401,10 @@ func (c *ClientWithResponses) GetVirtualMachinePackagesWithResponse(ctx context.
 	res, err := ParseGetVirtualMachinePackagesResponse(rsp)
 	if err != nil {
 		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
 	}
 
 	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {

@@ -86,6 +86,10 @@ func (c *ClientWithResponses) {{$opid}}{{if .HasBody}}WithBody{{end}}WithRespons
     return nil, err
     }
 
+    if rsp.StatusCode == http.StatusNotFound {
+        return res, ErrNotFound
+    }
+
     if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
         return res, ErrRequestFailed
     }
@@ -109,7 +113,11 @@ func (c *ClientWithResponses) {{$opid}}{{.Suffix}}WithResponse(ctx context.Conte
     return nil, err
     }
 
-    if res.StatusCode() < 200 || res.StatusCode() >= 300 {
+    if rsp.StatusCode == http.StatusNotFound {
+        return res, ErrNotFound
+    }
+
+    if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
         return res, ErrRequestFailed
     }
 
