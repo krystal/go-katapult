@@ -7,6 +7,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -547,7 +548,7 @@ const (
 )
 
 var (
-	ErrRequestFailed = fmt.Errorf("request was not successful")
+	ErrRequestFailed = errors.New("request was not successful")
 )
 
 // RequestEditorFn  is the function signature for the RequestEditor callback function
