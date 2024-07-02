@@ -80,6 +80,11 @@ func (c *ClientWithResponses) {{$opid}}{{if .HasBody}}WithBody{{end}}WithRespons
     if err != nil {
         return nil, err
     }
+
+    if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+        return nil, ErrRequestFailed
+    }
+
     return Parse{{genResponseTypeName $opid | ucFirst}}(rsp)
 }
 
@@ -93,6 +98,11 @@ func (c *ClientWithResponses) {{$opid}}{{.Suffix}}WithResponse(ctx context.Conte
     if err != nil {
         return nil, err
     }
+
+    if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+        return nil, ErrRequestFailed
+    }
+
     return Parse{{genResponseTypeName $opid | ucFirst}}(rsp)
 }
 {{end}}

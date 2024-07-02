@@ -546,6 +546,10 @@ const (
 	clientVersion = "0.2.0" // x-release-please-version
 )
 
+var (
+	ErrRequestFailed = fmt.Errorf("request was not successful")
+)
+
 // RequestEditorFn  is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
 
@@ -1232,6 +1236,11 @@ func (c *ClientWithResponses) GetDataCentersWithResponse(ctx context.Context, re
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetDataCentersResponse(rsp)
 }
 
@@ -1241,6 +1250,11 @@ func (c *ClientWithResponses) PostPricingEstimateWithBodyWithResponse(ctx contex
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostPricingEstimateResponse(rsp)
 }
 
@@ -1249,6 +1263,11 @@ func (c *ClientWithResponses) PostPricingEstimateWithResponse(ctx context.Contex
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostPricingEstimateResponse(rsp)
 }
 
@@ -1258,6 +1277,11 @@ func (c *ClientWithResponses) GetPricingPricesWithResponse(ctx context.Context, 
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetPricingPricesResponse(rsp)
 }
 
@@ -1267,6 +1291,11 @@ func (c *ClientWithResponses) PostSignupsWithBodyWithResponse(ctx context.Contex
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostSignupsResponse(rsp)
 }
 
@@ -1275,6 +1304,11 @@ func (c *ClientWithResponses) PostSignupsWithResponse(ctx context.Context, body 
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostSignupsResponse(rsp)
 }
 
@@ -1284,6 +1318,11 @@ func (c *ClientWithResponses) GetStatsWithResponse(ctx context.Context, reqEdito
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetStatsResponse(rsp)
 }
 
@@ -1293,6 +1332,11 @@ func (c *ClientWithResponses) GetVirtualMachinePackagesWithResponse(ctx context.
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetVirtualMachinePackagesResponse(rsp)
 }
 

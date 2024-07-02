@@ -7506,6 +7506,10 @@ const (
 	clientVersion = "0.2.0" // x-release-please-version
 )
 
+var (
+	ErrRequestFailed = fmt.Errorf("request was not successful")
+)
+
 // RequestEditorFn  is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
 
@@ -23736,6 +23740,11 @@ func (c *ClientWithResponses) DeleteAddressListEntryWithBodyWithResponse(ctx con
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteAddressListEntryResponse(rsp)
 }
 
@@ -23744,6 +23753,11 @@ func (c *ClientWithResponses) DeleteAddressListEntryWithResponse(ctx context.Con
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteAddressListEntryResponse(rsp)
 }
 
@@ -23753,6 +23767,11 @@ func (c *ClientWithResponses) GetAddressListEntryWithResponse(ctx context.Contex
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetAddressListEntryResponse(rsp)
 }
 
@@ -23762,6 +23781,11 @@ func (c *ClientWithResponses) PatchAddressListEntryWithBodyWithResponse(ctx cont
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchAddressListEntryResponse(rsp)
 }
 
@@ -23770,6 +23794,11 @@ func (c *ClientWithResponses) PatchAddressListEntryWithResponse(ctx context.Cont
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchAddressListEntryResponse(rsp)
 }
 
@@ -23779,6 +23808,11 @@ func (c *ClientWithResponses) GetAddressListsWithResponse(ctx context.Context, p
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetAddressListsResponse(rsp)
 }
 
@@ -23788,6 +23822,11 @@ func (c *ClientWithResponses) DeleteAddressListWithBodyWithResponse(ctx context.
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteAddressListResponse(rsp)
 }
 
@@ -23796,6 +23835,11 @@ func (c *ClientWithResponses) DeleteAddressListWithResponse(ctx context.Context,
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteAddressListResponse(rsp)
 }
 
@@ -23805,6 +23849,11 @@ func (c *ClientWithResponses) GetAddressListWithResponse(ctx context.Context, pa
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetAddressListResponse(rsp)
 }
 
@@ -23814,6 +23863,11 @@ func (c *ClientWithResponses) PatchAddressListWithBodyWithResponse(ctx context.C
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchAddressListResponse(rsp)
 }
 
@@ -23822,6 +23876,11 @@ func (c *ClientWithResponses) PatchAddressListWithResponse(ctx context.Context, 
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchAddressListResponse(rsp)
 }
 
@@ -23831,6 +23890,11 @@ func (c *ClientWithResponses) GetAddressListEntriesWithResponse(ctx context.Cont
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetAddressListEntriesResponse(rsp)
 }
 
@@ -23840,6 +23904,11 @@ func (c *ClientWithResponses) PostAddressListEntriesWithBodyWithResponse(ctx con
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostAddressListEntriesResponse(rsp)
 }
 
@@ -23848,6 +23917,11 @@ func (c *ClientWithResponses) PostAddressListEntriesWithResponse(ctx context.Con
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostAddressListEntriesResponse(rsp)
 }
 
@@ -23857,6 +23931,11 @@ func (c *ClientWithResponses) GetCertificateWithResponse(ctx context.Context, pa
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetCertificateResponse(rsp)
 }
 
@@ -23866,6 +23945,11 @@ func (c *ClientWithResponses) GetCountriesWithResponse(ctx context.Context, para
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetCountriesResponse(rsp)
 }
 
@@ -23875,6 +23959,11 @@ func (c *ClientWithResponses) GetCountryWithResponse(ctx context.Context, params
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetCountryResponse(rsp)
 }
 
@@ -23884,6 +23973,11 @@ func (c *ClientWithResponses) GetCountryCountryStatesWithResponse(ctx context.Co
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetCountryCountryStatesResponse(rsp)
 }
 
@@ -23893,6 +23987,11 @@ func (c *ClientWithResponses) GetCountryStateWithResponse(ctx context.Context, p
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetCountryStateResponse(rsp)
 }
 
@@ -23902,6 +24001,11 @@ func (c *ClientWithResponses) GetCurrenciesWithResponse(ctx context.Context, par
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetCurrenciesResponse(rsp)
 }
 
@@ -23911,6 +24015,11 @@ func (c *ClientWithResponses) GetCurrencyWithResponse(ctx context.Context, param
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetCurrencyResponse(rsp)
 }
 
@@ -23920,6 +24029,11 @@ func (c *ClientWithResponses) GetDataCentersWithResponse(ctx context.Context, re
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetDataCentersResponse(rsp)
 }
 
@@ -23929,6 +24043,11 @@ func (c *ClientWithResponses) GetDataCenterWithResponse(ctx context.Context, par
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetDataCenterResponse(rsp)
 }
 
@@ -23938,6 +24057,11 @@ func (c *ClientWithResponses) GetDataCenterDefaultNetworkWithResponse(ctx contex
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetDataCenterDefaultNetworkResponse(rsp)
 }
 
@@ -23947,6 +24071,11 @@ func (c *ClientWithResponses) GetDataCenterGpuTypesWithResponse(ctx context.Cont
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetDataCenterGpuTypesResponse(rsp)
 }
 
@@ -23956,6 +24085,11 @@ func (c *ClientWithResponses) DeleteDiskBackupPolicyWithBodyWithResponse(ctx con
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteDiskBackupPolicyResponse(rsp)
 }
 
@@ -23964,6 +24098,11 @@ func (c *ClientWithResponses) DeleteDiskBackupPolicyWithResponse(ctx context.Con
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteDiskBackupPolicyResponse(rsp)
 }
 
@@ -23973,6 +24112,11 @@ func (c *ClientWithResponses) GetDiskBackupPolicyWithResponse(ctx context.Contex
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetDiskBackupPolicyResponse(rsp)
 }
 
@@ -23982,6 +24126,11 @@ func (c *ClientWithResponses) PatchDiskBackupPolicyWithBodyWithResponse(ctx cont
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchDiskBackupPolicyResponse(rsp)
 }
 
@@ -23990,6 +24139,11 @@ func (c *ClientWithResponses) PatchDiskBackupPolicyWithResponse(ctx context.Cont
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchDiskBackupPolicyResponse(rsp)
 }
 
@@ -23999,6 +24153,11 @@ func (c *ClientWithResponses) DeleteDiskBackupPolicyScheduleWithBodyWithResponse
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteDiskBackupPolicyScheduleResponse(rsp)
 }
 
@@ -24007,6 +24166,11 @@ func (c *ClientWithResponses) DeleteDiskBackupPolicyScheduleWithResponse(ctx con
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteDiskBackupPolicyScheduleResponse(rsp)
 }
 
@@ -24016,6 +24180,11 @@ func (c *ClientWithResponses) GetDiskTemplateVersionWithResponse(ctx context.Con
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetDiskTemplateVersionResponse(rsp)
 }
 
@@ -24025,6 +24194,11 @@ func (c *ClientWithResponses) GetDiskTemplateVersionSpecWithResponse(ctx context
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetDiskTemplateVersionSpecResponse(rsp)
 }
 
@@ -24034,6 +24208,11 @@ func (c *ClientWithResponses) GetDiskTemplateWithResponse(ctx context.Context, p
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetDiskTemplateResponse(rsp)
 }
 
@@ -24043,6 +24222,11 @@ func (c *ClientWithResponses) GetDiskTemplateVersionsWithResponse(ctx context.Co
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetDiskTemplateVersionsResponse(rsp)
 }
 
@@ -24052,6 +24236,11 @@ func (c *ClientWithResponses) GetDiskWithResponse(ctx context.Context, params *G
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetDiskResponse(rsp)
 }
 
@@ -24061,6 +24250,11 @@ func (c *ClientWithResponses) GetDiskDiskBackupPoliciesWithResponse(ctx context.
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetDiskDiskBackupPoliciesResponse(rsp)
 }
 
@@ -24070,6 +24264,11 @@ func (c *ClientWithResponses) PostDiskDiskBackupPoliciesWithBodyWithResponse(ctx
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostDiskDiskBackupPoliciesResponse(rsp)
 }
 
@@ -24078,6 +24277,11 @@ func (c *ClientWithResponses) PostDiskDiskBackupPoliciesWithResponse(ctx context
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostDiskDiskBackupPoliciesResponse(rsp)
 }
 
@@ -24087,6 +24291,11 @@ func (c *ClientWithResponses) DeleteDnsRecordWithBodyWithResponse(ctx context.Co
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteDnsRecordResponse(rsp)
 }
 
@@ -24095,6 +24304,11 @@ func (c *ClientWithResponses) DeleteDnsRecordWithResponse(ctx context.Context, b
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteDnsRecordResponse(rsp)
 }
 
@@ -24104,6 +24318,11 @@ func (c *ClientWithResponses) GetDnsRecordWithResponse(ctx context.Context, para
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetDnsRecordResponse(rsp)
 }
 
@@ -24113,6 +24332,11 @@ func (c *ClientWithResponses) PatchDnsRecordWithBodyWithResponse(ctx context.Con
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchDnsRecordResponse(rsp)
 }
 
@@ -24121,6 +24345,11 @@ func (c *ClientWithResponses) PatchDnsRecordWithResponse(ctx context.Context, bo
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchDnsRecordResponse(rsp)
 }
 
@@ -24130,6 +24359,11 @@ func (c *ClientWithResponses) DeleteDnsZoneWithBodyWithResponse(ctx context.Cont
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteDnsZoneResponse(rsp)
 }
 
@@ -24138,6 +24372,11 @@ func (c *ClientWithResponses) DeleteDnsZoneWithResponse(ctx context.Context, bod
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteDnsZoneResponse(rsp)
 }
 
@@ -24147,6 +24386,11 @@ func (c *ClientWithResponses) GetDnsZoneWithResponse(ctx context.Context, params
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetDnsZoneResponse(rsp)
 }
 
@@ -24156,6 +24400,11 @@ func (c *ClientWithResponses) PatchDnsZoneWithBodyWithResponse(ctx context.Conte
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchDnsZoneResponse(rsp)
 }
 
@@ -24164,6 +24413,11 @@ func (c *ClientWithResponses) PatchDnsZoneWithResponse(ctx context.Context, body
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchDnsZoneResponse(rsp)
 }
 
@@ -24173,6 +24427,11 @@ func (c *ClientWithResponses) GetDnsZoneRecordsWithResponse(ctx context.Context,
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetDnsZoneRecordsResponse(rsp)
 }
 
@@ -24182,6 +24441,11 @@ func (c *ClientWithResponses) PostDnsZoneRecordsWithBodyWithResponse(ctx context
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostDnsZoneRecordsResponse(rsp)
 }
 
@@ -24190,6 +24454,11 @@ func (c *ClientWithResponses) PostDnsZoneRecordsWithResponse(ctx context.Context
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostDnsZoneRecordsResponse(rsp)
 }
 
@@ -24199,6 +24468,11 @@ func (c *ClientWithResponses) PostDnsZoneVerifyWithBodyWithResponse(ctx context.
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostDnsZoneVerifyResponse(rsp)
 }
 
@@ -24207,6 +24481,11 @@ func (c *ClientWithResponses) PostDnsZoneVerifyWithResponse(ctx context.Context,
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostDnsZoneVerifyResponse(rsp)
 }
 
@@ -24216,6 +24495,11 @@ func (c *ClientWithResponses) DeleteFileStorageVolumeWithBodyWithResponse(ctx co
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteFileStorageVolumeResponse(rsp)
 }
 
@@ -24224,6 +24508,11 @@ func (c *ClientWithResponses) DeleteFileStorageVolumeWithResponse(ctx context.Co
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteFileStorageVolumeResponse(rsp)
 }
 
@@ -24233,6 +24522,11 @@ func (c *ClientWithResponses) GetFileStorageVolumeWithResponse(ctx context.Conte
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetFileStorageVolumeResponse(rsp)
 }
 
@@ -24242,6 +24536,11 @@ func (c *ClientWithResponses) PatchFileStorageVolumeWithBodyWithResponse(ctx con
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchFileStorageVolumeResponse(rsp)
 }
 
@@ -24250,6 +24549,11 @@ func (c *ClientWithResponses) PatchFileStorageVolumeWithResponse(ctx context.Con
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchFileStorageVolumeResponse(rsp)
 }
 
@@ -24259,6 +24563,11 @@ func (c *ClientWithResponses) GetGpuTypesWithResponse(ctx context.Context, param
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetGpuTypesResponse(rsp)
 }
 
@@ -24268,6 +24577,11 @@ func (c *ClientWithResponses) GetGpuTypeWithResponse(ctx context.Context, params
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetGpuTypeResponse(rsp)
 }
 
@@ -24277,6 +24591,11 @@ func (c *ClientWithResponses) PostInvalidateLinkedWebSessionWithBodyWithResponse
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostInvalidateLinkedWebSessionResponse(rsp)
 }
 
@@ -24285,6 +24604,11 @@ func (c *ClientWithResponses) PostInvalidateLinkedWebSessionWithResponse(ctx con
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostInvalidateLinkedWebSessionResponse(rsp)
 }
 
@@ -24294,6 +24618,11 @@ func (c *ClientWithResponses) DeleteIpAddressWithBodyWithResponse(ctx context.Co
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteIpAddressResponse(rsp)
 }
 
@@ -24302,6 +24631,11 @@ func (c *ClientWithResponses) DeleteIpAddressWithResponse(ctx context.Context, b
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteIpAddressResponse(rsp)
 }
 
@@ -24311,6 +24645,11 @@ func (c *ClientWithResponses) GetIpAddressWithResponse(ctx context.Context, para
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetIpAddressResponse(rsp)
 }
 
@@ -24320,6 +24659,11 @@ func (c *ClientWithResponses) PatchIpAddressWithBodyWithResponse(ctx context.Con
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchIpAddressResponse(rsp)
 }
 
@@ -24328,6 +24672,11 @@ func (c *ClientWithResponses) PatchIpAddressWithResponse(ctx context.Context, bo
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchIpAddressResponse(rsp)
 }
 
@@ -24337,6 +24686,11 @@ func (c *ClientWithResponses) PostIpAddressUnallocateWithBodyWithResponse(ctx co
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostIpAddressUnallocateResponse(rsp)
 }
 
@@ -24345,6 +24699,11 @@ func (c *ClientWithResponses) PostIpAddressUnallocateWithResponse(ctx context.Co
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostIpAddressUnallocateResponse(rsp)
 }
 
@@ -24354,6 +24713,11 @@ func (c *ClientWithResponses) DeleteLoadBalancerWithBodyWithResponse(ctx context
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteLoadBalancerResponse(rsp)
 }
 
@@ -24362,6 +24726,11 @@ func (c *ClientWithResponses) DeleteLoadBalancerWithResponse(ctx context.Context
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteLoadBalancerResponse(rsp)
 }
 
@@ -24371,6 +24740,11 @@ func (c *ClientWithResponses) GetLoadBalancerWithResponse(ctx context.Context, p
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetLoadBalancerResponse(rsp)
 }
 
@@ -24380,6 +24754,11 @@ func (c *ClientWithResponses) PatchLoadBalancerWithBodyWithResponse(ctx context.
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchLoadBalancerResponse(rsp)
 }
 
@@ -24388,6 +24767,11 @@ func (c *ClientWithResponses) PatchLoadBalancerWithResponse(ctx context.Context,
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchLoadBalancerResponse(rsp)
 }
 
@@ -24397,6 +24781,11 @@ func (c *ClientWithResponses) GetLoadBalancerRulesWithResponse(ctx context.Conte
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetLoadBalancerRulesResponse(rsp)
 }
 
@@ -24406,6 +24795,11 @@ func (c *ClientWithResponses) PostLoadBalancerRulesWithBodyWithResponse(ctx cont
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostLoadBalancerRulesResponse(rsp)
 }
 
@@ -24414,6 +24808,11 @@ func (c *ClientWithResponses) PostLoadBalancerRulesWithResponse(ctx context.Cont
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostLoadBalancerRulesResponse(rsp)
 }
 
@@ -24423,6 +24822,11 @@ func (c *ClientWithResponses) DeleteLoadBalancersRulesLoadBalancerRuleWithBodyWi
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteLoadBalancersRulesLoadBalancerRuleResponse(rsp)
 }
 
@@ -24431,6 +24835,11 @@ func (c *ClientWithResponses) DeleteLoadBalancersRulesLoadBalancerRuleWithRespon
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteLoadBalancersRulesLoadBalancerRuleResponse(rsp)
 }
 
@@ -24440,6 +24849,11 @@ func (c *ClientWithResponses) GetLoadBalancersRulesLoadBalancerRuleWithResponse(
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetLoadBalancersRulesLoadBalancerRuleResponse(rsp)
 }
 
@@ -24449,6 +24863,11 @@ func (c *ClientWithResponses) PatchLoadBalancersRulesLoadBalancerRuleWithBodyWit
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchLoadBalancersRulesLoadBalancerRuleResponse(rsp)
 }
 
@@ -24457,6 +24876,11 @@ func (c *ClientWithResponses) PatchLoadBalancersRulesLoadBalancerRuleWithRespons
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchLoadBalancersRulesLoadBalancerRuleResponse(rsp)
 }
 
@@ -24466,6 +24890,11 @@ func (c *ClientWithResponses) GetNetworkWithResponse(ctx context.Context, params
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetNetworkResponse(rsp)
 }
 
@@ -24475,6 +24904,11 @@ func (c *ClientWithResponses) GetOperatingSystemsWithResponse(ctx context.Contex
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetOperatingSystemsResponse(rsp)
 }
 
@@ -24484,6 +24918,11 @@ func (c *ClientWithResponses) GetOperatingSystemWithResponse(ctx context.Context
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetOperatingSystemResponse(rsp)
 }
 
@@ -24493,6 +24932,11 @@ func (c *ClientWithResponses) GetOrganizationsWithResponse(ctx context.Context, 
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetOrganizationsResponse(rsp)
 }
 
@@ -24502,6 +24946,11 @@ func (c *ClientWithResponses) GetOrganizationWithResponse(ctx context.Context, p
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetOrganizationResponse(rsp)
 }
 
@@ -24511,6 +24960,11 @@ func (c *ClientWithResponses) GetOrganizationAddressListsWithResponse(ctx contex
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetOrganizationAddressListsResponse(rsp)
 }
 
@@ -24520,6 +24974,11 @@ func (c *ClientWithResponses) PostOrganizationAddressListsWithBodyWithResponse(c
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostOrganizationAddressListsResponse(rsp)
 }
 
@@ -24528,6 +24987,11 @@ func (c *ClientWithResponses) PostOrganizationAddressListsWithResponse(ctx conte
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostOrganizationAddressListsResponse(rsp)
 }
 
@@ -24537,6 +25001,11 @@ func (c *ClientWithResponses) GetOrganizationAvailableNetworksWithResponse(ctx c
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetOrganizationAvailableNetworksResponse(rsp)
 }
 
@@ -24546,6 +25015,11 @@ func (c *ClientWithResponses) GetOrganizationCertificatesWithResponse(ctx contex
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetOrganizationCertificatesResponse(rsp)
 }
 
@@ -24555,6 +25029,11 @@ func (c *ClientWithResponses) GetOrganizationDiskBackupPoliciesWithResponse(ctx 
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetOrganizationDiskBackupPoliciesResponse(rsp)
 }
 
@@ -24564,6 +25043,11 @@ func (c *ClientWithResponses) GetOrganizationDiskTemplatesWithResponse(ctx conte
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetOrganizationDiskTemplatesResponse(rsp)
 }
 
@@ -24573,6 +25057,11 @@ func (c *ClientWithResponses) GetOrganizationDisksWithResponse(ctx context.Conte
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetOrganizationDisksResponse(rsp)
 }
 
@@ -24582,6 +25071,11 @@ func (c *ClientWithResponses) GetOrganizationDnsZonesWithResponse(ctx context.Co
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetOrganizationDnsZonesResponse(rsp)
 }
 
@@ -24591,6 +25085,11 @@ func (c *ClientWithResponses) PostOrganizationDnsZonesWithBodyWithResponse(ctx c
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostOrganizationDnsZonesResponse(rsp)
 }
 
@@ -24599,6 +25098,11 @@ func (c *ClientWithResponses) PostOrganizationDnsZonesWithResponse(ctx context.C
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostOrganizationDnsZonesResponse(rsp)
 }
 
@@ -24608,6 +25112,11 @@ func (c *ClientWithResponses) GetOrganizationDnsZonesNameserversWithResponse(ctx
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetOrganizationDnsZonesNameserversResponse(rsp)
 }
 
@@ -24617,6 +25126,11 @@ func (c *ClientWithResponses) GetOrganizationFileStorageVolumesWithResponse(ctx 
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetOrganizationFileStorageVolumesResponse(rsp)
 }
 
@@ -24626,6 +25140,11 @@ func (c *ClientWithResponses) PostOrganizationFileStorageVolumesWithBodyWithResp
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostOrganizationFileStorageVolumesResponse(rsp)
 }
 
@@ -24634,6 +25153,11 @@ func (c *ClientWithResponses) PostOrganizationFileStorageVolumesWithResponse(ctx
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostOrganizationFileStorageVolumesResponse(rsp)
 }
 
@@ -24643,6 +25167,11 @@ func (c *ClientWithResponses) GetOrganizationIpAddressesWithResponse(ctx context
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetOrganizationIpAddressesResponse(rsp)
 }
 
@@ -24652,6 +25181,11 @@ func (c *ClientWithResponses) PostOrganizationIpAddressesWithBodyWithResponse(ct
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostOrganizationIpAddressesResponse(rsp)
 }
 
@@ -24660,6 +25194,11 @@ func (c *ClientWithResponses) PostOrganizationIpAddressesWithResponse(ctx contex
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostOrganizationIpAddressesResponse(rsp)
 }
 
@@ -24669,6 +25208,11 @@ func (c *ClientWithResponses) GetOrganizationLoadBalancersWithResponse(ctx conte
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetOrganizationLoadBalancersResponse(rsp)
 }
 
@@ -24678,6 +25222,11 @@ func (c *ClientWithResponses) PostOrganizationLoadBalancersWithBodyWithResponse(
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostOrganizationLoadBalancersResponse(rsp)
 }
 
@@ -24686,6 +25235,11 @@ func (c *ClientWithResponses) PostOrganizationLoadBalancersWithResponse(ctx cont
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostOrganizationLoadBalancersResponse(rsp)
 }
 
@@ -24695,6 +25249,11 @@ func (c *ClientWithResponses) GetOrganizationManagedWithResponse(ctx context.Con
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetOrganizationManagedResponse(rsp)
 }
 
@@ -24704,6 +25263,11 @@ func (c *ClientWithResponses) PostOrganizationManagedWithBodyWithResponse(ctx co
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostOrganizationManagedResponse(rsp)
 }
 
@@ -24712,6 +25276,11 @@ func (c *ClientWithResponses) PostOrganizationManagedWithResponse(ctx context.Co
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostOrganizationManagedResponse(rsp)
 }
 
@@ -24721,6 +25290,11 @@ func (c *ClientWithResponses) GetOrganizationNetworkSpeedProfilesWithResponse(ct
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetOrganizationNetworkSpeedProfilesResponse(rsp)
 }
 
@@ -24730,6 +25304,11 @@ func (c *ClientWithResponses) GetOrganizationPolicyLimitsWithResponse(ctx contex
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetOrganizationPolicyLimitsResponse(rsp)
 }
 
@@ -24739,6 +25318,11 @@ func (c *ClientWithResponses) GetOrganizationSecurityGroupsWithResponse(ctx cont
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetOrganizationSecurityGroupsResponse(rsp)
 }
 
@@ -24748,6 +25332,11 @@ func (c *ClientWithResponses) PostOrganizationSecurityGroupsWithBodyWithResponse
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostOrganizationSecurityGroupsResponse(rsp)
 }
 
@@ -24756,6 +25345,11 @@ func (c *ClientWithResponses) PostOrganizationSecurityGroupsWithResponse(ctx con
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostOrganizationSecurityGroupsResponse(rsp)
 }
 
@@ -24765,6 +25359,11 @@ func (c *ClientWithResponses) GetOrganizationSshKeysWithResponse(ctx context.Con
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetOrganizationSshKeysResponse(rsp)
 }
 
@@ -24774,6 +25373,11 @@ func (c *ClientWithResponses) PostOrganizationSshKeysWithBodyWithResponse(ctx co
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostOrganizationSshKeysResponse(rsp)
 }
 
@@ -24782,6 +25386,11 @@ func (c *ClientWithResponses) PostOrganizationSshKeysWithResponse(ctx context.Co
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostOrganizationSshKeysResponse(rsp)
 }
 
@@ -24791,6 +25400,11 @@ func (c *ClientWithResponses) GetOrganizationTagsWithResponse(ctx context.Contex
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetOrganizationTagsResponse(rsp)
 }
 
@@ -24800,6 +25414,11 @@ func (c *ClientWithResponses) PostOrganizationTagsWithBodyWithResponse(ctx conte
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostOrganizationTagsResponse(rsp)
 }
 
@@ -24808,6 +25427,11 @@ func (c *ClientWithResponses) PostOrganizationTagsWithResponse(ctx context.Conte
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostOrganizationTagsResponse(rsp)
 }
 
@@ -24817,6 +25441,11 @@ func (c *ClientWithResponses) GetOrganizationTrashObjectsWithResponse(ctx contex
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetOrganizationTrashObjectsResponse(rsp)
 }
 
@@ -24826,6 +25455,11 @@ func (c *ClientWithResponses) PostOrganizationTrashObjectsPurgeAllWithBodyWithRe
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostOrganizationTrashObjectsPurgeAllResponse(rsp)
 }
 
@@ -24834,6 +25468,11 @@ func (c *ClientWithResponses) PostOrganizationTrashObjectsPurgeAllWithResponse(c
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostOrganizationTrashObjectsPurgeAllResponse(rsp)
 }
 
@@ -24843,6 +25482,11 @@ func (c *ClientWithResponses) GetOrganizationUsersWithAccessWithResponse(ctx con
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetOrganizationUsersWithAccessResponse(rsp)
 }
 
@@ -24852,6 +25496,11 @@ func (c *ClientWithResponses) GetOrganizationVirtualMachineGroupsWithResponse(ct
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetOrganizationVirtualMachineGroupsResponse(rsp)
 }
 
@@ -24861,6 +25510,11 @@ func (c *ClientWithResponses) PostOrganizationVirtualMachineGroupsWithBodyWithRe
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostOrganizationVirtualMachineGroupsResponse(rsp)
 }
 
@@ -24869,6 +25523,11 @@ func (c *ClientWithResponses) PostOrganizationVirtualMachineGroupsWithResponse(c
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostOrganizationVirtualMachineGroupsResponse(rsp)
 }
 
@@ -24878,6 +25537,11 @@ func (c *ClientWithResponses) GetOrganizationVirtualMachinesWithResponse(ctx con
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetOrganizationVirtualMachinesResponse(rsp)
 }
 
@@ -24887,6 +25551,11 @@ func (c *ClientWithResponses) PostOrganizationVirtualMachinesBuildWithBodyWithRe
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostOrganizationVirtualMachinesBuildResponse(rsp)
 }
 
@@ -24895,6 +25564,11 @@ func (c *ClientWithResponses) PostOrganizationVirtualMachinesBuildWithResponse(c
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostOrganizationVirtualMachinesBuildResponse(rsp)
 }
 
@@ -24904,6 +25578,11 @@ func (c *ClientWithResponses) PostOrganizationVirtualMachinesBuildFromSpecWithBo
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostOrganizationVirtualMachinesBuildFromSpecResponse(rsp)
 }
 
@@ -24912,6 +25591,11 @@ func (c *ClientWithResponses) PostOrganizationVirtualMachinesBuildFromSpecWithRe
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostOrganizationVirtualMachinesBuildFromSpecResponse(rsp)
 }
 
@@ -24921,6 +25605,11 @@ func (c *ClientWithResponses) DeleteSecurityGroupWithBodyWithResponse(ctx contex
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteSecurityGroupResponse(rsp)
 }
 
@@ -24929,6 +25618,11 @@ func (c *ClientWithResponses) DeleteSecurityGroupWithResponse(ctx context.Contex
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteSecurityGroupResponse(rsp)
 }
 
@@ -24938,6 +25632,11 @@ func (c *ClientWithResponses) GetSecurityGroupWithResponse(ctx context.Context, 
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetSecurityGroupResponse(rsp)
 }
 
@@ -24947,6 +25646,11 @@ func (c *ClientWithResponses) PatchSecurityGroupWithBodyWithResponse(ctx context
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchSecurityGroupResponse(rsp)
 }
 
@@ -24955,6 +25659,11 @@ func (c *ClientWithResponses) PatchSecurityGroupWithResponse(ctx context.Context
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchSecurityGroupResponse(rsp)
 }
 
@@ -24964,6 +25673,11 @@ func (c *ClientWithResponses) GetSecurityGroupRulesWithResponse(ctx context.Cont
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetSecurityGroupRulesResponse(rsp)
 }
 
@@ -24973,6 +25687,11 @@ func (c *ClientWithResponses) PostSecurityGroupRulesWithBodyWithResponse(ctx con
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostSecurityGroupRulesResponse(rsp)
 }
 
@@ -24981,6 +25700,11 @@ func (c *ClientWithResponses) PostSecurityGroupRulesWithResponse(ctx context.Con
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostSecurityGroupRulesResponse(rsp)
 }
 
@@ -24990,6 +25714,11 @@ func (c *ClientWithResponses) DeleteSecurityGroupsRulesSecurityGroupRuleWithBody
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteSecurityGroupsRulesSecurityGroupRuleResponse(rsp)
 }
 
@@ -24998,6 +25727,11 @@ func (c *ClientWithResponses) DeleteSecurityGroupsRulesSecurityGroupRuleWithResp
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteSecurityGroupsRulesSecurityGroupRuleResponse(rsp)
 }
 
@@ -25007,6 +25741,11 @@ func (c *ClientWithResponses) GetSecurityGroupsRulesSecurityGroupRuleWithRespons
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetSecurityGroupsRulesSecurityGroupRuleResponse(rsp)
 }
 
@@ -25016,6 +25755,11 @@ func (c *ClientWithResponses) PatchSecurityGroupsRulesSecurityGroupRuleWithBodyW
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchSecurityGroupsRulesSecurityGroupRuleResponse(rsp)
 }
 
@@ -25024,6 +25768,11 @@ func (c *ClientWithResponses) PatchSecurityGroupsRulesSecurityGroupRuleWithRespo
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchSecurityGroupsRulesSecurityGroupRuleResponse(rsp)
 }
 
@@ -25033,6 +25782,11 @@ func (c *ClientWithResponses) DeleteSshKeyWithBodyWithResponse(ctx context.Conte
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteSshKeyResponse(rsp)
 }
 
@@ -25041,6 +25795,11 @@ func (c *ClientWithResponses) DeleteSshKeyWithResponse(ctx context.Context, body
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteSshKeyResponse(rsp)
 }
 
@@ -25050,6 +25809,11 @@ func (c *ClientWithResponses) DeleteTagWithBodyWithResponse(ctx context.Context,
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteTagResponse(rsp)
 }
 
@@ -25058,6 +25822,11 @@ func (c *ClientWithResponses) DeleteTagWithResponse(ctx context.Context, body De
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteTagResponse(rsp)
 }
 
@@ -25067,6 +25836,11 @@ func (c *ClientWithResponses) GetTagWithResponse(ctx context.Context, params *Ge
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetTagResponse(rsp)
 }
 
@@ -25076,6 +25850,11 @@ func (c *ClientWithResponses) PatchTagWithBodyWithResponse(ctx context.Context, 
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchTagResponse(rsp)
 }
 
@@ -25084,6 +25863,11 @@ func (c *ClientWithResponses) PatchTagWithResponse(ctx context.Context, body Pat
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchTagResponse(rsp)
 }
 
@@ -25093,6 +25877,11 @@ func (c *ClientWithResponses) GetTaskWithResponse(ctx context.Context, params *G
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetTaskResponse(rsp)
 }
 
@@ -25102,6 +25891,11 @@ func (c *ClientWithResponses) DeleteTrashObjectWithBodyWithResponse(ctx context.
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteTrashObjectResponse(rsp)
 }
 
@@ -25110,6 +25904,11 @@ func (c *ClientWithResponses) DeleteTrashObjectWithResponse(ctx context.Context,
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteTrashObjectResponse(rsp)
 }
 
@@ -25119,6 +25918,11 @@ func (c *ClientWithResponses) GetTrashObjectWithResponse(ctx context.Context, pa
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetTrashObjectResponse(rsp)
 }
 
@@ -25128,6 +25932,11 @@ func (c *ClientWithResponses) PostTrashObjectRestoreWithBodyWithResponse(ctx con
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostTrashObjectRestoreResponse(rsp)
 }
 
@@ -25136,6 +25945,11 @@ func (c *ClientWithResponses) PostTrashObjectRestoreWithResponse(ctx context.Con
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostTrashObjectRestoreResponse(rsp)
 }
 
@@ -25145,6 +25959,11 @@ func (c *ClientWithResponses) GetUsersCurrentWithResponse(ctx context.Context, r
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetUsersCurrentResponse(rsp)
 }
 
@@ -25154,6 +25973,11 @@ func (c *ClientWithResponses) GetVirtualMachineAuthorizedKeysWithResponse(ctx co
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetVirtualMachineAuthorizedKeysResponse(rsp)
 }
 
@@ -25163,6 +25987,11 @@ func (c *ClientWithResponses) DeleteVirtualMachineGroupWithBodyWithResponse(ctx 
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteVirtualMachineGroupResponse(rsp)
 }
 
@@ -25171,6 +26000,11 @@ func (c *ClientWithResponses) DeleteVirtualMachineGroupWithResponse(ctx context.
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteVirtualMachineGroupResponse(rsp)
 }
 
@@ -25180,6 +26014,11 @@ func (c *ClientWithResponses) GetVirtualMachineGroupWithResponse(ctx context.Con
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetVirtualMachineGroupResponse(rsp)
 }
 
@@ -25189,6 +26028,11 @@ func (c *ClientWithResponses) PatchVirtualMachineGroupWithBodyWithResponse(ctx c
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchVirtualMachineGroupResponse(rsp)
 }
 
@@ -25197,6 +26041,11 @@ func (c *ClientWithResponses) PatchVirtualMachineGroupWithResponse(ctx context.C
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchVirtualMachineGroupResponse(rsp)
 }
 
@@ -25206,6 +26055,11 @@ func (c *ClientWithResponses) GetVMNIVMNIWithResponse(ctx context.Context, param
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetVMNIVMNIResponse(rsp)
 }
 
@@ -25215,6 +26069,11 @@ func (c *ClientWithResponses) PostVirtualMachineNetworkInterfaceAllocateIpWithBo
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostVirtualMachineNetworkInterfaceAllocateIpResponse(rsp)
 }
 
@@ -25223,6 +26082,11 @@ func (c *ClientWithResponses) PostVirtualMachineNetworkInterfaceAllocateIpWithRe
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostVirtualMachineNetworkInterfaceAllocateIpResponse(rsp)
 }
 
@@ -25232,6 +26096,11 @@ func (c *ClientWithResponses) PostVirtualMachineNetworkInterfaceAllocateNewIpWit
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostVirtualMachineNetworkInterfaceAllocateNewIpResponse(rsp)
 }
 
@@ -25240,6 +26109,11 @@ func (c *ClientWithResponses) PostVirtualMachineNetworkInterfaceAllocateNewIpWit
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostVirtualMachineNetworkInterfaceAllocateNewIpResponse(rsp)
 }
 
@@ -25249,6 +26123,11 @@ func (c *ClientWithResponses) GetVirtualMachineNetworkInterfaceAvailableIpsAddre
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionResponse(rsp)
 }
 
@@ -25258,6 +26137,11 @@ func (c *ClientWithResponses) PatchVirtualMachineNetworkInterfaceUpdateSpeedProf
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchVirtualMachineNetworkInterfaceUpdateSpeedProfileResponse(rsp)
 }
 
@@ -25266,6 +26150,11 @@ func (c *ClientWithResponses) PatchVirtualMachineNetworkInterfaceUpdateSpeedProf
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchVirtualMachineNetworkInterfaceUpdateSpeedProfileResponse(rsp)
 }
 
@@ -25275,6 +26164,11 @@ func (c *ClientWithResponses) GetVirtualMachinePackagesWithResponse(ctx context.
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetVirtualMachinePackagesResponse(rsp)
 }
 
@@ -25284,6 +26178,11 @@ func (c *ClientWithResponses) GetVirtualMachinePackageWithResponse(ctx context.C
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetVirtualMachinePackageResponse(rsp)
 }
 
@@ -25293,6 +26192,11 @@ func (c *ClientWithResponses) DeleteVirtualMachineWithBodyWithResponse(ctx conte
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteVirtualMachineResponse(rsp)
 }
 
@@ -25301,6 +26205,11 @@ func (c *ClientWithResponses) DeleteVirtualMachineWithResponse(ctx context.Conte
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseDeleteVirtualMachineResponse(rsp)
 }
 
@@ -25310,6 +26219,11 @@ func (c *ClientWithResponses) GetVirtualMachineWithResponse(ctx context.Context,
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetVirtualMachineResponse(rsp)
 }
 
@@ -25319,6 +26233,11 @@ func (c *ClientWithResponses) PatchVirtualMachineWithBodyWithResponse(ctx contex
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchVirtualMachineResponse(rsp)
 }
 
@@ -25327,6 +26246,11 @@ func (c *ClientWithResponses) PatchVirtualMachineWithResponse(ctx context.Contex
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePatchVirtualMachineResponse(rsp)
 }
 
@@ -25336,6 +26260,11 @@ func (c *ClientWithResponses) PostVirtualMachineAllocateIpWithBodyWithResponse(c
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostVirtualMachineAllocateIpResponse(rsp)
 }
 
@@ -25344,6 +26273,11 @@ func (c *ClientWithResponses) PostVirtualMachineAllocateIpWithResponse(ctx conte
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostVirtualMachineAllocateIpResponse(rsp)
 }
 
@@ -25353,6 +26287,11 @@ func (c *ClientWithResponses) PostVirtualMachineConsoleSessionsWithBodyWithRespo
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostVirtualMachineConsoleSessionsResponse(rsp)
 }
 
@@ -25361,6 +26300,11 @@ func (c *ClientWithResponses) PostVirtualMachineConsoleSessionsWithResponse(ctx 
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostVirtualMachineConsoleSessionsResponse(rsp)
 }
 
@@ -25370,6 +26314,11 @@ func (c *ClientWithResponses) GetVirtualMachineDiskBackupPoliciesWithResponse(ct
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetVirtualMachineDiskBackupPoliciesResponse(rsp)
 }
 
@@ -25379,6 +26328,11 @@ func (c *ClientWithResponses) PostVirtualMachineDiskBackupPoliciesWithBodyWithRe
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostVirtualMachineDiskBackupPoliciesResponse(rsp)
 }
 
@@ -25387,6 +26341,11 @@ func (c *ClientWithResponses) PostVirtualMachineDiskBackupPoliciesWithResponse(c
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostVirtualMachineDiskBackupPoliciesResponse(rsp)
 }
 
@@ -25396,6 +26355,11 @@ func (c *ClientWithResponses) GetVirtualMachineDisksWithResponse(ctx context.Con
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetVirtualMachineDisksResponse(rsp)
 }
 
@@ -25405,6 +26369,11 @@ func (c *ClientWithResponses) PutVirtualMachineFlexibleResourcesWithBodyWithResp
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePutVirtualMachineFlexibleResourcesResponse(rsp)
 }
 
@@ -25413,6 +26382,11 @@ func (c *ClientWithResponses) PutVirtualMachineFlexibleResourcesWithResponse(ctx
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePutVirtualMachineFlexibleResourcesResponse(rsp)
 }
 
@@ -25422,6 +26396,11 @@ func (c *ClientWithResponses) GetVirtualMachineNetworkInterfacesWithResponse(ctx
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetVirtualMachineNetworkInterfacesResponse(rsp)
 }
 
@@ -25431,6 +26410,11 @@ func (c *ClientWithResponses) GetVirtualMachineNetworkInterfaceWithResponse(ctx 
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetVirtualMachineNetworkInterfaceResponse(rsp)
 }
 
@@ -25440,6 +26424,11 @@ func (c *ClientWithResponses) PutVirtualMachinePackageWithBodyWithResponse(ctx c
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePutVirtualMachinePackageResponse(rsp)
 }
 
@@ -25448,6 +26437,11 @@ func (c *ClientWithResponses) PutVirtualMachinePackageWithResponse(ctx context.C
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePutVirtualMachinePackageResponse(rsp)
 }
 
@@ -25457,6 +26451,11 @@ func (c *ClientWithResponses) PostVirtualMachineResetWithBodyWithResponse(ctx co
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostVirtualMachineResetResponse(rsp)
 }
 
@@ -25465,6 +26464,11 @@ func (c *ClientWithResponses) PostVirtualMachineResetWithResponse(ctx context.Co
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostVirtualMachineResetResponse(rsp)
 }
 
@@ -25474,6 +26478,11 @@ func (c *ClientWithResponses) PostVirtualMachineShutdownWithBodyWithResponse(ctx
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostVirtualMachineShutdownResponse(rsp)
 }
 
@@ -25482,6 +26491,11 @@ func (c *ClientWithResponses) PostVirtualMachineShutdownWithResponse(ctx context
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostVirtualMachineShutdownResponse(rsp)
 }
 
@@ -25491,6 +26505,11 @@ func (c *ClientWithResponses) PostVirtualMachineStartWithBodyWithResponse(ctx co
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostVirtualMachineStartResponse(rsp)
 }
 
@@ -25499,6 +26518,11 @@ func (c *ClientWithResponses) PostVirtualMachineStartWithResponse(ctx context.Co
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostVirtualMachineStartResponse(rsp)
 }
 
@@ -25508,6 +26532,11 @@ func (c *ClientWithResponses) PostVirtualMachineStopWithBodyWithResponse(ctx con
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostVirtualMachineStopResponse(rsp)
 }
 
@@ -25516,6 +26545,11 @@ func (c *ClientWithResponses) PostVirtualMachineStopWithResponse(ctx context.Con
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParsePostVirtualMachineStopResponse(rsp)
 }
 
@@ -25525,6 +26559,11 @@ func (c *ClientWithResponses) GetVirtualMachinesBuildsVirtualMachineBuildWithRes
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetVirtualMachinesBuildsVirtualMachineBuildResponse(rsp)
 }
 
@@ -25534,6 +26573,11 @@ func (c *ClientWithResponses) GetZonesWithResponse(ctx context.Context, reqEdito
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetZonesResponse(rsp)
 }
 
@@ -25543,6 +26587,11 @@ func (c *ClientWithResponses) GetZoneWithResponse(ctx context.Context, params *G
 	if err != nil {
 		return nil, err
 	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return nil, ErrRequestFailed
+	}
+
 	return ParseGetZoneResponse(rsp)
 }
 

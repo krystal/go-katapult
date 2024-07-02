@@ -2,6 +2,10 @@ const (
     clientVersion = "0.2.0" // x-release-please-version
 )
 
+var (
+    ErrRequestFailed = fmt.Errorf("request was not successful")
+)
+
 // RequestEditorFn  is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
 
