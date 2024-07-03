@@ -80,7 +80,21 @@ func (c *ClientWithResponses) {{$opid}}{{if .HasBody}}WithBody{{end}}WithRespons
     if err != nil {
         return nil, err
     }
-    return Parse{{genResponseTypeName $opid | ucFirst}}(rsp)
+
+    res, err := Parse{{genResponseTypeName $opid | ucFirst}}(rsp)
+    if err != nil {
+    return nil, err
+    }
+
+    if rsp.StatusCode == http.StatusNotFound {
+        return res, ErrNotFound
+    }
+
+    if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+        return res, ErrRequestFailed
+    }
+
+    return res, nil
 }
 
 {{$hasParams := .RequiresParamObject -}}
@@ -93,7 +107,21 @@ func (c *ClientWithResponses) {{$opid}}{{.Suffix}}WithResponse(ctx context.Conte
     if err != nil {
         return nil, err
     }
-    return Parse{{genResponseTypeName $opid | ucFirst}}(rsp)
+
+    res, err := Parse{{genResponseTypeName $opid | ucFirst}}(rsp)
+    if err != nil {
+    return nil, err
+    }
+
+    if rsp.StatusCode == http.StatusNotFound {
+        return res, ErrNotFound
+    }
+
+    if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+        return res, ErrRequestFailed
+    }
+
+    return res, nil
 }
 {{end}}
 {{end}}

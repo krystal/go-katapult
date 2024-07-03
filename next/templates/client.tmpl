@@ -2,6 +2,11 @@ const (
     clientVersion = "0.2.0" // x-release-please-version
 )
 
+var (
+    ErrRequestFailed = errors.New("request was not successful")
+    ErrNotFound = errors.New("resource not found")
+)
+
 // RequestEditorFn  is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
 
