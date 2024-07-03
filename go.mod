@@ -10,6 +10,7 @@ require (
 	github.com/jimeh/rands v0.3.0
 	github.com/jimeh/undent v1.1.1
 	github.com/mitchellh/copystructure v1.2.0
+	github.com/oapi-codegen/nullable v1.1.0
 	github.com/oapi-codegen/oapi-codegen/v2 v2.3.0
 	github.com/oapi-codegen/runtime v1.1.1
 	github.com/stretchr/testify v1.9.0

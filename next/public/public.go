@@ -14,6 +14,7 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/oapi-codegen/nullable"
 	"github.com/oapi-codegen/oapi-codegen/v2/pkg/securityprovider"
 	"github.com/oapi-codegen/runtime"
 )
@@ -163,7 +164,7 @@ type InvalidCouponCodeEnum string
 
 // InvalidEstimateQuantity defines model for InvalidEstimateQuantity.
 type InvalidEstimateQuantity struct {
-	Resource *string `json:"resource"`
+	Resource nullable.Nullable[string] `json:"resource,omitempty"`
 }
 
 // InvalidEstimateQuantityEnum defines model for InvalidEstimateQuantityEnum.
@@ -178,7 +179,7 @@ type InvalidEstimateQuantitySchema struct {
 
 // InvalidEstimateResource defines model for InvalidEstimateResource.
 type InvalidEstimateResource struct {
-	Resource *string `json:"resource"`
+	Resource nullable.Nullable[string] `json:"resource,omitempty"`
 }
 
 // InvalidEstimateResourceEnum defines model for InvalidEstimateResourceEnum.
@@ -223,10 +224,10 @@ type PaginationObject struct {
 	PerPage *int `json:"per_page,omitempty"`
 
 	// Total The total number of items across all pages
-	Total *int `json:"total"`
+	Total nullable.Nullable[int] `json:"total,omitempty"`
 
 	// TotalPages The total number of pages
-	TotalPages *int `json:"total_pages"`
+	TotalPages nullable.Nullable[int] `json:"total_pages,omitempty"`
 }
 
 // Price defines model for Price.
@@ -238,10 +239,10 @@ type Price struct {
 
 // PriceVariant defines model for PriceVariant.
 type PriceVariant struct {
-	Default     *bool    `json:"default,omitempty"`
-	Description *string  `json:"description"`
-	Id          *string  `json:"id"`
-	Prices      *[]Price `json:"prices,omitempty"`
+	Default     *bool                     `json:"default,omitempty"`
+	Description nullable.Nullable[string] `json:"description,omitempty"`
+	Id          nullable.Nullable[string] `json:"id,omitempty"`
+	Prices      *[]Price                  `json:"prices,omitempty"`
 }
 
 // PricingEstimate defines model for PricingEstimate.
@@ -258,16 +259,16 @@ type PricingEstimate struct {
 
 // PricingEstimateResource defines model for PricingEstimateResource.
 type PricingEstimateResource struct {
-	Description    *string                `json:"description,omitempty"`
-	Package        *VirtualMachinePackage `json:"package"`
-	PerHour        *float32               `json:"per_hour,omitempty"`
-	PerHourEach    *float32               `json:"per_hour_each,omitempty"`
-	PerHourIncTax  *float32               `json:"per_hour_inc_tax,omitempty"`
-	PerMonth       *float32               `json:"per_month,omitempty"`
-	PerMonthEach   *float32               `json:"per_month_each,omitempty"`
-	PerMonthIncTax *float32               `json:"per_month_inc_tax,omitempty"`
-	Quantity       *int                   `json:"quantity,omitempty"`
-	Resource       *string                `json:"resource,omitempty"`
+	Description    *string                                  `json:"description,omitempty"`
+	Package        nullable.Nullable[VirtualMachinePackage] `json:"package,omitempty"`
+	PerHour        *float32                                 `json:"per_hour,omitempty"`
+	PerHourEach    *float32                                 `json:"per_hour_each,omitempty"`
+	PerHourIncTax  *float32                                 `json:"per_hour_inc_tax,omitempty"`
+	PerMonth       *float32                                 `json:"per_month,omitempty"`
+	PerMonthEach   *float32                                 `json:"per_month_each,omitempty"`
+	PerMonthIncTax *float32                                 `json:"per_month_inc_tax,omitempty"`
+	Quantity       *int                                     `json:"quantity,omitempty"`
+	Resource       *string                                  `json:"resource,omitempty"`
 }
 
 // PricingEstimateResourceArguments All 'resources[]' params are mutually exclusive, only one can be provided.
@@ -308,17 +309,17 @@ type ValidationErrorEnum string
 
 // VirtualMachinePackage defines model for VirtualMachinePackage.
 type VirtualMachinePackage struct {
-	CpuCores                      *int              `json:"cpu_cores,omitempty"`
-	Icon                          *Attachment       `json:"icon"`
-	Id                            *string           `json:"id,omitempty"`
-	Ipv4Addresses                 *int              `json:"ipv4_addresses,omitempty"`
-	MemoryInGb                    *int              `json:"memory_in_gb,omitempty"`
-	MonthlyBandwidthAllowanceInGb *int              `json:"monthly_bandwidth_allowance_in_gb"`
-	Name                          *string           `json:"name,omitempty"`
-	Permalink                     *string           `json:"permalink,omitempty"`
-	Privacy                       *PrivacyTypesEnum `json:"privacy,omitempty"`
-	StorageInGb                   *int              `json:"storage_in_gb,omitempty"`
-	UseDedicatedCpus              *bool             `json:"use_dedicated_cpus,omitempty"`
+	CpuCores                      *int                          `json:"cpu_cores,omitempty"`
+	Icon                          nullable.Nullable[Attachment] `json:"icon,omitempty"`
+	Id                            *string                       `json:"id,omitempty"`
+	Ipv4Addresses                 *int                          `json:"ipv4_addresses,omitempty"`
+	MemoryInGb                    *int                          `json:"memory_in_gb,omitempty"`
+	MonthlyBandwidthAllowanceInGb nullable.Nullable[int]        `json:"monthly_bandwidth_allowance_in_gb,omitempty"`
+	Name                          *string                       `json:"name,omitempty"`
+	Permalink                     *string                       `json:"permalink,omitempty"`
+	Privacy                       *PrivacyTypesEnum             `json:"privacy,omitempty"`
+	StorageInGb                   *int                          `json:"storage_in_gb,omitempty"`
+	UseDedicatedCpus              *bool                         `json:"use_dedicated_cpus,omitempty"`
 }
 
 // APIAuthenticator403Response defines model for APIAuthenticator403Response.
