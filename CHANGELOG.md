@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.9](https://github.com/krystal/go-katapult/compare/v0.2.8...v0.2.9) (2024-07-04)
+
+
+### Features
+
+* **next:** add nullable output option to generator ([#170](https://github.com/krystal/go-katapult/issues/170)) ([e410f3f](https://github.com/krystal/go-katapult/commit/e410f3fa37b9029e9ea9622d2830222eb510d59c))
+* returns an `ErrRequestFailed` error on response functions if response isn't 2xx ([#167](https://github.com/krystal/go-katapult/issues/167)) ([8525ba9](https://github.com/krystal/go-katapult/commit/8525ba9ab17a3b242a9d9453325fba565d34846b))
+
 ## [0.2.8](https://github.com/krystal/go-katapult/compare/v0.2.7...v0.2.8) (2024-06-21)
 
 
