@@ -109,6 +109,17 @@ const (
 	DiskBackupPolicyNotFound DiskBackupPolicyNotFoundEnum = "disk_backup_policy_not_found"
 )
 
+// Defines values for DiskBusEnum.
+const (
+	Scsi   DiskBusEnum = "scsi"
+	Virtio DiskBusEnum = "virtio"
+)
+
+// Defines values for DiskIOProfileNotFoundEnum.
+const (
+	DiskIoProfileNotFound DiskIOProfileNotFoundEnum = "disk_io_profile_not_found"
+)
+
 // Defines values for DiskNotFoundEnum.
 const (
 	DiskNotFound DiskNotFoundEnum = "disk_not_found"
@@ -149,6 +160,12 @@ const (
 	FileStorageVolumeStateEnumFailed      FileStorageVolumeStateEnum = "failed"
 	FileStorageVolumeStateEnumPending     FileStorageVolumeStateEnum = "pending"
 	FileStorageVolumeStateEnumReady       FileStorageVolumeStateEnum = "ready"
+)
+
+// Defines values for FileSystemEnum.
+const (
+	Ext4 FileSystemEnum = "ext4"
+	Xfs  FileSystemEnum = "xfs"
 )
 
 // Defines values for FlexibleResourcesUnavailableToOrganizationEnum.
@@ -487,6 +504,21 @@ const (
 // Defines values for TrashObjectNotFoundEnum.
 const (
 	TrashObjectNotFound TrashObjectNotFoundEnum = "trash_object_not_found"
+)
+
+// Defines values for UnableToAssignEnum.
+const (
+	UnableToAssignEnumUnableToAssign UnableToAssignEnum = "unable_to_assign"
+)
+
+// Defines values for UnableToUnassignEnum.
+const (
+	UnableToUnassignEnumUnableToUnassign UnableToUnassignEnum = "unable_to_unassign"
+)
+
+// Defines values for UnassignedDiskEnum.
+const (
+	UnassignedDisk UnassignedDiskEnum = "unassigned_disk"
 )
 
 // Defines values for UnauthorizedNetworkForAPITokenEnum.
@@ -967,6 +999,22 @@ type DecimalOrUnlimited struct {
 	Value     nullable.Nullable[float32] `json:"value,omitempty"`
 }
 
+// DeleteDisk200ResponseDisk defines model for DeleteDisk200ResponseDisk.
+type DeleteDisk200ResponseDisk struct {
+	BusType            nullable.Nullable[DiskBusEnum]                      `json:"bus_type,omitempty"`
+	CreatedAt          *int                                                `json:"created_at,omitempty"`
+	DataCenter         *DeleteDiskPartDataCenter                           `json:"data_center,omitempty"`
+	Id                 *string                                             `json:"id,omitempty"`
+	Installation       nullable.Nullable[DiskInstallation]                 `json:"installation,omitempty"`
+	IoProfile          nullable.Nullable[DiskIOProfile]                    `json:"io_profile,omitempty"`
+	Name               *string                                             `json:"name,omitempty"`
+	SizeInGb           *int                                                `json:"size_in_gb,omitempty"`
+	State              *DiskStateEnum                                      `json:"state,omitempty"`
+	StorageSpeed       *StorageSpeedEnum                                   `json:"storage_speed,omitempty"`
+	VirtualMachineDisk nullable.Nullable[DeleteDiskPartVirtualMachineDisk] `json:"virtual_machine_disk,omitempty"`
+	Wwn                *string                                             `json:"wwn,omitempty"`
+}
+
 // DeleteDiskBackupPolicy200ResponseDiskBackupPolicy defines model for DeleteDiskBackupPolicy200ResponseDiskBackupPolicy.
 type DeleteDiskBackupPolicy200ResponseDiskBackupPolicy struct {
 	Id *string `json:"id,omitempty"`
@@ -977,6 +1025,27 @@ type DeleteDiskBackupPolicySchedule200ResponseDiskBackupPolicy struct {
 	AutoMoveToTrashAt nullable.Nullable[int]  `json:"auto_move_to_trash_at,omitempty"`
 	Id                *string                 `json:"id,omitempty"`
 	Target            *DiskBackupPolicyTarget `json:"target,omitempty"`
+}
+
+// DeleteDiskPartDataCenter defines model for DeleteDiskPartDataCenter.
+type DeleteDiskPartDataCenter struct {
+	Id        *string                   `json:"id,omitempty"`
+	Name      *string                   `json:"name,omitempty"`
+	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+}
+
+// DeleteDiskPartVirtualMachine defines model for DeleteDiskPartVirtualMachine.
+type DeleteDiskPartVirtualMachine struct {
+	Fqdn *string `json:"fqdn,omitempty"`
+	Id   *string `json:"id,omitempty"`
+}
+
+// DeleteDiskPartVirtualMachineDisk defines model for DeleteDiskPartVirtualMachineDisk.
+type DeleteDiskPartVirtualMachineDisk struct {
+	AttachOnBoot   *bool                                  `json:"attach_on_boot,omitempty"`
+	Boot           *bool                                  `json:"boot,omitempty"`
+	State          *VirtualMachineDiskAttachmentStateEnum `json:"state,omitempty"`
+	VirtualMachine *DeleteDiskPartVirtualMachine          `json:"virtual_machine,omitempty"`
 }
 
 // DeleteFileStorageVolume200ResponseFileStorageVolume defines model for DeleteFileStorageVolume200ResponseFileStorageVolume.
@@ -1069,7 +1138,9 @@ type DeletionRestrictedEnum string
 
 // Disk defines model for Disk.
 type Disk struct {
+	BusType            nullable.Nullable[DiskBusEnum]        `json:"bus_type,omitempty"`
 	CreatedAt          *int                                  `json:"created_at,omitempty"`
+	DataCenter         *DataCenter                           `json:"data_center,omitempty"`
 	Id                 *string                               `json:"id,omitempty"`
 	Installation       nullable.Nullable[DiskInstallation]   `json:"installation,omitempty"`
 	IoProfile          nullable.Nullable[DiskIOProfile]      `json:"io_profile,omitempty"`
@@ -1079,6 +1150,26 @@ type Disk struct {
 	StorageSpeed       *StorageSpeedEnum                     `json:"storage_speed,omitempty"`
 	VirtualMachineDisk nullable.Nullable[VirtualMachineDisk] `json:"virtual_machine_disk,omitempty"`
 	Wwn                *string                               `json:"wwn,omitempty"`
+}
+
+// DiskArguments All 'properties[]' params are mutually exclusive, only one can be provided.
+type DiskArguments struct {
+	BusType *DiskBusEnum `json:"bus_type,omitempty"`
+
+	// DataCenter All 'data_center[]' params are mutually exclusive, only one can be provided.
+	DataCenter        *DataCenterLookup `json:"data_center,omitempty"`
+	InitialFileSystem *FileSystemEnum   `json:"initial_file_system,omitempty"`
+
+	// IoProfile All 'io_profile[]' params are mutually exclusive, only one can be provided.
+	IoProfile *DiskIOProfileLookup `json:"io_profile,omitempty"`
+	Name      *string              `json:"name,omitempty"`
+
+	// SizeInGb Only available when creating disk. Existing disks must use the resize endpoint.
+	SizeInGb     *int              `json:"size_in_gb,omitempty"`
+	StorageSpeed *StorageSpeedEnum `json:"storage_speed,omitempty"`
+
+	// VirtualMachineDisk All 'virtual_machine_disk[]' params are mutually exclusive, only one can be provided.
+	VirtualMachineDisk *VirtualMachineDiskArguments `json:"virtual_machine_disk,omitempty"`
 }
 
 // DiskBackupPolicyArguments All 'properties[]' params are mutually exclusive, only one can be provided.
@@ -1107,6 +1198,9 @@ type DiskBackupPolicyTarget_Target struct {
 	union json.RawMessage
 }
 
+// DiskBusEnum defines model for DiskBusEnum.
+type DiskBusEnum string
+
 // DiskIOProfile defines model for DiskIOProfile.
 type DiskIOProfile struct {
 	Id        *string                `json:"id,omitempty"`
@@ -1114,6 +1208,22 @@ type DiskIOProfile struct {
 	Name      *string                `json:"name,omitempty"`
 	Permalink *string                `json:"permalink,omitempty"`
 	SpeedInMb nullable.Nullable[int] `json:"speed_in_mb,omitempty"`
+}
+
+// DiskIOProfileLookup All 'io_profile[]' params are mutually exclusive, only one can be provided.
+type DiskIOProfileLookup struct {
+	Id        *string `json:"id,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
+}
+
+// DiskIOProfileNotFoundEnum defines model for DiskIOProfileNotFoundEnum.
+type DiskIOProfileNotFoundEnum string
+
+// DiskIOProfileNotFoundSchema No disk IO profile was found matching any of the criteria provided in the arguments
+type DiskIOProfileNotFoundSchema struct {
+	Code        *DiskIOProfileNotFoundEnum `json:"code,omitempty"`
+	Description *string                    `json:"description,omitempty"`
+	Detail      *map[string]interface{}    `json:"detail,omitempty"`
 }
 
 // DiskInstallation defines model for DiskInstallation.
@@ -1139,6 +1249,13 @@ type DiskLookup struct {
 
 // DiskNotFoundEnum defines model for DiskNotFoundEnum.
 type DiskNotFoundEnum string
+
+// DiskNotFoundSchema No disk was found matching any of the criteria provided in the arguments
+type DiskNotFoundSchema struct {
+	Code        *DiskNotFoundEnum       `json:"code,omitempty"`
+	Description *string                 `json:"description,omitempty"`
+	Detail      *map[string]interface{} `json:"detail,omitempty"`
+}
 
 // DiskStateEnum defines model for DiskStateEnum.
 type DiskStateEnum string
@@ -1203,6 +1320,9 @@ type FileStorageVolumeNotFoundEnum string
 
 // FileStorageVolumeStateEnum defines model for FileStorageVolumeStateEnum.
 type FileStorageVolumeStateEnum string
+
+// FileSystemEnum defines model for FileSystemEnum.
+type FileSystemEnum string
 
 // FlexibleResourcesUnavailableToOrganizationEnum defines model for FlexibleResourcesUnavailableToOrganizationEnum.
 type FlexibleResourcesUnavailableToOrganizationEnum string
@@ -1317,7 +1437,9 @@ type GetDataCentersPartCountry struct {
 
 // GetDisk200ResponseDisk defines model for GetDisk200ResponseDisk.
 type GetDisk200ResponseDisk struct {
+	BusType            nullable.Nullable[DiskBusEnum]                   `json:"bus_type,omitempty"`
 	CreatedAt          *int                                             `json:"created_at,omitempty"`
+	DataCenter         *GetDiskPartDataCenter                           `json:"data_center,omitempty"`
 	Id                 *string                                          `json:"id,omitempty"`
 	Installation       nullable.Nullable[DiskInstallation]              `json:"installation,omitempty"`
 	IoProfile          nullable.Nullable[DiskIOProfile]                 `json:"io_profile,omitempty"`
@@ -1352,6 +1474,13 @@ type GetDiskDiskBackupPolicies200ResponseDiskBackupPolicies struct {
 type GetDiskDiskBackupPoliciesPartSchedule struct {
 	Interval         *ScheduleIntervalTypeEnum `json:"interval,omitempty"`
 	NextInvocationAt *int                      `json:"next_invocation_at,omitempty"`
+}
+
+// GetDiskPartDataCenter defines model for GetDiskPartDataCenter.
+type GetDiskPartDataCenter struct {
+	Id        *string                   `json:"id,omitempty"`
+	Name      *string                   `json:"name,omitempty"`
+	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
 }
 
 // GetDiskPartVirtualMachine defines model for GetDiskPartVirtualMachine.
@@ -2377,6 +2506,16 @@ type OneOfDataCenterNotFoundVirtualMachinePackageNotFoundZoneNotFound404Res stru
 	union json.RawMessage
 }
 
+// OneOfDiskIOProfileNotFoundDiskNotFound404Res defines model for OneOfDiskIOProfileNotFoundDiskNotFound404Res.
+type OneOfDiskIOProfileNotFoundDiskNotFound404Res struct {
+	union json.RawMessage
+}
+
+// OneOfDiskNotFoundVirtualMachineNotFound404Res defines model for OneOfDiskNotFoundVirtualMachineNotFound404Res.
+type OneOfDiskNotFoundVirtualMachineNotFound404Res struct {
+	union json.RawMessage
+}
+
 // OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res defines model for OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res.
 type OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res struct {
 	union json.RawMessage
@@ -2474,6 +2613,11 @@ type OneOfOrganizationNotActivatedPermissionDeniedResourceCreationRestricted403R
 
 // OneOfPermissionDenied403Res defines model for OneOfPermissionDenied403Res.
 type OneOfPermissionDenied403Res struct {
+	union json.RawMessage
+}
+
+// OneOfUnassignedDiskValidationError422Res defines model for OneOfUnassignedDiskValidationError422Res.
+type OneOfUnassignedDiskValidationError422Res struct {
 	union json.RawMessage
 }
 
@@ -2605,12 +2749,49 @@ type PaginationObject struct {
 	TotalPages nullable.Nullable[int] `json:"total_pages,omitempty"`
 }
 
+// PatchDisk200ResponseDisk defines model for PatchDisk200ResponseDisk.
+type PatchDisk200ResponseDisk struct {
+	BusType            nullable.Nullable[DiskBusEnum]                     `json:"bus_type,omitempty"`
+	CreatedAt          *int                                               `json:"created_at,omitempty"`
+	DataCenter         *PatchDiskPartDataCenter                           `json:"data_center,omitempty"`
+	Id                 *string                                            `json:"id,omitempty"`
+	Installation       nullable.Nullable[DiskInstallation]                `json:"installation,omitempty"`
+	IoProfile          nullable.Nullable[DiskIOProfile]                   `json:"io_profile,omitempty"`
+	Name               *string                                            `json:"name,omitempty"`
+	SizeInGb           *int                                               `json:"size_in_gb,omitempty"`
+	State              *DiskStateEnum                                     `json:"state,omitempty"`
+	StorageSpeed       *StorageSpeedEnum                                  `json:"storage_speed,omitempty"`
+	VirtualMachineDisk nullable.Nullable[PatchDiskPartVirtualMachineDisk] `json:"virtual_machine_disk,omitempty"`
+	Wwn                *string                                            `json:"wwn,omitempty"`
+}
+
 // PatchDiskBackupPolicy200ResponseDiskBackupPolicy defines model for PatchDiskBackupPolicy200ResponseDiskBackupPolicy.
 type PatchDiskBackupPolicy200ResponseDiskBackupPolicy struct {
 	Id        *string                 `json:"id,omitempty"`
 	Retention *int                    `json:"retention,omitempty"`
 	Schedule  *map[string]interface{} `json:"schedule,omitempty"`
 	Target    *DiskBackupPolicyTarget `json:"target,omitempty"`
+}
+
+// PatchDiskPartDataCenter defines model for PatchDiskPartDataCenter.
+type PatchDiskPartDataCenter struct {
+	Id        *string                   `json:"id,omitempty"`
+	Name      *string                   `json:"name,omitempty"`
+	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+}
+
+// PatchDiskPartVirtualMachine defines model for PatchDiskPartVirtualMachine.
+type PatchDiskPartVirtualMachine struct {
+	Fqdn *string `json:"fqdn,omitempty"`
+	Id   *string `json:"id,omitempty"`
+}
+
+// PatchDiskPartVirtualMachineDisk defines model for PatchDiskPartVirtualMachineDisk.
+type PatchDiskPartVirtualMachineDisk struct {
+	AttachOnBoot   *bool                                  `json:"attach_on_boot,omitempty"`
+	Boot           *bool                                  `json:"boot,omitempty"`
+	State          *VirtualMachineDiskAttachmentStateEnum `json:"state,omitempty"`
+	VirtualMachine *PatchDiskPartVirtualMachine           `json:"virtual_machine,omitempty"`
 }
 
 // PatchFileStorageVolume200ResponseFileStorageVolume defines model for PatchFileStorageVolume200ResponseFileStorageVolume.
@@ -2771,6 +2952,117 @@ type PermissionDeniedSchema struct {
 	Detail      *PermissionDenied     `json:"detail,omitempty"`
 }
 
+// PostDiskAssign200ResponseDisk defines model for PostDiskAssign200ResponseDisk.
+type PostDiskAssign200ResponseDisk struct {
+	BusType            nullable.Nullable[DiskBusEnum]                          `json:"bus_type,omitempty"`
+	CreatedAt          *int                                                    `json:"created_at,omitempty"`
+	DataCenter         *PostDiskAssignPartDataCenter                           `json:"data_center,omitempty"`
+	Id                 *string                                                 `json:"id,omitempty"`
+	Installation       nullable.Nullable[DiskInstallation]                     `json:"installation,omitempty"`
+	IoProfile          nullable.Nullable[DiskIOProfile]                        `json:"io_profile,omitempty"`
+	Name               *string                                                 `json:"name,omitempty"`
+	SizeInGb           *int                                                    `json:"size_in_gb,omitempty"`
+	State              *DiskStateEnum                                          `json:"state,omitempty"`
+	StorageSpeed       *StorageSpeedEnum                                       `json:"storage_speed,omitempty"`
+	VirtualMachineDisk nullable.Nullable[PostDiskAssignPartVirtualMachineDisk] `json:"virtual_machine_disk,omitempty"`
+	Wwn                *string                                                 `json:"wwn,omitempty"`
+}
+
+// PostDiskAssignPartDataCenter defines model for PostDiskAssignPartDataCenter.
+type PostDiskAssignPartDataCenter struct {
+	Id        *string                   `json:"id,omitempty"`
+	Name      *string                   `json:"name,omitempty"`
+	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+}
+
+// PostDiskAssignPartVirtualMachine defines model for PostDiskAssignPartVirtualMachine.
+type PostDiskAssignPartVirtualMachine struct {
+	Fqdn *string `json:"fqdn,omitempty"`
+	Id   *string `json:"id,omitempty"`
+}
+
+// PostDiskAssignPartVirtualMachineDisk defines model for PostDiskAssignPartVirtualMachineDisk.
+type PostDiskAssignPartVirtualMachineDisk struct {
+	AttachOnBoot   *bool                                  `json:"attach_on_boot,omitempty"`
+	Boot           *bool                                  `json:"boot,omitempty"`
+	State          *VirtualMachineDiskAttachmentStateEnum `json:"state,omitempty"`
+	VirtualMachine *PostDiskAssignPartVirtualMachine      `json:"virtual_machine,omitempty"`
+}
+
+// PostDiskAttach200ResponseDisk defines model for PostDiskAttach200ResponseDisk.
+type PostDiskAttach200ResponseDisk struct {
+	BusType            nullable.Nullable[DiskBusEnum]                          `json:"bus_type,omitempty"`
+	CreatedAt          *int                                                    `json:"created_at,omitempty"`
+	DataCenter         *PostDiskAttachPartDataCenter                           `json:"data_center,omitempty"`
+	Id                 *string                                                 `json:"id,omitempty"`
+	Installation       nullable.Nullable[DiskInstallation]                     `json:"installation,omitempty"`
+	IoProfile          nullable.Nullable[DiskIOProfile]                        `json:"io_profile,omitempty"`
+	Name               *string                                                 `json:"name,omitempty"`
+	SizeInGb           *int                                                    `json:"size_in_gb,omitempty"`
+	State              *DiskStateEnum                                          `json:"state,omitempty"`
+	StorageSpeed       *StorageSpeedEnum                                       `json:"storage_speed,omitempty"`
+	VirtualMachineDisk nullable.Nullable[PostDiskAttachPartVirtualMachineDisk] `json:"virtual_machine_disk,omitempty"`
+	Wwn                *string                                                 `json:"wwn,omitempty"`
+}
+
+// PostDiskAttachPartDataCenter defines model for PostDiskAttachPartDataCenter.
+type PostDiskAttachPartDataCenter struct {
+	Id        *string                   `json:"id,omitempty"`
+	Name      *string                   `json:"name,omitempty"`
+	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+}
+
+// PostDiskAttachPartVirtualMachine defines model for PostDiskAttachPartVirtualMachine.
+type PostDiskAttachPartVirtualMachine struct {
+	Fqdn *string `json:"fqdn,omitempty"`
+	Id   *string `json:"id,omitempty"`
+}
+
+// PostDiskAttachPartVirtualMachineDisk defines model for PostDiskAttachPartVirtualMachineDisk.
+type PostDiskAttachPartVirtualMachineDisk struct {
+	AttachOnBoot   *bool                                  `json:"attach_on_boot,omitempty"`
+	Boot           *bool                                  `json:"boot,omitempty"`
+	State          *VirtualMachineDiskAttachmentStateEnum `json:"state,omitempty"`
+	VirtualMachine *PostDiskAttachPartVirtualMachine      `json:"virtual_machine,omitempty"`
+}
+
+// PostDiskDetach200ResponseDisk defines model for PostDiskDetach200ResponseDisk.
+type PostDiskDetach200ResponseDisk struct {
+	BusType            nullable.Nullable[DiskBusEnum]                          `json:"bus_type,omitempty"`
+	CreatedAt          *int                                                    `json:"created_at,omitempty"`
+	DataCenter         *PostDiskDetachPartDataCenter                           `json:"data_center,omitempty"`
+	Id                 *string                                                 `json:"id,omitempty"`
+	Installation       nullable.Nullable[DiskInstallation]                     `json:"installation,omitempty"`
+	IoProfile          nullable.Nullable[DiskIOProfile]                        `json:"io_profile,omitempty"`
+	Name               *string                                                 `json:"name,omitempty"`
+	SizeInGb           *int                                                    `json:"size_in_gb,omitempty"`
+	State              *DiskStateEnum                                          `json:"state,omitempty"`
+	StorageSpeed       *StorageSpeedEnum                                       `json:"storage_speed,omitempty"`
+	VirtualMachineDisk nullable.Nullable[PostDiskDetachPartVirtualMachineDisk] `json:"virtual_machine_disk,omitempty"`
+	Wwn                *string                                                 `json:"wwn,omitempty"`
+}
+
+// PostDiskDetachPartDataCenter defines model for PostDiskDetachPartDataCenter.
+type PostDiskDetachPartDataCenter struct {
+	Id        *string                   `json:"id,omitempty"`
+	Name      *string                   `json:"name,omitempty"`
+	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+}
+
+// PostDiskDetachPartVirtualMachine defines model for PostDiskDetachPartVirtualMachine.
+type PostDiskDetachPartVirtualMachine struct {
+	Fqdn *string `json:"fqdn,omitempty"`
+	Id   *string `json:"id,omitempty"`
+}
+
+// PostDiskDetachPartVirtualMachineDisk defines model for PostDiskDetachPartVirtualMachineDisk.
+type PostDiskDetachPartVirtualMachineDisk struct {
+	AttachOnBoot   *bool                                  `json:"attach_on_boot,omitempty"`
+	Boot           *bool                                  `json:"boot,omitempty"`
+	State          *VirtualMachineDiskAttachmentStateEnum `json:"state,omitempty"`
+	VirtualMachine *PostDiskDetachPartVirtualMachine      `json:"virtual_machine,omitempty"`
+}
+
 // PostDiskDiskBackupPolicies200ResponseDiskBackupPolicy defines model for PostDiskDiskBackupPolicies200ResponseDiskBackupPolicy.
 type PostDiskDiskBackupPolicies200ResponseDiskBackupPolicy struct {
 	AutoMoveToTrashAt nullable.Nullable[int]  `json:"auto_move_to_trash_at,omitempty"`
@@ -2779,6 +3071,43 @@ type PostDiskDiskBackupPolicies200ResponseDiskBackupPolicy struct {
 	Schedule          *Schedule               `json:"schedule,omitempty"`
 	Target            *DiskBackupPolicyTarget `json:"target,omitempty"`
 	TotalSize         *float32                `json:"total_size,omitempty"`
+}
+
+// PostDiskUnassign200ResponseDisk defines model for PostDiskUnassign200ResponseDisk.
+type PostDiskUnassign200ResponseDisk struct {
+	BusType            nullable.Nullable[DiskBusEnum]                            `json:"bus_type,omitempty"`
+	CreatedAt          *int                                                      `json:"created_at,omitempty"`
+	DataCenter         *PostDiskUnassignPartDataCenter                           `json:"data_center,omitempty"`
+	Id                 *string                                                   `json:"id,omitempty"`
+	Installation       nullable.Nullable[DiskInstallation]                       `json:"installation,omitempty"`
+	IoProfile          nullable.Nullable[DiskIOProfile]                          `json:"io_profile,omitempty"`
+	Name               *string                                                   `json:"name,omitempty"`
+	SizeInGb           *int                                                      `json:"size_in_gb,omitempty"`
+	State              *DiskStateEnum                                            `json:"state,omitempty"`
+	StorageSpeed       *StorageSpeedEnum                                         `json:"storage_speed,omitempty"`
+	VirtualMachineDisk nullable.Nullable[PostDiskUnassignPartVirtualMachineDisk] `json:"virtual_machine_disk,omitempty"`
+	Wwn                *string                                                   `json:"wwn,omitempty"`
+}
+
+// PostDiskUnassignPartDataCenter defines model for PostDiskUnassignPartDataCenter.
+type PostDiskUnassignPartDataCenter struct {
+	Id        *string                   `json:"id,omitempty"`
+	Name      *string                   `json:"name,omitempty"`
+	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+}
+
+// PostDiskUnassignPartVirtualMachine defines model for PostDiskUnassignPartVirtualMachine.
+type PostDiskUnassignPartVirtualMachine struct {
+	Fqdn *string `json:"fqdn,omitempty"`
+	Id   *string `json:"id,omitempty"`
+}
+
+// PostDiskUnassignPartVirtualMachineDisk defines model for PostDiskUnassignPartVirtualMachineDisk.
+type PostDiskUnassignPartVirtualMachineDisk struct {
+	AttachOnBoot   *bool                                  `json:"attach_on_boot,omitempty"`
+	Boot           *bool                                  `json:"boot,omitempty"`
+	State          *VirtualMachineDiskAttachmentStateEnum `json:"state,omitempty"`
+	VirtualMachine *PostDiskUnassignPartVirtualMachine    `json:"virtual_machine,omitempty"`
 }
 
 // PostLoadBalancerRules200ResponseLoadBalancerRule defines model for PostLoadBalancerRules200ResponseLoadBalancerRule.
@@ -2815,6 +3144,43 @@ type PostLoadBalancerRulesPartCertificates struct {
 type PostLoadBalancerRulesPartLoadBalancer struct {
 	Id   *string `json:"id,omitempty"`
 	Name *string `json:"name,omitempty"`
+}
+
+// PostOrganizationDisks201ResponseDisk defines model for PostOrganizationDisks201ResponseDisk.
+type PostOrganizationDisks201ResponseDisk struct {
+	BusType            nullable.Nullable[DiskBusEnum]                                 `json:"bus_type,omitempty"`
+	CreatedAt          *int                                                           `json:"created_at,omitempty"`
+	DataCenter         *PostOrganizationDisksPartDataCenter                           `json:"data_center,omitempty"`
+	Id                 *string                                                        `json:"id,omitempty"`
+	Installation       nullable.Nullable[DiskInstallation]                            `json:"installation,omitempty"`
+	IoProfile          nullable.Nullable[DiskIOProfile]                               `json:"io_profile,omitempty"`
+	Name               *string                                                        `json:"name,omitempty"`
+	SizeInGb           *int                                                           `json:"size_in_gb,omitempty"`
+	State              *DiskStateEnum                                                 `json:"state,omitempty"`
+	StorageSpeed       *StorageSpeedEnum                                              `json:"storage_speed,omitempty"`
+	VirtualMachineDisk nullable.Nullable[PostOrganizationDisksPartVirtualMachineDisk] `json:"virtual_machine_disk,omitempty"`
+	Wwn                *string                                                        `json:"wwn,omitempty"`
+}
+
+// PostOrganizationDisksPartDataCenter defines model for PostOrganizationDisksPartDataCenter.
+type PostOrganizationDisksPartDataCenter struct {
+	Id        *string                   `json:"id,omitempty"`
+	Name      *string                   `json:"name,omitempty"`
+	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+}
+
+// PostOrganizationDisksPartVirtualMachine defines model for PostOrganizationDisksPartVirtualMachine.
+type PostOrganizationDisksPartVirtualMachine struct {
+	Fqdn *string `json:"fqdn,omitempty"`
+	Id   *string `json:"id,omitempty"`
+}
+
+// PostOrganizationDisksPartVirtualMachineDisk defines model for PostOrganizationDisksPartVirtualMachineDisk.
+type PostOrganizationDisksPartVirtualMachineDisk struct {
+	AttachOnBoot   *bool                                    `json:"attach_on_boot,omitempty"`
+	Boot           *bool                                    `json:"boot,omitempty"`
+	State          *VirtualMachineDiskAttachmentStateEnum   `json:"state,omitempty"`
+	VirtualMachine *PostOrganizationDisksPartVirtualMachine `json:"virtual_machine,omitempty"`
 }
 
 // PostOrganizationFileStorageVolumes201ResponseFileStorageVolume defines model for PostOrganizationFileStorageVolumes201ResponseFileStorageVolume.
@@ -3012,6 +3378,80 @@ type PostVirtualMachineStop200ResponseTask struct {
 
 // PrivacyTypesEnum defines model for PrivacyTypesEnum.
 type PrivacyTypesEnum string
+
+// PutDiskIOProfile200ResponseDisk defines model for PutDiskIOProfile200ResponseDisk.
+type PutDiskIOProfile200ResponseDisk struct {
+	BusType            nullable.Nullable[DiskBusEnum]                            `json:"bus_type,omitempty"`
+	CreatedAt          *int                                                      `json:"created_at,omitempty"`
+	DataCenter         *PutDiskIOProfilePartDataCenter                           `json:"data_center,omitempty"`
+	Id                 *string                                                   `json:"id,omitempty"`
+	Installation       nullable.Nullable[DiskInstallation]                       `json:"installation,omitempty"`
+	IoProfile          nullable.Nullable[DiskIOProfile]                          `json:"io_profile,omitempty"`
+	Name               *string                                                   `json:"name,omitempty"`
+	SizeInGb           *int                                                      `json:"size_in_gb,omitempty"`
+	State              *DiskStateEnum                                            `json:"state,omitempty"`
+	StorageSpeed       *StorageSpeedEnum                                         `json:"storage_speed,omitempty"`
+	VirtualMachineDisk nullable.Nullable[PutDiskIOProfilePartVirtualMachineDisk] `json:"virtual_machine_disk,omitempty"`
+	Wwn                *string                                                   `json:"wwn,omitempty"`
+}
+
+// PutDiskIOProfilePartDataCenter defines model for PutDiskIOProfilePartDataCenter.
+type PutDiskIOProfilePartDataCenter struct {
+	Id        *string                   `json:"id,omitempty"`
+	Name      *string                   `json:"name,omitempty"`
+	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+}
+
+// PutDiskIOProfilePartVirtualMachine defines model for PutDiskIOProfilePartVirtualMachine.
+type PutDiskIOProfilePartVirtualMachine struct {
+	Fqdn *string `json:"fqdn,omitempty"`
+	Id   *string `json:"id,omitempty"`
+}
+
+// PutDiskIOProfilePartVirtualMachineDisk defines model for PutDiskIOProfilePartVirtualMachineDisk.
+type PutDiskIOProfilePartVirtualMachineDisk struct {
+	AttachOnBoot   *bool                                  `json:"attach_on_boot,omitempty"`
+	Boot           *bool                                  `json:"boot,omitempty"`
+	State          *VirtualMachineDiskAttachmentStateEnum `json:"state,omitempty"`
+	VirtualMachine *PutDiskIOProfilePartVirtualMachine    `json:"virtual_machine,omitempty"`
+}
+
+// PutDiskResize200ResponseDisk defines model for PutDiskResize200ResponseDisk.
+type PutDiskResize200ResponseDisk struct {
+	BusType            nullable.Nullable[DiskBusEnum]                         `json:"bus_type,omitempty"`
+	CreatedAt          *int                                                   `json:"created_at,omitempty"`
+	DataCenter         *PutDiskResizePartDataCenter                           `json:"data_center,omitempty"`
+	Id                 *string                                                `json:"id,omitempty"`
+	Installation       nullable.Nullable[DiskInstallation]                    `json:"installation,omitempty"`
+	IoProfile          nullable.Nullable[DiskIOProfile]                       `json:"io_profile,omitempty"`
+	Name               *string                                                `json:"name,omitempty"`
+	SizeInGb           *int                                                   `json:"size_in_gb,omitempty"`
+	State              *DiskStateEnum                                         `json:"state,omitempty"`
+	StorageSpeed       *StorageSpeedEnum                                      `json:"storage_speed,omitempty"`
+	VirtualMachineDisk nullable.Nullable[PutDiskResizePartVirtualMachineDisk] `json:"virtual_machine_disk,omitempty"`
+	Wwn                *string                                                `json:"wwn,omitempty"`
+}
+
+// PutDiskResizePartDataCenter defines model for PutDiskResizePartDataCenter.
+type PutDiskResizePartDataCenter struct {
+	Id        *string                   `json:"id,omitempty"`
+	Name      *string                   `json:"name,omitempty"`
+	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+}
+
+// PutDiskResizePartVirtualMachine defines model for PutDiskResizePartVirtualMachine.
+type PutDiskResizePartVirtualMachine struct {
+	Fqdn *string `json:"fqdn,omitempty"`
+	Id   *string `json:"id,omitempty"`
+}
+
+// PutDiskResizePartVirtualMachineDisk defines model for PutDiskResizePartVirtualMachineDisk.
+type PutDiskResizePartVirtualMachineDisk struct {
+	AttachOnBoot   *bool                                  `json:"attach_on_boot,omitempty"`
+	Boot           *bool                                  `json:"boot,omitempty"`
+	State          *VirtualMachineDiskAttachmentStateEnum `json:"state,omitempty"`
+	VirtualMachine *PutDiskResizePartVirtualMachine       `json:"virtual_machine,omitempty"`
+}
 
 // RateLimitReached defines model for RateLimitReached.
 type RateLimitReached struct {
@@ -3302,6 +3742,32 @@ type TrashObjectLookup struct {
 // TrashObjectNotFoundEnum defines model for TrashObjectNotFoundEnum.
 type TrashObjectNotFoundEnum string
 
+// UnableToAssign defines model for UnableToAssign.
+type UnableToAssign struct {
+	Errors *[]string `json:"errors,omitempty"`
+}
+
+// UnableToAssignEnum defines model for UnableToAssignEnum.
+type UnableToAssignEnum string
+
+// UnableToUnassign defines model for UnableToUnassign.
+type UnableToUnassign struct {
+	Errors *[]string `json:"errors,omitempty"`
+}
+
+// UnableToUnassignEnum defines model for UnableToUnassignEnum.
+type UnableToUnassignEnum string
+
+// UnassignedDiskEnum defines model for UnassignedDiskEnum.
+type UnassignedDiskEnum string
+
+// UnassignedDiskSchema Disk is not assigned to a virtual machine.
+type UnassignedDiskSchema struct {
+	Code        *UnassignedDiskEnum     `json:"code,omitempty"`
+	Description *string                 `json:"description,omitempty"`
+	Detail      *map[string]interface{} `json:"detail,omitempty"`
+}
+
 // UnauthorizedNetworkForAPIToken defines model for UnauthorizedNetworkForAPIToken.
 type UnauthorizedNetworkForAPIToken struct {
 	// IpAddress The IP address the request was received from
@@ -3393,6 +3859,19 @@ type VirtualMachineDisk struct {
 	Disk           *Disk                                  `json:"disk,omitempty"`
 	State          *VirtualMachineDiskAttachmentStateEnum `json:"state,omitempty"`
 	VirtualMachine *VirtualMachine                        `json:"virtual_machine,omitempty"`
+}
+
+// VirtualMachineDiskArguments All 'virtual_machine_disk[]' params are mutually exclusive, only one can be provided.
+type VirtualMachineDiskArguments struct {
+	// Attach Attach the disk once built. If the virtual machine is not running the disk will attach when started. Only available when creating disk, existing disks must use the attach endpoint.
+	Attach *bool `json:"attach,omitempty"`
+
+	// AttachOnBoot Attach the disk during virtual machine start up. Default is true.
+	AttachOnBoot *bool `json:"attach_on_boot,omitempty"`
+	Boot         *bool `json:"boot,omitempty"`
+
+	// VirtualMachine All 'virtual_machine[]' params are mutually exclusive, only one can be provided.
+	VirtualMachine *VirtualMachineLookup `json:"virtual_machine,omitempty"`
 }
 
 // VirtualMachineDiskAttachmentStateEnum defines model for VirtualMachineDiskAttachmentStateEnum.
@@ -3655,12 +4134,18 @@ type DiskBackupPolicyNotFoundResponse struct {
 	Detail      *map[string]interface{}       `json:"detail,omitempty"`
 }
 
+// DiskIOProfileNotFoundDiskNotFound404Res defines model for DiskIOProfileNotFoundDiskNotFound404Res.
+type DiskIOProfileNotFoundDiskNotFound404Res = OneOfDiskIOProfileNotFoundDiskNotFound404Res
+
 // DiskNotFoundResponse defines model for DiskNotFoundResponse.
 type DiskNotFoundResponse struct {
 	Code        *DiskNotFoundEnum       `json:"code,omitempty"`
 	Description *string                 `json:"description,omitempty"`
 	Detail      *map[string]interface{} `json:"detail,omitempty"`
 }
+
+// DiskNotFoundVirtualMachineNotFound404Res defines model for DiskNotFoundVirtualMachineNotFound404Res.
+type DiskNotFoundVirtualMachineNotFound404Res = OneOfDiskNotFoundVirtualMachineNotFound404Res
 
 // DiskTemplateNotFoundResponse defines model for DiskTemplateNotFoundResponse.
 type DiskTemplateNotFoundResponse struct {
@@ -3889,6 +4374,30 @@ type TrashObjectNotFoundResponse struct {
 	Description *string                  `json:"description,omitempty"`
 	Detail      *map[string]interface{}  `json:"detail,omitempty"`
 }
+
+// UnableToAssignResponse defines model for UnableToAssignResponse.
+type UnableToAssignResponse struct {
+	Code        *UnableToAssignEnum `json:"code,omitempty"`
+	Description *string             `json:"description,omitempty"`
+	Detail      *UnableToAssign     `json:"detail,omitempty"`
+}
+
+// UnableToUnassignResponse defines model for UnableToUnassignResponse.
+type UnableToUnassignResponse struct {
+	Code        *UnableToUnassignEnum `json:"code,omitempty"`
+	Description *string               `json:"description,omitempty"`
+	Detail      *UnableToUnassign     `json:"detail,omitempty"`
+}
+
+// UnassignedDiskResponse defines model for UnassignedDiskResponse.
+type UnassignedDiskResponse struct {
+	Code        *UnassignedDiskEnum     `json:"code,omitempty"`
+	Description *string                 `json:"description,omitempty"`
+	Detail      *map[string]interface{} `json:"detail,omitempty"`
+}
+
+// UnassignedDiskValidationError422Res defines model for UnassignedDiskValidationError422Res.
+type UnassignedDiskValidationError422Res = OneOfUnassignedDiskValidationError422Res
 
 // ValidationErrorResponse defines model for ValidationErrorResponse.
 type ValidationErrorResponse struct {
@@ -4157,10 +4666,46 @@ type GetDiskTemplateVersionsParams struct {
 	PerPage               *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
+// DeleteDiskJSONBody defines parameters for DeleteDisk.
+type DeleteDiskJSONBody struct {
+	// Disk All 'disk[]' params are mutually exclusive, only one can be provided.
+	Disk DiskLookup `json:"disk"`
+}
+
 // GetDiskParams defines parameters for GetDisk.
 type GetDiskParams struct {
 	// DiskId The disk to return. All 'disk[]' params are mutually exclusive, only one can be provided.
 	DiskId *string `form:"disk[id],omitempty" json:"disk[id],omitempty"`
+}
+
+// PatchDiskJSONBody defines parameters for PatchDisk.
+type PatchDiskJSONBody struct {
+	// Disk All 'disk[]' params are mutually exclusive, only one can be provided.
+	Disk DiskLookup `json:"disk"`
+
+	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
+	Properties DiskArguments `json:"properties"`
+}
+
+// PostDiskAssignJSONBody defines parameters for PostDiskAssign.
+type PostDiskAssignJSONBody struct {
+	// Disk All 'disk[]' params are mutually exclusive, only one can be provided.
+	Disk DiskLookup `json:"disk"`
+
+	// VirtualMachine All 'virtual_machine[]' params are mutually exclusive, only one can be provided.
+	VirtualMachine VirtualMachineLookup `json:"virtual_machine"`
+}
+
+// PostDiskAttachJSONBody defines parameters for PostDiskAttach.
+type PostDiskAttachJSONBody struct {
+	// Disk All 'disk[]' params are mutually exclusive, only one can be provided.
+	Disk DiskLookup `json:"disk"`
+}
+
+// PostDiskDetachJSONBody defines parameters for PostDiskDetach.
+type PostDiskDetachJSONBody struct {
+	// Disk All 'disk[]' params are mutually exclusive, only one can be provided.
+	Disk DiskLookup `json:"disk"`
 }
 
 // GetDiskDiskBackupPoliciesParams defines parameters for GetDiskDiskBackupPolicies.
@@ -4178,6 +4723,28 @@ type PostDiskDiskBackupPoliciesJSONBody struct {
 
 	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
 	Properties DiskBackupPolicyArguments `json:"properties"`
+}
+
+// PutDiskIoProfileJSONBody defines parameters for PutDiskIoProfile.
+type PutDiskIoProfileJSONBody struct {
+	// Disk All 'disk[]' params are mutually exclusive, only one can be provided.
+	Disk DiskLookup `json:"disk"`
+
+	// IoProfile All 'io_profile[]' params are mutually exclusive, only one can be provided.
+	IoProfile DiskIOProfileLookup `json:"io_profile"`
+}
+
+// PutDiskResizeJSONBody defines parameters for PutDiskResize.
+type PutDiskResizeJSONBody struct {
+	// Disk All 'disk[]' params are mutually exclusive, only one can be provided.
+	Disk     DiskLookup `json:"disk"`
+	SizeInGb int        `json:"size_in_gb"`
+}
+
+// PostDiskUnassignJSONBody defines parameters for PostDiskUnassign.
+type PostDiskUnassignJSONBody struct {
+	// Disk All 'disk[]' params are mutually exclusive, only one can be provided.
+	Disk DiskLookup `json:"disk"`
 }
 
 // DeleteDnsRecordJSONBody defines parameters for DeleteDnsRecord.
@@ -4470,6 +5037,17 @@ type GetOrganizationDiskBackupPoliciesParams struct {
 	PerPage               *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
+// GetOrganizationDiskIoProfilesParams defines parameters for GetOrganizationDiskIoProfiles.
+type GetOrganizationDiskIoProfilesParams struct {
+	// OrganizationId The organization to find disk IO profiles for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	OrganizationId *string `form:"organization[id],omitempty" json:"organization[id],omitempty"`
+
+	// OrganizationSubDomain The organization to find disk IO profiles for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
+	Page                  *int    `form:"page,omitempty" json:"page,omitempty"`
+	PerPage               *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+}
+
 // GetOrganizationDiskTemplatesParams defines parameters for GetOrganizationDiskTemplates.
 type GetOrganizationDiskTemplatesParams struct {
 	// OrganizationId The organization to find disk templates for. All 'organization[]' params are mutually exclusive, only one can be provided.
@@ -4496,6 +5074,15 @@ type GetOrganizationDisksParams struct {
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
 	Page                  *int    `form:"page,omitempty" json:"page,omitempty"`
 	PerPage               *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+}
+
+// PostOrganizationDisksJSONBody defines parameters for PostOrganizationDisks.
+type PostOrganizationDisksJSONBody struct {
+	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
+	Organization OrganizationLookup `json:"organization"`
+
+	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
+	Properties DiskArguments `json:"properties"`
 }
 
 // GetOrganizationDnsZonesParams defines parameters for GetOrganizationDnsZones.
@@ -5159,8 +5746,32 @@ type PatchDiskBackupPolicyJSONRequestBody PatchDiskBackupPolicyJSONBody
 // DeleteDiskBackupPolicyScheduleJSONRequestBody defines body for DeleteDiskBackupPolicySchedule for application/json ContentType.
 type DeleteDiskBackupPolicyScheduleJSONRequestBody DeleteDiskBackupPolicyScheduleJSONBody
 
+// DeleteDiskJSONRequestBody defines body for DeleteDisk for application/json ContentType.
+type DeleteDiskJSONRequestBody DeleteDiskJSONBody
+
+// PatchDiskJSONRequestBody defines body for PatchDisk for application/json ContentType.
+type PatchDiskJSONRequestBody PatchDiskJSONBody
+
+// PostDiskAssignJSONRequestBody defines body for PostDiskAssign for application/json ContentType.
+type PostDiskAssignJSONRequestBody PostDiskAssignJSONBody
+
+// PostDiskAttachJSONRequestBody defines body for PostDiskAttach for application/json ContentType.
+type PostDiskAttachJSONRequestBody PostDiskAttachJSONBody
+
+// PostDiskDetachJSONRequestBody defines body for PostDiskDetach for application/json ContentType.
+type PostDiskDetachJSONRequestBody PostDiskDetachJSONBody
+
 // PostDiskDiskBackupPoliciesJSONRequestBody defines body for PostDiskDiskBackupPolicies for application/json ContentType.
 type PostDiskDiskBackupPoliciesJSONRequestBody PostDiskDiskBackupPoliciesJSONBody
+
+// PutDiskIoProfileJSONRequestBody defines body for PutDiskIoProfile for application/json ContentType.
+type PutDiskIoProfileJSONRequestBody PutDiskIoProfileJSONBody
+
+// PutDiskResizeJSONRequestBody defines body for PutDiskResize for application/json ContentType.
+type PutDiskResizeJSONRequestBody PutDiskResizeJSONBody
+
+// PostDiskUnassignJSONRequestBody defines body for PostDiskUnassign for application/json ContentType.
+type PostDiskUnassignJSONRequestBody PostDiskUnassignJSONBody
 
 // DeleteDnsRecordJSONRequestBody defines body for DeleteDnsRecord for application/json ContentType.
 type DeleteDnsRecordJSONRequestBody DeleteDnsRecordJSONBody
@@ -5215,6 +5826,9 @@ type PatchLoadBalancersRulesLoadBalancerRuleJSONRequestBody PatchLoadBalancersRu
 
 // PostOrganizationAddressListsJSONRequestBody defines body for PostOrganizationAddressLists for application/json ContentType.
 type PostOrganizationAddressListsJSONRequestBody PostOrganizationAddressListsJSONBody
+
+// PostOrganizationDisksJSONRequestBody defines body for PostOrganizationDisks for application/json ContentType.
+type PostOrganizationDisksJSONRequestBody PostOrganizationDisksJSONBody
 
 // PostOrganizationDnsZonesJSONRequestBody defines body for PostOrganizationDnsZones for application/json ContentType.
 type PostOrganizationDnsZonesJSONRequestBody PostOrganizationDnsZonesJSONBody
@@ -5730,6 +6344,130 @@ func (t OneOfDataCenterNotFoundVirtualMachinePackageNotFoundZoneNotFound404Res) 
 }
 
 func (t *OneOfDataCenterNotFoundVirtualMachinePackageNotFoundZoneNotFound404Res) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsDiskNotFoundSchema returns the union data inside the OneOfDiskIOProfileNotFoundDiskNotFound404Res as a DiskNotFoundSchema
+func (t OneOfDiskIOProfileNotFoundDiskNotFound404Res) AsDiskNotFoundSchema() (DiskNotFoundSchema, error) {
+	var body DiskNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromDiskNotFoundSchema overwrites any union data inside the OneOfDiskIOProfileNotFoundDiskNotFound404Res as the provided DiskNotFoundSchema
+func (t *OneOfDiskIOProfileNotFoundDiskNotFound404Res) FromDiskNotFoundSchema(v DiskNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeDiskNotFoundSchema performs a merge with any union data inside the OneOfDiskIOProfileNotFoundDiskNotFound404Res, using the provided DiskNotFoundSchema
+func (t *OneOfDiskIOProfileNotFoundDiskNotFound404Res) MergeDiskNotFoundSchema(v DiskNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsDiskIOProfileNotFoundSchema returns the union data inside the OneOfDiskIOProfileNotFoundDiskNotFound404Res as a DiskIOProfileNotFoundSchema
+func (t OneOfDiskIOProfileNotFoundDiskNotFound404Res) AsDiskIOProfileNotFoundSchema() (DiskIOProfileNotFoundSchema, error) {
+	var body DiskIOProfileNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromDiskIOProfileNotFoundSchema overwrites any union data inside the OneOfDiskIOProfileNotFoundDiskNotFound404Res as the provided DiskIOProfileNotFoundSchema
+func (t *OneOfDiskIOProfileNotFoundDiskNotFound404Res) FromDiskIOProfileNotFoundSchema(v DiskIOProfileNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeDiskIOProfileNotFoundSchema performs a merge with any union data inside the OneOfDiskIOProfileNotFoundDiskNotFound404Res, using the provided DiskIOProfileNotFoundSchema
+func (t *OneOfDiskIOProfileNotFoundDiskNotFound404Res) MergeDiskIOProfileNotFoundSchema(v DiskIOProfileNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t OneOfDiskIOProfileNotFoundDiskNotFound404Res) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *OneOfDiskIOProfileNotFoundDiskNotFound404Res) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsDiskNotFoundSchema returns the union data inside the OneOfDiskNotFoundVirtualMachineNotFound404Res as a DiskNotFoundSchema
+func (t OneOfDiskNotFoundVirtualMachineNotFound404Res) AsDiskNotFoundSchema() (DiskNotFoundSchema, error) {
+	var body DiskNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromDiskNotFoundSchema overwrites any union data inside the OneOfDiskNotFoundVirtualMachineNotFound404Res as the provided DiskNotFoundSchema
+func (t *OneOfDiskNotFoundVirtualMachineNotFound404Res) FromDiskNotFoundSchema(v DiskNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeDiskNotFoundSchema performs a merge with any union data inside the OneOfDiskNotFoundVirtualMachineNotFound404Res, using the provided DiskNotFoundSchema
+func (t *OneOfDiskNotFoundVirtualMachineNotFound404Res) MergeDiskNotFoundSchema(v DiskNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsVirtualMachineNotFoundSchema returns the union data inside the OneOfDiskNotFoundVirtualMachineNotFound404Res as a VirtualMachineNotFoundSchema
+func (t OneOfDiskNotFoundVirtualMachineNotFound404Res) AsVirtualMachineNotFoundSchema() (VirtualMachineNotFoundSchema, error) {
+	var body VirtualMachineNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromVirtualMachineNotFoundSchema overwrites any union data inside the OneOfDiskNotFoundVirtualMachineNotFound404Res as the provided VirtualMachineNotFoundSchema
+func (t *OneOfDiskNotFoundVirtualMachineNotFound404Res) FromVirtualMachineNotFoundSchema(v VirtualMachineNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeVirtualMachineNotFoundSchema performs a merge with any union data inside the OneOfDiskNotFoundVirtualMachineNotFound404Res, using the provided VirtualMachineNotFoundSchema
+func (t *OneOfDiskNotFoundVirtualMachineNotFound404Res) MergeVirtualMachineNotFoundSchema(v VirtualMachineNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t OneOfDiskNotFoundVirtualMachineNotFound404Res) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *OneOfDiskNotFoundVirtualMachineNotFound404Res) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }
@@ -7442,6 +8180,68 @@ func (t *OneOfPermissionDenied403Res) UnmarshalJSON(b []byte) error {
 	return err
 }
 
+// AsUnassignedDiskSchema returns the union data inside the OneOfUnassignedDiskValidationError422Res as a UnassignedDiskSchema
+func (t OneOfUnassignedDiskValidationError422Res) AsUnassignedDiskSchema() (UnassignedDiskSchema, error) {
+	var body UnassignedDiskSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromUnassignedDiskSchema overwrites any union data inside the OneOfUnassignedDiskValidationError422Res as the provided UnassignedDiskSchema
+func (t *OneOfUnassignedDiskValidationError422Res) FromUnassignedDiskSchema(v UnassignedDiskSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeUnassignedDiskSchema performs a merge with any union data inside the OneOfUnassignedDiskValidationError422Res, using the provided UnassignedDiskSchema
+func (t *OneOfUnassignedDiskValidationError422Res) MergeUnassignedDiskSchema(v UnassignedDiskSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsValidationErrorSchema returns the union data inside the OneOfUnassignedDiskValidationError422Res as a ValidationErrorSchema
+func (t OneOfUnassignedDiskValidationError422Res) AsValidationErrorSchema() (ValidationErrorSchema, error) {
+	var body ValidationErrorSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromValidationErrorSchema overwrites any union data inside the OneOfUnassignedDiskValidationError422Res as the provided ValidationErrorSchema
+func (t *OneOfUnassignedDiskValidationError422Res) FromValidationErrorSchema(v ValidationErrorSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeValidationErrorSchema performs a merge with any union data inside the OneOfUnassignedDiskValidationError422Res, using the provided ValidationErrorSchema
+func (t *OneOfUnassignedDiskValidationError422Res) MergeValidationErrorSchema(v ValidationErrorSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t OneOfUnassignedDiskValidationError422Res) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *OneOfUnassignedDiskValidationError422Res) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
 // AsVirtualMachineNotFoundSchema returns the union data inside the OneOfVirtualMachineNotFoundVirtualMachinePackageNotFound404Res as a VirtualMachineNotFoundSchema
 func (t OneOfVirtualMachineNotFoundVirtualMachinePackageNotFound404Res) AsVirtualMachineNotFoundSchema() (VirtualMachineNotFoundSchema, error) {
 	var body VirtualMachineNotFoundSchema
@@ -7700,8 +8500,33 @@ type ClientInterface interface {
 	// GetDiskTemplateVersions request
 	GetDiskTemplateVersions(ctx context.Context, params *GetDiskTemplateVersionsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DeleteDiskWithBody request with any body
+	DeleteDiskWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	DeleteDisk(ctx context.Context, body DeleteDiskJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetDisk request
 	GetDisk(ctx context.Context, params *GetDiskParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PatchDiskWithBody request with any body
+	PatchDiskWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PatchDisk(ctx context.Context, body PatchDiskJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostDiskAssignWithBody request with any body
+	PostDiskAssignWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostDiskAssign(ctx context.Context, body PostDiskAssignJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostDiskAttachWithBody request with any body
+	PostDiskAttachWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostDiskAttach(ctx context.Context, body PostDiskAttachJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostDiskDetachWithBody request with any body
+	PostDiskDetachWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostDiskDetach(ctx context.Context, body PostDiskDetachJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetDiskDiskBackupPolicies request
 	GetDiskDiskBackupPolicies(ctx context.Context, params *GetDiskDiskBackupPoliciesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -7710,6 +8535,21 @@ type ClientInterface interface {
 	PostDiskDiskBackupPoliciesWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	PostDiskDiskBackupPolicies(ctx context.Context, body PostDiskDiskBackupPoliciesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PutDiskIoProfileWithBody request with any body
+	PutDiskIoProfileWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PutDiskIoProfile(ctx context.Context, body PutDiskIoProfileJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PutDiskResizeWithBody request with any body
+	PutDiskResizeWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PutDiskResize(ctx context.Context, body PutDiskResizeJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostDiskUnassignWithBody request with any body
+	PostDiskUnassignWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostDiskUnassign(ctx context.Context, body PostDiskUnassignJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeleteDnsRecordWithBody request with any body
 	DeleteDnsRecordWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -7858,11 +8698,19 @@ type ClientInterface interface {
 	// GetOrganizationDiskBackupPolicies request
 	GetOrganizationDiskBackupPolicies(ctx context.Context, params *GetOrganizationDiskBackupPoliciesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetOrganizationDiskIoProfiles request
+	GetOrganizationDiskIoProfiles(ctx context.Context, params *GetOrganizationDiskIoProfilesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetOrganizationDiskTemplates request
 	GetOrganizationDiskTemplates(ctx context.Context, params *GetOrganizationDiskTemplatesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetOrganizationDisks request
 	GetOrganizationDisks(ctx context.Context, params *GetOrganizationDisksParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostOrganizationDisksWithBody request with any body
+	PostOrganizationDisksWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostOrganizationDisks(ctx context.Context, body PostOrganizationDisksJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetOrganizationDnsZones request
 	GetOrganizationDnsZones(ctx context.Context, params *GetOrganizationDnsZonesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -8595,8 +9443,128 @@ func (c *Client) GetDiskTemplateVersions(ctx context.Context, params *GetDiskTem
 	return c.Client.Do(req)
 }
 
+func (c *Client) DeleteDiskWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteDiskRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteDisk(ctx context.Context, body DeleteDiskJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteDiskRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetDisk(ctx context.Context, params *GetDiskParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetDiskRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchDiskWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchDiskRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchDisk(ctx context.Context, body PatchDiskJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchDiskRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostDiskAssignWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostDiskAssignRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostDiskAssign(ctx context.Context, body PostDiskAssignJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostDiskAssignRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostDiskAttachWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostDiskAttachRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostDiskAttach(ctx context.Context, body PostDiskAttachJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostDiskAttachRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostDiskDetachWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostDiskDetachRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostDiskDetach(ctx context.Context, body PostDiskDetachJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostDiskDetachRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -8633,6 +9601,78 @@ func (c *Client) PostDiskDiskBackupPoliciesWithBody(ctx context.Context, content
 
 func (c *Client) PostDiskDiskBackupPolicies(ctx context.Context, body PostDiskDiskBackupPoliciesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPostDiskDiskBackupPoliciesRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PutDiskIoProfileWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutDiskIoProfileRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PutDiskIoProfile(ctx context.Context, body PutDiskIoProfileJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutDiskIoProfileRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PutDiskResizeWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutDiskResizeRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PutDiskResize(ctx context.Context, body PutDiskResizeJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutDiskResizeRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostDiskUnassignWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostDiskUnassignRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostDiskUnassign(ctx context.Context, body PostDiskUnassignJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostDiskUnassignRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -9303,6 +10343,18 @@ func (c *Client) GetOrganizationDiskBackupPolicies(ctx context.Context, params *
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetOrganizationDiskIoProfiles(ctx context.Context, params *GetOrganizationDiskIoProfilesParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetOrganizationDiskIoProfilesRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetOrganizationDiskTemplates(ctx context.Context, params *GetOrganizationDiskTemplatesParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetOrganizationDiskTemplatesRequest(c.Server, params)
 	if err != nil {
@@ -9317,6 +10369,30 @@ func (c *Client) GetOrganizationDiskTemplates(ctx context.Context, params *GetOr
 
 func (c *Client) GetOrganizationDisks(ctx context.Context, params *GetOrganizationDisksParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetOrganizationDisksRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostOrganizationDisksWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostOrganizationDisksRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostOrganizationDisks(ctx context.Context, body PostOrganizationDisksJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostOrganizationDisksRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -12285,6 +13361,46 @@ func NewGetDiskTemplateVersionsRequest(server string, params *GetDiskTemplateVer
 	return req, nil
 }
 
+// NewDeleteDiskRequest calls the generic DeleteDisk builder with application/json body
+func NewDeleteDiskRequest(server string, body DeleteDiskJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDeleteDiskRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewDeleteDiskRequestWithBody generates requests for DeleteDisk with any type of body
+func NewDeleteDiskRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/disks/:disk")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewGetDiskRequest generates requests for GetDisk
 func NewGetDiskRequest(server string, params *GetDiskParams) (*http.Request, error) {
 	var err error
@@ -12330,6 +13446,166 @@ func NewGetDiskRequest(server string, params *GetDiskParams) (*http.Request, err
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewPatchDiskRequest calls the generic PatchDisk builder with application/json body
+func NewPatchDiskRequest(server string, body PatchDiskJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchDiskRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPatchDiskRequestWithBody generates requests for PatchDisk with any type of body
+func NewPatchDiskRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/disks/:disk")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewPostDiskAssignRequest calls the generic PostDiskAssign builder with application/json body
+func NewPostDiskAssignRequest(server string, body PostDiskAssignJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostDiskAssignRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostDiskAssignRequestWithBody generates requests for PostDiskAssign with any type of body
+func NewPostDiskAssignRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/disks/:disk/assign")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewPostDiskAttachRequest calls the generic PostDiskAttach builder with application/json body
+func NewPostDiskAttachRequest(server string, body PostDiskAttachJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostDiskAttachRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostDiskAttachRequestWithBody generates requests for PostDiskAttach with any type of body
+func NewPostDiskAttachRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/disks/:disk/attach")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewPostDiskDetachRequest calls the generic PostDiskDetach builder with application/json body
+func NewPostDiskDetachRequest(server string, body PostDiskDetachJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostDiskDetachRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostDiskDetachRequestWithBody generates requests for PostDiskDetach with any type of body
+func NewPostDiskDetachRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/disks/:disk/detach")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -12436,6 +13712,126 @@ func NewPostDiskDiskBackupPoliciesRequestWithBody(server string, contentType str
 	}
 
 	operationPath := fmt.Sprintf("/disks/:disk/disk_backup_policies")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewPutDiskIoProfileRequest calls the generic PutDiskIoProfile builder with application/json body
+func NewPutDiskIoProfileRequest(server string, body PutDiskIoProfileJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPutDiskIoProfileRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPutDiskIoProfileRequestWithBody generates requests for PutDiskIoProfile with any type of body
+func NewPutDiskIoProfileRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/disks/:disk/io_profile")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewPutDiskResizeRequest calls the generic PutDiskResize builder with application/json body
+func NewPutDiskResizeRequest(server string, body PutDiskResizeJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPutDiskResizeRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPutDiskResizeRequestWithBody generates requests for PutDiskResize with any type of body
+func NewPutDiskResizeRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/disks/:disk/resize")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewPostDiskUnassignRequest calls the generic PostDiskUnassign builder with application/json body
+func NewPostDiskUnassignRequest(server string, body PostDiskUnassignJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostDiskUnassignRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostDiskUnassignRequestWithBody generates requests for PostDiskUnassign with any type of body
+func NewPostDiskUnassignRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/disks/:disk/unassign")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -14436,6 +15832,103 @@ func NewGetOrganizationDiskBackupPoliciesRequest(server string, params *GetOrgan
 	return req, nil
 }
 
+// NewGetOrganizationDiskIoProfilesRequest generates requests for GetOrganizationDiskIoProfiles
+func NewGetOrganizationDiskIoProfilesRequest(server string, params *GetOrganizationDiskIoProfilesParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/organizations/:organization/disk_io_profiles")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "organization[id]", runtime.ParamLocationQuery, *params.OrganizationId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.OrganizationSubDomain != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "organization[sub_domain]", runtime.ParamLocationQuery, *params.OrganizationSubDomain); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Page != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "page", runtime.ParamLocationQuery, *params.Page); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.PerPage != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "per_page", runtime.ParamLocationQuery, *params.PerPage); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetOrganizationDiskTemplatesRequest generates requests for GetOrganizationDiskTemplates
 func NewGetOrganizationDiskTemplatesRequest(server string, params *GetOrganizationDiskTemplatesParams) (*http.Request, error) {
 	var err error
@@ -14658,6 +16151,46 @@ func NewGetOrganizationDisksRequest(server string, params *GetOrganizationDisksP
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewPostOrganizationDisksRequest calls the generic PostOrganizationDisks builder with application/json body
+func NewPostOrganizationDisksRequest(server string, body PostOrganizationDisksJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostOrganizationDisksRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostOrganizationDisksRequestWithBody generates requests for PostOrganizationDisks with any type of body
+func NewPostOrganizationDisksRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/organizations/:organization/disks")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -19025,8 +20558,33 @@ type ClientWithResponsesInterface interface {
 	// GetDiskTemplateVersionsWithResponse request
 	GetDiskTemplateVersionsWithResponse(ctx context.Context, params *GetDiskTemplateVersionsParams, reqEditors ...RequestEditorFn) (*GetDiskTemplateVersionsResponse, error)
 
+	// DeleteDiskWithBodyWithResponse request with any body
+	DeleteDiskWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteDiskResponse, error)
+
+	DeleteDiskWithResponse(ctx context.Context, body DeleteDiskJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteDiskResponse, error)
+
 	// GetDiskWithResponse request
 	GetDiskWithResponse(ctx context.Context, params *GetDiskParams, reqEditors ...RequestEditorFn) (*GetDiskResponse, error)
+
+	// PatchDiskWithBodyWithResponse request with any body
+	PatchDiskWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchDiskResponse, error)
+
+	PatchDiskWithResponse(ctx context.Context, body PatchDiskJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchDiskResponse, error)
+
+	// PostDiskAssignWithBodyWithResponse request with any body
+	PostDiskAssignWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostDiskAssignResponse, error)
+
+	PostDiskAssignWithResponse(ctx context.Context, body PostDiskAssignJSONRequestBody, reqEditors ...RequestEditorFn) (*PostDiskAssignResponse, error)
+
+	// PostDiskAttachWithBodyWithResponse request with any body
+	PostDiskAttachWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostDiskAttachResponse, error)
+
+	PostDiskAttachWithResponse(ctx context.Context, body PostDiskAttachJSONRequestBody, reqEditors ...RequestEditorFn) (*PostDiskAttachResponse, error)
+
+	// PostDiskDetachWithBodyWithResponse request with any body
+	PostDiskDetachWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostDiskDetachResponse, error)
+
+	PostDiskDetachWithResponse(ctx context.Context, body PostDiskDetachJSONRequestBody, reqEditors ...RequestEditorFn) (*PostDiskDetachResponse, error)
 
 	// GetDiskDiskBackupPoliciesWithResponse request
 	GetDiskDiskBackupPoliciesWithResponse(ctx context.Context, params *GetDiskDiskBackupPoliciesParams, reqEditors ...RequestEditorFn) (*GetDiskDiskBackupPoliciesResponse, error)
@@ -19035,6 +20593,21 @@ type ClientWithResponsesInterface interface {
 	PostDiskDiskBackupPoliciesWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostDiskDiskBackupPoliciesResponse, error)
 
 	PostDiskDiskBackupPoliciesWithResponse(ctx context.Context, body PostDiskDiskBackupPoliciesJSONRequestBody, reqEditors ...RequestEditorFn) (*PostDiskDiskBackupPoliciesResponse, error)
+
+	// PutDiskIoProfileWithBodyWithResponse request with any body
+	PutDiskIoProfileWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutDiskIoProfileResponse, error)
+
+	PutDiskIoProfileWithResponse(ctx context.Context, body PutDiskIoProfileJSONRequestBody, reqEditors ...RequestEditorFn) (*PutDiskIoProfileResponse, error)
+
+	// PutDiskResizeWithBodyWithResponse request with any body
+	PutDiskResizeWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutDiskResizeResponse, error)
+
+	PutDiskResizeWithResponse(ctx context.Context, body PutDiskResizeJSONRequestBody, reqEditors ...RequestEditorFn) (*PutDiskResizeResponse, error)
+
+	// PostDiskUnassignWithBodyWithResponse request with any body
+	PostDiskUnassignWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostDiskUnassignResponse, error)
+
+	PostDiskUnassignWithResponse(ctx context.Context, body PostDiskUnassignJSONRequestBody, reqEditors ...RequestEditorFn) (*PostDiskUnassignResponse, error)
 
 	// DeleteDnsRecordWithBodyWithResponse request with any body
 	DeleteDnsRecordWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteDnsRecordResponse, error)
@@ -19183,11 +20756,19 @@ type ClientWithResponsesInterface interface {
 	// GetOrganizationDiskBackupPoliciesWithResponse request
 	GetOrganizationDiskBackupPoliciesWithResponse(ctx context.Context, params *GetOrganizationDiskBackupPoliciesParams, reqEditors ...RequestEditorFn) (*GetOrganizationDiskBackupPoliciesResponse, error)
 
+	// GetOrganizationDiskIoProfilesWithResponse request
+	GetOrganizationDiskIoProfilesWithResponse(ctx context.Context, params *GetOrganizationDiskIoProfilesParams, reqEditors ...RequestEditorFn) (*GetOrganizationDiskIoProfilesResponse, error)
+
 	// GetOrganizationDiskTemplatesWithResponse request
 	GetOrganizationDiskTemplatesWithResponse(ctx context.Context, params *GetOrganizationDiskTemplatesParams, reqEditors ...RequestEditorFn) (*GetOrganizationDiskTemplatesResponse, error)
 
 	// GetOrganizationDisksWithResponse request
 	GetOrganizationDisksWithResponse(ctx context.Context, params *GetOrganizationDisksParams, reqEditors ...RequestEditorFn) (*GetOrganizationDisksResponse, error)
+
+	// PostOrganizationDisksWithBodyWithResponse request with any body
+	PostOrganizationDisksWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostOrganizationDisksResponse, error)
+
+	PostOrganizationDisksWithResponse(ctx context.Context, body PostOrganizationDisksJSONRequestBody, reqEditors ...RequestEditorFn) (*PostOrganizationDisksResponse, error)
 
 	// GetOrganizationDnsZonesWithResponse request
 	GetOrganizationDnsZonesWithResponse(ctx context.Context, params *GetOrganizationDnsZonesParams, reqEditors ...RequestEditorFn) (*GetOrganizationDnsZonesResponse, error)
@@ -20311,6 +21892,38 @@ func (r GetDiskTemplateVersionsResponse) StatusCode() int {
 	return 0
 }
 
+type DeleteDiskResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// Disk The disk that has been move to the trash.
+		Disk        DeleteDisk200ResponseDisk `json:"disk"`
+		TrashObject TrashObject               `json:"trash_object"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *DiskNotFoundResponse
+	JSON406 *ObjectInTrashResponse
+	JSON422 *ValidationErrorResponse
+	JSON429 *APIAuthenticator429Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteDiskResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteDiskResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetDiskResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -20321,6 +21934,7 @@ type GetDiskResponse struct {
 	JSON400 *APIAuthenticator400Response
 	JSON403 *APIAuthenticator403Response
 	JSON404 *DiskNotFoundResponse
+	JSON406 *ObjectInTrashResponse
 	JSON429 *APIAuthenticator429Response
 }
 
@@ -20340,6 +21954,132 @@ func (r GetDiskResponse) StatusCode() int {
 	return 0
 }
 
+type PatchDiskResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// Disk The disk that has been updated.
+		Disk PatchDisk200ResponseDisk `json:"disk"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *DiskNotFoundResponse
+	JSON406 *ObjectInTrashResponse
+	JSON422 *UnassignedDiskValidationError422Res
+	JSON429 *APIAuthenticator429Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchDiskResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchDiskResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostDiskAssignResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// Disk The disk that has been assigned to a virtual machine.
+		Disk PostDiskAssign200ResponseDisk `json:"disk"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *DiskNotFoundVirtualMachineNotFound404Res
+	JSON406 *ObjectInTrashResponse
+	JSON422 *UnableToAssignResponse
+	JSON429 *APIAuthenticator429Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PostDiskAssignResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostDiskAssignResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostDiskAttachResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// Disk The disk that will be attached to its virtual machine.
+		Disk PostDiskAttach200ResponseDisk `json:"disk"`
+		Task Task                          `json:"task"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *DiskNotFoundResponse
+	JSON406 *ObjectInTrashTaskQueueingError406Res
+	JSON422 *UnassignedDiskResponse
+	JSON429 *APIAuthenticator429Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PostDiskAttachResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostDiskAttachResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostDiskDetachResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// Disk The disk that will be detached from its virtual machine.
+		Disk PostDiskDetach200ResponseDisk `json:"disk"`
+		Task Task                          `json:"task"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *DiskNotFoundResponse
+	JSON406 *ObjectInTrashTaskQueueingError406Res
+	JSON422 *UnassignedDiskResponse
+	JSON429 *APIAuthenticator429Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PostDiskDetachResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostDiskDetachResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetDiskDiskBackupPoliciesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -20351,6 +22091,7 @@ type GetDiskDiskBackupPoliciesResponse struct {
 	JSON400 *APIAuthenticator400Response
 	JSON403 *PermissionDenied403Res
 	JSON404 *DiskNotFoundResponse
+	JSON406 *ObjectInTrashResponse
 	JSON429 *APIAuthenticator429Response
 }
 
@@ -20380,6 +22121,7 @@ type PostDiskDiskBackupPoliciesResponse struct {
 	JSON400 *APIAuthenticator400Response
 	JSON403 *PermissionDenied403Res
 	JSON404 *DiskNotFoundResponse
+	JSON406 *ObjectInTrashResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
 }
@@ -20394,6 +22136,100 @@ func (r PostDiskDiskBackupPoliciesResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r PostDiskDiskBackupPoliciesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PutDiskIoProfileResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// Disk The disk that has been updated.
+		Disk PutDiskIOProfile200ResponseDisk `json:"disk"`
+		Task Task                            `json:"task"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *DiskIOProfileNotFoundDiskNotFound404Res
+	JSON406 *ObjectInTrashTaskQueueingError406Res
+	JSON429 *APIAuthenticator429Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PutDiskIoProfileResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PutDiskIoProfileResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PutDiskResizeResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// Disk The disk that has been resized.
+		Disk PutDiskResize200ResponseDisk `json:"disk"`
+		Task Task                         `json:"task"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *DiskNotFoundResponse
+	JSON406 *ObjectInTrashTaskQueueingError406Res
+	JSON422 *ValidationErrorResponse
+	JSON429 *APIAuthenticator429Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PutDiskResizeResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PutDiskResizeResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostDiskUnassignResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// Disk The disk that has been unassigned from a virtual machine.
+		Disk PostDiskUnassign200ResponseDisk `json:"disk"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *DiskNotFoundResponse
+	JSON406 *ObjectInTrashResponse
+	JSON422 *UnableToUnassignResponse
+	JSON429 *APIAuthenticator429Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PostDiskUnassignResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostDiskUnassignResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -21483,6 +23319,36 @@ func (r GetOrganizationDiskBackupPoliciesResponse) StatusCode() int {
 	return 0
 }
 
+type GetOrganizationDiskIoProfilesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// DiskIoProfiles The list of disk IO profiles
+		DiskIoProfiles []DiskIOProfile  `json:"disk_io_profiles"`
+		Pagination     PaginationObject `json:"pagination"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *OrganizationNotActivatedOrganizationSuspended403Res
+	JSON404 *OrganizationNotFoundResponse
+	JSON429 *APIAuthenticator429Response
+}
+
+// Status returns HTTPResponse.Status
+func (r GetOrganizationDiskIoProfilesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetOrganizationDiskIoProfilesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetOrganizationDiskTemplatesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -21537,6 +23403,38 @@ func (r GetOrganizationDisksResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetOrganizationDisksResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostOrganizationDisksResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *struct {
+		// Disk The disk that has been created.
+		Disk PostOrganizationDisks201ResponseDisk `json:"disk"`
+		Task Task                                 `json:"task"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+	JSON404 *OrganizationNotFoundResponse
+	JSON406 *TaskQueueingErrorResponse
+	JSON422 *ValidationErrorResponse
+	JSON429 *APIAuthenticator429Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PostOrganizationDisksResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostOrganizationDisksResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -24557,6 +26455,51 @@ func (c *ClientWithResponses) GetDiskTemplateVersionsWithResponse(ctx context.Co
 	return res, nil
 }
 
+// DeleteDiskWithBodyWithResponse request with arbitrary body returning *DeleteDiskResponse
+func (c *ClientWithResponses) DeleteDiskWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteDiskResponse, error) {
+	rsp, err := c.DeleteDiskWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseDeleteDiskResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) DeleteDiskWithResponse(ctx context.Context, body DeleteDiskJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteDiskResponse, error) {
+	rsp, err := c.DeleteDisk(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseDeleteDiskResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
 // GetDiskWithResponse request returning *GetDiskResponse
 func (c *ClientWithResponses) GetDiskWithResponse(ctx context.Context, params *GetDiskParams, reqEditors ...RequestEditorFn) (*GetDiskResponse, error) {
 	rsp, err := c.GetDisk(ctx, params, reqEditors...)
@@ -24565,6 +26508,186 @@ func (c *ClientWithResponses) GetDiskWithResponse(ctx context.Context, params *G
 	}
 
 	res, err := ParseGetDiskResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PatchDiskWithBodyWithResponse request with arbitrary body returning *PatchDiskResponse
+func (c *ClientWithResponses) PatchDiskWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchDiskResponse, error) {
+	rsp, err := c.PatchDiskWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePatchDiskResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PatchDiskWithResponse(ctx context.Context, body PatchDiskJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchDiskResponse, error) {
+	rsp, err := c.PatchDisk(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePatchDiskResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PostDiskAssignWithBodyWithResponse request with arbitrary body returning *PostDiskAssignResponse
+func (c *ClientWithResponses) PostDiskAssignWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostDiskAssignResponse, error) {
+	rsp, err := c.PostDiskAssignWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostDiskAssignResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PostDiskAssignWithResponse(ctx context.Context, body PostDiskAssignJSONRequestBody, reqEditors ...RequestEditorFn) (*PostDiskAssignResponse, error) {
+	rsp, err := c.PostDiskAssign(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostDiskAssignResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PostDiskAttachWithBodyWithResponse request with arbitrary body returning *PostDiskAttachResponse
+func (c *ClientWithResponses) PostDiskAttachWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostDiskAttachResponse, error) {
+	rsp, err := c.PostDiskAttachWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostDiskAttachResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PostDiskAttachWithResponse(ctx context.Context, body PostDiskAttachJSONRequestBody, reqEditors ...RequestEditorFn) (*PostDiskAttachResponse, error) {
+	rsp, err := c.PostDiskAttach(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostDiskAttachResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PostDiskDetachWithBodyWithResponse request with arbitrary body returning *PostDiskDetachResponse
+func (c *ClientWithResponses) PostDiskDetachWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostDiskDetachResponse, error) {
+	rsp, err := c.PostDiskDetachWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostDiskDetachResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PostDiskDetachWithResponse(ctx context.Context, body PostDiskDetachJSONRequestBody, reqEditors ...RequestEditorFn) (*PostDiskDetachResponse, error) {
+	rsp, err := c.PostDiskDetach(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostDiskDetachResponse(rsp)
 	if err != nil {
 		return nil, err
 	}
@@ -24633,6 +26756,141 @@ func (c *ClientWithResponses) PostDiskDiskBackupPoliciesWithResponse(ctx context
 	}
 
 	res, err := ParsePostDiskDiskBackupPoliciesResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PutDiskIoProfileWithBodyWithResponse request with arbitrary body returning *PutDiskIoProfileResponse
+func (c *ClientWithResponses) PutDiskIoProfileWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutDiskIoProfileResponse, error) {
+	rsp, err := c.PutDiskIoProfileWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePutDiskIoProfileResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PutDiskIoProfileWithResponse(ctx context.Context, body PutDiskIoProfileJSONRequestBody, reqEditors ...RequestEditorFn) (*PutDiskIoProfileResponse, error) {
+	rsp, err := c.PutDiskIoProfile(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePutDiskIoProfileResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PutDiskResizeWithBodyWithResponse request with arbitrary body returning *PutDiskResizeResponse
+func (c *ClientWithResponses) PutDiskResizeWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutDiskResizeResponse, error) {
+	rsp, err := c.PutDiskResizeWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePutDiskResizeResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PutDiskResizeWithResponse(ctx context.Context, body PutDiskResizeJSONRequestBody, reqEditors ...RequestEditorFn) (*PutDiskResizeResponse, error) {
+	rsp, err := c.PutDiskResize(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePutDiskResizeResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PostDiskUnassignWithBodyWithResponse request with arbitrary body returning *PostDiskUnassignResponse
+func (c *ClientWithResponses) PostDiskUnassignWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostDiskUnassignResponse, error) {
+	rsp, err := c.PostDiskUnassignWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostDiskUnassignResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PostDiskUnassignWithResponse(ctx context.Context, body PostDiskUnassignJSONRequestBody, reqEditors ...RequestEditorFn) (*PostDiskUnassignResponse, error) {
+	rsp, err := c.PostDiskUnassign(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostDiskUnassignResponse(rsp)
 	if err != nil {
 		return nil, err
 	}
@@ -25895,6 +28153,29 @@ func (c *ClientWithResponses) GetOrganizationDiskBackupPoliciesWithResponse(ctx 
 	return res, nil
 }
 
+// GetOrganizationDiskIoProfilesWithResponse request returning *GetOrganizationDiskIoProfilesResponse
+func (c *ClientWithResponses) GetOrganizationDiskIoProfilesWithResponse(ctx context.Context, params *GetOrganizationDiskIoProfilesParams, reqEditors ...RequestEditorFn) (*GetOrganizationDiskIoProfilesResponse, error) {
+	rsp, err := c.GetOrganizationDiskIoProfiles(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseGetOrganizationDiskIoProfilesResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
 // GetOrganizationDiskTemplatesWithResponse request returning *GetOrganizationDiskTemplatesResponse
 func (c *ClientWithResponses) GetOrganizationDiskTemplatesWithResponse(ctx context.Context, params *GetOrganizationDiskTemplatesParams, reqEditors ...RequestEditorFn) (*GetOrganizationDiskTemplatesResponse, error) {
 	rsp, err := c.GetOrganizationDiskTemplates(ctx, params, reqEditors...)
@@ -25926,6 +28207,51 @@ func (c *ClientWithResponses) GetOrganizationDisksWithResponse(ctx context.Conte
 	}
 
 	res, err := ParseGetOrganizationDisksResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PostOrganizationDisksWithBodyWithResponse request with arbitrary body returning *PostOrganizationDisksResponse
+func (c *ClientWithResponses) PostOrganizationDisksWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostOrganizationDisksResponse, error) {
+	rsp, err := c.PostOrganizationDisksWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostOrganizationDisksResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PostOrganizationDisksWithResponse(ctx context.Context, body PostOrganizationDisksJSONRequestBody, reqEditors ...RequestEditorFn) (*PostOrganizationDisksResponse, error) {
+	rsp, err := c.PostOrganizationDisks(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostOrganizationDisksResponse(rsp)
 	if err != nil {
 		return nil, err
 	}
@@ -30116,6 +32442,78 @@ func ParseGetDiskTemplateVersionsResponse(rsp *http.Response) (*GetDiskTemplateV
 	return response, nil
 }
 
+// ParseDeleteDiskResponse parses an HTTP response from a DeleteDiskWithResponse call
+func ParseDeleteDiskResponse(rsp *http.Response) (*DeleteDiskResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteDiskResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// Disk The disk that has been move to the trash.
+			Disk        DeleteDisk200ResponseDisk `json:"disk"`
+			TrashObject TrashObject               `json:"trash_object"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest DiskNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest ObjectInTrashResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetDiskResponse parses an HTTP response from a GetDiskWithResponse call
 func ParseGetDiskResponse(rsp *http.Response) (*GetDiskResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -30160,6 +32558,299 @@ func ParseGetDiskResponse(rsp *http.Response) (*GetDiskResponse, error) {
 			return nil, err
 		}
 		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest ObjectInTrashResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePatchDiskResponse parses an HTTP response from a PatchDiskWithResponse call
+func ParsePatchDiskResponse(rsp *http.Response) (*PatchDiskResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchDiskResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// Disk The disk that has been updated.
+			Disk PatchDisk200ResponseDisk `json:"disk"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest DiskNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest ObjectInTrashResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnassignedDiskValidationError422Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostDiskAssignResponse parses an HTTP response from a PostDiskAssignWithResponse call
+func ParsePostDiskAssignResponse(rsp *http.Response) (*PostDiskAssignResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostDiskAssignResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// Disk The disk that has been assigned to a virtual machine.
+			Disk PostDiskAssign200ResponseDisk `json:"disk"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest DiskNotFoundVirtualMachineNotFound404Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest ObjectInTrashResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnableToAssignResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostDiskAttachResponse parses an HTTP response from a PostDiskAttachWithResponse call
+func ParsePostDiskAttachResponse(rsp *http.Response) (*PostDiskAttachResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostDiskAttachResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// Disk The disk that will be attached to its virtual machine.
+			Disk PostDiskAttach200ResponseDisk `json:"disk"`
+			Task Task                          `json:"task"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest DiskNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest ObjectInTrashTaskQueueingError406Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnassignedDiskResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostDiskDetachResponse parses an HTTP response from a PostDiskDetachWithResponse call
+func ParsePostDiskDetachResponse(rsp *http.Response) (*PostDiskDetachResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostDiskDetachResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// Disk The disk that will be detached from its virtual machine.
+			Disk PostDiskDetach200ResponseDisk `json:"disk"`
+			Task Task                          `json:"task"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest DiskNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest ObjectInTrashTaskQueueingError406Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnassignedDiskResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest APIAuthenticator429Response
@@ -30219,6 +32910,13 @@ func ParseGetDiskDiskBackupPoliciesResponse(rsp *http.Response) (*GetDiskDiskBac
 		}
 		response.JSON404 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest ObjectInTrashResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest APIAuthenticator429Response
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -30276,8 +32974,223 @@ func ParsePostDiskDiskBackupPoliciesResponse(rsp *http.Response) (*PostDiskDiskB
 		}
 		response.JSON404 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest ObjectInTrashResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
 		var dest ValidationErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePutDiskIoProfileResponse parses an HTTP response from a PutDiskIoProfileWithResponse call
+func ParsePutDiskIoProfileResponse(rsp *http.Response) (*PutDiskIoProfileResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PutDiskIoProfileResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// Disk The disk that has been updated.
+			Disk PutDiskIOProfile200ResponseDisk `json:"disk"`
+			Task Task                            `json:"task"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest DiskIOProfileNotFoundDiskNotFound404Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest ObjectInTrashTaskQueueingError406Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePutDiskResizeResponse parses an HTTP response from a PutDiskResizeWithResponse call
+func ParsePutDiskResizeResponse(rsp *http.Response) (*PutDiskResizeResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PutDiskResizeResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// Disk The disk that has been resized.
+			Disk PutDiskResize200ResponseDisk `json:"disk"`
+			Task Task                         `json:"task"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest DiskNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest ObjectInTrashTaskQueueingError406Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostDiskUnassignResponse parses an HTTP response from a PostDiskUnassignWithResponse call
+func ParsePostDiskUnassignResponse(rsp *http.Response) (*PostDiskUnassignResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostDiskUnassignResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// Disk The disk that has been unassigned from a virtual machine.
+			Disk PostDiskUnassign200ResponseDisk `json:"disk"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest DiskNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest ObjectInTrashResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest UnableToUnassignResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -32504,6 +35417,64 @@ func ParseGetOrganizationDiskBackupPoliciesResponse(rsp *http.Response) (*GetOrg
 	return response, nil
 }
 
+// ParseGetOrganizationDiskIoProfilesResponse parses an HTTP response from a GetOrganizationDiskIoProfilesWithResponse call
+func ParseGetOrganizationDiskIoProfilesResponse(rsp *http.Response) (*GetOrganizationDiskIoProfilesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetOrganizationDiskIoProfilesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// DiskIoProfiles The list of disk IO profiles
+			DiskIoProfiles []DiskIOProfile  `json:"disk_io_profiles"`
+			Pagination     PaginationObject `json:"pagination"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest OrganizationNotActivatedOrganizationSuspended403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest OrganizationNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetOrganizationDiskTemplatesResponse parses an HTTP response from a GetOrganizationDiskTemplatesWithResponse call
 func ParseGetOrganizationDiskTemplatesResponse(rsp *http.Response) (*GetOrganizationDiskTemplatesResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -32607,6 +35578,78 @@ func ParseGetOrganizationDisksResponse(rsp *http.Response) (*GetOrganizationDisk
 			return nil, err
 		}
 		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostOrganizationDisksResponse parses an HTTP response from a PostOrganizationDisksWithResponse call
+func ParsePostOrganizationDisksResponse(rsp *http.Response) (*PostOrganizationDisksResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostOrganizationDisksResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest struct {
+			// Disk The disk that has been created.
+			Disk PostOrganizationDisks201ResponseDisk `json:"disk"`
+			Task Task                                 `json:"task"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest OrganizationNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest TaskQueueingErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest APIAuthenticator429Response

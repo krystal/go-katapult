@@ -625,6 +625,78 @@
             "$ref": "#/components/responses/APIAuthenticator429Response"
           }
         }
+      },
+      "post": {
+        "operationId": "post:organization_disks",
+        "tags": [
+          "Core"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "organization": {
+                    "$ref": "#/components/schemas/OrganizationLookup"
+                  },
+                  "properties": {
+                    "$ref": "#/components/schemas/DiskArguments"
+                  }
+                },
+                "required": [
+                  "organization",
+                  "properties"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Create a new disk for a given organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "disk": {
+                      "description": "The disk that has been created.",
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/PostOrganizationDisks201ResponseDisk"
+                        }
+                      ]
+                    },
+                    "task": {
+                      "$ref": "#/components/schemas/Task"
+                    }
+                  },
+                  "required": [
+                    "disk",
+                    "task"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res"
+          },
+          "404": {
+            "$ref": "#/components/responses/OrganizationNotFoundResponse"
+          },
+          "406": {
+            "$ref": "#/components/responses/TaskQueueingErrorResponse"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationErrorResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
       }
     },
     "/disks/:disk": {
@@ -674,6 +746,566 @@
           },
           "404": {
             "$ref": "#/components/responses/DiskNotFoundResponse"
+          },
+          "406": {
+            "$ref": "#/components/responses/ObjectInTrashResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "patch:disk",
+        "tags": [
+          "Core"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "disk": {
+                    "$ref": "#/components/schemas/DiskLookup"
+                  },
+                  "properties": {
+                    "$ref": "#/components/schemas/DiskArguments"
+                  }
+                },
+                "required": [
+                  "disk",
+                  "properties"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Update a disk for a given organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "disk": {
+                      "description": "The disk that has been updated.",
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/PatchDisk200ResponseDisk"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "disk"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/PermissionDenied403Res"
+          },
+          "404": {
+            "$ref": "#/components/responses/DiskNotFoundResponse"
+          },
+          "406": {
+            "$ref": "#/components/responses/ObjectInTrashResponse"
+          },
+          "422": {
+            "$ref": "#/components/responses/UnassignedDiskValidationError422Res"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "delete:disk",
+        "tags": [
+          "Core"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "disk": {
+                    "$ref": "#/components/schemas/DiskLookup"
+                  }
+                },
+                "required": [
+                  "disk"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Deletes a disk and moves it to the trash",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "disk": {
+                      "description": "The disk that has been move to the trash.",
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/DeleteDisk200ResponseDisk"
+                        }
+                      ]
+                    },
+                    "trash_object": {
+                      "$ref": "#/components/schemas/TrashObject"
+                    }
+                  },
+                  "required": [
+                    "disk",
+                    "trash_object"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/PermissionDenied403Res"
+          },
+          "404": {
+            "$ref": "#/components/responses/DiskNotFoundResponse"
+          },
+          "406": {
+            "$ref": "#/components/responses/ObjectInTrashResponse"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationErrorResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      }
+    },
+    "/disks/:disk/assign": {
+      "post": {
+        "operationId": "post:disk_assign",
+        "tags": [
+          "Core"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "disk": {
+                    "$ref": "#/components/schemas/DiskLookup"
+                  },
+                  "virtual_machine": {
+                    "$ref": "#/components/schemas/VirtualMachineLookup"
+                  }
+                },
+                "required": [
+                  "disk",
+                  "virtual_machine"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Assign a disk to a virtual machine.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "disk": {
+                      "description": "The disk that has been assigned to a virtual machine.",
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/PostDiskAssign200ResponseDisk"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "disk"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/PermissionDenied403Res"
+          },
+          "404": {
+            "$ref": "#/components/responses/DiskNotFoundVirtualMachineNotFound404Res"
+          },
+          "406": {
+            "$ref": "#/components/responses/ObjectInTrashResponse"
+          },
+          "422": {
+            "$ref": "#/components/responses/UnableToAssignResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      }
+    },
+    "/disks/:disk/unassign": {
+      "post": {
+        "operationId": "post:disk_unassign",
+        "tags": [
+          "Core"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "disk": {
+                    "$ref": "#/components/schemas/DiskLookup"
+                  }
+                },
+                "required": [
+                  "disk"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Unassign a disk from a virtual machine.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "disk": {
+                      "description": "The disk that has been unassigned from a virtual machine.",
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/PostDiskUnassign200ResponseDisk"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "disk"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/PermissionDenied403Res"
+          },
+          "404": {
+            "$ref": "#/components/responses/DiskNotFoundResponse"
+          },
+          "406": {
+            "$ref": "#/components/responses/ObjectInTrashResponse"
+          },
+          "422": {
+            "$ref": "#/components/responses/UnableToUnassignResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      }
+    },
+    "/disks/:disk/attach": {
+      "post": {
+        "operationId": "post:disk_attach",
+        "tags": [
+          "Core"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "disk": {
+                    "$ref": "#/components/schemas/DiskLookup"
+                  }
+                },
+                "required": [
+                  "disk"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Attach a disk to its virtual machine.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "disk": {
+                      "description": "The disk that will be attached to its virtual machine.",
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/PostDiskAttach200ResponseDisk"
+                        }
+                      ]
+                    },
+                    "task": {
+                      "$ref": "#/components/schemas/Task"
+                    }
+                  },
+                  "required": [
+                    "disk",
+                    "task"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/PermissionDenied403Res"
+          },
+          "404": {
+            "$ref": "#/components/responses/DiskNotFoundResponse"
+          },
+          "406": {
+            "$ref": "#/components/responses/ObjectInTrashTaskQueueingError406Res"
+          },
+          "422": {
+            "$ref": "#/components/responses/UnassignedDiskResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      }
+    },
+    "/disks/:disk/detach": {
+      "post": {
+        "operationId": "post:disk_detach",
+        "tags": [
+          "Core"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "disk": {
+                    "$ref": "#/components/schemas/DiskLookup"
+                  }
+                },
+                "required": [
+                  "disk"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Detach a disk from its virtual machine.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "disk": {
+                      "description": "The disk that will be detached from its virtual machine.",
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/PostDiskDetach200ResponseDisk"
+                        }
+                      ]
+                    },
+                    "task": {
+                      "$ref": "#/components/schemas/Task"
+                    }
+                  },
+                  "required": [
+                    "disk",
+                    "task"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/PermissionDenied403Res"
+          },
+          "404": {
+            "$ref": "#/components/responses/DiskNotFoundResponse"
+          },
+          "406": {
+            "$ref": "#/components/responses/ObjectInTrashTaskQueueingError406Res"
+          },
+          "422": {
+            "$ref": "#/components/responses/UnassignedDiskResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      }
+    },
+    "/disks/:disk/resize": {
+      "put": {
+        "operationId": "put:disk_resize",
+        "tags": [
+          "Core"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "disk": {
+                    "$ref": "#/components/schemas/DiskLookup"
+                  },
+                  "size_in_gb": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "disk",
+                  "size_in_gb"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Resize a disk.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "disk": {
+                      "description": "The disk that has been resized.",
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/PutDiskResize200ResponseDisk"
+                        }
+                      ]
+                    },
+                    "task": {
+                      "$ref": "#/components/schemas/Task"
+                    }
+                  },
+                  "required": [
+                    "disk",
+                    "task"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/PermissionDenied403Res"
+          },
+          "404": {
+            "$ref": "#/components/responses/DiskNotFoundResponse"
+          },
+          "406": {
+            "$ref": "#/components/responses/ObjectInTrashTaskQueueingError406Res"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationErrorResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      }
+    },
+    "/disks/:disk/io_profile": {
+      "put": {
+        "operationId": "put:disk_io_profile",
+        "tags": [
+          "Core"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "disk": {
+                    "$ref": "#/components/schemas/DiskLookup"
+                  },
+                  "io_profile": {
+                    "$ref": "#/components/schemas/DiskIOProfileLookup"
+                  }
+                },
+                "required": [
+                  "disk",
+                  "io_profile"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Change disk IO profile.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "disk": {
+                      "description": "The disk that has been updated.",
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/PutDiskIOProfile200ResponseDisk"
+                        }
+                      ]
+                    },
+                    "task": {
+                      "$ref": "#/components/schemas/Task"
+                    }
+                  },
+                  "required": [
+                    "disk",
+                    "task"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/PermissionDenied403Res"
+          },
+          "404": {
+            "$ref": "#/components/responses/DiskIOProfileNotFoundDiskNotFound404Res"
+          },
+          "406": {
+            "$ref": "#/components/responses/ObjectInTrashTaskQueueingError406Res"
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
@@ -756,6 +1388,85 @@
           },
           "406": {
             "$ref": "#/components/responses/ObjectInTrashResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      }
+    },
+    "/organizations/:organization/disk_io_profiles": {
+      "get": {
+        "operationId": "get:organization_disk_io_profiles",
+        "tags": [
+          "Core"
+        ],
+        "parameters": [
+          {
+            "name": "organization[id]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The organization to find disk IO profiles for. All 'organization[]' params are mutually exclusive, only one can be provided."
+          },
+          {
+            "name": "organization[sub_domain]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The organization to find disk IO profiles for. All 'organization[]' params are mutually exclusive, only one can be provided."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return a list of all disk IO profiles available to this organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "pagination": {
+                      "$ref": "#/components/schemas/PaginationObject"
+                    },
+                    "disk_io_profiles": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/DiskIOProfile"
+                      },
+                      "description": "The list of disk IO profiles"
+                    }
+                  },
+                  "required": [
+                    "pagination",
+                    "disk_io_profiles"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/OrganizationNotActivatedOrganizationSuspended403Res"
+          },
+          "404": {
+            "$ref": "#/components/responses/OrganizationNotFoundResponse"
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
@@ -2954,6 +3665,9 @@
           "404": {
             "$ref": "#/components/responses/DiskNotFoundResponse"
           },
+          "406": {
+            "$ref": "#/components/responses/ObjectInTrashResponse"
+          },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
           }
@@ -3015,6 +3729,9 @@
           },
           "404": {
             "$ref": "#/components/responses/DiskNotFoundResponse"
+          },
+          "406": {
+            "$ref": "#/components/responses/ObjectInTrashResponse"
           },
           "422": {
             "$ref": "#/components/responses/ValidationErrorResponse"
@@ -10043,7 +10760,115 @@
           }
         }
       },
-      "GetDisk200ResponseDisk": {
+      "DiskArguments": {
+        "description": "All 'properties[]' params are mutually exclusive, only one can be provided.",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "bus_type": {
+            "$ref": "#/components/schemas/DiskBusEnum"
+          },
+          "data_center": {
+            "$ref": "#/components/schemas/DataCenterLookup"
+          },
+          "size_in_gb": {
+            "type": "integer",
+            "description": "Only available when creating disk. Existing disks must use the resize endpoint."
+          },
+          "io_profile": {
+            "$ref": "#/components/schemas/DiskIOProfileLookup"
+          },
+          "initial_file_system": {
+            "$ref": "#/components/schemas/FileSystemEnum"
+          },
+          "storage_speed": {
+            "$ref": "#/components/schemas/StorageSpeedEnum"
+          },
+          "virtual_machine_disk": {
+            "$ref": "#/components/schemas/VirtualMachineDiskArguments"
+          }
+        }
+      },
+      "DiskBusEnum": {
+        "type": "string",
+        "enum": [
+          "scsi",
+          "virtio"
+        ]
+      },
+      "DataCenterLookup": {
+        "description": "All 'data_center[]' params are mutually exclusive, only one can be provided.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "permalink": {
+            "type": "string"
+          }
+        }
+      },
+      "DiskIOProfileLookup": {
+        "description": "All 'io_profile[]' params are mutually exclusive, only one can be provided.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "permalink": {
+            "type": "string"
+          }
+        }
+      },
+      "FileSystemEnum": {
+        "type": "string",
+        "enum": [
+          "ext4",
+          "xfs"
+        ]
+      },
+      "StorageSpeedEnum": {
+        "type": "string",
+        "enum": [
+          "nvme",
+          "ssd"
+        ]
+      },
+      "VirtualMachineDiskArguments": {
+        "description": "All 'virtual_machine_disk[]' params are mutually exclusive, only one can be provided.",
+        "type": "object",
+        "properties": {
+          "boot": {
+            "type": "boolean"
+          },
+          "attach_on_boot": {
+            "type": "boolean",
+            "description": "Attach the disk during virtual machine start up. Default is true."
+          },
+          "attach": {
+            "type": "boolean",
+            "description": "Attach the disk once built. If the virtual machine is not running the disk will attach when started. Only available when creating disk, existing disks must use the attach endpoint."
+          },
+          "virtual_machine": {
+            "$ref": "#/components/schemas/VirtualMachineLookup"
+          }
+        }
+      },
+      "VirtualMachineLookup": {
+        "description": "All 'virtual_machine[]' params are mutually exclusive, only one can be provided.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "fqdn": {
+            "type": "string"
+          }
+        }
+      },
+      "PostOrganizationDisks201ResponseDisk": {
         "type": "object",
         "properties": {
           "id": {
@@ -10075,10 +10900,21 @@
             ],
             "nullable": true
           },
+          "bus_type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskBusEnum"
+              }
+            ],
+            "nullable": true
+          },
+          "data_center": {
+            "$ref": "#/components/schemas/PostOrganizationDisksPartDataCenter"
+          },
           "virtual_machine_disk": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/GetDiskPartVirtualMachineDisk"
+                "$ref": "#/components/schemas/PostOrganizationDisksPartVirtualMachineDisk"
               }
             ],
             "nullable": true
@@ -10092,13 +10928,6 @@
             "nullable": true
           }
         }
-      },
-      "StorageSpeedEnum": {
-        "type": "string",
-        "enum": [
-          "nvme",
-          "ssd"
-        ]
       },
       "DiskIOProfile": {
         "type": "object",
@@ -10122,11 +10951,26 @@
           }
         }
       },
-      "GetDiskPartVirtualMachineDisk": {
+      "PostOrganizationDisksPartDataCenter": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "permalink": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "PostOrganizationDisksPartVirtualMachineDisk": {
         "type": "object",
         "properties": {
           "virtual_machine": {
-            "$ref": "#/components/schemas/GetDiskPartVirtualMachine"
+            "$ref": "#/components/schemas/PostOrganizationDisksPartVirtualMachine"
           },
           "attach_on_boot": {
             "type": "boolean"
@@ -10139,7 +10983,7 @@
           }
         }
       },
-      "GetDiskPartVirtualMachine": {
+      "PostOrganizationDisksPartVirtualMachine": {
         "type": "object",
         "properties": {
           "id": {
@@ -10298,10 +11142,1291 @@
           }
         }
       },
+      "Task": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/TaskStatusEnum"
+          },
+          "created_at": {
+            "type": "integer"
+          },
+          "started_at": {
+            "type": "integer",
+            "nullable": true
+          },
+          "finished_at": {
+            "type": "integer",
+            "nullable": true
+          },
+          "progress": {
+            "type": "integer"
+          }
+        }
+      },
+      "TaskStatusEnum": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "running",
+          "completed",
+          "failed"
+        ]
+      },
+      "PermissionDenied": {
+        "type": "object",
+        "properties": {
+          "details": {
+            "type": "string",
+            "description": "Additional information regarding the reason why permission was denied",
+            "nullable": true
+          }
+        }
+      },
+      "PermissionDeniedEnum": {
+        "type": "string",
+        "enum": [
+          "permission_denied"
+        ]
+      },
+      "PermissionDeniedSchema": {
+        "type": "object",
+        "description": "The authenticated identity is not permitted to perform this action",
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/PermissionDeniedEnum"
+          },
+          "description": {
+            "type": "string"
+          },
+          "detail": {
+            "$ref": "#/components/schemas/PermissionDenied"
+          }
+        }
+      },
+      "OneOfOrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/UnauthorizedNetworkForAPITokenSchema"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidAPITokenSchema"
+          },
+          {
+            "$ref": "#/components/schemas/ScopeNotGrantedErrorSchema"
+          },
+          {
+            "$ref": "#/components/schemas/OrganizationSuspendedSchema"
+          },
+          {
+            "$ref": "#/components/schemas/OrganizationNotActivatedSchema"
+          },
+          {
+            "$ref": "#/components/schemas/PermissionDeniedSchema"
+          }
+        ]
+      },
+      "TaskQueueingError": {
+        "type": "object",
+        "properties": {
+          "details": {
+            "type": "string"
+          }
+        }
+      },
+      "TaskQueueingErrorEnum": {
+        "type": "string",
+        "enum": [
+          "task_queueing_error"
+        ]
+      },
+      "GetDisk200ResponseDisk": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "size_in_gb": {
+            "type": "integer"
+          },
+          "wwn": {
+            "type": "string"
+          },
+          "state": {
+            "$ref": "#/components/schemas/DiskStateEnum"
+          },
+          "created_at": {
+            "type": "integer"
+          },
+          "storage_speed": {
+            "$ref": "#/components/schemas/StorageSpeedEnum"
+          },
+          "io_profile": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskIOProfile"
+              }
+            ],
+            "nullable": true
+          },
+          "bus_type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskBusEnum"
+              }
+            ],
+            "nullable": true
+          },
+          "data_center": {
+            "$ref": "#/components/schemas/GetDiskPartDataCenter"
+          },
+          "virtual_machine_disk": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetDiskPartVirtualMachineDisk"
+              }
+            ],
+            "nullable": true
+          },
+          "installation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskInstallation"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "GetDiskPartDataCenter": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "permalink": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "GetDiskPartVirtualMachineDisk": {
+        "type": "object",
+        "properties": {
+          "virtual_machine": {
+            "$ref": "#/components/schemas/GetDiskPartVirtualMachine"
+          },
+          "attach_on_boot": {
+            "type": "boolean"
+          },
+          "boot": {
+            "type": "boolean"
+          },
+          "state": {
+            "$ref": "#/components/schemas/VirtualMachineDiskAttachmentStateEnum"
+          }
+        }
+      },
+      "GetDiskPartVirtualMachine": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "fqdn": {
+            "type": "string"
+          }
+        }
+      },
       "DiskNotFoundEnum": {
         "type": "string",
         "enum": [
           "disk_not_found"
+        ]
+      },
+      "ObjectInTrash": {
+        "type": "object",
+        "properties": {
+          "trash_object": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TrashObject"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "TrashObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "keep_until": {
+            "type": "integer"
+          },
+          "object_id": {
+            "type": "string"
+          },
+          "object_type": {
+            "type": "string"
+          }
+        }
+      },
+      "ObjectInTrashEnum": {
+        "type": "string",
+        "enum": [
+          "object_in_trash"
+        ]
+      },
+      "DiskLookup": {
+        "description": "All 'disk[]' params are mutually exclusive, only one can be provided.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "PatchDisk200ResponseDisk": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "size_in_gb": {
+            "type": "integer"
+          },
+          "wwn": {
+            "type": "string"
+          },
+          "state": {
+            "$ref": "#/components/schemas/DiskStateEnum"
+          },
+          "created_at": {
+            "type": "integer"
+          },
+          "storage_speed": {
+            "$ref": "#/components/schemas/StorageSpeedEnum"
+          },
+          "io_profile": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskIOProfile"
+              }
+            ],
+            "nullable": true
+          },
+          "bus_type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskBusEnum"
+              }
+            ],
+            "nullable": true
+          },
+          "data_center": {
+            "$ref": "#/components/schemas/PatchDiskPartDataCenter"
+          },
+          "virtual_machine_disk": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PatchDiskPartVirtualMachineDisk"
+              }
+            ],
+            "nullable": true
+          },
+          "installation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskInstallation"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "PatchDiskPartDataCenter": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "permalink": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "PatchDiskPartVirtualMachineDisk": {
+        "type": "object",
+        "properties": {
+          "virtual_machine": {
+            "$ref": "#/components/schemas/PatchDiskPartVirtualMachine"
+          },
+          "attach_on_boot": {
+            "type": "boolean"
+          },
+          "boot": {
+            "type": "boolean"
+          },
+          "state": {
+            "$ref": "#/components/schemas/VirtualMachineDiskAttachmentStateEnum"
+          }
+        }
+      },
+      "PatchDiskPartVirtualMachine": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "fqdn": {
+            "type": "string"
+          }
+        }
+      },
+      "OneOfPermissionDenied403Res": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/UnauthorizedNetworkForAPITokenSchema"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidAPITokenSchema"
+          },
+          {
+            "$ref": "#/components/schemas/ScopeNotGrantedErrorSchema"
+          },
+          {
+            "$ref": "#/components/schemas/PermissionDeniedSchema"
+          }
+        ]
+      },
+      "UnassignedDiskEnum": {
+        "type": "string",
+        "enum": [
+          "unassigned_disk"
+        ]
+      },
+      "UnassignedDiskSchema": {
+        "type": "object",
+        "description": "Disk is not assigned to a virtual machine.",
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/UnassignedDiskEnum"
+          },
+          "description": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "object"
+          }
+        }
+      },
+      "OneOfUnassignedDiskValidationError422Res": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/UnassignedDiskSchema"
+          },
+          {
+            "$ref": "#/components/schemas/ValidationErrorSchema"
+          }
+        ]
+      },
+      "DeleteDisk200ResponseDisk": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "size_in_gb": {
+            "type": "integer"
+          },
+          "wwn": {
+            "type": "string"
+          },
+          "state": {
+            "$ref": "#/components/schemas/DiskStateEnum"
+          },
+          "created_at": {
+            "type": "integer"
+          },
+          "storage_speed": {
+            "$ref": "#/components/schemas/StorageSpeedEnum"
+          },
+          "io_profile": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskIOProfile"
+              }
+            ],
+            "nullable": true
+          },
+          "bus_type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskBusEnum"
+              }
+            ],
+            "nullable": true
+          },
+          "data_center": {
+            "$ref": "#/components/schemas/DeleteDiskPartDataCenter"
+          },
+          "virtual_machine_disk": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DeleteDiskPartVirtualMachineDisk"
+              }
+            ],
+            "nullable": true
+          },
+          "installation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskInstallation"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "DeleteDiskPartDataCenter": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "permalink": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "DeleteDiskPartVirtualMachineDisk": {
+        "type": "object",
+        "properties": {
+          "virtual_machine": {
+            "$ref": "#/components/schemas/DeleteDiskPartVirtualMachine"
+          },
+          "attach_on_boot": {
+            "type": "boolean"
+          },
+          "boot": {
+            "type": "boolean"
+          },
+          "state": {
+            "$ref": "#/components/schemas/VirtualMachineDiskAttachmentStateEnum"
+          }
+        }
+      },
+      "DeleteDiskPartVirtualMachine": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "fqdn": {
+            "type": "string"
+          }
+        }
+      },
+      "PostDiskAssign200ResponseDisk": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "size_in_gb": {
+            "type": "integer"
+          },
+          "wwn": {
+            "type": "string"
+          },
+          "state": {
+            "$ref": "#/components/schemas/DiskStateEnum"
+          },
+          "created_at": {
+            "type": "integer"
+          },
+          "storage_speed": {
+            "$ref": "#/components/schemas/StorageSpeedEnum"
+          },
+          "io_profile": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskIOProfile"
+              }
+            ],
+            "nullable": true
+          },
+          "bus_type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskBusEnum"
+              }
+            ],
+            "nullable": true
+          },
+          "data_center": {
+            "$ref": "#/components/schemas/PostDiskAssignPartDataCenter"
+          },
+          "virtual_machine_disk": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PostDiskAssignPartVirtualMachineDisk"
+              }
+            ],
+            "nullable": true
+          },
+          "installation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskInstallation"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "PostDiskAssignPartDataCenter": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "permalink": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "PostDiskAssignPartVirtualMachineDisk": {
+        "type": "object",
+        "properties": {
+          "virtual_machine": {
+            "$ref": "#/components/schemas/PostDiskAssignPartVirtualMachine"
+          },
+          "attach_on_boot": {
+            "type": "boolean"
+          },
+          "boot": {
+            "type": "boolean"
+          },
+          "state": {
+            "$ref": "#/components/schemas/VirtualMachineDiskAttachmentStateEnum"
+          }
+        }
+      },
+      "PostDiskAssignPartVirtualMachine": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "fqdn": {
+            "type": "string"
+          }
+        }
+      },
+      "DiskNotFoundSchema": {
+        "type": "object",
+        "description": "No disk was found matching any of the criteria provided in the arguments",
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/DiskNotFoundEnum"
+          },
+          "description": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "object"
+          }
+        }
+      },
+      "VirtualMachineNotFoundEnum": {
+        "type": "string",
+        "enum": [
+          "virtual_machine_not_found"
+        ]
+      },
+      "VirtualMachineNotFoundSchema": {
+        "type": "object",
+        "description": "No virtual machine was found matching any of the criteria provided in the arguments",
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/VirtualMachineNotFoundEnum"
+          },
+          "description": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "object"
+          }
+        }
+      },
+      "OneOfDiskNotFoundVirtualMachineNotFound404Res": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/DiskNotFoundSchema"
+          },
+          {
+            "$ref": "#/components/schemas/VirtualMachineNotFoundSchema"
+          }
+        ]
+      },
+      "UnableToAssign": {
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "UnableToAssignEnum": {
+        "type": "string",
+        "enum": [
+          "unable_to_assign"
+        ]
+      },
+      "PostDiskUnassign200ResponseDisk": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "size_in_gb": {
+            "type": "integer"
+          },
+          "wwn": {
+            "type": "string"
+          },
+          "state": {
+            "$ref": "#/components/schemas/DiskStateEnum"
+          },
+          "created_at": {
+            "type": "integer"
+          },
+          "storage_speed": {
+            "$ref": "#/components/schemas/StorageSpeedEnum"
+          },
+          "io_profile": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskIOProfile"
+              }
+            ],
+            "nullable": true
+          },
+          "bus_type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskBusEnum"
+              }
+            ],
+            "nullable": true
+          },
+          "data_center": {
+            "$ref": "#/components/schemas/PostDiskUnassignPartDataCenter"
+          },
+          "virtual_machine_disk": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PostDiskUnassignPartVirtualMachineDisk"
+              }
+            ],
+            "nullable": true
+          },
+          "installation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskInstallation"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "PostDiskUnassignPartDataCenter": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "permalink": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "PostDiskUnassignPartVirtualMachineDisk": {
+        "type": "object",
+        "properties": {
+          "virtual_machine": {
+            "$ref": "#/components/schemas/PostDiskUnassignPartVirtualMachine"
+          },
+          "attach_on_boot": {
+            "type": "boolean"
+          },
+          "boot": {
+            "type": "boolean"
+          },
+          "state": {
+            "$ref": "#/components/schemas/VirtualMachineDiskAttachmentStateEnum"
+          }
+        }
+      },
+      "PostDiskUnassignPartVirtualMachine": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "fqdn": {
+            "type": "string"
+          }
+        }
+      },
+      "UnableToUnassign": {
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "UnableToUnassignEnum": {
+        "type": "string",
+        "enum": [
+          "unable_to_unassign"
+        ]
+      },
+      "PostDiskAttach200ResponseDisk": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "size_in_gb": {
+            "type": "integer"
+          },
+          "wwn": {
+            "type": "string"
+          },
+          "state": {
+            "$ref": "#/components/schemas/DiskStateEnum"
+          },
+          "created_at": {
+            "type": "integer"
+          },
+          "storage_speed": {
+            "$ref": "#/components/schemas/StorageSpeedEnum"
+          },
+          "io_profile": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskIOProfile"
+              }
+            ],
+            "nullable": true
+          },
+          "bus_type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskBusEnum"
+              }
+            ],
+            "nullable": true
+          },
+          "data_center": {
+            "$ref": "#/components/schemas/PostDiskAttachPartDataCenter"
+          },
+          "virtual_machine_disk": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PostDiskAttachPartVirtualMachineDisk"
+              }
+            ],
+            "nullable": true
+          },
+          "installation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskInstallation"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "PostDiskAttachPartDataCenter": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "permalink": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "PostDiskAttachPartVirtualMachineDisk": {
+        "type": "object",
+        "properties": {
+          "virtual_machine": {
+            "$ref": "#/components/schemas/PostDiskAttachPartVirtualMachine"
+          },
+          "attach_on_boot": {
+            "type": "boolean"
+          },
+          "boot": {
+            "type": "boolean"
+          },
+          "state": {
+            "$ref": "#/components/schemas/VirtualMachineDiskAttachmentStateEnum"
+          }
+        }
+      },
+      "PostDiskAttachPartVirtualMachine": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "fqdn": {
+            "type": "string"
+          }
+        }
+      },
+      "ObjectInTrashSchema": {
+        "type": "object",
+        "description": "The object found is in the trash and therefore cannot be manipulated through the API. It should be restored in order to run this operation.",
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/ObjectInTrashEnum"
+          },
+          "description": {
+            "type": "string"
+          },
+          "detail": {
+            "$ref": "#/components/schemas/ObjectInTrash"
+          }
+        }
+      },
+      "TaskQueueingErrorSchema": {
+        "type": "object",
+        "description": "This error means that a background task that was needed to complete your request could not be queued",
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/TaskQueueingErrorEnum"
+          },
+          "description": {
+            "type": "string"
+          },
+          "detail": {
+            "$ref": "#/components/schemas/TaskQueueingError"
+          }
+        }
+      },
+      "OneOfObjectInTrashTaskQueueingError406Res": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ObjectInTrashSchema"
+          },
+          {
+            "$ref": "#/components/schemas/TaskQueueingErrorSchema"
+          }
+        ]
+      },
+      "PostDiskDetach200ResponseDisk": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "size_in_gb": {
+            "type": "integer"
+          },
+          "wwn": {
+            "type": "string"
+          },
+          "state": {
+            "$ref": "#/components/schemas/DiskStateEnum"
+          },
+          "created_at": {
+            "type": "integer"
+          },
+          "storage_speed": {
+            "$ref": "#/components/schemas/StorageSpeedEnum"
+          },
+          "io_profile": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskIOProfile"
+              }
+            ],
+            "nullable": true
+          },
+          "bus_type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskBusEnum"
+              }
+            ],
+            "nullable": true
+          },
+          "data_center": {
+            "$ref": "#/components/schemas/PostDiskDetachPartDataCenter"
+          },
+          "virtual_machine_disk": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PostDiskDetachPartVirtualMachineDisk"
+              }
+            ],
+            "nullable": true
+          },
+          "installation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskInstallation"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "PostDiskDetachPartDataCenter": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "permalink": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "PostDiskDetachPartVirtualMachineDisk": {
+        "type": "object",
+        "properties": {
+          "virtual_machine": {
+            "$ref": "#/components/schemas/PostDiskDetachPartVirtualMachine"
+          },
+          "attach_on_boot": {
+            "type": "boolean"
+          },
+          "boot": {
+            "type": "boolean"
+          },
+          "state": {
+            "$ref": "#/components/schemas/VirtualMachineDiskAttachmentStateEnum"
+          }
+        }
+      },
+      "PostDiskDetachPartVirtualMachine": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "fqdn": {
+            "type": "string"
+          }
+        }
+      },
+      "PutDiskResize200ResponseDisk": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "size_in_gb": {
+            "type": "integer"
+          },
+          "wwn": {
+            "type": "string"
+          },
+          "state": {
+            "$ref": "#/components/schemas/DiskStateEnum"
+          },
+          "created_at": {
+            "type": "integer"
+          },
+          "storage_speed": {
+            "$ref": "#/components/schemas/StorageSpeedEnum"
+          },
+          "io_profile": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskIOProfile"
+              }
+            ],
+            "nullable": true
+          },
+          "bus_type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskBusEnum"
+              }
+            ],
+            "nullable": true
+          },
+          "data_center": {
+            "$ref": "#/components/schemas/PutDiskResizePartDataCenter"
+          },
+          "virtual_machine_disk": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PutDiskResizePartVirtualMachineDisk"
+              }
+            ],
+            "nullable": true
+          },
+          "installation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskInstallation"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "PutDiskResizePartDataCenter": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "permalink": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "PutDiskResizePartVirtualMachineDisk": {
+        "type": "object",
+        "properties": {
+          "virtual_machine": {
+            "$ref": "#/components/schemas/PutDiskResizePartVirtualMachine"
+          },
+          "attach_on_boot": {
+            "type": "boolean"
+          },
+          "boot": {
+            "type": "boolean"
+          },
+          "state": {
+            "$ref": "#/components/schemas/VirtualMachineDiskAttachmentStateEnum"
+          }
+        }
+      },
+      "PutDiskResizePartVirtualMachine": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "fqdn": {
+            "type": "string"
+          }
+        }
+      },
+      "PutDiskIOProfile200ResponseDisk": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "size_in_gb": {
+            "type": "integer"
+          },
+          "wwn": {
+            "type": "string"
+          },
+          "state": {
+            "$ref": "#/components/schemas/DiskStateEnum"
+          },
+          "created_at": {
+            "type": "integer"
+          },
+          "storage_speed": {
+            "$ref": "#/components/schemas/StorageSpeedEnum"
+          },
+          "io_profile": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskIOProfile"
+              }
+            ],
+            "nullable": true
+          },
+          "bus_type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskBusEnum"
+              }
+            ],
+            "nullable": true
+          },
+          "data_center": {
+            "$ref": "#/components/schemas/PutDiskIOProfilePartDataCenter"
+          },
+          "virtual_machine_disk": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PutDiskIOProfilePartVirtualMachineDisk"
+              }
+            ],
+            "nullable": true
+          },
+          "installation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskInstallation"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "PutDiskIOProfilePartDataCenter": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "permalink": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "PutDiskIOProfilePartVirtualMachineDisk": {
+        "type": "object",
+        "properties": {
+          "virtual_machine": {
+            "$ref": "#/components/schemas/PutDiskIOProfilePartVirtualMachine"
+          },
+          "attach_on_boot": {
+            "type": "boolean"
+          },
+          "boot": {
+            "type": "boolean"
+          },
+          "state": {
+            "$ref": "#/components/schemas/VirtualMachineDiskAttachmentStateEnum"
+          }
+        }
+      },
+      "PutDiskIOProfilePartVirtualMachine": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "fqdn": {
+            "type": "string"
+          }
+        }
+      },
+      "DiskIOProfileNotFoundEnum": {
+        "type": "string",
+        "enum": [
+          "disk_io_profile_not_found"
+        ]
+      },
+      "DiskIOProfileNotFoundSchema": {
+        "type": "object",
+        "description": "No disk IO profile was found matching any of the criteria provided in the arguments",
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/DiskIOProfileNotFoundEnum"
+          },
+          "description": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "object"
+          }
+        }
+      },
+      "OneOfDiskIOProfileNotFoundDiskNotFound404Res": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/DiskNotFoundSchema"
+          },
+          {
+            "$ref": "#/components/schemas/DiskIOProfileNotFoundSchema"
+          }
         ]
       },
       "GetVirtualMachineDisks200ResponseDisks": {
@@ -10343,48 +12468,6 @@
             "type": "integer"
           }
         }
-      },
-      "VirtualMachineNotFoundEnum": {
-        "type": "string",
-        "enum": [
-          "virtual_machine_not_found"
-        ]
-      },
-      "ObjectInTrash": {
-        "type": "object",
-        "properties": {
-          "trash_object": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/TrashObject"
-              }
-            ],
-            "nullable": true
-          }
-        }
-      },
-      "TrashObject": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "keep_until": {
-            "type": "integer"
-          },
-          "object_id": {
-            "type": "string"
-          },
-          "object_type": {
-            "type": "string"
-          }
-        }
-      },
-      "ObjectInTrashEnum": {
-        "type": "string",
-        "enum": [
-          "object_in_trash"
-        ]
       },
       "GetOrganizationDiskTemplates200ResponseDiskTemplates": {
         "type": "object",
@@ -11354,18 +13437,6 @@
           }
         }
       },
-      "VirtualMachineLookup": {
-        "description": "All 'virtual_machine[]' params are mutually exclusive, only one can be provided.",
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "fqdn": {
-            "type": "string"
-          }
-        }
-      },
       "VirtualMachineArguments": {
         "description": "All 'properties[]' params are mutually exclusive, only one can be provided.",
         "type": "object",
@@ -11670,53 +13741,6 @@
           }
         }
       },
-      "PermissionDenied": {
-        "type": "object",
-        "properties": {
-          "details": {
-            "type": "string",
-            "description": "Additional information regarding the reason why permission was denied",
-            "nullable": true
-          }
-        }
-      },
-      "PermissionDeniedEnum": {
-        "type": "string",
-        "enum": [
-          "permission_denied"
-        ]
-      },
-      "PermissionDeniedSchema": {
-        "type": "object",
-        "description": "The authenticated identity is not permitted to perform this action",
-        "properties": {
-          "code": {
-            "$ref": "#/components/schemas/PermissionDeniedEnum"
-          },
-          "description": {
-            "type": "string"
-          },
-          "detail": {
-            "$ref": "#/components/schemas/PermissionDenied"
-          }
-        }
-      },
-      "OneOfPermissionDenied403Res": {
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/UnauthorizedNetworkForAPITokenSchema"
-          },
-          {
-            "$ref": "#/components/schemas/InvalidAPITokenSchema"
-          },
-          {
-            "$ref": "#/components/schemas/ScopeNotGrantedErrorSchema"
-          },
-          {
-            "$ref": "#/components/schemas/PermissionDeniedSchema"
-          }
-        ]
-      },
       "VirtualMachinePackageLookup": {
         "description": "All 'virtual_machine_package[]' params are mutually exclusive, only one can be provided.",
         "type": "object",
@@ -11726,58 +13750,6 @@
           },
           "permalink": {
             "type": "string"
-          }
-        }
-      },
-      "Task": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "status": {
-            "$ref": "#/components/schemas/TaskStatusEnum"
-          },
-          "created_at": {
-            "type": "integer"
-          },
-          "started_at": {
-            "type": "integer",
-            "nullable": true
-          },
-          "finished_at": {
-            "type": "integer",
-            "nullable": true
-          },
-          "progress": {
-            "type": "integer"
-          }
-        }
-      },
-      "TaskStatusEnum": {
-        "type": "string",
-        "enum": [
-          "pending",
-          "running",
-          "completed",
-          "failed"
-        ]
-      },
-      "VirtualMachineNotFoundSchema": {
-        "type": "object",
-        "description": "No virtual machine was found matching any of the criteria provided in the arguments",
-        "properties": {
-          "code": {
-            "$ref": "#/components/schemas/VirtualMachineNotFoundEnum"
-          },
-          "description": {
-            "type": "string"
-          },
-          "detail": {
-            "type": "object"
           }
         }
       },
@@ -11809,60 +13781,6 @@
           },
           {
             "$ref": "#/components/schemas/VirtualMachinePackageNotFoundSchema"
-          }
-        ]
-      },
-      "ObjectInTrashSchema": {
-        "type": "object",
-        "description": "The object found is in the trash and therefore cannot be manipulated through the API. It should be restored in order to run this operation.",
-        "properties": {
-          "code": {
-            "$ref": "#/components/schemas/ObjectInTrashEnum"
-          },
-          "description": {
-            "type": "string"
-          },
-          "detail": {
-            "$ref": "#/components/schemas/ObjectInTrash"
-          }
-        }
-      },
-      "TaskQueueingError": {
-        "type": "object",
-        "properties": {
-          "details": {
-            "type": "string"
-          }
-        }
-      },
-      "TaskQueueingErrorEnum": {
-        "type": "string",
-        "enum": [
-          "task_queueing_error"
-        ]
-      },
-      "TaskQueueingErrorSchema": {
-        "type": "object",
-        "description": "This error means that a background task that was needed to complete your request could not be queued",
-        "properties": {
-          "code": {
-            "$ref": "#/components/schemas/TaskQueueingErrorEnum"
-          },
-          "description": {
-            "type": "string"
-          },
-          "detail": {
-            "$ref": "#/components/schemas/TaskQueueingError"
-          }
-        }
-      },
-      "OneOfObjectInTrashTaskQueueingError406Res": {
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/ObjectInTrashSchema"
-          },
-          {
-            "$ref": "#/components/schemas/TaskQueueingErrorSchema"
           }
         ]
       },
@@ -12028,18 +13946,6 @@
       },
       "ZoneLookup": {
         "description": "All 'zone[]' params are mutually exclusive, only one can be provided.",
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "permalink": {
-            "type": "string"
-          }
-        }
-      },
-      "DataCenterLookup": {
-        "description": "All 'data_center[]' params are mutually exclusive, only one can be provided.",
         "type": "object",
         "properties": {
           "id": {
@@ -12405,28 +14311,6 @@
           },
           {
             "$ref": "#/components/schemas/InvalidSpecXMLSchema"
-          }
-        ]
-      },
-      "OneOfOrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res": {
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/UnauthorizedNetworkForAPITokenSchema"
-          },
-          {
-            "$ref": "#/components/schemas/InvalidAPITokenSchema"
-          },
-          {
-            "$ref": "#/components/schemas/ScopeNotGrantedErrorSchema"
-          },
-          {
-            "$ref": "#/components/schemas/OrganizationSuspendedSchema"
-          },
-          {
-            "$ref": "#/components/schemas/OrganizationNotActivatedSchema"
-          },
-          {
-            "$ref": "#/components/schemas/PermissionDeniedSchema"
           }
         ]
       },
@@ -12889,6 +14773,17 @@
             ],
             "nullable": true
           },
+          "bus_type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DiskBusEnum"
+              }
+            ],
+            "nullable": true
+          },
+          "data_center": {
+            "$ref": "#/components/schemas/DataCenter"
+          },
           "virtual_machine_disk": {
             "allOf": [
               {
@@ -13194,15 +15089,6 @@
           "auto_move_to_trash_at": {
             "type": "integer",
             "nullable": true
-          }
-        }
-      },
-      "DiskLookup": {
-        "description": "All 'disk[]' params are mutually exclusive, only one can be provided.",
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
           }
         }
       },
@@ -16426,6 +18312,56 @@
           }
         }
       },
+      "OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res": {
+        "description": "403 error response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/OneOfOrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res"
+            }
+          }
+        }
+      },
+      "TaskQueueingErrorResponse": {
+        "description": "This error means that a background task that was needed to complete your request could not be queued",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "$ref": "#/components/schemas/TaskQueueingErrorEnum"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "detail": {
+                  "$ref": "#/components/schemas/TaskQueueingError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ValidationErrorResponse": {
+        "description": "A validation error occurred with the object that was being created/updated/deleted",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "$ref": "#/components/schemas/ValidationErrorEnum"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "detail": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
       "DiskNotFoundResponse": {
         "description": "No disk was found matching any of the criteria provided in the arguments",
         "content": {
@@ -16434,26 +18370,6 @@
               "properties": {
                 "code": {
                   "$ref": "#/components/schemas/DiskNotFoundEnum"
-                },
-                "description": {
-                  "type": "string"
-                },
-                "detail": {
-                  "type": "object"
-                }
-              }
-            }
-          }
-        }
-      },
-      "VirtualMachineNotFoundResponse": {
-        "description": "No virtual machine was found matching any of the criteria provided in the arguments",
-        "content": {
-          "application/json": {
-            "schema": {
-              "properties": {
-                "code": {
-                  "$ref": "#/components/schemas/VirtualMachineNotFoundEnum"
                 },
                 "description": {
                   "type": "string"
@@ -16480,6 +18396,136 @@
                 },
                 "detail": {
                   "$ref": "#/components/schemas/ObjectInTrash"
+                }
+              }
+            }
+          }
+        }
+      },
+      "PermissionDenied403Res": {
+        "description": "403 error response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/OneOfPermissionDenied403Res"
+            }
+          }
+        }
+      },
+      "UnassignedDiskValidationError422Res": {
+        "description": "422 error response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/OneOfUnassignedDiskValidationError422Res"
+            }
+          }
+        }
+      },
+      "DiskNotFoundVirtualMachineNotFound404Res": {
+        "description": "404 error response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/OneOfDiskNotFoundVirtualMachineNotFound404Res"
+            }
+          }
+        }
+      },
+      "UnableToAssignResponse": {
+        "description": "The disk can not be assigned to the virtual machine.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "$ref": "#/components/schemas/UnableToAssignEnum"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "detail": {
+                  "$ref": "#/components/schemas/UnableToAssign"
+                }
+              }
+            }
+          }
+        }
+      },
+      "UnableToUnassignResponse": {
+        "description": "The disk can not be unassigned from the virtual machine.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "$ref": "#/components/schemas/UnableToUnassignEnum"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "detail": {
+                  "$ref": "#/components/schemas/UnableToUnassign"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ObjectInTrashTaskQueueingError406Res": {
+        "description": "406 error response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/OneOfObjectInTrashTaskQueueingError406Res"
+            }
+          }
+        }
+      },
+      "UnassignedDiskResponse": {
+        "description": "Disk is not assigned to a virtual machine.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "$ref": "#/components/schemas/UnassignedDiskEnum"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "detail": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "DiskIOProfileNotFoundDiskNotFound404Res": {
+        "description": "404 error response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/OneOfDiskIOProfileNotFoundDiskNotFound404Res"
+            }
+          }
+        }
+      },
+      "VirtualMachineNotFoundResponse": {
+        "description": "No virtual machine was found matching any of the criteria provided in the arguments",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "$ref": "#/components/schemas/VirtualMachineNotFoundEnum"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "detail": {
+                  "type": "object"
                 }
               }
             }
@@ -16556,32 +18602,12 @@
           }
         }
       },
-      "PermissionDenied403Res": {
-        "description": "403 error response",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/OneOfPermissionDenied403Res"
-            }
-          }
-        }
-      },
       "VirtualMachineNotFoundVirtualMachinePackageNotFound404Res": {
         "description": "404 error response",
         "content": {
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/OneOfVirtualMachineNotFoundVirtualMachinePackageNotFound404Res"
-            }
-          }
-        }
-      },
-      "ObjectInTrashTaskQueueingError406Res": {
-        "description": "406 error response",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/OneOfObjectInTrashTaskQueueingError406Res"
             }
           }
         }
@@ -16672,36 +18698,6 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/OneOfInvalidSpecXML400Res"
-            }
-          }
-        }
-      },
-      "OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res": {
-        "description": "403 error response",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/OneOfOrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res"
-            }
-          }
-        }
-      },
-      "ValidationErrorResponse": {
-        "description": "A validation error occurred with the object that was being created/updated/deleted",
-        "content": {
-          "application/json": {
-            "schema": {
-              "properties": {
-                "code": {
-                  "$ref": "#/components/schemas/ValidationErrorEnum"
-                },
-                "description": {
-                  "type": "string"
-                },
-                "detail": {
-                  "$ref": "#/components/schemas/ValidationError"
-                }
-              }
             }
           }
         }
@@ -17212,26 +19208,6 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/OneOfNetworkSpeedProfileNotFoundVirtualMachineNetworkInterfaceNotFound404Res"
-            }
-          }
-        }
-      },
-      "TaskQueueingErrorResponse": {
-        "description": "This error means that a background task that was needed to complete your request could not be queued",
-        "content": {
-          "application/json": {
-            "schema": {
-              "properties": {
-                "code": {
-                  "$ref": "#/components/schemas/TaskQueueingErrorEnum"
-                },
-                "description": {
-                  "type": "string"
-                },
-                "detail": {
-                  "$ref": "#/components/schemas/TaskQueueingError"
-                }
-              }
             }
           }
         }
