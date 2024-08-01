@@ -1882,8 +1882,9 @@ type GetOrganizationManaged200ResponseOrganizations struct {
 
 // GetOrganizationTags200ResponseTags defines model for GetOrganizationTags200ResponseTags.
 type GetOrganizationTags200ResponseTags struct {
-	Id   *string `json:"id,omitempty"`
-	Name *string `json:"name,omitempty"`
+	Color *TagColorsEnum `json:"color,omitempty"`
+	Id    *string        `json:"id,omitempty"`
+	Name  *string        `json:"name,omitempty"`
 }
 
 // GetOrganizationUsersWithAccess200ResponseUsers defines model for GetOrganizationUsersWithAccess200ResponseUsers.
@@ -2236,6 +2237,11 @@ type IdentityNotLinkedToWebSessionSchema struct {
 type IntegerOrUnlimited struct {
 	Unlimited *bool                  `json:"unlimited,omitempty"`
 	Value     nullable.Nullable[int] `json:"value,omitempty"`
+}
+
+// IntegerValue defines model for IntegerValue.
+type IntegerValue struct {
+	Value nullable.Nullable[int] `json:"value,omitempty"`
 }
 
 // InterfaceNotFoundEnum defines model for InterfaceNotFoundEnum.
@@ -2707,6 +2713,7 @@ type OrganizationPolicy struct {
 	AllowSuspension                 *bool               `json:"allow_suspension,omitempty"`
 	FlexibleVirtualMachineResources *bool               `json:"flexible_virtual_machine_resources,omitempty"`
 	MaximumCertificates             *IntegerOrUnlimited `json:"maximum_certificates,omitempty"`
+	MaximumDiskSize                 *IntegerOrUnlimited `json:"maximum_disk_size,omitempty"`
 	MaximumDiskSpace                *IntegerOrUnlimited `json:"maximum_disk_space,omitempty"`
 	MaximumDnsZones                 *IntegerOrUnlimited `json:"maximum_dns_zones,omitempty"`
 	MaximumFileStorageVolumes       *IntegerOrUnlimited `json:"maximum_file_storage_volumes,omitempty"`
@@ -2719,6 +2726,7 @@ type OrganizationPolicy struct {
 	MaximumVirtualMachineMemory     *IntegerOrUnlimited `json:"maximum_virtual_machine_memory,omitempty"`
 	MaximumVirtualMachines          *IntegerOrUnlimited `json:"maximum_virtual_machines,omitempty"`
 	MaximumVirtualNetworks          *IntegerOrUnlimited `json:"maximum_virtual_networks,omitempty"`
+	MinimumDiskSize                 *IntegerValue       `json:"minimum_disk_size,omitempty"`
 }
 
 // OrganizationSuspendedEnum defines model for OrganizationSuspendedEnum.

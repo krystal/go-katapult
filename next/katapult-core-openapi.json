@@ -10508,6 +10508,12 @@
           "maximum_isos": {
             "$ref": "#/components/schemas/IntegerOrUnlimited"
           },
+          "maximum_disk_size": {
+            "$ref": "#/components/schemas/IntegerOrUnlimited"
+          },
+          "minimum_disk_size": {
+            "$ref": "#/components/schemas/IntegerValue"
+          },
           "flexible_virtual_machine_resources": {
             "type": "boolean"
           },
@@ -10541,6 +10547,15 @@
           },
           "unlimited": {
             "type": "boolean"
+          }
+        }
+      },
+      "IntegerValue": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "nullable": true
           }
         }
       },
@@ -17979,6 +17994,9 @@
           },
           "name": {
             "type": "string"
+          },
+          "color": {
+            "$ref": "#/components/schemas/TagColorsEnum"
           }
         }
       },
