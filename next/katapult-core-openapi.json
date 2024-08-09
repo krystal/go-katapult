@@ -1184,6 +1184,9 @@
                   },
                   "size_in_gb": {
                     "type": "integer"
+                  },
+                  "resize_method": {
+                    "$ref": "#/components/schemas/ResizeMethodEnum"
                   }
                 },
                 "required": [
@@ -12204,6 +12207,13 @@
             "type": "string"
           }
         }
+      },
+      "ResizeMethodEnum": {
+        "type": "string",
+        "enum": [
+          "offline",
+          "online"
+        ]
       },
       "PutDiskResize200ResponseDisk": {
         "type": "object",

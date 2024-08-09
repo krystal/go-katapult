@@ -366,6 +366,12 @@ const (
 	RateLimitReachedEnumRateLimitReached RateLimitReachedEnum = "rate_limit_reached"
 )
 
+// Defines values for ResizeMethodEnum.
+const (
+	Offline ResizeMethodEnum = "offline"
+	Online  ResizeMethodEnum = "online"
+)
+
 // Defines values for ResourceCreationRestrictedEnum.
 const (
 	ResourceCreationRestrictedEnumResourceCreationRestricted ResourceCreationRestrictedEnum = "resource_creation_restricted"
@@ -3541,6 +3547,9 @@ type RecordContentAttributesForVirtualMachine struct {
 	VirtualMachine nullable.Nullable[string] `json:"virtual_machine,omitempty"`
 }
 
+// ResizeMethodEnum defines model for ResizeMethodEnum.
+type ResizeMethodEnum string
+
 // ResourceCreationRestricted defines model for ResourceCreationRestricted.
 type ResourceCreationRestricted struct {
 	Errors *[]string `json:"errors,omitempty"`
@@ -4745,8 +4754,9 @@ type PutDiskIoProfileJSONBody struct {
 // PutDiskResizeJSONBody defines parameters for PutDiskResize.
 type PutDiskResizeJSONBody struct {
 	// Disk All 'disk[]' params are mutually exclusive, only one can be provided.
-	Disk     DiskLookup `json:"disk"`
-	SizeInGb int        `json:"size_in_gb"`
+	Disk         DiskLookup        `json:"disk"`
+	ResizeMethod *ResizeMethodEnum `json:"resize_method,omitempty"`
+	SizeInGb     int               `json:"size_in_gb"`
 }
 
 // PostDiskUnassignJSONBody defines parameters for PostDiskUnassign.
