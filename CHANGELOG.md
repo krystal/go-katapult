@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.10](https://github.com/krystal/go-katapult/compare/v0.2.9...v0.2.10) (2024-08-12)
+
+
+### Features
+
+* next client introduces disk endpoints ([#171](https://github.com/krystal/go-katapult/issues/171)) ([39f04fb](https://github.com/krystal/go-katapult/commit/39f04fb95db310c72ba0523ecdf707289a34f957))
+
 ## [0.2.9](https://github.com/krystal/go-katapult/compare/v0.2.8...v0.2.9) (2024-07-04)
 
 
