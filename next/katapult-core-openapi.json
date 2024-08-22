@@ -49,6 +49,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -106,6 +109,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -168,6 +174,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -210,6 +219,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -267,6 +279,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -324,6 +339,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -402,6 +420,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -428,6 +449,22 @@
               "type": "string"
             },
             "description": "All 'organization[]' params are mutually exclusive, only one can be provided."
+          },
+          {
+            "name": "annotations[key]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided."
+          },
+          {
+            "name": "annotations[value]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided."
           },
           {
             "name": "page",
@@ -480,6 +517,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -501,6 +541,12 @@
                   },
                   "sub_domain": {
                     "type": "string"
+                  },
+                  "annotations": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/KeyValue"
+                    }
                   }
                 },
                 "required": [
@@ -521,10 +567,17 @@
                   "properties": {
                     "organization": {
                       "$ref": "#/components/schemas/Organization"
+                    },
+                    "annotations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/KeyValue"
+                      }
                     }
                   },
                   "required": [
-                    "organization"
+                    "organization",
+                    "annotations"
                   ]
                 }
               }
@@ -544,6 +597,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -570,6 +626,22 @@
               "type": "string"
             },
             "description": "The organization to find disks for. All 'organization[]' params are mutually exclusive, only one can be provided."
+          },
+          {
+            "name": "annotations[key]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided."
+          },
+          {
+            "name": "annotations[value]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided."
           },
           {
             "name": "page",
@@ -623,6 +695,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -641,6 +716,12 @@
                   },
                   "properties": {
                     "$ref": "#/components/schemas/DiskArguments"
+                  },
+                  "annotations": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/KeyValue"
+                    }
                   }
                 },
                 "required": [
@@ -668,11 +749,19 @@
                     },
                     "task": {
                       "$ref": "#/components/schemas/Task"
+                    },
+                    "annotations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/KeyValue"
+                      },
+                      "description": "Annotations for this disk"
                     }
                   },
                   "required": [
                     "disk",
-                    "task"
+                    "task",
+                    "annotations"
                   ]
                 }
               }
@@ -695,6 +784,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -729,10 +821,17 @@
                           "$ref": "#/components/schemas/GetDisk200ResponseDisk"
                         }
                       ]
+                    },
+                    "annotations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/KeyValue"
+                      }
                     }
                   },
                   "required": [
-                    "disk"
+                    "disk",
+                    "annotations"
                   ]
                 }
               }
@@ -752,6 +851,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -770,6 +872,12 @@
                   },
                   "properties": {
                     "$ref": "#/components/schemas/DiskArguments"
+                  },
+                  "annotations": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/KeyValue"
+                    }
                   }
                 },
                 "required": [
@@ -794,10 +902,18 @@
                           "$ref": "#/components/schemas/PatchDisk200ResponseDisk"
                         }
                       ]
+                    },
+                    "annotations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/KeyValue"
+                      },
+                      "description": "Annotations for this disk"
                     }
                   },
                   "required": [
-                    "disk"
+                    "disk",
+                    "annotations"
                   ]
                 }
               }
@@ -820,6 +936,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -888,6 +1007,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -958,6 +1080,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -1024,6 +1149,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -1094,6 +1222,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -1164,6 +1295,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -1241,6 +1375,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -1312,6 +1449,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -1394,6 +1534,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -1473,6 +1616,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -1569,6 +1715,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -1631,6 +1780,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -1714,6 +1866,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -1768,6 +1923,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -1826,6 +1984,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -1885,6 +2046,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -1942,6 +2106,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -2020,6 +2187,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -2046,6 +2216,22 @@
               "type": "string"
             },
             "description": "All 'organization[]' params are mutually exclusive, only one can be provided."
+          },
+          {
+            "name": "annotations[key]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided."
+          },
+          {
+            "name": "annotations[value]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided."
           },
           {
             "name": "page",
@@ -2098,6 +2284,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -2135,10 +2324,17 @@
                   "properties": {
                     "virtual_machine": {
                       "$ref": "#/components/schemas/GetVirtualMachine200ResponseVirtualMachine"
+                    },
+                    "annotations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/KeyValue"
+                      }
                     }
                   },
                   "required": [
-                    "virtual_machine"
+                    "virtual_machine",
+                    "annotations"
                   ]
                 }
               }
@@ -2158,6 +2354,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -2176,6 +2375,12 @@
                   },
                   "properties": {
                     "$ref": "#/components/schemas/VirtualMachineArguments"
+                  },
+                  "annotations": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/KeyValue"
+                    }
                   }
                 },
                 "required": [
@@ -2200,10 +2405,17 @@
                           "$ref": "#/components/schemas/PatchVirtualMachine200ResponseVirtualMachine"
                         }
                       ]
+                    },
+                    "annotations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/KeyValue"
+                      }
                     }
                   },
                   "required": [
-                    "virtual_machine"
+                    "virtual_machine",
+                    "annotations"
                   ]
                 }
               }
@@ -2223,6 +2435,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -2280,6 +2495,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -2342,6 +2560,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -2404,6 +2625,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -2474,6 +2698,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -2509,6 +2736,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -2550,6 +2780,12 @@
                   },
                   "hostname": {
                     "type": "string"
+                  },
+                  "annotations": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/KeyValue"
+                    }
                   }
                 },
                 "required": [
@@ -2583,13 +2819,20 @@
                     },
                     "hostname": {
                       "type": "string"
+                    },
+                    "annotations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/KeyValue"
+                      }
                     }
                   },
                   "required": [
                     "task",
                     "build",
                     "virtual_machine_build",
-                    "hostname"
+                    "hostname",
+                    "annotations"
                   ]
                 }
               }
@@ -2609,6 +2852,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -2629,6 +2875,12 @@
                   },
                   "xml": {
                     "type": "string"
+                  },
+                  "annotations": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/KeyValue"
+                    }
                   }
                 },
                 "required": [
@@ -2662,13 +2914,20 @@
                     },
                     "hostname": {
                       "type": "string"
+                    },
+                    "annotations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/KeyValue"
+                      }
                     }
                   },
                   "required": [
                     "task",
                     "build",
                     "virtual_machine_build",
-                    "hostname"
+                    "hostname",
+                    "annotations"
                   ]
                 }
               }
@@ -2688,6 +2947,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -2717,10 +2979,17 @@
                   "properties": {
                     "virtual_machine_build": {
                       "$ref": "#/components/schemas/GetVirtualMachinesBuildsVirtualMachineBuild200ResponseVirtualMachineBuild"
+                    },
+                    "annotations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/KeyValue"
+                      }
                     }
                   },
                   "required": [
-                    "virtual_machine_build"
+                    "virtual_machine_build",
+                    "annotations"
                   ]
                 }
               }
@@ -2737,6 +3006,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -2795,6 +3067,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -2853,6 +3128,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -2911,6 +3189,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -2969,6 +3250,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -3030,6 +3314,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -3108,6 +3395,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -3165,6 +3455,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -3243,6 +3536,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -3303,6 +3599,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -3361,6 +3660,402 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
+          }
+        }
+      }
+    },
+    "/organizations/:organization/api_tokens": {
+      "get": {
+        "operationId": "get:organization_api_tokens",
+        "tags": [
+          "Core"
+        ],
+        "parameters": [
+          {
+            "name": "organization[id]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The organization to list API tokens for. All 'organization[]' params are mutually exclusive, only one can be provided."
+          },
+          {
+            "name": "organization[sub_domain]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The organization to list API tokens for. All 'organization[]' params are mutually exclusive, only one can be provided."
+          },
+          {
+            "name": "annotations[key]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided."
+          },
+          {
+            "name": "annotations[value]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a list of all API tokens for an organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "pagination": {
+                      "$ref": "#/components/schemas/PaginationObject"
+                    },
+                    "api_tokens": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/APIToken"
+                      }
+                    }
+                  },
+                  "required": [
+                    "pagination",
+                    "api_tokens"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res"
+          },
+          "404": {
+            "$ref": "#/components/responses/OrganizationNotFoundResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
+          }
+        }
+      },
+      "post": {
+        "operationId": "post:organization_api_tokens",
+        "tags": [
+          "Core"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "organization": {
+                    "$ref": "#/components/schemas/OrganizationLookup"
+                  },
+                  "properties": {
+                    "$ref": "#/components/schemas/APITokenArguments"
+                  },
+                  "annotations": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/KeyValue"
+                    }
+                  }
+                },
+                "required": [
+                  "organization",
+                  "properties"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Create a new API token for a given organization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "api_token": {
+                      "description": "The API token that has been created",
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/APIToken"
+                        }
+                      ]
+                    },
+                    "annotations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/KeyValue"
+                      },
+                      "description": "Annotations for this API token"
+                    }
+                  },
+                  "required": [
+                    "api_token",
+                    "annotations"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res"
+          },
+          "404": {
+            "$ref": "#/components/responses/OrganizationNotFoundResponse"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationErrorResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
+          }
+        }
+      }
+    },
+    "/api_tokens/:api_token": {
+      "patch": {
+        "operationId": "patch:api_token",
+        "tags": [
+          "Core"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "api_token": {
+                    "$ref": "#/components/schemas/APITokenLookup"
+                  },
+                  "properties": {
+                    "$ref": "#/components/schemas/APITokenArguments"
+                  },
+                  "annotations": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/KeyValue"
+                    }
+                  }
+                },
+                "required": [
+                  "api_token",
+                  "properties"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updates an organization API token with new properties",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "api_token": {
+                      "description": "The API token that has been updated",
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/APIToken"
+                        }
+                      ]
+                    },
+                    "annotations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/KeyValue"
+                      },
+                      "description": "Annotations for this API token"
+                    }
+                  },
+                  "required": [
+                    "api_token",
+                    "annotations"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/PermissionDenied403Res"
+          },
+          "404": {
+            "$ref": "#/components/responses/APITokenNotFoundResponse"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationErrorResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "delete:api_token",
+        "tags": [
+          "Core"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "api_token": {
+                    "$ref": "#/components/schemas/APITokenLookup"
+                  }
+                },
+                "required": [
+                  "api_token"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Delete an organization API token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "api_token": {
+                      "description": "The API token that has been destroyed",
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/DeleteAPIToken200ResponseAPIToken"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "api_token"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/PermissionDenied403Res"
+          },
+          "404": {
+            "$ref": "#/components/responses/APITokenNotFoundResponse"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationErrorResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
+          }
+        }
+      }
+    },
+    "/api_tokens/:api_token/regenerate_secret": {
+      "post": {
+        "operationId": "post:api_token_regenerate_secret",
+        "tags": [
+          "Core"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "api_token": {
+                    "$ref": "#/components/schemas/APITokenLookup"
+                  }
+                },
+                "required": [
+                  "api_token"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Regenerates the secret for an organization API token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "api_token": {
+                      "description": "The API token that has had its secret regenerated",
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/APIToken"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "api_token"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/APIAuthenticator400Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/PermissionDenied403Res"
+          },
+          "404": {
+            "$ref": "#/components/responses/APITokenNotFoundResponse"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationErrorResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -3440,6 +4135,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -3531,6 +4229,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -3599,6 +4300,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -3673,6 +4377,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -3741,6 +4448,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -3798,6 +4508,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -3859,6 +4572,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -3927,6 +4643,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -3995,6 +4714,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -4074,6 +4796,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -4139,6 +4864,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -4199,6 +4927,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -4261,6 +4992,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -4326,6 +5060,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -4379,6 +5116,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -4442,6 +5182,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -4503,6 +5246,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -4563,6 +5309,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -4617,6 +5366,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -4682,6 +5434,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -4735,6 +5490,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -4761,6 +5519,22 @@
               "type": "string"
             },
             "description": "The organization to return all security groups for. All 'organization[]' params are mutually exclusive, only one can be provided."
+          },
+          {
+            "name": "annotations[key]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided."
+          },
+          {
+            "name": "annotations[value]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided."
           },
           {
             "name": "page",
@@ -4814,6 +5588,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -4832,6 +5609,12 @@
                   },
                   "properties": {
                     "$ref": "#/components/schemas/SecurityGroupArguments"
+                  },
+                  "annotations": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/KeyValue"
+                    }
                   }
                 },
                 "required": [
@@ -4856,10 +5639,17 @@
                           "$ref": "#/components/schemas/SecurityGroup"
                         }
                       ]
+                    },
+                    "annotations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/KeyValue"
+                      }
                     }
                   },
                   "required": [
-                    "security_group"
+                    "security_group",
+                    "annotations"
                   ]
                 }
               }
@@ -4879,6 +5669,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -4913,10 +5706,17 @@
                           "$ref": "#/components/schemas/SecurityGroup"
                         }
                       ]
+                    },
+                    "annotations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/KeyValue"
+                      }
                     }
                   },
                   "required": [
-                    "security_group"
+                    "security_group",
+                    "annotations"
                   ]
                 }
               }
@@ -4933,6 +5733,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -4951,6 +5754,12 @@
                   },
                   "properties": {
                     "$ref": "#/components/schemas/SecurityGroupArguments"
+                  },
+                  "annotations": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/KeyValue"
+                    }
                   }
                 },
                 "required": [
@@ -4975,10 +5784,17 @@
                           "$ref": "#/components/schemas/SecurityGroup"
                         }
                       ]
+                    },
+                    "annotations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/KeyValue"
+                      }
                     }
                   },
                   "required": [
-                    "security_group"
+                    "security_group",
+                    "annotations"
                   ]
                 }
               }
@@ -4998,6 +5814,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -5062,6 +5881,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -5133,6 +5955,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -5198,6 +6023,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -5252,6 +6080,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -5317,6 +6148,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -5378,6 +6212,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -5404,6 +6241,22 @@
               "type": "string"
             },
             "description": "The organization to return all file storage volumes for. All 'organization[]' params are mutually exclusive, only one can be provided."
+          },
+          {
+            "name": "annotations[key]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided."
+          },
+          {
+            "name": "annotations[value]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided."
           },
           {
             "name": "page",
@@ -5457,6 +6310,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -5475,6 +6331,12 @@
                   },
                   "properties": {
                     "$ref": "#/components/schemas/FileStorageVolumeArguments"
+                  },
+                  "annotations": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/KeyValue"
+                    }
                   }
                 },
                 "required": [
@@ -5499,10 +6361,17 @@
                           "$ref": "#/components/schemas/PostOrganizationFileStorageVolumes201ResponseFileStorageVolume"
                         }
                       ]
+                    },
+                    "annotations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/KeyValue"
+                      }
                     }
                   },
                   "required": [
-                    "file_storage_volume"
+                    "file_storage_volume",
+                    "annotations"
                   ]
                 }
               }
@@ -5522,6 +6391,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -5556,10 +6428,17 @@
                           "$ref": "#/components/schemas/GetFileStorageVolume200ResponseFileStorageVolume"
                         }
                       ]
+                    },
+                    "annotations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/KeyValue"
+                      }
                     }
                   },
                   "required": [
-                    "file_storage_volume"
+                    "file_storage_volume",
+                    "annotations"
                   ]
                 }
               }
@@ -5579,6 +6458,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -5597,6 +6479,12 @@
                   },
                   "properties": {
                     "$ref": "#/components/schemas/FileStorageVolumeArguments"
+                  },
+                  "annotations": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/KeyValue"
+                    }
                   }
                 },
                 "required": [
@@ -5621,10 +6509,17 @@
                           "$ref": "#/components/schemas/PatchFileStorageVolume200ResponseFileStorageVolume"
                         }
                       ]
+                    },
+                    "annotations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/KeyValue"
+                      }
                     }
                   },
                   "required": [
-                    "file_storage_volume"
+                    "file_storage_volume",
+                    "annotations"
                   ]
                 }
               }
@@ -5647,6 +6542,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -5715,6 +6613,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -5782,6 +6683,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -5844,6 +6748,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -5923,6 +6830,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -5983,6 +6893,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -6009,6 +6922,22 @@
               "type": "string"
             },
             "description": "The organization for which the address lists should be returned. All 'organization[]' params are mutually exclusive, only one can be provided."
+          },
+          {
+            "name": "annotations[key]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided."
+          },
+          {
+            "name": "annotations[value]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided."
           },
           {
             "name": "page",
@@ -6062,6 +6991,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -6080,6 +7012,12 @@
                   },
                   "properties": {
                     "$ref": "#/components/schemas/AddressListArguments"
+                  },
+                  "annotations": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/KeyValue"
+                    }
                   }
                 },
                 "required": [
@@ -6104,10 +7042,17 @@
                           "$ref": "#/components/schemas/AddressList"
                         }
                       ]
+                    },
+                    "annotations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/KeyValue"
+                      }
                     }
                   },
                   "required": [
-                    "address_list"
+                    "address_list",
+                    "annotations"
                   ]
                 }
               }
@@ -6127,6 +7072,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -6161,10 +7109,17 @@
                           "$ref": "#/components/schemas/AddressList"
                         }
                       ]
+                    },
+                    "annotations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/KeyValue"
+                      }
                     }
                   },
                   "required": [
-                    "address_list"
+                    "address_list",
+                    "annotations"
                   ]
                 }
               }
@@ -6181,6 +7136,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -6199,6 +7157,12 @@
                   },
                   "properties": {
                     "$ref": "#/components/schemas/AddressListArguments"
+                  },
+                  "annotations": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/KeyValue"
+                    }
                   }
                 },
                 "required": [
@@ -6223,10 +7187,17 @@
                           "$ref": "#/components/schemas/AddressList"
                         }
                       ]
+                    },
+                    "annotations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/KeyValue"
+                      }
                     }
                   },
                   "required": [
-                    "address_list"
+                    "address_list",
+                    "annotations"
                   ]
                 }
               }
@@ -6246,6 +7217,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -6304,6 +7278,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -6375,6 +7352,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -6440,6 +7420,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -6494,6 +7477,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -6559,6 +7545,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -6617,6 +7606,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -6695,6 +7687,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -6750,6 +7745,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -6776,6 +7774,22 @@
               "type": "string"
             },
             "description": "The organization to return all load balancers for. All 'organization[]' params are mutually exclusive, only one can be provided."
+          },
+          {
+            "name": "annotations[key]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided."
+          },
+          {
+            "name": "annotations[value]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided."
           },
           {
             "name": "page",
@@ -6829,6 +7843,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -6847,6 +7864,12 @@
                   },
                   "properties": {
                     "$ref": "#/components/schemas/LoadBalancerArguments"
+                  },
+                  "annotations": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/KeyValue"
+                    }
                   }
                 },
                 "required": [
@@ -6871,10 +7894,17 @@
                           "$ref": "#/components/schemas/PostOrganizationLoadBalancers201ResponseLoadBalancer"
                         }
                       ]
+                    },
+                    "annotations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/KeyValue"
+                      }
                     }
                   },
                   "required": [
-                    "load_balancer"
+                    "load_balancer",
+                    "annotations"
                   ]
                 }
               }
@@ -6894,6 +7924,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -6936,10 +7969,17 @@
                           "$ref": "#/components/schemas/GetLoadBalancer200ResponseLoadBalancer"
                         }
                       ]
+                    },
+                    "annotations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/KeyValue"
+                      }
                     }
                   },
                   "required": [
-                    "load_balancer"
+                    "load_balancer",
+                    "annotations"
                   ]
                 }
               }
@@ -6956,6 +7996,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -6974,6 +8017,12 @@
                   },
                   "properties": {
                     "$ref": "#/components/schemas/LoadBalancerArguments"
+                  },
+                  "annotations": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/KeyValue"
+                    }
                   }
                 },
                 "required": [
@@ -6998,10 +8047,17 @@
                           "$ref": "#/components/schemas/PatchLoadBalancer200ResponseLoadBalancer"
                         }
                       ]
+                    },
+                    "annotations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/KeyValue"
+                      }
                     }
                   },
                   "required": [
-                    "load_balancer"
+                    "load_balancer",
+                    "annotations"
                   ]
                 }
               }
@@ -7021,6 +8077,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -7082,6 +8141,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -7161,6 +8223,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -7226,6 +8291,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -7280,6 +8348,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -7345,6 +8416,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -7406,6 +8480,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -7494,6 +8571,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -7573,7 +8653,7 @@
             "$ref": "#/components/responses/APIAuthenticator429Response"
           },
           "503": {
-            "$ref": "#/components/responses/NoAvailableAddressesResponse"
+            "$ref": "#/components/responses/NoAvailableAddresses503Res"
           }
         }
       }
@@ -7646,6 +8726,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -7719,6 +8802,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -7770,6 +8856,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -7826,6 +8915,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -7908,6 +9000,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -7989,6 +9084,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -8043,6 +9141,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -8105,6 +9206,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -8172,6 +9276,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -8238,7 +9345,7 @@
             "$ref": "#/components/responses/APIAuthenticator429Response"
           },
           "503": {
-            "$ref": "#/components/responses/NoAvailableAddressesResponse"
+            "$ref": "#/components/responses/NoAvailableAddresses503Res"
           }
         }
       }
@@ -8309,6 +9416,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -8388,6 +9498,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -8453,6 +9566,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -8507,6 +9623,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -8572,6 +9691,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -8630,6 +9752,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -8691,6 +9816,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -8756,6 +9884,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -8810,6 +9941,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -8875,6 +10009,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -8936,6 +10073,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -8996,6 +10136,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -9050,6 +10193,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -9129,6 +10275,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -9187,6 +10336,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -9249,6 +10401,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       },
@@ -9305,6 +10460,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -9365,6 +10523,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -9408,6 +10569,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -9470,6 +10634,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -9530,6 +10697,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -9600,6 +10770,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -9687,6 +10860,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -9741,6 +10917,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -9801,6 +10980,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -9863,6 +11045,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -9912,6 +11097,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -9942,7 +11130,8 @@
                       }
                     },
                     "api_token_id": {
-                      "type": "string"
+                      "type": "string",
+                      "nullable": true
                     }
                   },
                   "required": [
@@ -9965,6 +11154,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -10012,6 +11204,9 @@
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
+          },
+          "503": {
+            "$ref": "#/components/responses/APIAuthenticator503Response"
           }
         }
       }
@@ -10029,8 +11224,7 @@
             "type": "string"
           },
           "permalink": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "country": {
             "$ref": "#/components/schemas/GetDataCentersPartCountry"
@@ -10173,6 +11367,12 @@
           "rate_limit_reached"
         ]
       },
+      "ServiceUnavailableEnum": {
+        "type": "string",
+        "enum": [
+          "service_unavailable"
+        ]
+      },
       "GetDataCenter200ResponseDataCenter": {
         "type": "object",
         "properties": {
@@ -10183,8 +11383,7 @@
             "type": "string"
           },
           "permalink": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "country": {
             "$ref": "#/components/schemas/GetDataCenterPartCountry"
@@ -10236,8 +11435,7 @@
             "type": "string"
           },
           "permalink": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -10258,6 +11456,10 @@
           },
           "created_at": {
             "type": "integer"
+          },
+          "activated_at": {
+            "type": "integer",
+            "nullable": true
           },
           "suspended": {
             "type": "boolean"
@@ -10284,6 +11486,10 @@
           },
           "created_at": {
             "type": "integer"
+          },
+          "activated_at": {
+            "type": "integer",
+            "nullable": true
           },
           "suspended": {
             "type": "boolean"
@@ -10654,6 +11860,21 @@
           }
         }
       },
+      "KeyValue": {
+        "description": "All 'annotations[]' params are mutually exclusive, only one can be provided.",
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "key"
+        ]
+      },
       "OrganizationLimitReachedEnum": {
         "type": "string",
         "enum": [
@@ -10979,8 +12200,7 @@
             "type": "string"
           },
           "permalink": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -11335,8 +12555,7 @@
             "type": "string"
           },
           "permalink": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -11490,8 +12709,7 @@
             "type": "string"
           },
           "permalink": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -11641,8 +12859,7 @@
             "type": "string"
           },
           "permalink": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -11745,8 +12962,7 @@
             "type": "string"
           },
           "permalink": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -11911,8 +13127,7 @@
             "type": "string"
           },
           "permalink": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -12031,8 +13246,7 @@
             "type": "string"
           },
           "permalink": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -12175,8 +13389,7 @@
             "type": "string"
           },
           "permalink": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -12286,8 +13499,7 @@
             "type": "string"
           },
           "permalink": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -12390,8 +13602,7 @@
             "type": "string"
           },
           "permalink": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -12847,8 +14058,7 @@
             "type": "string"
           },
           "permalink": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -12896,8 +14106,7 @@
             "type": "string"
           },
           "permalink": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -13003,8 +14212,7 @@
             "type": "string"
           },
           "permalink": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "country": {
             "$ref": "#/components/schemas/Country"
@@ -13993,21 +15201,6 @@
           }
         }
       },
-      "KeyValue": {
-        "description": "All 'disk_template_options[]' params are mutually exclusive, only one can be provided.",
-        "type": "object",
-        "properties": {
-          "key": {
-            "type": "string"
-          },
-          "value": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "key"
-        ]
-      },
       "NetworkLookup": {
         "description": "All 'network[]' params are mutually exclusive, only one can be provided.",
         "type": "object",
@@ -14624,6 +15817,95 @@
         "enum": [
           "deletion_restricted"
         ]
+      },
+      "APIToken": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "organization_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "authorized_ip_addresses": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "expires_at": {
+            "type": "integer",
+            "nullable": true
+          },
+          "rate_limit": {
+            "type": "integer"
+          },
+          "scopes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "secret": {
+            "type": "string",
+            "description": "The secret will only be returned on token creation or when a new secret is generated.",
+            "nullable": true
+          }
+        }
+      },
+      "APITokenArguments": {
+        "description": "All 'properties[]' params are mutually exclusive, only one can be provided.",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "authorized_ip_addresses": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "expires_at": {
+            "type": "integer"
+          },
+          "scopes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "APITokenLookup": {
+        "description": "All 'api_token[]' params are mutually exclusive, only one can be provided.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "APITokenNotFoundEnum": {
+        "type": "string",
+        "enum": [
+          "api_token_not_found"
+        ]
+      },
+      "DeleteAPIToken200ResponseAPIToken": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
       },
       "GetOrganizationDiskBackupPolicies200ResponseDiskBackupPolicies": {
         "type": "object",
@@ -16078,8 +17360,7 @@
             "type": "string"
           },
           "permalink": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -16135,8 +17416,7 @@
             "type": "string"
           },
           "permalink": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -16209,8 +17489,7 @@
             "type": "string"
           },
           "permalink": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -16266,8 +17545,7 @@
             "type": "string"
           },
           "permalink": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -16314,8 +17592,7 @@
             "type": "string"
           },
           "permalink": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -16347,8 +17624,7 @@
             "type": "string"
           },
           "permalink": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -16836,8 +18112,7 @@
             "type": "string"
           },
           "permalink": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -16933,8 +18208,7 @@
             "type": "string"
           },
           "permalink": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -17037,8 +18311,7 @@
             "type": "string"
           },
           "permalink": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -17568,10 +18841,50 @@
           }
         ]
       },
+      "APIAuthenticator503Schema": {
+        "type": "object",
+        "description": "The service is currently unavailable, please try again later",
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/ServiceUnavailableEnum"
+          },
+          "description": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "object"
+          }
+        }
+      },
       "NoAvailableAddressesEnum": {
         "type": "string",
         "enum": [
           "no_available_addresses"
+        ]
+      },
+      "NoAvailableAddressesSchema": {
+        "type": "object",
+        "description": "Our pool of addresses for that version seems to have run dry. If this issue continues, please contact support.",
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/NoAvailableAddressesEnum"
+          },
+          "description": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "object"
+          }
+        }
+      },
+      "OneOfNoAvailableAddresses503Res": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/APIAuthenticator503Schema"
+          },
+          {
+            "$ref": "#/components/schemas/NoAvailableAddressesSchema"
+          }
         ]
       },
       "GetIPAddress200ResponseAllocation": {
@@ -18115,8 +19428,7 @@
             "type": "string"
           },
           "permalink": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -18274,6 +19586,26 @@
                 },
                 "detail": {
                   "$ref": "#/components/schemas/RateLimitReached"
+                }
+              }
+            }
+          }
+        }
+      },
+      "APIAuthenticator503Response": {
+        "description": "The service is currently unavailable, please try again later",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "$ref": "#/components/schemas/ServiceUnavailableEnum"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "detail": {
+                  "type": "object"
                 }
               }
             }
@@ -18820,6 +20152,26 @@
           }
         }
       },
+      "APITokenNotFoundResponse": {
+        "description": "No API token was found matching any of the criteria provided in the arguments.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "$ref": "#/components/schemas/APITokenNotFoundEnum"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "detail": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
       "DiskBackupPolicyNotFoundResponse": {
         "description": "No disk backup policy was found matching any of the criteria provided in the arguments",
         "content": {
@@ -19100,22 +20452,12 @@
           }
         }
       },
-      "NoAvailableAddressesResponse": {
-        "description": "Our pool of addresses for that version seems to have run dry. If this issue continues, please contact support.",
+      "NoAvailableAddresses503Res": {
+        "description": "503 error response",
         "content": {
           "application/json": {
             "schema": {
-              "properties": {
-                "code": {
-                  "$ref": "#/components/schemas/NoAvailableAddressesEnum"
-                },
-                "description": {
-                  "type": "string"
-                },
-                "detail": {
-                  "type": "object"
-                }
-              }
+              "$ref": "#/components/schemas/OneOfNoAvailableAddresses503Res"
             }
           }
         }
