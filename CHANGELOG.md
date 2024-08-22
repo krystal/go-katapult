@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.11](https://github.com/krystal/go-katapult/compare/v0.2.10...v0.2.11) (2024-08-22)
+
+
+### Features
+
+* update next client to add annotations ([#173](https://github.com/krystal/go-katapult/issues/173)) ([3b84f0b](https://github.com/krystal/go-katapult/commit/3b84f0b347c84d3beaa8ddcb32e8249b7f453627))
+
 ## [0.2.10](https://github.com/krystal/go-katapult/compare/v0.2.9...v0.2.10) (2024-08-12)
 
 
