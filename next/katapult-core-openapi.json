@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "http://api.katapult.io/core/v1"
+      "url": "https://api.katapult.io/core/v1"
     }
   ],
   "paths": {
