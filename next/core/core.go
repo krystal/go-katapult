@@ -23,6 +23,11 @@ const (
 	AuthenticatorScopes = "Authenticator.Scopes"
 )
 
+// Defines values for APITokenNotFoundEnum.
+const (
+	ApiTokenNotFound APITokenNotFoundEnum = "api_token_not_found"
+)
+
 // Defines values for AddressListEntryNotFoundEnum.
 const (
 	AddressListEntryNotFound AddressListEntryNotFoundEnum = "address_list_entry_not_found"
@@ -429,6 +434,11 @@ const (
 	UDP  SecurityGroupRuleProtocolEnum = "UDP"
 )
 
+// Defines values for ServiceUnavailableEnum.
+const (
+	ServiceUnavailable ServiceUnavailableEnum = "service_unavailable"
+)
+
 // Defines values for SpeedProfileAlreadyAssignedEnum.
 const (
 	SpeedProfileAlreadyAssigned SpeedProfileAlreadyAssignedEnum = "speed_profile_already_assigned"
@@ -627,6 +637,43 @@ type APIAuthenticator400Schema struct {
 	Description *string                 `json:"description,omitempty"`
 	Detail      *map[string]interface{} `json:"detail,omitempty"`
 }
+
+// APIAuthenticator503Schema The service is currently unavailable, please try again later
+type APIAuthenticator503Schema struct {
+	Code        *ServiceUnavailableEnum `json:"code,omitempty"`
+	Description *string                 `json:"description,omitempty"`
+	Detail      *map[string]interface{} `json:"detail,omitempty"`
+}
+
+// APIToken defines model for APIToken.
+type APIToken struct {
+	AuthorizedIpAddresses *[]string                 `json:"authorized_ip_addresses,omitempty"`
+	ExpiresAt             nullable.Nullable[int]    `json:"expires_at,omitempty"`
+	Id                    *string                   `json:"id,omitempty"`
+	Name                  *string                   `json:"name,omitempty"`
+	OrganizationId        nullable.Nullable[string] `json:"organization_id,omitempty"`
+	RateLimit             *int                      `json:"rate_limit,omitempty"`
+	Scopes                *[]string                 `json:"scopes,omitempty"`
+
+	// Secret The secret will only be returned on token creation or when a new secret is generated.
+	Secret nullable.Nullable[string] `json:"secret,omitempty"`
+}
+
+// APITokenArguments All 'properties[]' params are mutually exclusive, only one can be provided.
+type APITokenArguments struct {
+	AuthorizedIpAddresses *[]string `json:"authorized_ip_addresses,omitempty"`
+	ExpiresAt             *int      `json:"expires_at,omitempty"`
+	Name                  *string   `json:"name,omitempty"`
+	Scopes                *[]string `json:"scopes,omitempty"`
+}
+
+// APITokenLookup All 'api_token[]' params are mutually exclusive, only one can be provided.
+type APITokenLookup struct {
+	Id *string `json:"id,omitempty"`
+}
+
+// APITokenNotFoundEnum defines model for APITokenNotFoundEnum.
+type APITokenNotFoundEnum string
 
 // AddressList defines model for AddressList.
 type AddressList struct {
@@ -977,10 +1024,10 @@ type DNSZoneNotVerifiedEnum string
 
 // DataCenter defines model for DataCenter.
 type DataCenter struct {
-	Country   *Country                  `json:"country,omitempty"`
-	Id        *string                   `json:"id,omitempty"`
-	Name      *string                   `json:"name,omitempty"`
-	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+	Country   *Country `json:"country,omitempty"`
+	Id        *string  `json:"id,omitempty"`
+	Name      *string  `json:"name,omitempty"`
+	Permalink *string  `json:"permalink,omitempty"`
 }
 
 // DataCenterLookup All 'data_center[]' params are mutually exclusive, only one can be provided.
@@ -1003,6 +1050,12 @@ type DataCenterNotFoundSchema struct {
 type DecimalOrUnlimited struct {
 	Unlimited *bool                      `json:"unlimited,omitempty"`
 	Value     nullable.Nullable[float32] `json:"value,omitempty"`
+}
+
+// DeleteAPIToken200ResponseAPIToken defines model for DeleteAPIToken200ResponseAPIToken.
+type DeleteAPIToken200ResponseAPIToken struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
 }
 
 // DeleteDisk200ResponseDisk defines model for DeleteDisk200ResponseDisk.
@@ -1035,9 +1088,9 @@ type DeleteDiskBackupPolicySchedule200ResponseDiskBackupPolicy struct {
 
 // DeleteDiskPartDataCenter defines model for DeleteDiskPartDataCenter.
 type DeleteDiskPartDataCenter struct {
-	Id        *string                   `json:"id,omitempty"`
-	Name      *string                   `json:"name,omitempty"`
-	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
 }
 
 // DeleteDiskPartVirtualMachine defines model for DeleteDiskPartVirtualMachine.
@@ -1071,9 +1124,9 @@ type DeleteFileStorageVolume200ResponseFileStorageVolume struct {
 
 // DeleteFileStorageVolumePartDataCenter defines model for DeleteFileStorageVolumePartDataCenter.
 type DeleteFileStorageVolumePartDataCenter struct {
-	Id        *string                   `json:"id,omitempty"`
-	Name      *string                   `json:"name,omitempty"`
-	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
 }
 
 // DeleteLoadBalancer200ResponseLoadBalancer defines model for DeleteLoadBalancer200ResponseLoadBalancer.
@@ -1393,7 +1446,7 @@ type GetDataCenter200ResponseDataCenter struct {
 	Country   *GetDataCenterPartCountry `json:"country,omitempty"`
 	Id        *string                   `json:"id,omitempty"`
 	Name      *string                   `json:"name,omitempty"`
-	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+	Permalink *string                   `json:"permalink,omitempty"`
 }
 
 // GetDataCenterDefaultNetwork200ResponseNetwork defines model for GetDataCenterDefaultNetwork200ResponseNetwork.
@@ -1406,9 +1459,9 @@ type GetDataCenterDefaultNetwork200ResponseNetwork struct {
 
 // GetDataCenterDefaultNetworkPartDataCenter defines model for GetDataCenterDefaultNetworkPartDataCenter.
 type GetDataCenterDefaultNetworkPartDataCenter struct {
-	Id        *string                   `json:"id,omitempty"`
-	Name      *string                   `json:"name,omitempty"`
-	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
 }
 
 // GetDataCenterGPUTypes200ResponseGPUTypes defines model for GetDataCenterGPUTypes200ResponseGPUTypes.
@@ -1432,7 +1485,7 @@ type GetDataCenters200ResponseDataCenters struct {
 	Country   *GetDataCentersPartCountry `json:"country,omitempty"`
 	Id        *string                    `json:"id,omitempty"`
 	Name      *string                    `json:"name,omitempty"`
-	Permalink nullable.Nullable[string]  `json:"permalink,omitempty"`
+	Permalink *string                    `json:"permalink,omitempty"`
 }
 
 // GetDataCentersPartCountry defines model for GetDataCentersPartCountry.
@@ -1484,9 +1537,9 @@ type GetDiskDiskBackupPoliciesPartSchedule struct {
 
 // GetDiskPartDataCenter defines model for GetDiskPartDataCenter.
 type GetDiskPartDataCenter struct {
-	Id        *string                   `json:"id,omitempty"`
-	Name      *string                   `json:"name,omitempty"`
-	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
 }
 
 // GetDiskPartVirtualMachine defines model for GetDiskPartVirtualMachine.
@@ -1583,9 +1636,9 @@ type GetFileStorageVolume200ResponseFileStorageVolume struct {
 
 // GetFileStorageVolumePartDataCenter defines model for GetFileStorageVolumePartDataCenter.
 type GetFileStorageVolumePartDataCenter struct {
-	Id        *string                   `json:"id,omitempty"`
-	Name      *string                   `json:"name,omitempty"`
-	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
 }
 
 // GetGPUType200ResponseGPUType defines model for GetGPUType200ResponseGPUType.
@@ -1601,9 +1654,9 @@ type GetGPUType200ResponseGPUType struct {
 
 // GetGPUTypePartDataCenters defines model for GetGPUTypePartDataCenters.
 type GetGPUTypePartDataCenters struct {
-	Id        *string                   `json:"id,omitempty"`
-	Name      *string                   `json:"name,omitempty"`
-	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
 }
 
 // GetGPUTypes200ResponseGPUTypes defines model for GetGPUTypes200ResponseGPUTypes.
@@ -1619,9 +1672,9 @@ type GetGPUTypes200ResponseGPUTypes struct {
 
 // GetGPUTypesPartDataCenters defines model for GetGPUTypesPartDataCenters.
 type GetGPUTypesPartDataCenters struct {
-	Id        *string                   `json:"id,omitempty"`
-	Name      *string                   `json:"name,omitempty"`
-	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
 }
 
 // GetIPAddress200ResponseAllocation defines model for GetIPAddress200ResponseAllocation.
@@ -1650,9 +1703,9 @@ type GetLoadBalancer200ResponseLoadBalancer struct {
 
 // GetLoadBalancerPartDataCenter defines model for GetLoadBalancerPartDataCenter.
 type GetLoadBalancerPartDataCenter struct {
-	Id        *string                   `json:"id,omitempty"`
-	Name      *string                   `json:"name,omitempty"`
-	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
 }
 
 // GetLoadBalancerPartIPAddress defines model for GetLoadBalancerPartIPAddress.
@@ -1747,9 +1800,9 @@ type GetOrganizationAvailableNetworks200ResponseVirtualNetworks struct {
 
 // GetOrganizationAvailableNetworksPartDataCenter defines model for GetOrganizationAvailableNetworksPartDataCenter.
 type GetOrganizationAvailableNetworksPartDataCenter struct {
-	Id        *string                   `json:"id,omitempty"`
-	Name      *string                   `json:"name,omitempty"`
-	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
 }
 
 // GetOrganizationCertificates200ResponseCertificates defines model for GetOrganizationCertificates200ResponseCertificates.
@@ -1838,9 +1891,9 @@ type GetOrganizationFileStorageVolumes200ResponseFileStorageVolumes struct {
 
 // GetOrganizationFileStorageVolumesPartDataCenter defines model for GetOrganizationFileStorageVolumesPartDataCenter.
 type GetOrganizationFileStorageVolumesPartDataCenter struct {
-	Id        *string                   `json:"id,omitempty"`
-	Name      *string                   `json:"name,omitempty"`
-	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
 }
 
 // GetOrganizationIPAddresses200ResponseIPAddresses defines model for GetOrganizationIPAddresses200ResponseIPAddresses.
@@ -1930,13 +1983,14 @@ type GetOrganizationVirtualMachinesPartPackage struct {
 
 // GetOrganizations200ResponseOrganizations defines model for GetOrganizations200ResponseOrganizations.
 type GetOrganizations200ResponseOrganizations struct {
-	CreatedAt            *int    `json:"created_at,omitempty"`
-	Id                   *string `json:"id,omitempty"`
-	InfrastructureDomain *string `json:"infrastructure_domain,omitempty"`
-	Managed              *bool   `json:"managed,omitempty"`
-	Name                 *string `json:"name,omitempty"`
-	SubDomain            *string `json:"sub_domain,omitempty"`
-	Suspended            *bool   `json:"suspended,omitempty"`
+	ActivatedAt          nullable.Nullable[int] `json:"activated_at,omitempty"`
+	CreatedAt            *int                   `json:"created_at,omitempty"`
+	Id                   *string                `json:"id,omitempty"`
+	InfrastructureDomain *string                `json:"infrastructure_domain,omitempty"`
+	Managed              *bool                  `json:"managed,omitempty"`
+	Name                 *string                `json:"name,omitempty"`
+	SubDomain            *string                `json:"sub_domain,omitempty"`
+	Suspended            *bool                  `json:"suspended,omitempty"`
 }
 
 // GetSecurityGroupRules200ResponseSecurityGroupRules defines model for GetSecurityGroupRules200ResponseSecurityGroupRules.
@@ -2175,9 +2229,9 @@ type GetZones200ResponseZones struct {
 
 // GetZonesPartDataCenter defines model for GetZonesPartDataCenter.
 type GetZonesPartDataCenter struct {
-	Id        *string                   `json:"id,omitempty"`
-	Name      *string                   `json:"name,omitempty"`
-	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
 }
 
 // IPAddress defines model for IPAddress.
@@ -2314,7 +2368,7 @@ type InvalidTimestampSchema struct {
 // IssuerEnum defines model for IssuerEnum.
 type IssuerEnum string
 
-// KeyValue All 'disk_template_options[]' params are mutually exclusive, only one can be provided.
+// KeyValue All 'annotations[]' params are mutually exclusive, only one can be provided.
 type KeyValue struct {
 	Key   string  `json:"key"`
 	Value *string `json:"value,omitempty"`
@@ -2477,6 +2531,13 @@ type NoAllocationEnum string
 // NoAvailableAddressesEnum defines model for NoAvailableAddressesEnum.
 type NoAvailableAddressesEnum string
 
+// NoAvailableAddressesSchema Our pool of addresses for that version seems to have run dry. If this issue continues, please contact support.
+type NoAvailableAddressesSchema struct {
+	Code        *NoAvailableAddressesEnum `json:"code,omitempty"`
+	Description *string                   `json:"description,omitempty"`
+	Detail      *map[string]interface{}   `json:"detail,omitempty"`
+}
+
 // NoInterfaceAvailableEnum defines model for NoInterfaceAvailableEnum.
 type NoInterfaceAvailableEnum string
 
@@ -2588,6 +2649,11 @@ type OneOfNetworkSpeedProfileNotFoundVirtualMachineNetworkInterfaceNotFound404Re
 	union json.RawMessage
 }
 
+// OneOfNoAvailableAddresses503Res defines model for OneOfNoAvailableAddresses503Res.
+type OneOfNoAvailableAddresses503Res struct {
+	union json.RawMessage
+}
+
 // OneOfObjectInTrashTaskQueueingError406Res defines model for OneOfObjectInTrashTaskQueueingError406Res.
 type OneOfObjectInTrashTaskQueueingError406Res struct {
 	union json.RawMessage
@@ -2657,6 +2723,7 @@ type OperatingSystemNotFoundSchema struct {
 
 // Organization defines model for Organization.
 type Organization struct {
+	ActivatedAt          nullable.Nullable[int]          `json:"activated_at,omitempty"`
 	Address1             nullable.Nullable[string]       `json:"address1,omitempty"`
 	Address2             nullable.Nullable[string]       `json:"address2,omitempty"`
 	Address3             nullable.Nullable[string]       `json:"address3,omitempty"`
@@ -2789,9 +2856,9 @@ type PatchDiskBackupPolicy200ResponseDiskBackupPolicy struct {
 
 // PatchDiskPartDataCenter defines model for PatchDiskPartDataCenter.
 type PatchDiskPartDataCenter struct {
-	Id        *string                   `json:"id,omitempty"`
-	Name      *string                   `json:"name,omitempty"`
-	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
 }
 
 // PatchDiskPartVirtualMachine defines model for PatchDiskPartVirtualMachine.
@@ -2825,9 +2892,9 @@ type PatchFileStorageVolume200ResponseFileStorageVolume struct {
 
 // PatchFileStorageVolumePartDataCenter defines model for PatchFileStorageVolumePartDataCenter.
 type PatchFileStorageVolumePartDataCenter struct {
-	Id        *string                   `json:"id,omitempty"`
-	Name      *string                   `json:"name,omitempty"`
-	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
 }
 
 // PatchLoadBalancer200ResponseLoadBalancer defines model for PatchLoadBalancer200ResponseLoadBalancer.
@@ -2850,9 +2917,9 @@ type PatchLoadBalancer200ResponseLoadBalancer struct {
 
 // PatchLoadBalancerPartDataCenter defines model for PatchLoadBalancerPartDataCenter.
 type PatchLoadBalancerPartDataCenter struct {
-	Id        *string                   `json:"id,omitempty"`
-	Name      *string                   `json:"name,omitempty"`
-	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
 }
 
 // PatchLoadBalancerPartIPAddress defines model for PatchLoadBalancerPartIPAddress.
@@ -2984,9 +3051,9 @@ type PostDiskAssign200ResponseDisk struct {
 
 // PostDiskAssignPartDataCenter defines model for PostDiskAssignPartDataCenter.
 type PostDiskAssignPartDataCenter struct {
-	Id        *string                   `json:"id,omitempty"`
-	Name      *string                   `json:"name,omitempty"`
-	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
 }
 
 // PostDiskAssignPartVirtualMachine defines model for PostDiskAssignPartVirtualMachine.
@@ -3021,9 +3088,9 @@ type PostDiskAttach200ResponseDisk struct {
 
 // PostDiskAttachPartDataCenter defines model for PostDiskAttachPartDataCenter.
 type PostDiskAttachPartDataCenter struct {
-	Id        *string                   `json:"id,omitempty"`
-	Name      *string                   `json:"name,omitempty"`
-	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
 }
 
 // PostDiskAttachPartVirtualMachine defines model for PostDiskAttachPartVirtualMachine.
@@ -3058,9 +3125,9 @@ type PostDiskDetach200ResponseDisk struct {
 
 // PostDiskDetachPartDataCenter defines model for PostDiskDetachPartDataCenter.
 type PostDiskDetachPartDataCenter struct {
-	Id        *string                   `json:"id,omitempty"`
-	Name      *string                   `json:"name,omitempty"`
-	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
 }
 
 // PostDiskDetachPartVirtualMachine defines model for PostDiskDetachPartVirtualMachine.
@@ -3105,9 +3172,9 @@ type PostDiskUnassign200ResponseDisk struct {
 
 // PostDiskUnassignPartDataCenter defines model for PostDiskUnassignPartDataCenter.
 type PostDiskUnassignPartDataCenter struct {
-	Id        *string                   `json:"id,omitempty"`
-	Name      *string                   `json:"name,omitempty"`
-	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
 }
 
 // PostDiskUnassignPartVirtualMachine defines model for PostDiskUnassignPartVirtualMachine.
@@ -3178,9 +3245,9 @@ type PostOrganizationDisks201ResponseDisk struct {
 
 // PostOrganizationDisksPartDataCenter defines model for PostOrganizationDisksPartDataCenter.
 type PostOrganizationDisksPartDataCenter struct {
-	Id        *string                   `json:"id,omitempty"`
-	Name      *string                   `json:"name,omitempty"`
-	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
 }
 
 // PostOrganizationDisksPartVirtualMachine defines model for PostOrganizationDisksPartVirtualMachine.
@@ -3214,9 +3281,9 @@ type PostOrganizationFileStorageVolumes201ResponseFileStorageVolume struct {
 
 // PostOrganizationFileStorageVolumesPartDataCenter defines model for PostOrganizationFileStorageVolumesPartDataCenter.
 type PostOrganizationFileStorageVolumesPartDataCenter struct {
-	Id        *string                   `json:"id,omitempty"`
-	Name      *string                   `json:"name,omitempty"`
-	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
 }
 
 // PostOrganizationLoadBalancers201ResponseLoadBalancer defines model for PostOrganizationLoadBalancers201ResponseLoadBalancer.
@@ -3239,9 +3306,9 @@ type PostOrganizationLoadBalancers201ResponseLoadBalancer struct {
 
 // PostOrganizationLoadBalancersPartDataCenter defines model for PostOrganizationLoadBalancersPartDataCenter.
 type PostOrganizationLoadBalancersPartDataCenter struct {
-	Id        *string                   `json:"id,omitempty"`
-	Name      *string                   `json:"name,omitempty"`
-	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
 }
 
 // PostOrganizationLoadBalancersPartIPAddress defines model for PostOrganizationLoadBalancersPartIPAddress.
@@ -3411,9 +3478,9 @@ type PutDiskIOProfile200ResponseDisk struct {
 
 // PutDiskIOProfilePartDataCenter defines model for PutDiskIOProfilePartDataCenter.
 type PutDiskIOProfilePartDataCenter struct {
-	Id        *string                   `json:"id,omitempty"`
-	Name      *string                   `json:"name,omitempty"`
-	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
 }
 
 // PutDiskIOProfilePartVirtualMachine defines model for PutDiskIOProfilePartVirtualMachine.
@@ -3448,9 +3515,9 @@ type PutDiskResize200ResponseDisk struct {
 
 // PutDiskResizePartDataCenter defines model for PutDiskResizePartDataCenter.
 type PutDiskResizePartDataCenter struct {
-	Id        *string                   `json:"id,omitempty"`
-	Name      *string                   `json:"name,omitempty"`
-	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
 }
 
 // PutDiskResizePartVirtualMachine defines model for PutDiskResizePartVirtualMachine.
@@ -3659,6 +3726,9 @@ type SecurityGroupRuleNotFoundEnum string
 
 // SecurityGroupRuleProtocolEnum defines model for SecurityGroupRuleProtocolEnum.
 type SecurityGroupRuleProtocolEnum string
+
+// ServiceUnavailableEnum defines model for ServiceUnavailableEnum.
+type ServiceUnavailableEnum string
 
 // SpeedProfileAlreadyAssignedEnum defines model for SpeedProfileAlreadyAssignedEnum.
 type SpeedProfileAlreadyAssignedEnum string
@@ -4064,6 +4134,20 @@ type APIAuthenticator429Response struct {
 	Detail      *RateLimitReached     `json:"detail,omitempty"`
 }
 
+// APIAuthenticator503Response defines model for APIAuthenticator503Response.
+type APIAuthenticator503Response struct {
+	Code        *ServiceUnavailableEnum `json:"code,omitempty"`
+	Description *string                 `json:"description,omitempty"`
+	Detail      *map[string]interface{} `json:"detail,omitempty"`
+}
+
+// APITokenNotFoundResponse defines model for APITokenNotFoundResponse.
+type APITokenNotFoundResponse struct {
+	Code        *APITokenNotFoundEnum   `json:"code,omitempty"`
+	Description *string                 `json:"description,omitempty"`
+	Detail      *map[string]interface{} `json:"detail,omitempty"`
+}
+
 // AddressListEntryNotFoundResponse defines model for AddressListEntryNotFoundResponse.
 type AddressListEntryNotFoundResponse struct {
 	Code        *AddressListEntryNotFoundEnum `json:"code,omitempty"`
@@ -4263,12 +4347,8 @@ type NoAllocationResponse struct {
 	Detail      *map[string]interface{} `json:"detail,omitempty"`
 }
 
-// NoAvailableAddressesResponse defines model for NoAvailableAddressesResponse.
-type NoAvailableAddressesResponse struct {
-	Code        *NoAvailableAddressesEnum `json:"code,omitempty"`
-	Description *string                   `json:"description,omitempty"`
-	Detail      *map[string]interface{}   `json:"detail,omitempty"`
-}
+// NoAvailableAddresses503Res defines model for NoAvailableAddresses503Res.
+type NoAvailableAddresses503Res = OneOfNoAvailableAddresses503Res
 
 // NoUserAssociatedWithIdentityResponse defines model for NoUserAssociatedWithIdentityResponse.
 type NoUserAssociatedWithIdentityResponse struct {
@@ -4511,6 +4591,7 @@ type GetAddressListParams struct {
 type PatchAddressListJSONBody struct {
 	// AddressList All 'address_list[]' params are mutually exclusive, only one can be provided.
 	AddressList AddressListLookup `json:"address_list"`
+	Annotations *[]KeyValue       `json:"annotations,omitempty"`
 
 	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
 	Properties AddressListArguments `json:"properties"`
@@ -4531,6 +4612,29 @@ type PostAddressListEntriesJSONBody struct {
 
 	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
 	Properties AddressListEntryArguments `json:"properties"`
+}
+
+// DeleteApiTokenJSONBody defines parameters for DeleteApiToken.
+type DeleteApiTokenJSONBody struct {
+	// ApiToken All 'api_token[]' params are mutually exclusive, only one can be provided.
+	ApiToken APITokenLookup `json:"api_token"`
+}
+
+// PatchApiTokenJSONBody defines parameters for PatchApiToken.
+type PatchApiTokenJSONBody struct {
+	Annotations *[]KeyValue `json:"annotations,omitempty"`
+
+	// ApiToken All 'api_token[]' params are mutually exclusive, only one can be provided.
+	ApiToken APITokenLookup `json:"api_token"`
+
+	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
+	Properties APITokenArguments `json:"properties"`
+}
+
+// PostApiTokenRegenerateSecretJSONBody defines parameters for PostApiTokenRegenerateSecret.
+type PostApiTokenRegenerateSecretJSONBody struct {
+	// ApiToken All 'api_token[]' params are mutually exclusive, only one can be provided.
+	ApiToken APITokenLookup `json:"api_token"`
 }
 
 // GetCertificateParams defines parameters for GetCertificate.
@@ -4697,6 +4801,8 @@ type GetDiskParams struct {
 
 // PatchDiskJSONBody defines parameters for PatchDisk.
 type PatchDiskJSONBody struct {
+	Annotations *[]KeyValue `json:"annotations,omitempty"`
+
 	// Disk All 'disk[]' params are mutually exclusive, only one can be provided.
 	Disk DiskLookup `json:"disk"`
 
@@ -4848,6 +4954,8 @@ type GetFileStorageVolumeParams struct {
 
 // PatchFileStorageVolumeJSONBody defines parameters for PatchFileStorageVolume.
 type PatchFileStorageVolumeJSONBody struct {
+	Annotations *[]KeyValue `json:"annotations,omitempty"`
+
 	// FileStorageVolume All 'file_storage_volume[]' params are mutually exclusive, only one can be provided.
 	FileStorageVolume FileStorageVolumeLookup `json:"file_storage_volume"`
 
@@ -4926,6 +5034,8 @@ type GetLoadBalancerParams struct {
 
 // PatchLoadBalancerJSONBody defines parameters for PatchLoadBalancer.
 type PatchLoadBalancerJSONBody struct {
+	Annotations *[]KeyValue `json:"annotations,omitempty"`
+
 	// LoadBalancer All 'load_balancer[]' params are mutually exclusive, only one can be provided.
 	LoadBalancer LoadBalancerLookup `json:"load_balancer"`
 
@@ -5011,17 +5121,53 @@ type GetOrganizationAddressListsParams struct {
 
 	// OrganizationSubDomain The organization for which the address lists should be returned. All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
-	Page                  *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage               *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// AnnotationsKey An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
+	AnnotationsKey *string `form:"annotations[key],omitempty" json:"annotations[key],omitempty"`
+
+	// AnnotationsValue An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
+	AnnotationsValue *string `form:"annotations[value],omitempty" json:"annotations[value],omitempty"`
+	Page             *int    `form:"page,omitempty" json:"page,omitempty"`
+	PerPage          *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // PostOrganizationAddressListsJSONBody defines parameters for PostOrganizationAddressLists.
 type PostOrganizationAddressListsJSONBody struct {
+	Annotations *[]KeyValue `json:"annotations,omitempty"`
+
 	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
 	Organization OrganizationLookup `json:"organization"`
 
 	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
 	Properties AddressListArguments `json:"properties"`
+}
+
+// GetOrganizationApiTokensParams defines parameters for GetOrganizationApiTokens.
+type GetOrganizationApiTokensParams struct {
+	// OrganizationId The organization to list API tokens for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	OrganizationId *string `form:"organization[id],omitempty" json:"organization[id],omitempty"`
+
+	// OrganizationSubDomain The organization to list API tokens for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
+
+	// AnnotationsKey An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
+	AnnotationsKey *string `form:"annotations[key],omitempty" json:"annotations[key],omitempty"`
+
+	// AnnotationsValue An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
+	AnnotationsValue *string `form:"annotations[value],omitempty" json:"annotations[value],omitempty"`
+	Page             *int    `form:"page,omitempty" json:"page,omitempty"`
+	PerPage          *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+}
+
+// PostOrganizationApiTokensJSONBody defines parameters for PostOrganizationApiTokens.
+type PostOrganizationApiTokensJSONBody struct {
+	Annotations *[]KeyValue `json:"annotations,omitempty"`
+
+	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
+	Organization OrganizationLookup `json:"organization"`
+
+	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
+	Properties APITokenArguments `json:"properties"`
 }
 
 // GetOrganizationAvailableNetworksParams defines parameters for GetOrganizationAvailableNetworks.
@@ -5090,12 +5236,20 @@ type GetOrganizationDisksParams struct {
 
 	// OrganizationSubDomain The organization to find disks for. All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
-	Page                  *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage               *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// AnnotationsKey An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
+	AnnotationsKey *string `form:"annotations[key],omitempty" json:"annotations[key],omitempty"`
+
+	// AnnotationsValue An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
+	AnnotationsValue *string `form:"annotations[value],omitempty" json:"annotations[value],omitempty"`
+	Page             *int    `form:"page,omitempty" json:"page,omitempty"`
+	PerPage          *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // PostOrganizationDisksJSONBody defines parameters for PostOrganizationDisks.
 type PostOrganizationDisksJSONBody struct {
+	Annotations *[]KeyValue `json:"annotations,omitempty"`
+
 	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
 	Organization OrganizationLookup `json:"organization"`
 
@@ -5139,12 +5293,20 @@ type GetOrganizationFileStorageVolumesParams struct {
 
 	// OrganizationSubDomain The organization to return all file storage volumes for. All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
-	Page                  *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage               *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// AnnotationsKey An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
+	AnnotationsKey *string `form:"annotations[key],omitempty" json:"annotations[key],omitempty"`
+
+	// AnnotationsValue An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
+	AnnotationsValue *string `form:"annotations[value],omitempty" json:"annotations[value],omitempty"`
+	Page             *int    `form:"page,omitempty" json:"page,omitempty"`
+	PerPage          *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // PostOrganizationFileStorageVolumesJSONBody defines parameters for PostOrganizationFileStorageVolumes.
 type PostOrganizationFileStorageVolumesJSONBody struct {
+	Annotations *[]KeyValue `json:"annotations,omitempty"`
+
 	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
 	Organization OrganizationLookup `json:"organization"`
 
@@ -5189,12 +5351,20 @@ type GetOrganizationLoadBalancersParams struct {
 
 	// OrganizationSubDomain The organization to return all load balancers for. All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
-	Page                  *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage               *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// AnnotationsKey An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
+	AnnotationsKey *string `form:"annotations[key],omitempty" json:"annotations[key],omitempty"`
+
+	// AnnotationsValue An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
+	AnnotationsValue *string `form:"annotations[value],omitempty" json:"annotations[value],omitempty"`
+	Page             *int    `form:"page,omitempty" json:"page,omitempty"`
+	PerPage          *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // PostOrganizationLoadBalancersJSONBody defines parameters for PostOrganizationLoadBalancers.
 type PostOrganizationLoadBalancersJSONBody struct {
+	Annotations *[]KeyValue `json:"annotations,omitempty"`
+
 	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
 	Organization OrganizationLookup `json:"organization"`
 
@@ -5209,13 +5379,20 @@ type GetOrganizationManagedParams struct {
 
 	// OrganizationSubDomain All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
-	Page                  *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage               *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// AnnotationsKey An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
+	AnnotationsKey *string `form:"annotations[key],omitempty" json:"annotations[key],omitempty"`
+
+	// AnnotationsValue An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
+	AnnotationsValue *string `form:"annotations[value],omitempty" json:"annotations[value],omitempty"`
+	Page             *int    `form:"page,omitempty" json:"page,omitempty"`
+	PerPage          *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // PostOrganizationManagedJSONBody defines parameters for PostOrganizationManaged.
 type PostOrganizationManagedJSONBody struct {
-	Name string `json:"name"`
+	Annotations *[]KeyValue `json:"annotations,omitempty"`
+	Name        string      `json:"name"`
 
 	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
 	Organization OrganizationLookup `json:"organization"`
@@ -5249,12 +5426,20 @@ type GetOrganizationSecurityGroupsParams struct {
 
 	// OrganizationSubDomain The organization to return all security groups for. All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
-	Page                  *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage               *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// AnnotationsKey An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
+	AnnotationsKey *string `form:"annotations[key],omitempty" json:"annotations[key],omitempty"`
+
+	// AnnotationsValue An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
+	AnnotationsValue *string `form:"annotations[value],omitempty" json:"annotations[value],omitempty"`
+	Page             *int    `form:"page,omitempty" json:"page,omitempty"`
+	PerPage          *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // PostOrganizationSecurityGroupsJSONBody defines parameters for PostOrganizationSecurityGroups.
 type PostOrganizationSecurityGroupsJSONBody struct {
+	Annotations *[]KeyValue `json:"annotations,omitempty"`
+
 	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
 	Organization OrganizationLookup `json:"organization"`
 
@@ -5355,12 +5540,20 @@ type GetOrganizationVirtualMachinesParams struct {
 
 	// OrganizationSubDomain All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
-	Page                  *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage               *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// AnnotationsKey An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
+	AnnotationsKey *string `form:"annotations[key],omitempty" json:"annotations[key],omitempty"`
+
+	// AnnotationsValue An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
+	AnnotationsValue *string `form:"annotations[value],omitempty" json:"annotations[value],omitempty"`
+	Page             *int    `form:"page,omitempty" json:"page,omitempty"`
+	PerPage          *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // PostOrganizationVirtualMachinesBuildJSONBody defines parameters for PostOrganizationVirtualMachinesBuild.
 type PostOrganizationVirtualMachinesBuildJSONBody struct {
+	Annotations *[]KeyValue `json:"annotations,omitempty"`
+
 	// DataCenter All 'data_center[]' params are mutually exclusive, only one can be provided.
 	DataCenter *DataCenterLookup `json:"data_center,omitempty"`
 
@@ -5384,6 +5577,8 @@ type PostOrganizationVirtualMachinesBuildJSONBody struct {
 
 // PostOrganizationVirtualMachinesBuildFromSpecJSONBody defines parameters for PostOrganizationVirtualMachinesBuildFromSpec.
 type PostOrganizationVirtualMachinesBuildFromSpecJSONBody struct {
+	Annotations *[]KeyValue `json:"annotations,omitempty"`
+
 	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
 	Organization OrganizationLookup `json:"organization"`
 	Xml          string             `json:"xml"`
@@ -5403,6 +5598,8 @@ type GetSecurityGroupParams struct {
 
 // PatchSecurityGroupJSONBody defines parameters for PatchSecurityGroup.
 type PatchSecurityGroupJSONBody struct {
+	Annotations *[]KeyValue `json:"annotations,omitempty"`
+
 	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
 	Properties SecurityGroupArguments `json:"properties"`
 
@@ -5601,6 +5798,8 @@ type GetVirtualMachineParams struct {
 
 // PatchVirtualMachineJSONBody defines parameters for PatchVirtualMachine.
 type PatchVirtualMachineJSONBody struct {
+	Annotations *[]KeyValue `json:"annotations,omitempty"`
+
 	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
 	Properties VirtualMachineArguments `json:"properties"`
 
@@ -5755,6 +5954,15 @@ type PatchAddressListJSONRequestBody PatchAddressListJSONBody
 // PostAddressListEntriesJSONRequestBody defines body for PostAddressListEntries for application/json ContentType.
 type PostAddressListEntriesJSONRequestBody PostAddressListEntriesJSONBody
 
+// DeleteApiTokenJSONRequestBody defines body for DeleteApiToken for application/json ContentType.
+type DeleteApiTokenJSONRequestBody DeleteApiTokenJSONBody
+
+// PatchApiTokenJSONRequestBody defines body for PatchApiToken for application/json ContentType.
+type PatchApiTokenJSONRequestBody PatchApiTokenJSONBody
+
+// PostApiTokenRegenerateSecretJSONRequestBody defines body for PostApiTokenRegenerateSecret for application/json ContentType.
+type PostApiTokenRegenerateSecretJSONRequestBody PostApiTokenRegenerateSecretJSONBody
+
 // DeleteDiskBackupPolicyJSONRequestBody defines body for DeleteDiskBackupPolicy for application/json ContentType.
 type DeleteDiskBackupPolicyJSONRequestBody DeleteDiskBackupPolicyJSONBody
 
@@ -5844,6 +6052,9 @@ type PatchLoadBalancersRulesLoadBalancerRuleJSONRequestBody PatchLoadBalancersRu
 
 // PostOrganizationAddressListsJSONRequestBody defines body for PostOrganizationAddressLists for application/json ContentType.
 type PostOrganizationAddressListsJSONRequestBody PostOrganizationAddressListsJSONBody
+
+// PostOrganizationApiTokensJSONRequestBody defines body for PostOrganizationApiTokens for application/json ContentType.
+type PostOrganizationApiTokensJSONRequestBody PostOrganizationApiTokensJSONBody
 
 // PostOrganizationDisksJSONRequestBody defines body for PostOrganizationDisks for application/json ContentType.
 type PostOrganizationDisksJSONRequestBody PostOrganizationDisksJSONBody
@@ -7338,6 +7549,68 @@ func (t *OneOfNetworkSpeedProfileNotFoundVirtualMachineNetworkInterfaceNotFound4
 	return err
 }
 
+// AsAPIAuthenticator503Schema returns the union data inside the OneOfNoAvailableAddresses503Res as a APIAuthenticator503Schema
+func (t OneOfNoAvailableAddresses503Res) AsAPIAuthenticator503Schema() (APIAuthenticator503Schema, error) {
+	var body APIAuthenticator503Schema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromAPIAuthenticator503Schema overwrites any union data inside the OneOfNoAvailableAddresses503Res as the provided APIAuthenticator503Schema
+func (t *OneOfNoAvailableAddresses503Res) FromAPIAuthenticator503Schema(v APIAuthenticator503Schema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeAPIAuthenticator503Schema performs a merge with any union data inside the OneOfNoAvailableAddresses503Res, using the provided APIAuthenticator503Schema
+func (t *OneOfNoAvailableAddresses503Res) MergeAPIAuthenticator503Schema(v APIAuthenticator503Schema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsNoAvailableAddressesSchema returns the union data inside the OneOfNoAvailableAddresses503Res as a NoAvailableAddressesSchema
+func (t OneOfNoAvailableAddresses503Res) AsNoAvailableAddressesSchema() (NoAvailableAddressesSchema, error) {
+	var body NoAvailableAddressesSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromNoAvailableAddressesSchema overwrites any union data inside the OneOfNoAvailableAddresses503Res as the provided NoAvailableAddressesSchema
+func (t *OneOfNoAvailableAddresses503Res) FromNoAvailableAddressesSchema(v NoAvailableAddressesSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeNoAvailableAddressesSchema performs a merge with any union data inside the OneOfNoAvailableAddresses503Res, using the provided NoAvailableAddressesSchema
+func (t *OneOfNoAvailableAddresses503Res) MergeNoAvailableAddressesSchema(v NoAvailableAddressesSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t OneOfNoAvailableAddresses503Res) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *OneOfNoAvailableAddresses503Res) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
 // AsObjectInTrashSchema returns the union data inside the OneOfObjectInTrashTaskQueueingError406Res as a ObjectInTrashSchema
 func (t OneOfObjectInTrashTaskQueueingError406Res) AsObjectInTrashSchema() (ObjectInTrashSchema, error) {
 	var body ObjectInTrashSchema
@@ -8455,6 +8728,21 @@ type ClientInterface interface {
 
 	PostAddressListEntries(ctx context.Context, body PostAddressListEntriesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DeleteApiTokenWithBody request with any body
+	DeleteApiTokenWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	DeleteApiToken(ctx context.Context, body DeleteApiTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PatchApiTokenWithBody request with any body
+	PatchApiTokenWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PatchApiToken(ctx context.Context, body PatchApiTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostApiTokenRegenerateSecretWithBody request with any body
+	PostApiTokenRegenerateSecretWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostApiTokenRegenerateSecret(ctx context.Context, body PostApiTokenRegenerateSecretJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetCertificate request
 	GetCertificate(ctx context.Context, params *GetCertificateParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -8706,6 +8994,14 @@ type ClientInterface interface {
 	PostOrganizationAddressListsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	PostOrganizationAddressLists(ctx context.Context, body PostOrganizationAddressListsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetOrganizationApiTokens request
+	GetOrganizationApiTokens(ctx context.Context, params *GetOrganizationApiTokensParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostOrganizationApiTokensWithBody request with any body
+	PostOrganizationApiTokensWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostOrganizationApiTokens(ctx context.Context, body PostOrganizationApiTokensJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetOrganizationAvailableNetworks request
 	GetOrganizationAvailableNetworks(ctx context.Context, params *GetOrganizationAvailableNetworksParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -9187,6 +9483,78 @@ func (c *Client) PostAddressListEntriesWithBody(ctx context.Context, contentType
 
 func (c *Client) PostAddressListEntries(ctx context.Context, body PostAddressListEntriesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPostAddressListEntriesRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteApiTokenWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteApiTokenRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteApiToken(ctx context.Context, body DeleteApiTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteApiTokenRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchApiTokenWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchApiTokenRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchApiToken(ctx context.Context, body PatchApiTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchApiTokenRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostApiTokenRegenerateSecretWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostApiTokenRegenerateSecretRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostApiTokenRegenerateSecret(ctx context.Context, body PostApiTokenRegenerateSecretJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostApiTokenRegenerateSecretRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -10315,6 +10683,42 @@ func (c *Client) PostOrganizationAddressListsWithBody(ctx context.Context, conte
 
 func (c *Client) PostOrganizationAddressLists(ctx context.Context, body PostOrganizationAddressListsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPostOrganizationAddressListsRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetOrganizationApiTokens(ctx context.Context, params *GetOrganizationApiTokensParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetOrganizationApiTokensRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostOrganizationApiTokensWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostOrganizationApiTokensRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostOrganizationApiTokens(ctx context.Context, body PostOrganizationApiTokensJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostOrganizationApiTokensRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -12190,6 +12594,126 @@ func NewPostAddressListEntriesRequestWithBody(server string, contentType string,
 	}
 
 	operationPath := fmt.Sprintf("/address_lists/:address_list/entries")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteApiTokenRequest calls the generic DeleteApiToken builder with application/json body
+func NewDeleteApiTokenRequest(server string, body DeleteApiTokenJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDeleteApiTokenRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewDeleteApiTokenRequestWithBody generates requests for DeleteApiToken with any type of body
+func NewDeleteApiTokenRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api_tokens/:api_token")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewPatchApiTokenRequest calls the generic PatchApiToken builder with application/json body
+func NewPatchApiTokenRequest(server string, body PatchApiTokenJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchApiTokenRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPatchApiTokenRequestWithBody generates requests for PatchApiToken with any type of body
+func NewPatchApiTokenRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api_tokens/:api_token")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewPostApiTokenRegenerateSecretRequest calls the generic PostApiTokenRegenerateSecret builder with application/json body
+func NewPostApiTokenRegenerateSecretRequest(server string, body PostApiTokenRegenerateSecretJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostApiTokenRegenerateSecretRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostApiTokenRegenerateSecretRequestWithBody generates requests for PostApiTokenRegenerateSecret with any type of body
+func NewPostApiTokenRegenerateSecretRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api_tokens/:api_token/regenerate_secret")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -15508,6 +16032,38 @@ func NewGetOrganizationAddressListsRequest(server string, params *GetOrganizatio
 
 		}
 
+		if params.AnnotationsKey != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[key]", runtime.ParamLocationQuery, *params.AnnotationsKey); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.AnnotationsValue != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[value]", runtime.ParamLocationQuery, *params.AnnotationsValue); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
 		if params.Page != nil {
 
 			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "page", runtime.ParamLocationQuery, *params.Page); err != nil {
@@ -15572,6 +16128,175 @@ func NewPostOrganizationAddressListsRequestWithBody(server string, contentType s
 	}
 
 	operationPath := fmt.Sprintf("/organizations/:organization/address_lists")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetOrganizationApiTokensRequest generates requests for GetOrganizationApiTokens
+func NewGetOrganizationApiTokensRequest(server string, params *GetOrganizationApiTokensParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/organizations/:organization/api_tokens")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "organization[id]", runtime.ParamLocationQuery, *params.OrganizationId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.OrganizationSubDomain != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "organization[sub_domain]", runtime.ParamLocationQuery, *params.OrganizationSubDomain); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.AnnotationsKey != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[key]", runtime.ParamLocationQuery, *params.AnnotationsKey); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.AnnotationsValue != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[value]", runtime.ParamLocationQuery, *params.AnnotationsValue); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Page != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "page", runtime.ParamLocationQuery, *params.Page); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.PerPage != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "per_page", runtime.ParamLocationQuery, *params.PerPage); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPostOrganizationApiTokensRequest calls the generic PostOrganizationApiTokens builder with application/json body
+func NewPostOrganizationApiTokensRequest(server string, body PostOrganizationApiTokensJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostOrganizationApiTokensRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostOrganizationApiTokensRequestWithBody generates requests for PostOrganizationApiTokens with any type of body
+func NewPostOrganizationApiTokensRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/organizations/:organization/api_tokens")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -16130,6 +16855,38 @@ func NewGetOrganizationDisksRequest(server string, params *GetOrganizationDisksP
 
 		}
 
+		if params.AnnotationsKey != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[key]", runtime.ParamLocationQuery, *params.AnnotationsKey); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.AnnotationsValue != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[value]", runtime.ParamLocationQuery, *params.AnnotationsValue); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
 		if params.Page != nil {
 
 			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "page", runtime.ParamLocationQuery, *params.Page); err != nil {
@@ -16469,6 +17226,38 @@ func NewGetOrganizationFileStorageVolumesRequest(server string, params *GetOrgan
 
 		}
 
+		if params.AnnotationsKey != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[key]", runtime.ParamLocationQuery, *params.AnnotationsKey); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.AnnotationsValue != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[value]", runtime.ParamLocationQuery, *params.AnnotationsValue); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
 		if params.Page != nil {
 
 			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "page", runtime.ParamLocationQuery, *params.Page); err != nil {
@@ -16759,6 +17548,38 @@ func NewGetOrganizationLoadBalancersRequest(server string, params *GetOrganizati
 
 		}
 
+		if params.AnnotationsKey != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[key]", runtime.ParamLocationQuery, *params.AnnotationsKey); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.AnnotationsValue != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[value]", runtime.ParamLocationQuery, *params.AnnotationsValue); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
 		if params.Page != nil {
 
 			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "page", runtime.ParamLocationQuery, *params.Page); err != nil {
@@ -16883,6 +17704,38 @@ func NewGetOrganizationManagedRequest(server string, params *GetOrganizationMana
 		if params.OrganizationSubDomain != nil {
 
 			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "organization[sub_domain]", runtime.ParamLocationQuery, *params.OrganizationSubDomain); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.AnnotationsKey != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[key]", runtime.ParamLocationQuery, *params.AnnotationsKey); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.AnnotationsValue != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[value]", runtime.ParamLocationQuery, *params.AnnotationsValue); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -17182,6 +18035,38 @@ func NewGetOrganizationSecurityGroupsRequest(server string, params *GetOrganizat
 		if params.OrganizationSubDomain != nil {
 
 			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "organization[sub_domain]", runtime.ParamLocationQuery, *params.OrganizationSubDomain); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.AnnotationsKey != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[key]", runtime.ParamLocationQuery, *params.AnnotationsKey); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.AnnotationsValue != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[value]", runtime.ParamLocationQuery, *params.AnnotationsValue); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -17932,6 +18817,38 @@ func NewGetOrganizationVirtualMachinesRequest(server string, params *GetOrganiza
 		if params.OrganizationSubDomain != nil {
 
 			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "organization[sub_domain]", runtime.ParamLocationQuery, *params.OrganizationSubDomain); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.AnnotationsKey != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[key]", runtime.ParamLocationQuery, *params.AnnotationsKey); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.AnnotationsValue != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[value]", runtime.ParamLocationQuery, *params.AnnotationsValue); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -20513,6 +21430,21 @@ type ClientWithResponsesInterface interface {
 
 	PostAddressListEntriesWithResponse(ctx context.Context, body PostAddressListEntriesJSONRequestBody, reqEditors ...RequestEditorFn) (*PostAddressListEntriesResponse, error)
 
+	// DeleteApiTokenWithBodyWithResponse request with any body
+	DeleteApiTokenWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteApiTokenResponse, error)
+
+	DeleteApiTokenWithResponse(ctx context.Context, body DeleteApiTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteApiTokenResponse, error)
+
+	// PatchApiTokenWithBodyWithResponse request with any body
+	PatchApiTokenWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchApiTokenResponse, error)
+
+	PatchApiTokenWithResponse(ctx context.Context, body PatchApiTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchApiTokenResponse, error)
+
+	// PostApiTokenRegenerateSecretWithBodyWithResponse request with any body
+	PostApiTokenRegenerateSecretWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostApiTokenRegenerateSecretResponse, error)
+
+	PostApiTokenRegenerateSecretWithResponse(ctx context.Context, body PostApiTokenRegenerateSecretJSONRequestBody, reqEditors ...RequestEditorFn) (*PostApiTokenRegenerateSecretResponse, error)
+
 	// GetCertificateWithResponse request
 	GetCertificateWithResponse(ctx context.Context, params *GetCertificateParams, reqEditors ...RequestEditorFn) (*GetCertificateResponse, error)
 
@@ -20764,6 +21696,14 @@ type ClientWithResponsesInterface interface {
 	PostOrganizationAddressListsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostOrganizationAddressListsResponse, error)
 
 	PostOrganizationAddressListsWithResponse(ctx context.Context, body PostOrganizationAddressListsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostOrganizationAddressListsResponse, error)
+
+	// GetOrganizationApiTokensWithResponse request
+	GetOrganizationApiTokensWithResponse(ctx context.Context, params *GetOrganizationApiTokensParams, reqEditors ...RequestEditorFn) (*GetOrganizationApiTokensResponse, error)
+
+	// PostOrganizationApiTokensWithBodyWithResponse request with any body
+	PostOrganizationApiTokensWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostOrganizationApiTokensResponse, error)
+
+	PostOrganizationApiTokensWithResponse(ctx context.Context, body PostOrganizationApiTokensJSONRequestBody, reqEditors ...RequestEditorFn) (*PostOrganizationApiTokensResponse, error)
 
 	// GetOrganizationAvailableNetworksWithResponse request
 	GetOrganizationAvailableNetworksWithResponse(ctx context.Context, params *GetOrganizationAvailableNetworksParams, reqEditors ...RequestEditorFn) (*GetOrganizationAvailableNetworksResponse, error)
@@ -21098,6 +22038,7 @@ type DeleteAddressListEntryResponse struct {
 	JSON403 *PermissionDenied403Res
 	JSON404 *AddressListEntryNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21127,6 +22068,7 @@ type GetAddressListEntryResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *AddressListEntryNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21157,6 +22099,7 @@ type PatchAddressListEntryResponse struct {
 	JSON404 *AddressListEntryNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21186,6 +22129,7 @@ type GetAddressListsResponse struct {
 	JSON400 *APIAuthenticator400Response
 	JSON403 *APIAuthenticator403Response
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21215,6 +22159,7 @@ type DeleteAddressListResponse struct {
 	JSON403 *PermissionDenied403Res
 	JSON404 *AddressListNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21239,11 +22184,13 @@ type GetAddressListResponse struct {
 	JSON200      *struct {
 		// AddressList The address list.
 		AddressList AddressList `json:"address_list"`
+		Annotations []KeyValue  `json:"annotations"`
 	}
 	JSON400 *APIAuthenticator400Response
 	JSON403 *APIAuthenticator403Response
 	JSON404 *AddressListNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21268,12 +22215,14 @@ type PatchAddressListResponse struct {
 	JSON200      *struct {
 		// AddressList The address list.
 		AddressList AddressList `json:"address_list"`
+		Annotations []KeyValue  `json:"annotations"`
 	}
 	JSON400 *APIAuthenticator400Response
 	JSON403 *PermissionDenied403Res
 	JSON404 *AddressListNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21304,6 +22253,7 @@ type GetAddressListEntriesResponse struct {
 	JSON403 *PermissionDenied403Res
 	JSON404 *AddressListNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21334,6 +22284,7 @@ type PostAddressListEntriesResponse struct {
 	JSON404 *AddressListNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21352,6 +22303,102 @@ func (r PostAddressListEntriesResponse) StatusCode() int {
 	return 0
 }
 
+type DeleteApiTokenResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// ApiToken The API token that has been destroyed
+		ApiToken DeleteAPIToken200ResponseAPIToken `json:"api_token"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *APITokenNotFoundResponse
+	JSON422 *ValidationErrorResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteApiTokenResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteApiTokenResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PatchApiTokenResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// Annotations Annotations for this API token
+		Annotations []KeyValue `json:"annotations"`
+
+		// ApiToken The API token that has been updated
+		ApiToken APIToken `json:"api_token"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *APITokenNotFoundResponse
+	JSON422 *ValidationErrorResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchApiTokenResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchApiTokenResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostApiTokenRegenerateSecretResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// ApiToken The API token that has had its secret regenerated
+		ApiToken APIToken `json:"api_token"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *APITokenNotFoundResponse
+	JSON422 *ValidationErrorResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PostApiTokenRegenerateSecretResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostApiTokenRegenerateSecretResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetCertificateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -21363,6 +22410,7 @@ type GetCertificateResponse struct {
 	JSON404 *CertificateNotFoundResponse
 	JSON406 *ObjectInTrashResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21392,6 +22440,7 @@ type GetCountriesResponse struct {
 	JSON400 *APIAuthenticator400Response
 	JSON403 *APIAuthenticator403Response
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21421,6 +22470,7 @@ type GetCountryResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *CountryNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21451,6 +22501,7 @@ type GetCountryCountryStatesResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *CountryNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21480,6 +22531,7 @@ type GetCountryStateResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *CountryStateNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21509,6 +22561,7 @@ type GetCurrenciesResponse struct {
 	JSON400 *APIAuthenticator400Response
 	JSON403 *APIAuthenticator403Response
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21538,6 +22591,7 @@ type GetCurrencyResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *CurrencyNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21565,6 +22619,7 @@ type GetDataCentersResponse struct {
 	JSON400 *APIAuthenticator400Response
 	JSON403 *APIAuthenticator403Response
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21593,6 +22648,7 @@ type GetDataCenterResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *DataCenterNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21622,6 +22678,7 @@ type GetDataCenterDefaultNetworkResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *DataCenterNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21651,6 +22708,7 @@ type GetDataCenterGpuTypesResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *DataCenterNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21681,6 +22739,7 @@ type DeleteDiskBackupPolicyResponse struct {
 	JSON404 *DiskBackupPolicyNotFoundResponse
 	JSON406 *ObjectInTrashResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21711,6 +22770,7 @@ type GetDiskBackupPolicyResponse struct {
 	JSON404 *DiskBackupPolicyNotFoundResponse
 	JSON406 *ObjectInTrashResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21742,6 +22802,7 @@ type PatchDiskBackupPolicyResponse struct {
 	JSON406 *ObjectInTrashResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21772,6 +22833,7 @@ type DeleteDiskBackupPolicyScheduleResponse struct {
 	JSON404 *DiskBackupPolicyNotFoundResponse
 	JSON406 *ObjectInTrashResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21801,6 +22863,7 @@ type GetDiskTemplateVersionResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *DiskTemplateVersionNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21831,6 +22894,7 @@ type GetDiskTemplateVersionSpecResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *DiskTemplateVersionNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21860,6 +22924,7 @@ type GetDiskTemplateResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *DiskTemplateNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21892,6 +22957,7 @@ type GetDiskTemplateVersionsResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *DiskTemplateNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21924,6 +22990,7 @@ type DeleteDiskResponse struct {
 	JSON406 *ObjectInTrashResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21946,6 +23013,8 @@ type GetDiskResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
+		Annotations []KeyValue `json:"annotations"`
+
 		// Disk The disk details
 		Disk GetDisk200ResponseDisk `json:"disk"`
 	}
@@ -21954,6 +23023,7 @@ type GetDiskResponse struct {
 	JSON404 *DiskNotFoundResponse
 	JSON406 *ObjectInTrashResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -21976,6 +23046,9 @@ type PatchDiskResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
+		// Annotations Annotations for this disk
+		Annotations []KeyValue `json:"annotations"`
+
 		// Disk The disk that has been updated.
 		Disk PatchDisk200ResponseDisk `json:"disk"`
 	}
@@ -21985,6 +23058,7 @@ type PatchDiskResponse struct {
 	JSON406 *ObjectInTrashResponse
 	JSON422 *UnassignedDiskValidationError422Res
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22016,6 +23090,7 @@ type PostDiskAssignResponse struct {
 	JSON406 *ObjectInTrashResponse
 	JSON422 *UnableToAssignResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22048,6 +23123,7 @@ type PostDiskAttachResponse struct {
 	JSON406 *ObjectInTrashTaskQueueingError406Res
 	JSON422 *UnassignedDiskResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22080,6 +23156,7 @@ type PostDiskDetachResponse struct {
 	JSON406 *ObjectInTrashTaskQueueingError406Res
 	JSON422 *UnassignedDiskResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22111,6 +23188,7 @@ type GetDiskDiskBackupPoliciesResponse struct {
 	JSON404 *DiskNotFoundResponse
 	JSON406 *ObjectInTrashResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22142,6 +23220,7 @@ type PostDiskDiskBackupPoliciesResponse struct {
 	JSON406 *ObjectInTrashResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22173,6 +23252,7 @@ type PutDiskIoProfileResponse struct {
 	JSON404 *DiskIOProfileNotFoundDiskNotFound404Res
 	JSON406 *ObjectInTrashTaskQueueingError406Res
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22205,6 +23285,7 @@ type PutDiskResizeResponse struct {
 	JSON406 *ObjectInTrashTaskQueueingError406Res
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22236,6 +23317,7 @@ type PostDiskUnassignResponse struct {
 	JSON406 *ObjectInTrashResponse
 	JSON422 *UnableToUnassignResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22264,6 +23346,7 @@ type DeleteDnsRecordResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *DNSRecordNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22293,6 +23376,7 @@ type GetDnsRecordResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *DNSRecordNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22323,6 +23407,7 @@ type PatchDnsRecordResponse struct {
 	JSON404 *DNSRecordNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22351,6 +23436,7 @@ type DeleteDnsZoneResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *DNSZoneNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22380,6 +23466,7 @@ type GetDnsZoneResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *DNSZoneNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22410,6 +23497,7 @@ type PatchDnsZoneResponse struct {
 	JSON404 *DNSZoneNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22439,6 +23527,7 @@ type GetDnsZoneRecordsResponse struct {
 	JSON403 *PermissionDenied403Res
 	JSON404 *DNSZoneNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22468,6 +23557,7 @@ type PostDnsZoneRecordsResponse struct {
 	JSON404 *DNSZoneNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22498,6 +23588,7 @@ type PostDnsZoneVerifyResponse struct {
 	JSON404 *DNSZoneNotFoundResponse
 	JSON422 *DNSZoneNotVerifiedResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22530,6 +23621,7 @@ type DeleteFileStorageVolumeResponse struct {
 	JSON406 *ObjectInTrashResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22552,6 +23644,8 @@ type GetFileStorageVolumeResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
+		Annotations []KeyValue `json:"annotations"`
+
 		// FileStorageVolume The file storage volume.
 		FileStorageVolume GetFileStorageVolume200ResponseFileStorageVolume `json:"file_storage_volume"`
 	}
@@ -22560,6 +23654,7 @@ type GetFileStorageVolumeResponse struct {
 	JSON404 *FileStorageVolumeNotFoundResponse
 	JSON406 *ObjectInTrashResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22582,6 +23677,8 @@ type PatchFileStorageVolumeResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
+		Annotations []KeyValue `json:"annotations"`
+
 		// FileStorageVolume The file storage volume.
 		FileStorageVolume PatchFileStorageVolume200ResponseFileStorageVolume `json:"file_storage_volume"`
 	}
@@ -22591,6 +23688,7 @@ type PatchFileStorageVolumeResponse struct {
 	JSON406 *ObjectInTrashResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22619,6 +23717,7 @@ type GetGpuTypesResponse struct {
 	JSON400 *APIAuthenticator400Response
 	JSON403 *APIAuthenticator403Response
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22647,6 +23746,7 @@ type GetGpuTypeResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *GPUTypeNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22674,6 +23774,7 @@ type PostInvalidateLinkedWebSessionResponse struct {
 	JSON400 *IdentityNotLinkedToWebSession400Res
 	JSON403 *APIAuthenticator403Response
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22701,6 +23802,7 @@ type DeleteIpAddressResponse struct {
 	JSON404      *IPAddressNotFoundResponse
 	JSON409      *ResourceDoesNotSupportUnallocationResponse
 	JSON429      *APIAuthenticator429Response
+	JSON503      *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22733,6 +23835,7 @@ type GetIpAddressResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *IPAddressNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22763,6 +23866,7 @@ type PatchIpAddressResponse struct {
 	JSON404 *IPAddressNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22791,6 +23895,7 @@ type PostIpAddressUnallocateResponse struct {
 	JSON409      *ResourceDoesNotSupportUnallocationResponse
 	JSON422      *NoAllocationResponse
 	JSON429      *APIAuthenticator429Response
+	JSON503      *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22821,6 +23926,7 @@ type DeleteLoadBalancerResponse struct {
 	JSON404 *LoadBalancerNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22843,6 +23949,8 @@ type GetLoadBalancerResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
+		Annotations []KeyValue `json:"annotations"`
+
 		// LoadBalancer The load balancer
 		LoadBalancer GetLoadBalancer200ResponseLoadBalancer `json:"load_balancer"`
 	}
@@ -22850,6 +23958,7 @@ type GetLoadBalancerResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *LoadBalancerNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22872,6 +23981,8 @@ type PatchLoadBalancerResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
+		Annotations []KeyValue `json:"annotations"`
+
 		// LoadBalancer The load balancer that has been updated
 		LoadBalancer PatchLoadBalancer200ResponseLoadBalancer `json:"load_balancer"`
 	}
@@ -22880,6 +23991,7 @@ type PatchLoadBalancerResponse struct {
 	JSON404 *LoadBalancerNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22910,6 +24022,7 @@ type GetLoadBalancerRulesResponse struct {
 	JSON403 *PermissionDenied403Res
 	JSON404 *LoadBalancerNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22940,6 +24053,7 @@ type PostLoadBalancerRulesResponse struct {
 	JSON404 *LoadBalancerNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22970,6 +24084,7 @@ type DeleteLoadBalancersRulesLoadBalancerRuleResponse struct {
 	JSON404 *LoadBalancerRuleNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -22999,6 +24114,7 @@ type GetLoadBalancersRulesLoadBalancerRuleResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *LoadBalancerRuleNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23029,6 +24145,7 @@ type PatchLoadBalancersRulesLoadBalancerRuleResponse struct {
 	JSON404 *LoadBalancerRuleNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23058,6 +24175,7 @@ type GetNetworkResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *NetworkNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23087,6 +24205,7 @@ type GetOperatingSystemsResponse struct {
 	JSON400 *APIAuthenticator400Response
 	JSON403 *APIAuthenticator403Response
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23116,6 +24235,7 @@ type GetOperatingSystemResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *OperatingSystemNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23143,6 +24263,7 @@ type GetOrganizationsResponse struct {
 	JSON400 *APIAuthenticator400Response
 	JSON403 *APIAuthenticator403Response
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23171,6 +24292,7 @@ type GetOrganizationResponse struct {
 	JSON403 *OrganizationNotActivatedOrganizationSuspended403Res
 	JSON404 *OrganizationNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23201,6 +24323,7 @@ type GetOrganizationAddressListsResponse struct {
 	JSON403 *OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
 	JSON404 *OrganizationNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23225,12 +24348,14 @@ type PostOrganizationAddressListsResponse struct {
 	JSON201      *struct {
 		// AddressList The address list.
 		AddressList AddressList `json:"address_list"`
+		Annotations []KeyValue  `json:"annotations"`
 	}
 	JSON400 *APIAuthenticator400Response
 	JSON403 *OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
 	JSON404 *OrganizationNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23249,6 +24374,70 @@ func (r PostOrganizationAddressListsResponse) StatusCode() int {
 	return 0
 }
 
+type GetOrganizationApiTokensResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		ApiTokens  []APIToken       `json:"api_tokens"`
+		Pagination PaginationObject `json:"pagination"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+	JSON404 *OrganizationNotFoundResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r GetOrganizationApiTokensResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetOrganizationApiTokensResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostOrganizationApiTokensResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// Annotations Annotations for this API token
+		Annotations []KeyValue `json:"annotations"`
+
+		// ApiToken The API token that has been created
+		ApiToken APIToken `json:"api_token"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+	JSON404 *OrganizationNotFoundResponse
+	JSON422 *ValidationErrorResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PostOrganizationApiTokensResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostOrganizationApiTokensResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetOrganizationAvailableNetworksResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -23260,6 +24449,7 @@ type GetOrganizationAvailableNetworksResponse struct {
 	JSON403 *OrganizationNotActivatedOrganizationSuspended403Res
 	JSON404 *OrganizationNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23289,6 +24479,7 @@ type GetOrganizationCertificatesResponse struct {
 	JSON403 *OrganizationNotActivatedOrganizationSuspended403Res
 	JSON404 *OrganizationNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23319,6 +24510,7 @@ type GetOrganizationDiskBackupPoliciesResponse struct {
 	JSON403 *OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
 	JSON404 *OrganizationNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23349,6 +24541,7 @@ type GetOrganizationDiskIoProfilesResponse struct {
 	JSON403 *OrganizationNotActivatedOrganizationSuspended403Res
 	JSON404 *OrganizationNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23379,6 +24572,7 @@ type GetOrganizationDiskTemplatesResponse struct {
 	JSON403 *OrganizationNotActivatedOrganizationSuspended403Res
 	JSON404 *OperatingSystemNotFoundOrganizationNotFound404Res
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23409,6 +24603,7 @@ type GetOrganizationDisksResponse struct {
 	JSON403 *OrganizationNotActivatedOrganizationSuspended403Res
 	JSON404 *OrganizationNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23431,6 +24626,9 @@ type PostOrganizationDisksResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *struct {
+		// Annotations Annotations for this disk
+		Annotations []KeyValue `json:"annotations"`
+
 		// Disk The disk that has been created.
 		Disk PostOrganizationDisks201ResponseDisk `json:"disk"`
 		Task Task                                 `json:"task"`
@@ -23441,6 +24639,7 @@ type PostOrganizationDisksResponse struct {
 	JSON406 *TaskQueueingErrorResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23471,6 +24670,7 @@ type GetOrganizationDnsZonesResponse struct {
 	JSON403 *OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
 	JSON404 *OrganizationNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23501,6 +24701,7 @@ type PostOrganizationDnsZonesResponse struct {
 	JSON404 *OrganizationNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23529,6 +24730,7 @@ type GetOrganizationDnsZonesNameserversResponse struct {
 	JSON403 *OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
 	JSON404 *OrganizationNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23559,6 +24761,7 @@ type GetOrganizationFileStorageVolumesResponse struct {
 	JSON403 *OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
 	JSON404 *OrganizationNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23581,6 +24784,8 @@ type PostOrganizationFileStorageVolumesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *struct {
+		Annotations []KeyValue `json:"annotations"`
+
 		// FileStorageVolume The file storage volume.
 		FileStorageVolume PostOrganizationFileStorageVolumes201ResponseFileStorageVolume `json:"file_storage_volume"`
 	}
@@ -23589,6 +24794,7 @@ type PostOrganizationFileStorageVolumesResponse struct {
 	JSON404 *OrganizationNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23619,6 +24825,7 @@ type GetOrganizationIpAddressesResponse struct {
 	JSON403 *OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
 	JSON404 *OrganizationNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23649,7 +24856,7 @@ type PostOrganizationIpAddressesResponse struct {
 	JSON404 *NetworkNotFoundOrganizationNotFound404Res
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
-	JSON503 *NoAvailableAddressesResponse
+	JSON503 *NoAvailableAddresses503Res
 }
 
 // Status returns HTTPResponse.Status
@@ -23680,6 +24887,7 @@ type GetOrganizationLoadBalancersResponse struct {
 	JSON403 *OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
 	JSON404 *OrganizationNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23702,6 +24910,8 @@ type PostOrganizationLoadBalancersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *struct {
+		Annotations []KeyValue `json:"annotations"`
+
 		// LoadBalancer The load balancer that has been created
 		LoadBalancer PostOrganizationLoadBalancers201ResponseLoadBalancer `json:"load_balancer"`
 	}
@@ -23710,6 +24920,7 @@ type PostOrganizationLoadBalancersResponse struct {
 	JSON404 *OrganizationNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23739,6 +24950,7 @@ type GetOrganizationManagedResponse struct {
 	JSON403 *OrganizationNotActivatedOrganizationSuspended403Res
 	JSON404 *OrganizationNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23761,6 +24973,7 @@ type PostOrganizationManagedResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *struct {
+		Annotations  []KeyValue   `json:"annotations"`
 		Organization Organization `json:"organization"`
 	}
 	JSON400 *APIAuthenticator400Response
@@ -23768,6 +24981,7 @@ type PostOrganizationManagedResponse struct {
 	JSON404 *OrganizationNotFoundResponse
 	JSON422 *OrganizationLimitReachedValidationError422Res
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23798,6 +25012,7 @@ type GetOrganizationNetworkSpeedProfilesResponse struct {
 	JSON403 *OrganizationNotActivatedOrganizationSuspended403Res
 	JSON404 *OrganizationNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23826,6 +25041,7 @@ type GetOrganizationPolicyLimitsResponse struct {
 	JSON403 *OrganizationNotActivatedOrganizationSuspended403Res
 	JSON404 *OrganizationNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23857,6 +25073,7 @@ type GetOrganizationSecurityGroupsResponse struct {
 	JSON403 *OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
 	JSON404 *OrganizationNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23879,6 +25096,8 @@ type PostOrganizationSecurityGroupsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
+		Annotations []KeyValue `json:"annotations"`
+
 		// SecurityGroup The security group that has been created
 		SecurityGroup SecurityGroup `json:"security_group"`
 	}
@@ -23887,6 +25106,7 @@ type PostOrganizationSecurityGroupsResponse struct {
 	JSON404 *OrganizationNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23916,6 +25136,7 @@ type GetOrganizationSshKeysResponse struct {
 	JSON403 *OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
 	JSON404 *OrganizationNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23945,6 +25166,7 @@ type PostOrganizationSshKeysResponse struct {
 	JSON404 *OrganizationNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -23976,6 +25198,7 @@ type GetOrganizationTagsResponse struct {
 	JSON403 *OrganizationNotActivatedOrganizationSuspended403Res
 	JSON404 *OrganizationNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24006,6 +25229,7 @@ type PostOrganizationTagsResponse struct {
 	JSON404 *OrganizationNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24037,6 +25261,7 @@ type GetOrganizationTrashObjectsResponse struct {
 	JSON403 *OrganizationNotActivatedOrganizationSuspended403Res
 	JSON404 *OrganizationNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24066,6 +25291,7 @@ type PostOrganizationTrashObjectsPurgeAllResponse struct {
 	JSON404 *OrganizationNotFoundResponse
 	JSON406 *TaskQueueingErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24095,6 +25321,7 @@ type GetOrganizationUsersWithAccessResponse struct {
 	JSON403 *OrganizationNotActivatedOrganizationSuspended403Res
 	JSON404 *OrganizationNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24124,6 +25351,7 @@ type GetOrganizationVirtualMachineGroupsResponse struct {
 	JSON403 *OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
 	JSON404 *OrganizationNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24154,6 +25382,7 @@ type PostOrganizationVirtualMachineGroupsResponse struct {
 	JSON404 *OrganizationNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24183,6 +25412,7 @@ type GetOrganizationVirtualMachinesResponse struct {
 	JSON403 *OrganizationNotActivatedOrganizationSuspended403Res
 	JSON404 *OrganizationNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24205,6 +25435,8 @@ type PostOrganizationVirtualMachinesBuildResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *struct {
+		Annotations []KeyValue `json:"annotations"`
+
 		// Build Deprecated, please use "virtual_machine_build" instead
 		Build               PostOrganizationVirtualMachinesBuild201ResponseBuild               `json:"build"`
 		Hostname            string                                                             `json:"hostname"`
@@ -24216,6 +25448,7 @@ type PostOrganizationVirtualMachinesBuildResponse struct {
 	JSON404 *DataCenterNotFoundVirtualMachinePackageNotFoundZoneNotFound404Res
 	JSON422 *LocationRequiredValidationError422Res
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24238,6 +25471,8 @@ type PostOrganizationVirtualMachinesBuildFromSpecResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *struct {
+		Annotations []KeyValue `json:"annotations"`
+
 		// Build Deprecated, please use "virtual_machine_build" instead
 		Build               PostOrganizationVirtualMachinesBuildFromSpec201ResponseBuild               `json:"build"`
 		Hostname            string                                                                     `json:"hostname"`
@@ -24249,6 +25484,7 @@ type PostOrganizationVirtualMachinesBuildFromSpecResponse struct {
 	JSON404 *OrganizationNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24280,6 +25516,7 @@ type DeleteSecurityGroupResponse struct {
 	JSON409 *DeletionRestrictedResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24302,6 +25539,8 @@ type GetSecurityGroupResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
+		Annotations []KeyValue `json:"annotations"`
+
 		// SecurityGroup The security group
 		SecurityGroup SecurityGroup `json:"security_group"`
 	}
@@ -24309,6 +25548,7 @@ type GetSecurityGroupResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *SecurityGroupNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24331,6 +25571,8 @@ type PatchSecurityGroupResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
+		Annotations []KeyValue `json:"annotations"`
+
 		// SecurityGroup The security group that has been updated
 		SecurityGroup SecurityGroup `json:"security_group"`
 	}
@@ -24339,6 +25581,7 @@ type PatchSecurityGroupResponse struct {
 	JSON404 *SecurityGroupNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24370,6 +25613,7 @@ type GetSecurityGroupRulesResponse struct {
 	JSON403 *PermissionDenied403Res
 	JSON404 *SecurityGroupNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24400,6 +25644,7 @@ type PostSecurityGroupRulesResponse struct {
 	JSON404 *SecurityGroupNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24430,6 +25675,7 @@ type DeleteSecurityGroupsRulesSecurityGroupRuleResponse struct {
 	JSON404 *SecurityGroupRuleNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24459,6 +25705,7 @@ type GetSecurityGroupsRulesSecurityGroupRuleResponse struct {
 	JSON403 *PermissionDenied403Res
 	JSON404 *SecurityGroupRuleNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24489,6 +25736,7 @@ type PatchSecurityGroupsRulesSecurityGroupRuleResponse struct {
 	JSON404 *SecurityGroupRuleNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24518,6 +25766,7 @@ type DeleteSshKeyResponse struct {
 	JSON404 *SSHKeyNotFoundResponse
 	JSON409 *DeletionRestrictedResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24547,6 +25796,7 @@ type DeleteTagResponse struct {
 	JSON403 *PermissionDenied403Res
 	JSON404 *TagNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24576,6 +25826,7 @@ type GetTagResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *TagNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24606,6 +25857,7 @@ type PatchTagResponse struct {
 	JSON404 *TagNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24634,6 +25886,7 @@ type GetTaskResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *TaskNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24663,6 +25916,7 @@ type DeleteTrashObjectResponse struct {
 	JSON404 *TrashObjectNotFoundResponse
 	JSON406 *TaskQueueingErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24692,6 +25946,7 @@ type GetTrashObjectResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *TrashObjectNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24721,6 +25976,7 @@ type PostTrashObjectRestoreResponse struct {
 	JSON403 *PermissionDenied403Res
 	JSON404 *TrashObjectNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24743,7 +25999,7 @@ type GetUsersCurrentResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
-		ApiTokenId    string                                    `json:"api_token_id"`
+		ApiTokenId    nullable.Nullable[string]                 `json:"api_token_id"`
 		Organizations []GetUsersCurrent200ResponseOrganizations `json:"organizations"`
 		User          User                                      `json:"user"`
 	}
@@ -24751,6 +26007,7 @@ type GetUsersCurrentResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *NoUserAssociatedWithIdentityResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24776,6 +26033,7 @@ type GetVirtualMachineAuthorizedKeysResponse struct {
 	JSON403      *APIAuthenticator403Response
 	JSON404      *NoVirtualMachineForAPITokenResponse
 	JSON429      *APIAuthenticator429Response
+	JSON503      *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24806,6 +26064,7 @@ type DeleteVirtualMachineGroupResponse struct {
 	JSON404 *VirtualMachineGroupNotFoundResponse
 	JSON409 *DeletionRestrictedResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24835,6 +26094,7 @@ type GetVirtualMachineGroupResponse struct {
 	JSON403 *PermissionDenied403Res
 	JSON404 *VirtualMachineGroupNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24865,6 +26125,7 @@ type PatchVirtualMachineGroupResponse struct {
 	JSON404 *VirtualMachineGroupNotFoundResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24894,6 +26155,7 @@ type GetVMNIVMNIResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *VirtualMachineNetworkInterfaceNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24924,6 +26186,7 @@ type PostVirtualMachineNetworkInterfaceAllocateIpResponse struct {
 	JSON404 *IPAddressNotFoundVirtualMachineNetworkInterfaceNotFound404Res
 	JSON422 *IPAlreadyAllocatedInvalidIP422Res
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -24953,7 +26216,7 @@ type PostVirtualMachineNetworkInterfaceAllocateNewIpResponse struct {
 	JSON403 *PermissionDenied403Res
 	JSON404 *VirtualMachineNetworkInterfaceNotFoundResponse
 	JSON429 *APIAuthenticator429Response
-	JSON503 *NoAvailableAddressesResponse
+	JSON503 *NoAvailableAddresses503Res
 }
 
 // Status returns HTTPResponse.Status
@@ -24983,6 +26246,7 @@ type GetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionResponse struct 
 	JSON403 *APIAuthenticator403Response
 	JSON404 *VirtualMachineNetworkInterfaceNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -25014,6 +26278,7 @@ type PatchVirtualMachineNetworkInterfaceUpdateSpeedProfileResponse struct {
 	JSON406 *TaskQueueingErrorResponse
 	JSON422 *SpeedProfileAlreadyAssignedResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -25043,6 +26308,7 @@ type GetVirtualMachinePackagesResponse struct {
 	JSON403 *OrganizationNotActivatedOrganizationSuspended403Res
 	JSON404 *OrganizationNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -25071,6 +26337,7 @@ type GetVirtualMachinePackageResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *VirtualMachinePackageNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -25101,6 +26368,7 @@ type DeleteVirtualMachineResponse struct {
 	JSON404 *VirtualMachineNotFoundResponse
 	JSON406 *ObjectInTrashResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -25123,6 +26391,7 @@ type GetVirtualMachineResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
+		Annotations    []KeyValue                                 `json:"annotations"`
 		VirtualMachine GetVirtualMachine200ResponseVirtualMachine `json:"virtual_machine"`
 	}
 	JSON400 *APIAuthenticator400Response
@@ -25130,6 +26399,7 @@ type GetVirtualMachineResponse struct {
 	JSON404 *VirtualMachineNotFoundResponse
 	JSON406 *ObjectInTrashResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -25152,6 +26422,8 @@ type PatchVirtualMachineResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
+		Annotations []KeyValue `json:"annotations"`
+
 		// VirtualMachine The newly updated virtual machine
 		VirtualMachine PatchVirtualMachine200ResponseVirtualMachine `json:"virtual_machine"`
 	}
@@ -25160,6 +26432,7 @@ type PatchVirtualMachineResponse struct {
 	JSON404 *VirtualMachineNotFoundResponse
 	JSON406 *ObjectInTrashResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -25191,6 +26464,7 @@ type PostVirtualMachineAllocateIpResponse struct {
 	JSON406 *ObjectInTrashResponse
 	JSON422 *IPAlreadyAllocatedNoInterfaceAvailable422Res
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -25221,6 +26495,7 @@ type PostVirtualMachineConsoleSessionsResponse struct {
 	JSON406 *ObjectInTrashVirtualMachineMustBeStarted406Res
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -25252,6 +26527,7 @@ type GetVirtualMachineDiskBackupPoliciesResponse struct {
 	JSON404 *VirtualMachineNotFoundResponse
 	JSON406 *ObjectInTrashResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -25283,6 +26559,7 @@ type PostVirtualMachineDiskBackupPoliciesResponse struct {
 	JSON406 *ObjectInTrashResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -25314,6 +26591,7 @@ type GetVirtualMachineDisksResponse struct {
 	JSON404 *VirtualMachineNotFoundResponse
 	JSON406 *ObjectInTrashResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -25343,6 +26621,7 @@ type PutVirtualMachineFlexibleResourcesResponse struct {
 	JSON404 *VirtualMachineNotFoundResponse
 	JSON406 *ObjectInTrashTaskQueueingError406Res
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -25375,6 +26654,7 @@ type GetVirtualMachineNetworkInterfacesResponse struct {
 	JSON404 *VirtualMachineNotFoundResponse
 	JSON406 *ObjectInTrashResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -25405,6 +26685,7 @@ type GetVirtualMachineNetworkInterfaceResponse struct {
 	JSON404 *InterfaceNotFoundNetworkNotFoundVirtualMachineNotFound404Res
 	JSON406 *ObjectInTrashResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -25434,6 +26715,7 @@ type PutVirtualMachinePackageResponse struct {
 	JSON404 *VirtualMachineNotFoundVirtualMachinePackageNotFound404Res
 	JSON406 *ObjectInTrashTaskQueueingError406Res
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -25463,6 +26745,7 @@ type PostVirtualMachineResetResponse struct {
 	JSON404 *VirtualMachineNotFoundResponse
 	JSON406 *ObjectInTrashTaskQueueingError406Res
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -25492,6 +26775,7 @@ type PostVirtualMachineShutdownResponse struct {
 	JSON404 *VirtualMachineNotFoundResponse
 	JSON406 *ObjectInTrashTaskQueueingError406Res
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -25521,6 +26805,7 @@ type PostVirtualMachineStartResponse struct {
 	JSON404 *VirtualMachineNotFoundResponse
 	JSON406 *ObjectInTrashTaskQueueingError406Res
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -25550,6 +26835,7 @@ type PostVirtualMachineStopResponse struct {
 	JSON404 *VirtualMachineNotFoundResponse
 	JSON406 *ObjectInTrashTaskQueueingError406Res
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -25572,12 +26858,14 @@ type GetVirtualMachinesBuildsVirtualMachineBuildResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
+		Annotations         []KeyValue                                                                `json:"annotations"`
 		VirtualMachineBuild GetVirtualMachinesBuildsVirtualMachineBuild200ResponseVirtualMachineBuild `json:"virtual_machine_build"`
 	}
 	JSON400 *APIAuthenticator400Response
 	JSON403 *APIAuthenticator403Response
 	JSON404 *VirtualMachineBuildNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -25606,6 +26894,7 @@ type GetZonesResponse struct {
 	JSON400 *APIAuthenticator400Response
 	JSON403 *APIAuthenticator403Response
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -25635,6 +26924,7 @@ type GetZoneResponse struct {
 	JSON403 *APIAuthenticator403Response
 	JSON404 *ZoneNotFoundResponse
 	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
@@ -25955,6 +27245,141 @@ func (c *ClientWithResponses) PostAddressListEntriesWithResponse(ctx context.Con
 	}
 
 	res, err := ParsePostAddressListEntriesResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// DeleteApiTokenWithBodyWithResponse request with arbitrary body returning *DeleteApiTokenResponse
+func (c *ClientWithResponses) DeleteApiTokenWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteApiTokenResponse, error) {
+	rsp, err := c.DeleteApiTokenWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseDeleteApiTokenResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) DeleteApiTokenWithResponse(ctx context.Context, body DeleteApiTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteApiTokenResponse, error) {
+	rsp, err := c.DeleteApiToken(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseDeleteApiTokenResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PatchApiTokenWithBodyWithResponse request with arbitrary body returning *PatchApiTokenResponse
+func (c *ClientWithResponses) PatchApiTokenWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchApiTokenResponse, error) {
+	rsp, err := c.PatchApiTokenWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePatchApiTokenResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PatchApiTokenWithResponse(ctx context.Context, body PatchApiTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchApiTokenResponse, error) {
+	rsp, err := c.PatchApiToken(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePatchApiTokenResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PostApiTokenRegenerateSecretWithBodyWithResponse request with arbitrary body returning *PostApiTokenRegenerateSecretResponse
+func (c *ClientWithResponses) PostApiTokenRegenerateSecretWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostApiTokenRegenerateSecretResponse, error) {
+	rsp, err := c.PostApiTokenRegenerateSecretWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostApiTokenRegenerateSecretResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PostApiTokenRegenerateSecretWithResponse(ctx context.Context, body PostApiTokenRegenerateSecretJSONRequestBody, reqEditors ...RequestEditorFn) (*PostApiTokenRegenerateSecretResponse, error) {
+	rsp, err := c.PostApiTokenRegenerateSecret(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostApiTokenRegenerateSecretResponse(rsp)
 	if err != nil {
 		return nil, err
 	}
@@ -28087,6 +29512,74 @@ func (c *ClientWithResponses) PostOrganizationAddressListsWithResponse(ctx conte
 	}
 
 	res, err := ParsePostOrganizationAddressListsResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// GetOrganizationApiTokensWithResponse request returning *GetOrganizationApiTokensResponse
+func (c *ClientWithResponses) GetOrganizationApiTokensWithResponse(ctx context.Context, params *GetOrganizationApiTokensParams, reqEditors ...RequestEditorFn) (*GetOrganizationApiTokensResponse, error) {
+	rsp, err := c.GetOrganizationApiTokens(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseGetOrganizationApiTokensResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PostOrganizationApiTokensWithBodyWithResponse request with arbitrary body returning *PostOrganizationApiTokensResponse
+func (c *ClientWithResponses) PostOrganizationApiTokensWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostOrganizationApiTokensResponse, error) {
+	rsp, err := c.PostOrganizationApiTokensWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostOrganizationApiTokensResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PostOrganizationApiTokensWithResponse(ctx context.Context, body PostOrganizationApiTokensJSONRequestBody, reqEditors ...RequestEditorFn) (*PostOrganizationApiTokensResponse, error) {
+	rsp, err := c.PostOrganizationApiTokens(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostOrganizationApiTokensResponse(rsp)
 	if err != nil {
 		return nil, err
 	}
@@ -30875,6 +32368,13 @@ func ParseDeleteAddressListEntryResponse(rsp *http.Response) (*DeleteAddressList
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -30931,6 +32431,13 @@ func ParseGetAddressListEntryResponse(rsp *http.Response) (*GetAddressListEntryR
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -30996,6 +32503,13 @@ func ParsePatchAddressListEntryResponse(rsp *http.Response) (*PatchAddressListEn
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -31046,6 +32560,13 @@ func ParseGetAddressListsResponse(rsp *http.Response) (*GetAddressListsResponse,
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -31104,6 +32625,13 @@ func ParseDeleteAddressListResponse(rsp *http.Response) (*DeleteAddressListRespo
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -31127,6 +32655,7 @@ func ParseGetAddressListResponse(rsp *http.Response) (*GetAddressListResponse, e
 		var dest struct {
 			// AddressList The address list.
 			AddressList AddressList `json:"address_list"`
+			Annotations []KeyValue  `json:"annotations"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -31161,6 +32690,13 @@ func ParseGetAddressListResponse(rsp *http.Response) (*GetAddressListResponse, e
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -31184,6 +32720,7 @@ func ParsePatchAddressListResponse(rsp *http.Response) (*PatchAddressListRespons
 		var dest struct {
 			// AddressList The address list.
 			AddressList AddressList `json:"address_list"`
+			Annotations []KeyValue  `json:"annotations"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -31224,6 +32761,13 @@ func ParsePatchAddressListResponse(rsp *http.Response) (*PatchAddressListRespons
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -31282,6 +32826,13 @@ func ParseGetAddressListEntriesResponse(rsp *http.Response) (*GetAddressListEntr
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -31347,6 +32898,229 @@ func ParsePostAddressListEntriesResponse(rsp *http.Response) (*PostAddressListEn
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteApiTokenResponse parses an HTTP response from a DeleteApiTokenWithResponse call
+func ParseDeleteApiTokenResponse(rsp *http.Response) (*DeleteApiTokenResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteApiTokenResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// ApiToken The API token that has been destroyed
+			ApiToken DeleteAPIToken200ResponseAPIToken `json:"api_token"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest APITokenNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePatchApiTokenResponse parses an HTTP response from a PatchApiTokenWithResponse call
+func ParsePatchApiTokenResponse(rsp *http.Response) (*PatchApiTokenResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchApiTokenResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// Annotations Annotations for this API token
+			Annotations []KeyValue `json:"annotations"`
+
+			// ApiToken The API token that has been updated
+			ApiToken APIToken `json:"api_token"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest APITokenNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostApiTokenRegenerateSecretResponse parses an HTTP response from a PostApiTokenRegenerateSecretWithResponse call
+func ParsePostApiTokenRegenerateSecretResponse(rsp *http.Response) (*PostApiTokenRegenerateSecretResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostApiTokenRegenerateSecretResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// ApiToken The API token that has had its secret regenerated
+			ApiToken APIToken `json:"api_token"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest APITokenNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -31410,6 +33184,13 @@ func ParseGetCertificateResponse(rsp *http.Response) (*GetCertificateResponse, e
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -31460,6 +33241,13 @@ func ParseGetCountriesResponse(rsp *http.Response) (*GetCountriesResponse, error
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -31517,6 +33305,13 @@ func ParseGetCountryResponse(rsp *http.Response) (*GetCountryResponse, error) {
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -31576,6 +33371,13 @@ func ParseGetCountryCountryStatesResponse(rsp *http.Response) (*GetCountryCountr
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -31633,6 +33435,13 @@ func ParseGetCountryStateResponse(rsp *http.Response) (*GetCountryStateResponse,
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -31683,6 +33492,13 @@ func ParseGetCurrenciesResponse(rsp *http.Response) (*GetCurrenciesResponse, err
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -31741,6 +33557,13 @@ func ParseGetCurrencyResponse(rsp *http.Response) (*GetCurrencyResponse, error) 
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -31789,6 +33612,13 @@ func ParseGetDataCentersResponse(rsp *http.Response) (*GetDataCentersResponse, e
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -31845,6 +33675,13 @@ func ParseGetDataCenterResponse(rsp *http.Response) (*GetDataCenterResponse, err
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -31903,6 +33740,13 @@ func ParseGetDataCenterDefaultNetworkResponse(rsp *http.Response) (*GetDataCente
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -31959,6 +33803,13 @@ func ParseGetDataCenterGpuTypesResponse(rsp *http.Response) (*GetDataCenterGpuTy
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -32024,6 +33875,13 @@ func ParseDeleteDiskBackupPolicyResponse(rsp *http.Response) (*DeleteDiskBackupP
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -32087,6 +33945,13 @@ func ParseGetDiskBackupPolicyResponse(rsp *http.Response) (*GetDiskBackupPolicyR
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -32159,6 +34024,13 @@ func ParsePatchDiskBackupPolicyResponse(rsp *http.Response) (*PatchDiskBackupPol
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -32223,6 +34095,13 @@ func ParseDeleteDiskBackupPolicyScheduleResponse(rsp *http.Response) (*DeleteDis
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -32279,6 +34158,13 @@ func ParseGetDiskTemplateVersionResponse(rsp *http.Response) (*GetDiskTemplateVe
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -32338,6 +34224,13 @@ func ParseGetDiskTemplateVersionSpecResponse(rsp *http.Response) (*GetDiskTempla
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -32394,6 +34287,13 @@ func ParseGetDiskTemplateResponse(rsp *http.Response) (*GetDiskTemplateResponse,
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -32454,6 +34354,13 @@ func ParseGetDiskTemplateVersionsResponse(rsp *http.Response) (*GetDiskTemplateV
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -32527,6 +34434,13 @@ func ParseDeleteDiskResponse(rsp *http.Response) (*DeleteDiskResponse, error) {
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -32548,6 +34462,8 @@ func ParseGetDiskResponse(rsp *http.Response) (*GetDiskResponse, error) {
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
+			Annotations []KeyValue `json:"annotations"`
+
 			// Disk The disk details
 			Disk GetDisk200ResponseDisk `json:"disk"`
 		}
@@ -32591,6 +34507,13 @@ func ParseGetDiskResponse(rsp *http.Response) (*GetDiskResponse, error) {
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -32612,6 +34535,9 @@ func ParsePatchDiskResponse(rsp *http.Response) (*PatchDiskResponse, error) {
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
+			// Annotations Annotations for this disk
+			Annotations []KeyValue `json:"annotations"`
+
 			// Disk The disk that has been updated.
 			Disk PatchDisk200ResponseDisk `json:"disk"`
 		}
@@ -32661,6 +34587,13 @@ func ParsePatchDiskResponse(rsp *http.Response) (*PatchDiskResponse, error) {
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -32732,6 +34665,13 @@ func ParsePostDiskAssignResponse(rsp *http.Response) (*PostDiskAssignResponse, e
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -32805,6 +34745,13 @@ func ParsePostDiskAttachResponse(rsp *http.Response) (*PostDiskAttachResponse, e
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -32877,6 +34824,13 @@ func ParsePostDiskDetachResponse(rsp *http.Response) (*PostDiskDetachResponse, e
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -32941,6 +34895,13 @@ func ParseGetDiskDiskBackupPoliciesResponse(rsp *http.Response) (*GetDiskDiskBac
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -33013,6 +34974,13 @@ func ParsePostDiskDiskBackupPoliciesResponse(rsp *http.Response) (*PostDiskDiskB
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -33077,6 +35045,13 @@ func ParsePutDiskIoProfileResponse(rsp *http.Response) (*PutDiskIoProfileRespons
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -33150,6 +35125,13 @@ func ParsePutDiskResizeResponse(rsp *http.Response) (*PutDiskResizeResponse, err
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -33221,6 +35203,13 @@ func ParsePostDiskUnassignResponse(rsp *http.Response) (*PostDiskUnassignRespons
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -33276,6 +35265,13 @@ func ParseDeleteDnsRecordResponse(rsp *http.Response) (*DeleteDnsRecordResponse,
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -33333,6 +35329,13 @@ func ParseGetDnsRecordResponse(rsp *http.Response) (*GetDnsRecordResponse, error
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -33398,6 +35401,13 @@ func ParsePatchDnsRecordResponse(rsp *http.Response) (*PatchDnsRecordResponse, e
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -33453,6 +35463,13 @@ func ParseDeleteDnsZoneResponse(rsp *http.Response) (*DeleteDnsZoneResponse, err
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -33510,6 +35527,13 @@ func ParseGetDnsZoneResponse(rsp *http.Response) (*GetDnsZoneResponse, error) {
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -33575,6 +35599,13 @@ func ParsePatchDnsZoneResponse(rsp *http.Response) (*PatchDnsZoneResponse, error
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -33631,6 +35662,13 @@ func ParseGetDnsZoneRecordsResponse(rsp *http.Response) (*GetDnsZoneRecordsRespo
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -33695,6 +35733,13 @@ func ParsePostDnsZoneRecordsResponse(rsp *http.Response) (*PostDnsZoneRecordsRes
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -33758,6 +35803,13 @@ func ParsePostDnsZoneVerifyResponse(rsp *http.Response) (*PostDnsZoneVerifyRespo
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -33831,6 +35883,13 @@ func ParseDeleteFileStorageVolumeResponse(rsp *http.Response) (*DeleteFileStorag
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -33852,6 +35911,8 @@ func ParseGetFileStorageVolumeResponse(rsp *http.Response) (*GetFileStorageVolum
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
+			Annotations []KeyValue `json:"annotations"`
+
 			// FileStorageVolume The file storage volume.
 			FileStorageVolume GetFileStorageVolume200ResponseFileStorageVolume `json:"file_storage_volume"`
 		}
@@ -33895,6 +35956,13 @@ func ParseGetFileStorageVolumeResponse(rsp *http.Response) (*GetFileStorageVolum
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -33916,6 +35984,8 @@ func ParsePatchFileStorageVolumeResponse(rsp *http.Response) (*PatchFileStorageV
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
+			Annotations []KeyValue `json:"annotations"`
+
 			// FileStorageVolume The file storage volume.
 			FileStorageVolume PatchFileStorageVolume200ResponseFileStorageVolume `json:"file_storage_volume"`
 		}
@@ -33966,6 +36036,13 @@ func ParsePatchFileStorageVolumeResponse(rsp *http.Response) (*PatchFileStorageV
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -34015,6 +36092,13 @@ func ParseGetGpuTypesResponse(rsp *http.Response) (*GetGpuTypesResponse, error) 
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -34072,6 +36156,13 @@ func ParseGetGpuTypeResponse(rsp *http.Response) (*GetGpuTypeResponse, error) {
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -34120,6 +36211,13 @@ func ParsePostInvalidateLinkedWebSessionResponse(rsp *http.Response) (*PostInval
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -34182,6 +36280,13 @@ func ParseDeleteIpAddressResponse(rsp *http.Response) (*DeleteIpAddressResponse,
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -34241,6 +36346,13 @@ func ParseGetIpAddressResponse(rsp *http.Response) (*GetIpAddressResponse, error
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -34305,6 +36417,13 @@ func ParsePatchIpAddressResponse(rsp *http.Response) (*PatchIpAddressResponse, e
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -34374,6 +36493,13 @@ func ParsePostIpAddressUnallocateResponse(rsp *http.Response) (*PostIpAddressUna
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -34438,6 +36564,13 @@ func ParseDeleteLoadBalancerResponse(rsp *http.Response) (*DeleteLoadBalancerRes
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -34459,6 +36592,8 @@ func ParseGetLoadBalancerResponse(rsp *http.Response) (*GetLoadBalancerResponse,
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
+			Annotations []KeyValue `json:"annotations"`
+
 			// LoadBalancer The load balancer
 			LoadBalancer GetLoadBalancer200ResponseLoadBalancer `json:"load_balancer"`
 		}
@@ -34495,6 +36630,13 @@ func ParseGetLoadBalancerResponse(rsp *http.Response) (*GetLoadBalancerResponse,
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -34516,6 +36658,8 @@ func ParsePatchLoadBalancerResponse(rsp *http.Response) (*PatchLoadBalancerRespo
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
+			Annotations []KeyValue `json:"annotations"`
+
 			// LoadBalancer The load balancer that has been updated
 			LoadBalancer PatchLoadBalancer200ResponseLoadBalancer `json:"load_balancer"`
 		}
@@ -34558,6 +36702,13 @@ func ParsePatchLoadBalancerResponse(rsp *http.Response) (*PatchLoadBalancerRespo
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -34616,6 +36767,13 @@ func ParseGetLoadBalancerRulesResponse(rsp *http.Response) (*GetLoadBalancerRule
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -34681,6 +36839,13 @@ func ParsePostLoadBalancerRulesResponse(rsp *http.Response) (*PostLoadBalancerRu
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -34745,6 +36910,13 @@ func ParseDeleteLoadBalancersRulesLoadBalancerRuleResponse(rsp *http.Response) (
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -34801,6 +36973,13 @@ func ParseGetLoadBalancersRulesLoadBalancerRuleResponse(rsp *http.Response) (*Ge
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -34866,6 +37045,13 @@ func ParsePatchLoadBalancersRulesLoadBalancerRuleResponse(rsp *http.Response) (*
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -34923,6 +37109,13 @@ func ParseGetNetworkResponse(rsp *http.Response) (*GetNetworkResponse, error) {
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -34973,6 +37166,13 @@ func ParseGetOperatingSystemsResponse(rsp *http.Response) (*GetOperatingSystemsR
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -35031,6 +37231,13 @@ func ParseGetOperatingSystemResponse(rsp *http.Response) (*GetOperatingSystemRes
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -35079,6 +37286,13 @@ func ParseGetOrganizationsResponse(rsp *http.Response) (*GetOrganizationsRespons
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -35135,6 +37349,13 @@ func ParseGetOrganizationResponse(rsp *http.Response) (*GetOrganizationResponse,
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -35194,6 +37415,13 @@ func ParseGetOrganizationAddressListsResponse(rsp *http.Response) (*GetOrganizat
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -35217,6 +37445,7 @@ func ParsePostOrganizationAddressListsResponse(rsp *http.Response) (*PostOrganiz
 		var dest struct {
 			// AddressList The address list.
 			AddressList AddressList `json:"address_list"`
+			Annotations []KeyValue  `json:"annotations"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -35257,6 +37486,151 @@ func ParsePostOrganizationAddressListsResponse(rsp *http.Response) (*PostOrganiz
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetOrganizationApiTokensResponse parses an HTTP response from a GetOrganizationApiTokensWithResponse call
+func ParseGetOrganizationApiTokensResponse(rsp *http.Response) (*GetOrganizationApiTokensResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetOrganizationApiTokensResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			ApiTokens  []APIToken       `json:"api_tokens"`
+			Pagination PaginationObject `json:"pagination"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest OrganizationNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostOrganizationApiTokensResponse parses an HTTP response from a PostOrganizationApiTokensWithResponse call
+func ParsePostOrganizationApiTokensResponse(rsp *http.Response) (*PostOrganizationApiTokensResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostOrganizationApiTokensResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// Annotations Annotations for this API token
+			Annotations []KeyValue `json:"annotations"`
+
+			// ApiToken The API token that has been created
+			ApiToken APIToken `json:"api_token"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest OrganizationNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -35315,6 +37689,13 @@ func ParseGetOrganizationAvailableNetworksResponse(rsp *http.Response) (*GetOrga
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -35371,6 +37752,13 @@ func ParseGetOrganizationCertificatesResponse(rsp *http.Response) (*GetOrganizat
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -35430,6 +37818,13 @@ func ParseGetOrganizationDiskBackupPoliciesResponse(rsp *http.Response) (*GetOrg
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -35487,6 +37882,13 @@ func ParseGetOrganizationDiskIoProfilesResponse(rsp *http.Response) (*GetOrganiz
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -35546,6 +37948,13 @@ func ParseGetOrganizationDiskTemplatesResponse(rsp *http.Response) (*GetOrganiza
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -35604,6 +38013,13 @@ func ParseGetOrganizationDisksResponse(rsp *http.Response) (*GetOrganizationDisk
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -35625,6 +38041,9 @@ func ParsePostOrganizationDisksResponse(rsp *http.Response) (*PostOrganizationDi
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest struct {
+			// Annotations Annotations for this disk
+			Annotations []KeyValue `json:"annotations"`
+
 			// Disk The disk that has been created.
 			Disk PostOrganizationDisks201ResponseDisk `json:"disk"`
 			Task Task                                 `json:"task"`
@@ -35675,6 +38094,13 @@ func ParsePostOrganizationDisksResponse(rsp *http.Response) (*PostOrganizationDi
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -35733,6 +38159,13 @@ func ParseGetOrganizationDnsZonesResponse(rsp *http.Response) (*GetOrganizationD
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -35798,6 +38231,13 @@ func ParsePostOrganizationDnsZonesResponse(rsp *http.Response) (*PostOrganizatio
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -35853,6 +38293,13 @@ func ParseGetOrganizationDnsZonesNameserversResponse(rsp *http.Response) (*GetOr
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -35912,6 +38359,13 @@ func ParseGetOrganizationFileStorageVolumesResponse(rsp *http.Response) (*GetOrg
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -35933,6 +38387,8 @@ func ParsePostOrganizationFileStorageVolumesResponse(rsp *http.Response) (*PostO
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest struct {
+			Annotations []KeyValue `json:"annotations"`
+
 			// FileStorageVolume The file storage volume.
 			FileStorageVolume PostOrganizationFileStorageVolumes201ResponseFileStorageVolume `json:"file_storage_volume"`
 		}
@@ -35975,6 +38431,13 @@ func ParsePostOrganizationFileStorageVolumesResponse(rsp *http.Response) (*PostO
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -36033,6 +38496,13 @@ func ParseGetOrganizationIpAddressesResponse(rsp *http.Response) (*GetOrganizati
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -36099,7 +38569,7 @@ func ParsePostOrganizationIpAddressesResponse(rsp *http.Response) (*PostOrganiza
 		response.JSON429 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
-		var dest NoAvailableAddressesResponse
+		var dest NoAvailableAddresses503Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -36163,6 +38633,13 @@ func ParseGetOrganizationLoadBalancersResponse(rsp *http.Response) (*GetOrganiza
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -36184,6 +38661,8 @@ func ParsePostOrganizationLoadBalancersResponse(rsp *http.Response) (*PostOrgani
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest struct {
+			Annotations []KeyValue `json:"annotations"`
+
 			// LoadBalancer The load balancer that has been created
 			LoadBalancer PostOrganizationLoadBalancers201ResponseLoadBalancer `json:"load_balancer"`
 		}
@@ -36226,6 +38705,13 @@ func ParsePostOrganizationLoadBalancersResponse(rsp *http.Response) (*PostOrgani
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -36284,6 +38770,13 @@ func ParseGetOrganizationManagedResponse(rsp *http.Response) (*GetOrganizationMa
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -36305,6 +38798,7 @@ func ParsePostOrganizationManagedResponse(rsp *http.Response) (*PostOrganization
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest struct {
+			Annotations  []KeyValue   `json:"annotations"`
 			Organization Organization `json:"organization"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -36346,6 +38840,13 @@ func ParsePostOrganizationManagedResponse(rsp *http.Response) (*PostOrganization
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -36405,6 +38906,13 @@ func ParseGetOrganizationNetworkSpeedProfilesResponse(rsp *http.Response) (*GetO
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -36460,6 +38968,13 @@ func ParseGetOrganizationPolicyLimitsResponse(rsp *http.Response) (*GetOrganizat
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -36520,6 +39035,13 @@ func ParseGetOrganizationSecurityGroupsResponse(rsp *http.Response) (*GetOrganiz
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -36541,6 +39063,8 @@ func ParsePostOrganizationSecurityGroupsResponse(rsp *http.Response) (*PostOrgan
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
+			Annotations []KeyValue `json:"annotations"`
+
 			// SecurityGroup The security group that has been created
 			SecurityGroup SecurityGroup `json:"security_group"`
 		}
@@ -36583,6 +39107,13 @@ func ParsePostOrganizationSecurityGroupsResponse(rsp *http.Response) (*PostOrgan
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -36640,6 +39171,13 @@ func ParseGetOrganizationSshKeysResponse(rsp *http.Response) (*GetOrganizationSs
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -36704,6 +39242,13 @@ func ParsePostOrganizationSshKeysResponse(rsp *http.Response) (*PostOrganization
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -36762,6 +39307,13 @@ func ParseGetOrganizationTagsResponse(rsp *http.Response) (*GetOrganizationTagsR
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -36827,6 +39379,13 @@ func ParsePostOrganizationTagsResponse(rsp *http.Response) (*PostOrganizationTag
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -36885,6 +39444,13 @@ func ParseGetOrganizationTrashObjectsResponse(rsp *http.Response) (*GetOrganizat
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -36949,6 +39515,13 @@ func ParsePostOrganizationTrashObjectsPurgeAllResponse(rsp *http.Response) (*Pos
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -37006,6 +39579,13 @@ func ParseGetOrganizationUsersWithAccessResponse(rsp *http.Response) (*GetOrgani
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -37062,6 +39642,13 @@ func ParseGetOrganizationVirtualMachineGroupsResponse(rsp *http.Response) (*GetO
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -37127,6 +39714,13 @@ func ParsePostOrganizationVirtualMachineGroupsResponse(rsp *http.Response) (*Pos
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -37184,6 +39778,13 @@ func ParseGetOrganizationVirtualMachinesResponse(rsp *http.Response) (*GetOrgani
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -37205,6 +39806,8 @@ func ParsePostOrganizationVirtualMachinesBuildResponse(rsp *http.Response) (*Pos
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest struct {
+			Annotations []KeyValue `json:"annotations"`
+
 			// Build Deprecated, please use "virtual_machine_build" instead
 			Build               PostOrganizationVirtualMachinesBuild201ResponseBuild               `json:"build"`
 			Hostname            string                                                             `json:"hostname"`
@@ -37251,6 +39854,13 @@ func ParsePostOrganizationVirtualMachinesBuildResponse(rsp *http.Response) (*Pos
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -37272,6 +39882,8 @@ func ParsePostOrganizationVirtualMachinesBuildFromSpecResponse(rsp *http.Respons
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest struct {
+			Annotations []KeyValue `json:"annotations"`
+
 			// Build Deprecated, please use "virtual_machine_build" instead
 			Build               PostOrganizationVirtualMachinesBuildFromSpec201ResponseBuild               `json:"build"`
 			Hostname            string                                                                     `json:"hostname"`
@@ -37317,6 +39929,13 @@ func ParsePostOrganizationVirtualMachinesBuildFromSpecResponse(rsp *http.Respons
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -37389,6 +40008,13 @@ func ParseDeleteSecurityGroupResponse(rsp *http.Response) (*DeleteSecurityGroupR
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -37410,6 +40036,8 @@ func ParseGetSecurityGroupResponse(rsp *http.Response) (*GetSecurityGroupRespons
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
+			Annotations []KeyValue `json:"annotations"`
+
 			// SecurityGroup The security group
 			SecurityGroup SecurityGroup `json:"security_group"`
 		}
@@ -37446,6 +40074,13 @@ func ParseGetSecurityGroupResponse(rsp *http.Response) (*GetSecurityGroupRespons
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -37467,6 +40102,8 @@ func ParsePatchSecurityGroupResponse(rsp *http.Response) (*PatchSecurityGroupRes
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
+			Annotations []KeyValue `json:"annotations"`
+
 			// SecurityGroup The security group that has been updated
 			SecurityGroup SecurityGroup `json:"security_group"`
 		}
@@ -37509,6 +40146,13 @@ func ParsePatchSecurityGroupResponse(rsp *http.Response) (*PatchSecurityGroupRes
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -37568,6 +40212,13 @@ func ParseGetSecurityGroupRulesResponse(rsp *http.Response) (*GetSecurityGroupRu
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -37633,6 +40284,13 @@ func ParsePostSecurityGroupRulesResponse(rsp *http.Response) (*PostSecurityGroup
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -37697,6 +40355,13 @@ func ParseDeleteSecurityGroupsRulesSecurityGroupRuleResponse(rsp *http.Response)
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -37753,6 +40418,13 @@ func ParseGetSecurityGroupsRulesSecurityGroupRuleResponse(rsp *http.Response) (*
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -37818,6 +40490,13 @@ func ParsePatchSecurityGroupsRulesSecurityGroupRuleResponse(rsp *http.Response) 
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -37881,6 +40560,13 @@ func ParseDeleteSshKeyResponse(rsp *http.Response) (*DeleteSshKeyResponse, error
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -37938,6 +40624,13 @@ func ParseDeleteTagResponse(rsp *http.Response) (*DeleteTagResponse, error) {
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -37994,6 +40687,13 @@ func ParseGetTagResponse(rsp *http.Response) (*GetTagResponse, error) {
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -38059,6 +40759,13 @@ func ParsePatchTagResponse(rsp *http.Response) (*PatchTagResponse, error) {
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -38114,6 +40821,13 @@ func ParseGetTaskResponse(rsp *http.Response) (*GetTaskResponse, error) {
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -38178,6 +40892,13 @@ func ParseDeleteTrashObjectResponse(rsp *http.Response) (*DeleteTrashObjectRespo
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -38234,6 +40955,13 @@ func ParseGetTrashObjectResponse(rsp *http.Response) (*GetTrashObjectResponse, e
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -38292,6 +41020,13 @@ func ParsePostTrashObjectRestoreResponse(rsp *http.Response) (*PostTrashObjectRe
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -38313,7 +41048,7 @@ func ParseGetUsersCurrentResponse(rsp *http.Response) (*GetUsersCurrentResponse,
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
-			ApiTokenId    string                                    `json:"api_token_id"`
+			ApiTokenId    nullable.Nullable[string]                 `json:"api_token_id"`
 			Organizations []GetUsersCurrent200ResponseOrganizations `json:"organizations"`
 			User          User                                      `json:"user"`
 		}
@@ -38349,6 +41084,13 @@ func ParseGetUsersCurrentResponse(rsp *http.Response) (*GetUsersCurrentResponse,
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -38396,6 +41138,13 @@ func ParseGetVirtualMachineAuthorizedKeysResponse(rsp *http.Response) (*GetVirtu
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -38461,6 +41210,13 @@ func ParseDeleteVirtualMachineGroupResponse(rsp *http.Response) (*DeleteVirtualM
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -38517,6 +41273,13 @@ func ParseGetVirtualMachineGroupResponse(rsp *http.Response) (*GetVirtualMachine
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -38582,6 +41345,13 @@ func ParsePatchVirtualMachineGroupResponse(rsp *http.Response) (*PatchVirtualMac
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -38638,6 +41408,13 @@ func ParseGetVMNIVMNIResponse(rsp *http.Response) (*GetVMNIVMNIResponse, error) 
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -38703,6 +41480,13 @@ func ParsePostVirtualMachineNetworkInterfaceAllocateIpResponse(rsp *http.Respons
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -38761,7 +41545,7 @@ func ParsePostVirtualMachineNetworkInterfaceAllocateNewIpResponse(rsp *http.Resp
 		response.JSON429 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
-		var dest NoAvailableAddressesResponse
+		var dest NoAvailableAddresses503Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -38823,6 +41607,13 @@ func ParseGetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionResponse(rs
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -38895,6 +41686,13 @@ func ParsePatchVirtualMachineNetworkInterfaceUpdateSpeedProfileResponse(rsp *htt
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -38952,6 +41750,13 @@ func ParseGetVirtualMachinePackagesResponse(rsp *http.Response) (*GetVirtualMach
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -39007,6 +41812,13 @@ func ParseGetVirtualMachinePackageResponse(rsp *http.Response) (*GetVirtualMachi
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -39072,6 +41884,13 @@ func ParseDeleteVirtualMachineResponse(rsp *http.Response) (*DeleteVirtualMachin
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -39093,6 +41912,7 @@ func ParseGetVirtualMachineResponse(rsp *http.Response) (*GetVirtualMachineRespo
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
+			Annotations    []KeyValue                                 `json:"annotations"`
 			VirtualMachine GetVirtualMachine200ResponseVirtualMachine `json:"virtual_machine"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -39135,6 +41955,13 @@ func ParseGetVirtualMachineResponse(rsp *http.Response) (*GetVirtualMachineRespo
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -39156,6 +41983,8 @@ func ParsePatchVirtualMachineResponse(rsp *http.Response) (*PatchVirtualMachineR
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
+			Annotations []KeyValue `json:"annotations"`
+
 			// VirtualMachine The newly updated virtual machine
 			VirtualMachine PatchVirtualMachine200ResponseVirtualMachine `json:"virtual_machine"`
 		}
@@ -39198,6 +42027,13 @@ func ParsePatchVirtualMachineResponse(rsp *http.Response) (*PatchVirtualMachineR
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -39270,6 +42106,13 @@ func ParsePostVirtualMachineAllocateIpResponse(rsp *http.Response) (*PostVirtual
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -39340,6 +42183,13 @@ func ParsePostVirtualMachineConsoleSessionsResponse(rsp *http.Response) (*PostVi
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -39404,6 +42254,13 @@ func ParseGetVirtualMachineDiskBackupPoliciesResponse(rsp *http.Response) (*GetV
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -39476,6 +42333,13 @@ func ParsePostVirtualMachineDiskBackupPoliciesResponse(rsp *http.Response) (*Pos
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -39541,6 +42405,13 @@ func ParseGetVirtualMachineDisksResponse(rsp *http.Response) (*GetVirtualMachine
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -39603,6 +42474,13 @@ func ParsePutVirtualMachineFlexibleResourcesResponse(rsp *http.Response) (*PutVi
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -39670,6 +42548,13 @@ func ParseGetVirtualMachineNetworkInterfacesResponse(rsp *http.Response) (*GetVi
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -39734,6 +42619,13 @@ func ParseGetVirtualMachineNetworkInterfaceResponse(rsp *http.Response) (*GetVir
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -39796,6 +42688,13 @@ func ParsePutVirtualMachinePackageResponse(rsp *http.Response) (*PutVirtualMachi
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -39860,6 +42759,13 @@ func ParsePostVirtualMachineResetResponse(rsp *http.Response) (*PostVirtualMachi
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -39922,6 +42828,13 @@ func ParsePostVirtualMachineShutdownResponse(rsp *http.Response) (*PostVirtualMa
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -39986,6 +42899,13 @@ func ParsePostVirtualMachineStartResponse(rsp *http.Response) (*PostVirtualMachi
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -40049,6 +42969,13 @@ func ParsePostVirtualMachineStopResponse(rsp *http.Response) (*PostVirtualMachin
 		}
 		response.JSON429 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
 	}
 
 	return response, nil
@@ -40070,6 +42997,7 @@ func ParseGetVirtualMachinesBuildsVirtualMachineBuildResponse(rsp *http.Response
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
+			Annotations         []KeyValue                                                                `json:"annotations"`
 			VirtualMachineBuild GetVirtualMachinesBuildsVirtualMachineBuild200ResponseVirtualMachineBuild `json:"virtual_machine_build"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -40104,6 +43032,13 @@ func ParseGetVirtualMachinesBuildsVirtualMachineBuildResponse(rsp *http.Response
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -40154,6 +43089,13 @@ func ParseGetZonesResponse(rsp *http.Response) (*GetZonesResponse, error) {
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
@@ -40211,6 +43153,13 @@ func ParseGetZoneResponse(rsp *http.Response) (*GetZoneResponse, error) {
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
 
 	}
 
