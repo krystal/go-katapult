@@ -271,7 +271,7 @@ type PricingEstimateResource struct {
 	Resource       *string                                  `json:"resource,omitempty"`
 }
 
-// PricingEstimateResourceArguments All 'resources[]' params are mutually exclusive, only one can be provided.
+// PricingEstimateResourceArguments defines model for PricingEstimateResourceArguments.
 type PricingEstimateResourceArguments struct {
 	Quantity *int    `json:"quantity,omitempty"`
 	Resource *string `json:"resource,omitempty"`
@@ -289,7 +289,7 @@ type RateLimitReached struct {
 // RateLimitReachedEnum defines model for RateLimitReachedEnum.
 type RateLimitReachedEnum string
 
-// SignupCampaignArguments All 'campaign[]' params are mutually exclusive, only one can be provided.
+// SignupCampaignArguments defines model for SignupCampaignArguments.
 type SignupCampaignArguments struct {
 	Content *string `json:"content,omitempty"`
 	Id      *string `json:"id,omitempty"`
@@ -310,6 +310,7 @@ type ValidationErrorEnum string
 // VirtualMachinePackage defines model for VirtualMachinePackage.
 type VirtualMachinePackage struct {
 	CpuCores                      *int                          `json:"cpu_cores,omitempty"`
+	Group                         *VirtualMachinePackageGroup   `json:"group,omitempty"`
 	Icon                          nullable.Nullable[Attachment] `json:"icon,omitempty"`
 	Id                            *string                       `json:"id,omitempty"`
 	Ipv4Addresses                 *int                          `json:"ipv4_addresses,omitempty"`
@@ -320,6 +321,12 @@ type VirtualMachinePackage struct {
 	Privacy                       *PrivacyTypesEnum             `json:"privacy,omitempty"`
 	StorageInGb                   *int                          `json:"storage_in_gb,omitempty"`
 	UseDedicatedCpus              *bool                         `json:"use_dedicated_cpus,omitempty"`
+}
+
+// VirtualMachinePackageGroup defines model for VirtualMachinePackageGroup.
+type VirtualMachinePackageGroup struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
 }
 
 // APIAuthenticator403Response defines model for APIAuthenticator403Response.
@@ -372,7 +379,6 @@ type PostPricingEstimateJSONBody struct {
 
 // PostSignupsJSONBody defines parameters for PostSignups.
 type PostSignupsJSONBody struct {
-	// Campaign All 'campaign[]' params are mutually exclusive, only one can be provided.
 	Campaign *SignupCampaignArguments `json:"campaign,omitempty"`
 
 	// Coupon The code for the coupon that will be applied to the first new organization created by the user
@@ -384,7 +390,10 @@ type PostSignupsJSONBody struct {
 
 // GetVirtualMachinePackagesParams defines parameters for GetVirtualMachinePackages.
 type GetVirtualMachinePackagesParams struct {
-	Page    *int `form:"page,omitempty" json:"page,omitempty"`
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
 	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
