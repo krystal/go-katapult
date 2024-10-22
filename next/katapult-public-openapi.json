@@ -1,9 +1,20 @@
 {
   "openapi": "3.0.0",
   "info": {
+    "contact": {
+      "name": "Katapult Support",
+      "email": "team@katapult.io",
+      "url": "https://katapult.io/contact"
+    },
+    "termsOfService": "https://katapult.io/terms",
+    "x-katapult-version": "2.61.1",
     "version": "1.0.0",
     "title": "Katapult Public API",
     "description": "Welcome to the documentation for the Katapult Public API"
+  },
+  "externalDocs": {
+    "description": "Katapult API Documentation",
+    "url": "https://developers.katapult.io/docs/category/public-api"
   },
   "servers": [
     {
@@ -11,123 +22,33 @@
     }
   ],
   "paths": {
-    "/signups": {
-      "post": {
-        "operationId": "post:signups",
-        "tags": [
-          "Core"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "email_address": {
-                    "type": "string",
-                    "description": "The e-mail address that should receive the welcome e-mail"
-                  },
-                  "coupon": {
-                    "type": "string",
-                    "description": "The code for the coupon that will be applied to the first new organization created by the user"
-                  },
-                  "campaign": {
-                    "$ref": "#/components/schemas/SignupCampaignArguments"
-                  }
-                },
-                "required": [
-                  "email_address"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "This will create a new signup object and e-mail the appropriate welcome e-mail to the given email address",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "description": "The ID of the signup"
-                    },
-                    "email_address": {
-                      "type": "string",
-                      "description": "The e-mail address that was sent the welcome email"
-                    }
-                  },
-                  "required": [
-                    "id",
-                    "email_address"
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "$ref": "#/components/responses/APIAuthenticator403Response"
-          },
-          "404": {
-            "$ref": "#/components/responses/InvalidCouponCodeResponse"
-          },
-          "422": {
-            "$ref": "#/components/responses/ValidationErrorResponse"
-          },
-          "429": {
-            "$ref": "#/components/responses/APIAuthenticator429Response"
-          }
-        }
-      }
-    },
-    "/stats": {
+    "/data_centers": {
       "get": {
-        "operationId": "get:stats",
+        "operationId": "get:data_centers",
+        "summary": "List data centers",
+        "description": "Provides a full list of all data centers",
         "tags": [
-          "Core"
+          "Data centers"
         ],
         "parameters": [
 
         ],
         "responses": {
           "200": {
-            "description": "Return some key statistics about the platform",
+            "description": "Provides a full list of all data centers",
             "content": {
               "application/json": {
                 "schema": {
                   "properties": {
-                    "total_virtual_machines_launched": {
-                      "type": "integer",
-                      "description": "The number of virtual machines launched (all time)"
-                    },
-                    "total_virtual_machines_launched_today": {
-                      "type": "integer",
-                      "description": "The number of virtual machines launched today"
-                    },
-                    "total_memory": {
-                      "type": "integer",
-                      "description": "The total amount of memory (in GB)"
-                    },
-                    "total_cpu_cores": {
-                      "type": "integer",
-                      "description": "The total number of CPU cores"
-                    },
-                    "total_block_storage": {
-                      "type": "integer",
-                      "description": "The total amount of block storage (in GB)"
-                    },
-                    "total_organizations": {
-                      "type": "integer",
-                      "description": "The number of organizations"
+                    "data_centers": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/DataCenter"
+                      }
                     }
                   },
                   "required": [
-                    "total_virtual_machines_launched",
-                    "total_virtual_machines_launched_today",
-                    "total_memory",
-                    "total_cpu_cores",
-                    "total_block_storage",
-                    "total_organizations"
+                    "data_centers"
                   ]
                 }
               }
@@ -145,8 +66,10 @@
     "/pricing/prices": {
       "get": {
         "operationId": "get:pricing_prices",
+        "summary": "Available Prices",
+        "description": "Return available prices for the system",
         "tags": [
-          "Core"
+          "Pricing"
         ],
         "parameters": [
 
@@ -185,8 +108,10 @@
     "/pricing/estimate": {
       "post": {
         "operationId": "post:pricing_estimate",
+        "summary": "Generate pricing estimate",
+        "description": "Return an estimate and breakdown of the cost of a configuration",
         "tags": [
-          "Core"
+          "Pricing"
         ],
         "requestBody": {
           "content": {
@@ -262,26 +187,169 @@
         }
       }
     },
+    "/signups": {
+      "post": {
+        "operationId": "post:signups",
+        "summary": "Create signup",
+        "description": "This will create a new signup object and e-mail the appropriate welcome e-mail to the given email address",
+        "tags": [
+          "Signups"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "email_address": {
+                    "type": "string",
+                    "description": "The e-mail address that should receive the welcome e-mail"
+                  },
+                  "coupon": {
+                    "type": "string",
+                    "description": "The code for the coupon that will be applied to the first new organization created by the user"
+                  },
+                  "campaign": {
+                    "$ref": "#/components/schemas/SignupCampaignArguments"
+                  }
+                },
+                "required": [
+                  "email_address"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "This will create a new signup object and e-mail the appropriate welcome e-mail to the given email address",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "The ID of the signup"
+                    },
+                    "email_address": {
+                      "type": "string",
+                      "description": "The e-mail address that was sent the welcome email"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "email_address"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/APIAuthenticator403Response"
+          },
+          "404": {
+            "$ref": "#/components/responses/InvalidCouponCodeResponse"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationErrorResponse"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      }
+    },
+    "/stats": {
+      "get": {
+        "operationId": "get:stats",
+        "summary": "Global stats",
+        "description": "Return some key statistics about the platform",
+        "tags": [
+          "Stats"
+        ],
+        "parameters": [
+
+        ],
+        "responses": {
+          "200": {
+            "description": "Return some key statistics about the platform",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "total_virtual_machines_launched": {
+                      "type": "integer",
+                      "description": "The number of virtual machines launched (all time)"
+                    },
+                    "total_virtual_machines_launched_today": {
+                      "type": "integer",
+                      "description": "The number of virtual machines launched today"
+                    },
+                    "total_memory": {
+                      "type": "integer",
+                      "description": "The total amount of memory (in GB)"
+                    },
+                    "total_cpu_cores": {
+                      "type": "integer",
+                      "description": "The total number of CPU cores"
+                    },
+                    "total_block_storage": {
+                      "type": "integer",
+                      "description": "The total amount of block storage (in GB)"
+                    },
+                    "total_organizations": {
+                      "type": "integer",
+                      "description": "The number of organizations"
+                    }
+                  },
+                  "required": [
+                    "total_virtual_machines_launched",
+                    "total_virtual_machines_launched_today",
+                    "total_memory",
+                    "total_cpu_cores",
+                    "total_block_storage",
+                    "total_organizations"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/APIAuthenticator403Response"
+          },
+          "429": {
+            "$ref": "#/components/responses/APIAuthenticator429Response"
+          }
+        }
+      }
+    },
     "/virtual_machine_packages": {
       "get": {
         "operationId": "get:virtual_machine_packages",
+        "summary": "Virtual machine packages",
+        "description": "Return the currently available virtual machine packages",
         "tags": [
-          "Core"
+          "Virtual machine packages"
         ],
         "parameters": [
           {
             "name": "page",
             "in": "query",
             "schema": {
-              "type": "integer"
-            }
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            },
+            "description": "The page number to request. If not provided, the first page will be returned."
           },
           {
             "name": "per_page",
             "in": "query",
             "schema": {
-              "type": "integer"
-            }
+              "type": "integer",
+              "default": 30,
+              "minimum": 1
+            },
+            "description": "The number of items to return per page. If not provided, the default value will be used."
           }
         ],
         "responses": {
@@ -318,51 +386,11 @@
           }
         }
       }
-    },
-    "/data_centers": {
-      "get": {
-        "operationId": "get:data_centers",
-        "tags": [
-          "Core"
-        ],
-        "parameters": [
-
-        ],
-        "responses": {
-          "200": {
-            "description": "Provides a full list of all data centers",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "data_centers": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/DataCenter"
-                      }
-                    }
-                  },
-                  "required": [
-                    "data_centers"
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "$ref": "#/components/responses/APIAuthenticator403Response"
-          },
-          "429": {
-            "$ref": "#/components/responses/APIAuthenticator429Response"
-          }
-        }
-      }
     }
   },
   "components": {
     "schemas": {
       "SignupCampaignArguments": {
-        "description": "All 'campaign[]' params are mutually exclusive, only one can be provided.",
         "type": "object",
         "properties": {
           "id": {
@@ -522,7 +550,6 @@
         }
       },
       "PricingEstimateResourceArguments": {
-        "description": "All 'resources[]' params are mutually exclusive, only one can be provided.",
         "type": "object",
         "properties": {
           "resource": {
@@ -691,6 +718,9 @@
           },
           "use_dedicated_cpus": {
             "type": "boolean"
+          },
+          "group": {
+            "$ref": "#/components/schemas/VirtualMachinePackageGroup"
           }
         }
       },
@@ -720,6 +750,17 @@
             "type": "string"
           },
           "token": {
+            "type": "string"
+          }
+        }
+      },
+      "VirtualMachinePackageGroup": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
             "type": "string"
           }
         }
@@ -1020,5 +1061,54 @@
   },
   "security": [
 
+  ],
+  "tags": [
+    {
+      "name": "Signups"
+    },
+    {
+      "name": "Stats"
+    },
+    {
+      "name": "Pricing"
+    },
+    {
+      "name": "Virtual machine packages"
+    },
+    {
+      "name": "Data centers"
+    }
+  ],
+  "x-tagGroups": [
+    {
+      "name": "Data centers",
+      "tags": [
+        "Data centers"
+      ]
+    },
+    {
+      "name": "Pricing",
+      "tags": [
+        "Pricing"
+      ]
+    },
+    {
+      "name": "Signups",
+      "tags": [
+        "Signups"
+      ]
+    },
+    {
+      "name": "Stats",
+      "tags": [
+        "Stats"
+      ]
+    },
+    {
+      "name": "Virtual machine packages",
+      "tags": [
+        "Virtual machine packages"
+      ]
+    }
   ]
 }

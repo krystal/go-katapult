@@ -21,6 +21,7 @@ import (
 
 const (
 	AuthenticatorScopes = "Authenticator.Scopes"
+	OAuth2Scopes        = "OAuth2.Scopes"
 )
 
 // Defines values for APITokenNotFoundEnum.
@@ -104,9 +105,19 @@ const (
 	DataCenterNotFound DataCenterNotFoundEnum = "data_center_not_found"
 )
 
+// Defines values for DeletionFailedEnum.
+const (
+	DeletionFailed DeletionFailedEnum = "deletion_failed"
+)
+
 // Defines values for DeletionRestrictedEnum.
 const (
 	DeletionRestrictedEnumDeletionRestricted DeletionRestrictedEnum = "deletion_restricted"
+)
+
+// Defines values for DeletionStepsNotSatisfiedEnum.
+const (
+	DeletionStepsNotSatisfiedEnumDeletionStepsNotSatisfied DeletionStepsNotSatisfiedEnum = "deletion_steps_not_satisfied"
 )
 
 // Defines values for DiskBackupPolicyNotFoundEnum.
@@ -214,6 +225,11 @@ const (
 	InvalidApiToken InvalidAPITokenEnum = "invalid_api_token"
 )
 
+// Defines values for InvalidCapabilitiesTokenEnum.
+const (
+	InvalidCapabilitiesToken InvalidCapabilitiesTokenEnum = "invalid_capabilities_token"
+)
+
 // Defines values for InvalidIPEnum.
 const (
 	InvalidIp InvalidIPEnum = "invalid_ip"
@@ -285,9 +301,24 @@ const (
 	LocationRequired LocationRequiredEnum = "location_required"
 )
 
+// Defines values for ManagedOrganizationRequiredEnum.
+const (
+	ManagedOrganizationRequired ManagedOrganizationRequiredEnum = "managed_organization_required"
+)
+
 // Defines values for MissingAPITokenEnum.
 const (
 	MissingApiToken MissingAPITokenEnum = "missing_api_token"
+)
+
+// Defines values for MultipleObjectStorageBucketsFoundEnum.
+const (
+	MultipleObjectStorageBucketsFound MultipleObjectStorageBucketsFoundEnum = "multiple_object_storage_buckets_found"
+)
+
+// Defines values for NetworkErrorEnum.
+const (
+	NetworkError NetworkErrorEnum = "network_error"
 )
 
 // Defines values for NetworkNotFoundEnum.
@@ -330,6 +361,75 @@ const (
 	ObjectInTrashEnumObjectInTrash ObjectInTrashEnum = "object_in_trash"
 )
 
+// Defines values for ObjectNotFoundEnum.
+const (
+	ObjectNotFound ObjectNotFoundEnum = "object_not_found"
+)
+
+// Defines values for ObjectStorageAccessKeyNotFoundEnum.
+const (
+	ObjectStorageAccessKeyNotFound ObjectStorageAccessKeyNotFoundEnum = "object_storage_access_key_not_found"
+)
+
+// Defines values for ObjectStorageAccessKeyStateEnum.
+const (
+	ObjectStorageAccessKeyStateEnumConfigured ObjectStorageAccessKeyStateEnum = "configured"
+	ObjectStorageAccessKeyStateEnumPending    ObjectStorageAccessKeyStateEnum = "pending"
+)
+
+// Defines values for ObjectStorageAccountNotFoundEnum.
+const (
+	ObjectStorageAccountNotFound ObjectStorageAccountNotFoundEnum = "object_storage_account_not_found"
+)
+
+// Defines values for ObjectStorageAccountNotProvisionedEnum.
+const (
+	ObjectStorageAccountNotProvisioned ObjectStorageAccountNotProvisionedEnum = "object_storage_account_not_provisioned"
+)
+
+// Defines values for ObjectStorageAccountProvisioningStateEnum.
+const (
+	ObjectStorageAccountProvisioningStateEnumFailed       ObjectStorageAccountProvisioningStateEnum = "failed"
+	ObjectStorageAccountProvisioningStateEnumProvisioned  ObjectStorageAccountProvisioningStateEnum = "provisioned"
+	ObjectStorageAccountProvisioningStateEnumProvisioning ObjectStorageAccountProvisioningStateEnum = "provisioning"
+)
+
+// Defines values for ObjectStorageAccountSuspendedEnum.
+const (
+	ObjectStorageAccountSuspended ObjectStorageAccountSuspendedEnum = "object_storage_account_suspended"
+)
+
+// Defines values for ObjectStorageBucketDeletionErrorEnum.
+const (
+	ObjectStorageBucketDeletionErrorEnumObjectStorageBucketDeletionError ObjectStorageBucketDeletionErrorEnum = "object_storage_bucket_deletion_error"
+)
+
+// Defines values for ObjectStorageBucketNotFoundEnum.
+const (
+	ObjectStorageBucketNotFound ObjectStorageBucketNotFoundEnum = "object_storage_bucket_not_found"
+)
+
+// Defines values for ObjectStorageBucketStateEnum.
+const (
+	ObjectStorageBucketStateEnumConfigured ObjectStorageBucketStateEnum = "configured"
+	ObjectStorageBucketStateEnumPending    ObjectStorageBucketStateEnum = "pending"
+)
+
+// Defines values for ObjectStorageClusterNotFoundEnum.
+const (
+	ObjectStorageClusterNotFound ObjectStorageClusterNotFoundEnum = "object_storage_cluster_not_found"
+)
+
+// Defines values for ObjectStorageProvisioningErrorEnum.
+const (
+	ObjectStorageProvisioningError ObjectStorageProvisioningErrorEnum = "object_storage_provisioning_error"
+)
+
+// Defines values for OneSystemDiskRequiredEnum.
+const (
+	OneSystemDiskRequired OneSystemDiskRequiredEnum = "one_system_disk_required"
+)
+
 // Defines values for OperatingSystemNotFoundEnum.
 const (
 	OperatingSystemNotFound OperatingSystemNotFoundEnum = "operating_system_not_found"
@@ -358,6 +458,23 @@ const (
 // Defines values for PermissionDeniedEnum.
 const (
 	PermissionDeniedEnumPermissionDenied PermissionDeniedEnum = "permission_denied"
+)
+
+// Defines values for PolicyNotAvailableForManagedOrganizationsEnum.
+const (
+	PolicyNotAvailableForManagedOrganizations PolicyNotAvailableForManagedOrganizationsEnum = "policy_not_available_for_managed_organizations"
+)
+
+// Defines values for PolicyType.
+const (
+	Auto     PolicyType = "auto"
+	None     PolicyType = "none"
+	Override PolicyType = "override"
+)
+
+// Defines values for PricesNotAvailableForManagedOrganizationsEnum.
+const (
+	PricesNotAvailableForManagedOrganizations PricesNotAvailableForManagedOrganizationsEnum = "prices_not_available_for_managed_organizations"
 )
 
 // Defines values for PrivacyTypesEnum.
@@ -578,11 +695,11 @@ const (
 
 // Defines values for VirtualMachineGPUStatusEnum.
 const (
-	Attached  VirtualMachineGPUStatusEnum = "attached"
-	Attaching VirtualMachineGPUStatusEnum = "attaching"
-	Detached  VirtualMachineGPUStatusEnum = "detached"
-	Detaching VirtualMachineGPUStatusEnum = "detaching"
-	Unknown   VirtualMachineGPUStatusEnum = "unknown"
+	VirtualMachineGPUStatusEnumAttached  VirtualMachineGPUStatusEnum = "attached"
+	VirtualMachineGPUStatusEnumAttaching VirtualMachineGPUStatusEnum = "attaching"
+	VirtualMachineGPUStatusEnumDetached  VirtualMachineGPUStatusEnum = "detached"
+	VirtualMachineGPUStatusEnumDetaching VirtualMachineGPUStatusEnum = "detaching"
+	VirtualMachineGPUStatusEnumUnknown   VirtualMachineGPUStatusEnum = "unknown"
 )
 
 // Defines values for VirtualMachineGroupNotFoundEnum.
@@ -593,6 +710,16 @@ const (
 // Defines values for VirtualMachineMustBeStartedEnum.
 const (
 	VirtualMachineMustBeStartedEnumVirtualMachineMustBeStarted VirtualMachineMustBeStartedEnum = "virtual_machine_must_be_started"
+)
+
+// Defines values for VirtualMachineNetworkInterfaceAlreadyAttachedEnum.
+const (
+	VirtualMachineNetworkInterfaceAlreadyAttached VirtualMachineNetworkInterfaceAlreadyAttachedEnum = "virtual_machine_network_interface_already_attached"
+)
+
+// Defines values for VirtualMachineNetworkInterfaceAlreadyDetachedEnum.
+const (
+	VirtualMachineNetworkInterfaceAlreadyDetached VirtualMachineNetworkInterfaceAlreadyDetachedEnum = "virtual_machine_network_interface_already_detached"
 )
 
 // Defines values for VirtualMachineNetworkInterfaceNotFoundEnum.
@@ -624,6 +751,11 @@ const (
 	Stopped      VirtualMachineStateEnum = "stopped"
 	Stopping     VirtualMachineStateEnum = "stopping"
 	Transferring VirtualMachineStateEnum = "transferring"
+)
+
+// Defines values for VirtualNetworkNotFoundEnum.
+const (
+	VirtualNetworkNotFound VirtualNetworkNotFoundEnum = "virtual_network_not_found"
 )
 
 // Defines values for ZoneNotFoundEnum.
@@ -659,7 +791,7 @@ type APIToken struct {
 	Secret nullable.Nullable[string] `json:"secret,omitempty"`
 }
 
-// APITokenArguments All 'properties[]' params are mutually exclusive, only one can be provided.
+// APITokenArguments defines model for APITokenArguments.
 type APITokenArguments struct {
 	AuthorizedIpAddresses *[]string `json:"authorized_ip_addresses,omitempty"`
 	ExpiresAt             *int      `json:"expires_at,omitempty"`
@@ -667,7 +799,7 @@ type APITokenArguments struct {
 	Scopes                *[]string `json:"scopes,omitempty"`
 }
 
-// APITokenLookup All 'api_token[]' params are mutually exclusive, only one can be provided.
+// APITokenLookup defines model for APITokenLookup.
 type APITokenLookup struct {
 	Id *string `json:"id,omitempty"`
 }
@@ -687,7 +819,7 @@ type AddressList struct {
 	Name *string `json:"name,omitempty"`
 }
 
-// AddressListArguments All 'properties[]' params are mutually exclusive, only one can be provided.
+// AddressListArguments defines model for AddressListArguments.
 type AddressListArguments struct {
 	// Name Name of the address list.
 	Name *string `json:"name,omitempty"`
@@ -703,7 +835,7 @@ type AddressListEntry struct {
 	Name *string `json:"name,omitempty"`
 }
 
-// AddressListEntryArguments All 'properties[]' params are mutually exclusive, only one can be provided.
+// AddressListEntryArguments defines model for AddressListEntryArguments.
 type AddressListEntryArguments struct {
 	// Address Address or network to add to the list.
 	Address *string `json:"address,omitempty"`
@@ -712,7 +844,7 @@ type AddressListEntryArguments struct {
 	Name *string `json:"name,omitempty"`
 }
 
-// AddressListEntryLookup All 'address_list_entry[]' params are mutually exclusive, only one can be provided.
+// AddressListEntryLookup defines model for AddressListEntryLookup.
 type AddressListEntryLookup struct {
 	Id *string `json:"id,omitempty"`
 }
@@ -720,7 +852,7 @@ type AddressListEntryLookup struct {
 // AddressListEntryNotFoundEnum defines model for AddressListEntryNotFoundEnum.
 type AddressListEntryNotFoundEnum string
 
-// AddressListLookup All 'address_list[]' params are mutually exclusive, only one can be provided.
+// AddressListLookup defines model for AddressListLookup.
 type AddressListLookup struct {
 	Id *string `json:"id,omitempty"`
 }
@@ -745,12 +877,12 @@ type AuthSSHKey struct {
 	Name        *string `json:"name,omitempty"`
 }
 
-// AuthSSHKeyLookup All 'ssh_key[]' params are mutually exclusive, only one can be provided.
+// AuthSSHKeyLookup defines model for AuthSSHKeyLookup.
 type AuthSSHKeyLookup struct {
 	Id *string `json:"id,omitempty"`
 }
 
-// AuthSSHKeyProperties All 'ssh_key[]' params are mutually exclusive, only one can be provided.
+// AuthSSHKeyProperties defines model for AuthSSHKeyProperties.
 type AuthSSHKeyProperties struct {
 	Key  *string `json:"key,omitempty"`
 	Name *string `json:"name,omitempty"`
@@ -776,7 +908,7 @@ type Certificate struct {
 	State             *CertificateStateEnum     `json:"state,omitempty"`
 }
 
-// CertificateLookup All 'certificates[]' params are mutually exclusive, only one can be provided.
+// CertificateLookup defines model for CertificateLookup.
 type CertificateLookup struct {
 	Id *string `json:"id,omitempty"`
 }
@@ -834,9 +966,8 @@ type DNSRecord struct {
 	Type              *DNSRecordTypesEnum         `json:"type,omitempty"`
 }
 
-// DNSRecordArguments All 'properties[]' params are mutually exclusive, only one can be provided.
+// DNSRecordArguments defines model for DNSRecordArguments.
 type DNSRecordArguments struct {
-	// Content All 'content[]' params are mutually exclusive, only one can be provided.
 	Content *DNSRecordContentArguments `json:"content,omitempty"`
 
 	// Name The name of the record
@@ -846,121 +977,91 @@ type DNSRecordArguments struct {
 	Type     *DNSRecordTypesEnum `json:"type,omitempty"`
 }
 
-// DNSRecordContentArguments All 'content[]' params are mutually exclusive, only one can be provided.
+// DNSRecordContentArguments defines model for DNSRecordContentArguments.
 type DNSRecordContentArguments struct {
-	// A All 'A[]' params are mutually exclusive, only one can be provided.
-	A *DNSRecordContentArgumentsForA `json:"A,omitempty"`
-
-	// AAAA All 'AAAA[]' params are mutually exclusive, only one can be provided.
-	AAAA *DNSRecordContentArgumentsForAAAA `json:"AAAA,omitempty"`
-
-	// ALIAS All 'ALIAS[]' params are mutually exclusive, only one can be provided.
-	ALIAS *DNSRecordContentArgumentsForALIAS `json:"ALIAS,omitempty"`
-
-	// CAA All 'CAA[]' params are mutually exclusive, only one can be provided.
-	CAA *DNSRecordContentArgumentsForCAA `json:"CAA,omitempty"`
-
-	// CNAME All 'CNAME[]' params are mutually exclusive, only one can be provided.
-	CNAME *DNSRecordContentArgumentsForCNAME `json:"CNAME,omitempty"`
-
-	// IPS All 'IPS[]' params are mutually exclusive, only one can be provided.
-	IPS *DNSRecordContentArgumentsForIPS `json:"IPS,omitempty"`
-
-	// MX All 'MX[]' params are mutually exclusive, only one can be provided.
-	MX *DNSRecordContentArgumentsForMX `json:"MX,omitempty"`
-
-	// NS All 'NS[]' params are mutually exclusive, only one can be provided.
-	NS *DNSRecordContentArgumentsForNS `json:"NS,omitempty"`
-
-	// PTR All 'PTR[]' params are mutually exclusive, only one can be provided.
-	PTR *DNSRecordContentArgumentsForPTR `json:"PTR,omitempty"`
-
-	// SOA All 'SOA[]' params are mutually exclusive, only one can be provided.
-	SOA *DNSRecordContentArgumentsForSOA `json:"SOA,omitempty"`
-
-	// SRV All 'SRV[]' params are mutually exclusive, only one can be provided.
-	SRV *DNSRecordContentArgumentsForSRV `json:"SRV,omitempty"`
-
-	// SSHFP All 'SSHFP[]' params are mutually exclusive, only one can be provided.
-	SSHFP *DNSRecordContentArgumentsForSSHFP `json:"SSHFP,omitempty"`
-
-	// TXT All 'TXT[]' params are mutually exclusive, only one can be provided.
-	TXT *DNSRecordContentArgumentsForTXT `json:"TXT,omitempty"`
-
-	// VirtualMachine All 'VirtualMachine[]' params are mutually exclusive, only one can be provided.
+	A              *DNSRecordContentArgumentsForA              `json:"A,omitempty"`
+	AAAA           *DNSRecordContentArgumentsForAAAA           `json:"AAAA,omitempty"`
+	ALIAS          *DNSRecordContentArgumentsForALIAS          `json:"ALIAS,omitempty"`
+	CAA            *DNSRecordContentArgumentsForCAA            `json:"CAA,omitempty"`
+	CNAME          *DNSRecordContentArgumentsForCNAME          `json:"CNAME,omitempty"`
+	IPS            *DNSRecordContentArgumentsForIPS            `json:"IPS,omitempty"`
+	MX             *DNSRecordContentArgumentsForMX             `json:"MX,omitempty"`
+	NS             *DNSRecordContentArgumentsForNS             `json:"NS,omitempty"`
+	PTR            *DNSRecordContentArgumentsForPTR            `json:"PTR,omitempty"`
+	SOA            *map[string]interface{}                     `json:"SOA,omitempty"`
+	SRV            *DNSRecordContentArgumentsForSRV            `json:"SRV,omitempty"`
+	SSHFP          *DNSRecordContentArgumentsForSSHFP          `json:"SSHFP,omitempty"`
+	TXT            *DNSRecordContentArgumentsForTXT            `json:"TXT,omitempty"`
 	VirtualMachine *DNSRecordContentArgumentsForVirtualMachine `json:"VirtualMachine,omitempty"`
 }
 
-// DNSRecordContentArgumentsForA All 'A[]' params are mutually exclusive, only one can be provided.
+// DNSRecordContentArgumentsForA defines model for DNSRecordContentArgumentsForA.
 type DNSRecordContentArgumentsForA struct {
 	IpAddress *string `json:"ip_address,omitempty"`
 }
 
-// DNSRecordContentArgumentsForAAAA All 'AAAA[]' params are mutually exclusive, only one can be provided.
+// DNSRecordContentArgumentsForAAAA defines model for DNSRecordContentArgumentsForAAAA.
 type DNSRecordContentArgumentsForAAAA struct {
 	IpAddress *string `json:"ip_address,omitempty"`
 }
 
-// DNSRecordContentArgumentsForALIAS All 'ALIAS[]' params are mutually exclusive, only one can be provided.
+// DNSRecordContentArgumentsForALIAS defines model for DNSRecordContentArgumentsForALIAS.
 type DNSRecordContentArgumentsForALIAS struct {
 	Hostname *string `json:"hostname,omitempty"`
 }
 
-// DNSRecordContentArgumentsForCAA All 'CAA[]' params are mutually exclusive, only one can be provided.
+// DNSRecordContentArgumentsForCAA defines model for DNSRecordContentArgumentsForCAA.
 type DNSRecordContentArgumentsForCAA struct {
 	Flag  *string `json:"flag,omitempty"`
 	Tag   *string `json:"tag,omitempty"`
 	Value *string `json:"value,omitempty"`
 }
 
-// DNSRecordContentArgumentsForCNAME All 'CNAME[]' params are mutually exclusive, only one can be provided.
+// DNSRecordContentArgumentsForCNAME defines model for DNSRecordContentArgumentsForCNAME.
 type DNSRecordContentArgumentsForCNAME struct {
 	Hostname *string `json:"hostname,omitempty"`
 }
 
-// DNSRecordContentArgumentsForIPS All 'IPS[]' params are mutually exclusive, only one can be provided.
+// DNSRecordContentArgumentsForIPS defines model for DNSRecordContentArgumentsForIPS.
 type DNSRecordContentArgumentsForIPS struct {
 	IpAddresses *string `json:"ip_addresses,omitempty"`
 }
 
-// DNSRecordContentArgumentsForMX All 'MX[]' params are mutually exclusive, only one can be provided.
+// DNSRecordContentArgumentsForMX defines model for DNSRecordContentArgumentsForMX.
 type DNSRecordContentArgumentsForMX struct {
 	Hostname *string `json:"hostname,omitempty"`
 }
 
-// DNSRecordContentArgumentsForNS All 'NS[]' params are mutually exclusive, only one can be provided.
+// DNSRecordContentArgumentsForNS defines model for DNSRecordContentArgumentsForNS.
 type DNSRecordContentArgumentsForNS struct {
 	Hostname *string `json:"hostname,omitempty"`
 }
 
-// DNSRecordContentArgumentsForPTR All 'PTR[]' params are mutually exclusive, only one can be provided.
+// DNSRecordContentArgumentsForPTR defines model for DNSRecordContentArgumentsForPTR.
 type DNSRecordContentArgumentsForPTR struct {
 	Hostname *string `json:"hostname,omitempty"`
 }
 
-// DNSRecordContentArgumentsForSOA All 'SOA[]' params are mutually exclusive, only one can be provided.
-type DNSRecordContentArgumentsForSOA = interface{}
-
-// DNSRecordContentArgumentsForSRV All 'SRV[]' params are mutually exclusive, only one can be provided.
+// DNSRecordContentArgumentsForSRV defines model for DNSRecordContentArgumentsForSRV.
 type DNSRecordContentArgumentsForSRV struct {
 	Port   *string `json:"port,omitempty"`
 	Target *string `json:"target,omitempty"`
 	Weight *string `json:"weight,omitempty"`
 }
 
-// DNSRecordContentArgumentsForSSHFP All 'SSHFP[]' params are mutually exclusive, only one can be provided.
+// DNSRecordContentArgumentsForSSHFP defines model for DNSRecordContentArgumentsForSSHFP.
 type DNSRecordContentArgumentsForSSHFP struct {
 	Algorithm       *string `json:"algorithm,omitempty"`
 	Fingerprint     *string `json:"fingerprint,omitempty"`
 	FingerprintType *string `json:"fingerprint_type,omitempty"`
 }
 
-// DNSRecordContentArgumentsForTXT All 'TXT[]' params are mutually exclusive, only one can be provided.
+// DNSRecordContentArgumentsForTXT defines model for DNSRecordContentArgumentsForTXT.
 type DNSRecordContentArgumentsForTXT struct {
 	Content *string `json:"content,omitempty"`
 }
 
-// DNSRecordContentArgumentsForVirtualMachine All 'VirtualMachine[]' params are mutually exclusive, only one can be provided.
+// DNSRecordContentArgumentsForVirtualMachine defines model for DNSRecordContentArgumentsForVirtualMachine.
 type DNSRecordContentArgumentsForVirtualMachine struct {
 	VirtualMachine *string `json:"virtual_machine,omitempty"`
 }
@@ -983,7 +1084,7 @@ type DNSRecordContentAttributes struct {
 	VirtualMachine nullable.Nullable[RecordContentAttributesForVirtualMachine] `json:"VirtualMachine,omitempty"`
 }
 
-// DNSRecordLookup All 'dns_record[]' params are mutually exclusive, only one can be provided.
+// DNSRecordLookup defines model for DNSRecordLookup.
 type DNSRecordLookup struct {
 	Id *string `json:"id,omitempty"`
 }
@@ -1002,7 +1103,7 @@ type DNSZone struct {
 	Verified   *bool   `json:"verified,omitempty"`
 }
 
-// DNSZoneArguments All 'properties[]' params are mutually exclusive, only one can be provided.
+// DNSZoneArguments defines model for DNSZoneArguments.
 type DNSZoneArguments struct {
 	DefaultTtl *int `json:"default_ttl,omitempty"`
 
@@ -1141,6 +1242,13 @@ type DeleteLoadBalancersRulesLoadBalancerRule200ResponseLoadBalancerRule struct 
 	Id *string `json:"id,omitempty"`
 }
 
+// DeleteOrganizationObjectStorageObjectStorageCluster200ResponseTrashObject defines model for DeleteOrganizationObjectStorageObjectStorageCluster200ResponseTrashObject.
+type DeleteOrganizationObjectStorageObjectStorageCluster200ResponseTrashObject struct {
+	Id         *string `json:"id,omitempty"`
+	KeepUntil  *int    `json:"keep_until,omitempty"`
+	ObjectType *string `json:"object_type,omitempty"`
+}
+
 // DeleteSecurityGroup200ResponseSecurityGroup defines model for DeleteSecurityGroup200ResponseSecurityGroup.
 type DeleteSecurityGroup200ResponseSecurityGroup struct {
 	Id   *string `json:"id,omitempty"`
@@ -1163,6 +1271,7 @@ type DeleteVirtualMachine200ResponseVirtualMachine struct {
 	Gpus                *[]VirtualMachineGPU                               `json:"gpus,omitempty"`
 	Group               nullable.Nullable[VirtualMachineGroup]             `json:"group,omitempty"`
 	Hostname            *string                                            `json:"hostname,omitempty"`
+	Hypervisor          nullable.Nullable[Hypervisor]                      `json:"hypervisor,omitempty"`
 	Id                  *string                                            `json:"id,omitempty"`
 	InitialRootPassword nullable.Nullable[string]                          `json:"initial_root_password,omitempty"`
 	IpAddresses         *[]IPAddress                                       `json:"ip_addresses,omitempty"`
@@ -1177,6 +1286,50 @@ type DeleteVirtualMachine200ResponseVirtualMachine struct {
 	Zone                *Zone                                              `json:"zone,omitempty"`
 }
 
+// DeleteVirtualMachineNetworkInterface200ResponseVirtualMachineNetworkInterface defines model for DeleteVirtualMachineNetworkInterface200ResponseVirtualMachineNetworkInterface.
+type DeleteVirtualMachineNetworkInterface200ResponseVirtualMachineNetworkInterface struct {
+	Id             *string                                                                   `json:"id,omitempty"`
+	IpAddresses    *[]DeleteVirtualMachineNetworkInterfacePartIPAddresses                    `json:"ip_addresses,omitempty"`
+	MacAddress     *string                                                                   `json:"mac_address,omitempty"`
+	Name           *string                                                                   `json:"name,omitempty"`
+	Network        nullable.Nullable[DeleteVirtualMachineNetworkInterfacePartNetwork]        `json:"network,omitempty"`
+	SpeedProfile   *DeleteVirtualMachineNetworkInterfacePartSpeedProfile                     `json:"speed_profile,omitempty"`
+	State          *string                                                                   `json:"state,omitempty"`
+	VirtualMachine *DeleteVirtualMachineNetworkInterfacePartVirtualMachine                   `json:"virtual_machine,omitempty"`
+	VirtualNetwork nullable.Nullable[DeleteVirtualMachineNetworkInterfacePartVirtualNetwork] `json:"virtual_network,omitempty"`
+}
+
+// DeleteVirtualMachineNetworkInterfacePartIPAddresses defines model for DeleteVirtualMachineNetworkInterfacePartIPAddresses.
+type DeleteVirtualMachineNetworkInterfacePartIPAddresses struct {
+	Address *string `json:"address,omitempty"`
+	Id      *string `json:"id,omitempty"`
+}
+
+// DeleteVirtualMachineNetworkInterfacePartNetwork defines model for DeleteVirtualMachineNetworkInterfacePartNetwork.
+type DeleteVirtualMachineNetworkInterfacePartNetwork struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
+// DeleteVirtualMachineNetworkInterfacePartSpeedProfile defines model for DeleteVirtualMachineNetworkInterfacePartSpeedProfile.
+type DeleteVirtualMachineNetworkInterfacePartSpeedProfile struct {
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
+}
+
+// DeleteVirtualMachineNetworkInterfacePartVirtualMachine defines model for DeleteVirtualMachineNetworkInterfacePartVirtualMachine.
+type DeleteVirtualMachineNetworkInterfacePartVirtualMachine struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
+// DeleteVirtualMachineNetworkInterfacePartVirtualNetwork defines model for DeleteVirtualMachineNetworkInterfacePartVirtualNetwork.
+type DeleteVirtualMachineNetworkInterfacePartVirtualNetwork struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
 // DeleteVirtualMachinePartGPUType defines model for DeleteVirtualMachinePartGPUType.
 type DeleteVirtualMachinePartGPUType struct {
 	Id           *string `json:"id,omitempty"`
@@ -1187,6 +1340,9 @@ type DeleteVirtualMachinePartGPUType struct {
 	Permalink    *string `json:"permalink,omitempty"`
 }
 
+// DeletionFailedEnum defines model for DeletionFailedEnum.
+type DeletionFailedEnum string
+
 // DeletionRestricted defines model for DeletionRestricted.
 type DeletionRestricted struct {
 	Errors *[]string `json:"errors,omitempty"`
@@ -1194,6 +1350,21 @@ type DeletionRestricted struct {
 
 // DeletionRestrictedEnum defines model for DeletionRestrictedEnum.
 type DeletionRestrictedEnum string
+
+// DeletionStepsNotSatisfied defines model for DeletionStepsNotSatisfied.
+type DeletionStepsNotSatisfied struct {
+	Steps *OrganizationDeletionSteps `json:"steps,omitempty"`
+}
+
+// DeletionStepsNotSatisfiedEnum defines model for DeletionStepsNotSatisfiedEnum.
+type DeletionStepsNotSatisfiedEnum string
+
+// DeletionStepsNotSatisfiedSchema Not all deletion steps have been satisfied, ensure all steps are satisfied before attempting deletion
+type DeletionStepsNotSatisfiedSchema struct {
+	Code        *DeletionStepsNotSatisfiedEnum `json:"code,omitempty"`
+	Description *string                        `json:"description,omitempty"`
+	Detail      *DeletionStepsNotSatisfied     `json:"detail,omitempty"`
+}
 
 // Disk defines model for Disk.
 type Disk struct {
@@ -1211,7 +1382,7 @@ type Disk struct {
 	Wwn                *string                               `json:"wwn,omitempty"`
 }
 
-// DiskArguments All 'properties[]' params are mutually exclusive, only one can be provided.
+// DiskArguments defines model for DiskArguments.
 type DiskArguments struct {
 	BusType *DiskBusEnum `json:"bus_type,omitempty"`
 
@@ -1224,22 +1395,18 @@ type DiskArguments struct {
 	Name      *string              `json:"name,omitempty"`
 
 	// SizeInGb Only available when creating disk. Existing disks must use the resize endpoint.
-	SizeInGb     *int              `json:"size_in_gb,omitempty"`
-	StorageSpeed *StorageSpeedEnum `json:"storage_speed,omitempty"`
-
-	// VirtualMachineDisk All 'virtual_machine_disk[]' params are mutually exclusive, only one can be provided.
+	SizeInGb           *int                         `json:"size_in_gb,omitempty"`
+	StorageSpeed       *StorageSpeedEnum            `json:"storage_speed,omitempty"`
 	VirtualMachineDisk *VirtualMachineDiskArguments `json:"virtual_machine_disk,omitempty"`
 }
 
-// DiskBackupPolicyArguments All 'properties[]' params are mutually exclusive, only one can be provided.
+// DiskBackupPolicyArguments defines model for DiskBackupPolicyArguments.
 type DiskBackupPolicyArguments struct {
-	Retention *int `json:"retention,omitempty"`
-
-	// Schedule All 'schedule[]' params are mutually exclusive, only one can be provided.
-	Schedule *ScheduleArguments `json:"schedule,omitempty"`
+	Retention *int               `json:"retention,omitempty"`
+	Schedule  *ScheduleArguments `json:"schedule,omitempty"`
 }
 
-// DiskBackupPolicyLookup All 'disk_backup_policy[]' params are mutually exclusive, only one can be provided.
+// DiskBackupPolicyLookup defines model for DiskBackupPolicyLookup.
 type DiskBackupPolicyLookup struct {
 	Id *string `json:"id,omitempty"`
 }
@@ -1301,7 +1468,7 @@ type DiskInstallationAttribute struct {
 	Value       nullable.Nullable[string] `json:"value,omitempty"`
 }
 
-// DiskLookup All 'disk[]' params are mutually exclusive, only one can be provided.
+// DiskLookup defines model for DiskLookup.
 type DiskLookup struct {
 	Id *string `json:"id,omitempty"`
 }
@@ -1327,6 +1494,7 @@ type DiskTemplate struct {
 	Name            *string                                `json:"name,omitempty"`
 	OperatingSystem nullable.Nullable[OperatingSystem]     `json:"operating_system,omitempty"`
 	Permalink       *string                                `json:"permalink,omitempty"`
+	SizeInGb        nullable.Nullable[int]                 `json:"size_in_gb,omitempty"`
 	Universal       *bool                                  `json:"universal,omitempty"`
 }
 
@@ -1358,7 +1526,7 @@ type DiskTemplateVersion struct {
 // DiskTemplateVersionNotFoundEnum defines model for DiskTemplateVersionNotFoundEnum.
 type DiskTemplateVersionNotFoundEnum string
 
-// FileStorageVolumeArguments All 'properties[]' params are mutually exclusive, only one can be provided.
+// FileStorageVolumeArguments defines model for FileStorageVolumeArguments.
 type FileStorageVolumeArguments struct {
 	Associations *[]string `json:"associations,omitempty"`
 
@@ -1369,7 +1537,7 @@ type FileStorageVolumeArguments struct {
 	Name *string `json:"name,omitempty"`
 }
 
-// FileStorageVolumeLookup All 'file_storage_volume[]' params are mutually exclusive, only one can be provided.
+// FileStorageVolumeLookup defines model for FileStorageVolumeLookup.
 type FileStorageVolumeLookup struct {
 	Id *string `json:"id,omitempty"`
 }
@@ -1382,6 +1550,13 @@ type FileStorageVolumeStateEnum string
 
 // FileSystemEnum defines model for FileSystemEnum.
 type FileSystemEnum string
+
+// FinancialPolicyLimit defines model for FinancialPolicyLimit.
+type FinancialPolicyLimit struct {
+	Currency *Currency `json:"currency,omitempty"`
+	Current  *float32  `json:"current,omitempty"`
+	Limit    *float32  `json:"limit,omitempty"`
+}
 
 // FlexibleResourcesUnavailableToOrganizationEnum defines model for FlexibleResourcesUnavailableToOrganizationEnum.
 type FlexibleResourcesUnavailableToOrganizationEnum string
@@ -1564,6 +1739,7 @@ type GetDiskTemplate200ResponseDiskTemplate struct {
 	Name            *string                                             `json:"name,omitempty"`
 	OperatingSystem nullable.Nullable[OperatingSystem]                  `json:"operating_system,omitempty"`
 	Permalink       *string                                             `json:"permalink,omitempty"`
+	SizeInGb        nullable.Nullable[int]                              `json:"size_in_gb,omitempty"`
 	Universal       *bool                                               `json:"universal,omitempty"`
 }
 
@@ -1838,6 +2014,7 @@ type GetOrganizationDiskTemplates200ResponseDiskTemplates struct {
 	Name            *string                                                            `json:"name,omitempty"`
 	OperatingSystem nullable.Nullable[GetOrganizationDiskTemplatesPartOperatingSystem] `json:"operating_system,omitempty"`
 	Permalink       *string                                                            `json:"permalink,omitempty"`
+	SizeInGb        nullable.Nullable[int]                                             `json:"size_in_gb,omitempty"`
 	Universal       *bool                                                              `json:"universal,omitempty"`
 }
 
@@ -1953,15 +2130,16 @@ type GetOrganizationUsersWithAccess200ResponseUsers struct {
 
 // GetOrganizationVirtualMachines200ResponseVirtualMachines defines model for GetOrganizationVirtualMachines200ResponseVirtualMachines.
 type GetOrganizationVirtualMachines200ResponseVirtualMachines struct {
-	CreatedAt   *int                                                         `json:"created_at,omitempty"`
-	Fqdn        *string                                                      `json:"fqdn,omitempty"`
-	GpuType     nullable.Nullable[GetOrganizationVirtualMachinesPartGPUType] `json:"gpu_type,omitempty"`
-	Hostname    *string                                                      `json:"hostname,omitempty"`
-	Id          *string                                                      `json:"id,omitempty"`
-	IpAddresses *[]GetOrganizationVirtualMachinesPartIPAddresses             `json:"ip_addresses,omitempty"`
-	Name        *string                                                      `json:"name,omitempty"`
-	Package     nullable.Nullable[GetOrganizationVirtualMachinesPartPackage] `json:"package,omitempty"`
-	Zone        *Zone                                                        `json:"zone,omitempty"`
+	CreatedAt   *int                                                            `json:"created_at,omitempty"`
+	Fqdn        *string                                                         `json:"fqdn,omitempty"`
+	GpuType     nullable.Nullable[GetOrganizationVirtualMachinesPartGPUType]    `json:"gpu_type,omitempty"`
+	Hostname    *string                                                         `json:"hostname,omitempty"`
+	Hypervisor  nullable.Nullable[GetOrganizationVirtualMachinesPartHypervisor] `json:"hypervisor,omitempty"`
+	Id          *string                                                         `json:"id,omitempty"`
+	IpAddresses *[]GetOrganizationVirtualMachinesPartIPAddresses                `json:"ip_addresses,omitempty"`
+	Name        *string                                                         `json:"name,omitempty"`
+	Package     nullable.Nullable[GetOrganizationVirtualMachinesPartPackage]    `json:"package,omitempty"`
+	Zone        *Zone                                                           `json:"zone,omitempty"`
 }
 
 // GetOrganizationVirtualMachinesPartGPUType defines model for GetOrganizationVirtualMachinesPartGPUType.
@@ -1969,6 +2147,12 @@ type GetOrganizationVirtualMachinesPartGPUType struct {
 	Id        *string `json:"id,omitempty"`
 	Name      *string `json:"name,omitempty"`
 	Permalink *string `json:"permalink,omitempty"`
+}
+
+// GetOrganizationVirtualMachinesPartHypervisor defines model for GetOrganizationVirtualMachinesPartHypervisor.
+type GetOrganizationVirtualMachinesPartHypervisor struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
 }
 
 // GetOrganizationVirtualMachinesPartIPAddresses defines model for GetOrganizationVirtualMachinesPartIPAddresses.
@@ -2031,14 +2215,15 @@ type GetUsersCurrent200ResponseOrganizations struct {
 
 // GetVMNIVMNI200ResponseVirtualMachineNetworkInterface defines model for GetVMNIVMNI200ResponseVirtualMachineNetworkInterface.
 type GetVMNIVMNI200ResponseVirtualMachineNetworkInterface struct {
-	Id             *string                        `json:"id,omitempty"`
-	IpAddresses    *[]GetVMNIVMNIPartIPAddresses  `json:"ip_addresses,omitempty"`
-	MacAddress     *string                        `json:"mac_address,omitempty"`
-	Name           *string                        `json:"name,omitempty"`
-	Network        *GetVMNIVMNIPartNetwork        `json:"network,omitempty"`
-	SpeedProfile   *GetVMNIVMNIPartSpeedProfile   `json:"speed_profile,omitempty"`
-	State          *string                        `json:"state,omitempty"`
-	VirtualMachine *GetVMNIVMNIPartVirtualMachine `json:"virtual_machine,omitempty"`
+	Id             *string                                          `json:"id,omitempty"`
+	IpAddresses    *[]GetVMNIVMNIPartIPAddresses                    `json:"ip_addresses,omitempty"`
+	MacAddress     *string                                          `json:"mac_address,omitempty"`
+	Name           *string                                          `json:"name,omitempty"`
+	Network        nullable.Nullable[GetVMNIVMNIPartNetwork]        `json:"network,omitempty"`
+	SpeedProfile   *GetVMNIVMNIPartSpeedProfile                     `json:"speed_profile,omitempty"`
+	State          *string                                          `json:"state,omitempty"`
+	VirtualMachine *GetVMNIVMNIPartVirtualMachine                   `json:"virtual_machine,omitempty"`
+	VirtualNetwork nullable.Nullable[GetVMNIVMNIPartVirtualNetwork] `json:"virtual_network,omitempty"`
 }
 
 // GetVMNIVMNIPartIPAddresses defines model for GetVMNIVMNIPartIPAddresses.
@@ -2066,6 +2251,12 @@ type GetVMNIVMNIPartVirtualMachine struct {
 	Name *string `json:"name,omitempty"`
 }
 
+// GetVMNIVMNIPartVirtualNetwork defines model for GetVMNIVMNIPartVirtualNetwork.
+type GetVMNIVMNIPartVirtualNetwork struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
 // GetVirtualMachine200ResponseVirtualMachine defines model for GetVirtualMachine200ResponseVirtualMachine.
 type GetVirtualMachine200ResponseVirtualMachine struct {
 	AttachedIso         nullable.Nullable[ISO]                          `json:"attached_iso,omitempty"`
@@ -2077,6 +2268,7 @@ type GetVirtualMachine200ResponseVirtualMachine struct {
 	Gpus                *[]VirtualMachineGPU                            `json:"gpus,omitempty"`
 	Group               nullable.Nullable[VirtualMachineGroup]          `json:"group,omitempty"`
 	Hostname            *string                                         `json:"hostname,omitempty"`
+	Hypervisor          nullable.Nullable[Hypervisor]                   `json:"hypervisor,omitempty"`
 	Id                  *string                                         `json:"id,omitempty"`
 	InitialRootPassword nullable.Nullable[string]                       `json:"initial_root_password,omitempty"`
 	IpAddresses         *[]IPAddress                                    `json:"ip_addresses,omitempty"`
@@ -2126,13 +2318,14 @@ type GetVirtualMachineDisksPartDisk struct {
 
 // GetVirtualMachineNetworkInterface200ResponseVirtualMachineNetworkInterface defines model for GetVirtualMachineNetworkInterface200ResponseVirtualMachineNetworkInterface.
 type GetVirtualMachineNetworkInterface200ResponseVirtualMachineNetworkInterface struct {
-	Id             *string                                              `json:"id,omitempty"`
-	IpAddresses    *[]GetVirtualMachineNetworkInterfacePartIPAddresses  `json:"ip_addresses,omitempty"`
-	MacAddress     *string                                              `json:"mac_address,omitempty"`
-	Name           *string                                              `json:"name,omitempty"`
-	Network        *GetVirtualMachineNetworkInterfacePartNetwork        `json:"network,omitempty"`
-	State          *string                                              `json:"state,omitempty"`
-	VirtualMachine *GetVirtualMachineNetworkInterfacePartVirtualMachine `json:"virtual_machine,omitempty"`
+	Id             *string                                                                `json:"id,omitempty"`
+	IpAddresses    *[]GetVirtualMachineNetworkInterfacePartIPAddresses                    `json:"ip_addresses,omitempty"`
+	MacAddress     *string                                                                `json:"mac_address,omitempty"`
+	Name           *string                                                                `json:"name,omitempty"`
+	Network        nullable.Nullable[GetVirtualMachineNetworkInterfacePartNetwork]        `json:"network,omitempty"`
+	State          *string                                                                `json:"state,omitempty"`
+	VirtualMachine *GetVirtualMachineNetworkInterfacePartVirtualMachine                   `json:"virtual_machine,omitempty"`
+	VirtualNetwork nullable.Nullable[GetVirtualMachineNetworkInterfacePartVirtualNetwork] `json:"virtual_network,omitempty"`
 }
 
 // GetVirtualMachineNetworkInterfacePartIPAddresses defines model for GetVirtualMachineNetworkInterfacePartIPAddresses.
@@ -2153,12 +2346,19 @@ type GetVirtualMachineNetworkInterfacePartVirtualMachine struct {
 	Name *string `json:"name,omitempty"`
 }
 
+// GetVirtualMachineNetworkInterfacePartVirtualNetwork defines model for GetVirtualMachineNetworkInterfacePartVirtualNetwork.
+type GetVirtualMachineNetworkInterfacePartVirtualNetwork struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
 // GetVirtualMachineNetworkInterfaces200ResponseVirtualMachineNetworkInterfaces defines model for GetVirtualMachineNetworkInterfaces200ResponseVirtualMachineNetworkInterfaces.
 type GetVirtualMachineNetworkInterfaces200ResponseVirtualMachineNetworkInterfaces struct {
-	Id          *string                                              `json:"id,omitempty"`
-	IpAddresses *[]GetVirtualMachineNetworkInterfacesPartIPAddresses `json:"ip_addresses,omitempty"`
-	Name        *string                                              `json:"name,omitempty"`
-	Network     *GetVirtualMachineNetworkInterfacesPartNetwork       `json:"network,omitempty"`
+	Id             *string                                                                 `json:"id,omitempty"`
+	IpAddresses    *[]GetVirtualMachineNetworkInterfacesPartIPAddresses                    `json:"ip_addresses,omitempty"`
+	Name           *string                                                                 `json:"name,omitempty"`
+	Network        nullable.Nullable[GetVirtualMachineNetworkInterfacesPartNetwork]        `json:"network,omitempty"`
+	VirtualNetwork nullable.Nullable[GetVirtualMachineNetworkInterfacesPartVirtualNetwork] `json:"virtual_network,omitempty"`
 }
 
 // GetVirtualMachineNetworkInterfacesPartIPAddresses defines model for GetVirtualMachineNetworkInterfacesPartIPAddresses.
@@ -2173,22 +2373,10 @@ type GetVirtualMachineNetworkInterfacesPartNetwork struct {
 	Name *string `json:"name,omitempty"`
 }
 
-// GetVirtualMachinePackages200ResponseVirtualMachinePackages defines model for GetVirtualMachinePackages200ResponseVirtualMachinePackages.
-type GetVirtualMachinePackages200ResponseVirtualMachinePackages struct {
-	CpuCores      *int                                                 `json:"cpu_cores,omitempty"`
-	Icon          nullable.Nullable[GetVirtualMachinePackagesPartIcon] `json:"icon,omitempty"`
-	Id            *string                                              `json:"id,omitempty"`
-	Ipv4Addresses *int                                                 `json:"ipv4_addresses,omitempty"`
-	MemoryInGb    *int                                                 `json:"memory_in_gb,omitempty"`
-	Name          *string                                              `json:"name,omitempty"`
-	Permalink     *string                                              `json:"permalink,omitempty"`
-	Privacy       *PrivacyTypesEnum                                    `json:"privacy,omitempty"`
-	StorageInGb   *int                                                 `json:"storage_in_gb,omitempty"`
-}
-
-// GetVirtualMachinePackagesPartIcon defines model for GetVirtualMachinePackagesPartIcon.
-type GetVirtualMachinePackagesPartIcon struct {
-	Url *string `json:"url,omitempty"`
+// GetVirtualMachineNetworkInterfacesPartVirtualNetwork defines model for GetVirtualMachineNetworkInterfacesPartVirtualNetwork.
+type GetVirtualMachineNetworkInterfacesPartVirtualNetwork struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
 }
 
 // GetVirtualMachinePartGPUType defines model for GetVirtualMachinePartGPUType.
@@ -2232,6 +2420,13 @@ type GetZonesPartDataCenter struct {
 	Id        *string `json:"id,omitempty"`
 	Name      *string `json:"name,omitempty"`
 	Permalink *string `json:"permalink,omitempty"`
+}
+
+// Hypervisor defines model for Hypervisor.
+type Hypervisor struct {
+	Id        *string `json:"id,omitempty"`
+	IpAddress *string `json:"ip_address,omitempty"`
+	Name      *string `json:"name,omitempty"`
 }
 
 // IPAddress defines model for IPAddress.
@@ -2329,6 +2524,16 @@ type InvalidAPITokenSchema struct {
 	Detail      *InvalidAPIToken     `json:"detail,omitempty"`
 }
 
+// InvalidCapabilitiesTokenEnum defines model for InvalidCapabilitiesTokenEnum.
+type InvalidCapabilitiesTokenEnum string
+
+// InvalidCapabilitiesTokenSchema The capabilities token provided was not valid (either not valid, expired or not signed by the correct key)
+type InvalidCapabilitiesTokenSchema struct {
+	Code        *InvalidCapabilitiesTokenEnum `json:"code,omitempty"`
+	Description *string                       `json:"description,omitempty"`
+	Detail      *map[string]interface{}       `json:"detail,omitempty"`
+}
+
 // InvalidIPEnum defines model for InvalidIPEnum.
 type InvalidIPEnum string
 
@@ -2368,13 +2573,13 @@ type InvalidTimestampSchema struct {
 // IssuerEnum defines model for IssuerEnum.
 type IssuerEnum string
 
-// KeyValue All 'annotations[]' params are mutually exclusive, only one can be provided.
+// KeyValue defines model for KeyValue.
 type KeyValue struct {
 	Key   string  `json:"key"`
 	Value *string `json:"value,omitempty"`
 }
 
-// LoadBalancerArguments All 'properties[]' params are mutually exclusive, only one can be provided.
+// LoadBalancerArguments defines model for LoadBalancerArguments.
 type LoadBalancerArguments struct {
 	ApiReference *string `json:"api_reference,omitempty"`
 
@@ -2414,7 +2619,7 @@ type LoadBalancerResourceTypesEnum string
 // LoadBalancerRuleAlgorithmEnum defines model for LoadBalancerRuleAlgorithmEnum.
 type LoadBalancerRuleAlgorithmEnum string
 
-// LoadBalancerRuleArguments All 'properties[]' params are mutually exclusive, only one can be provided.
+// LoadBalancerRuleArguments defines model for LoadBalancerRuleArguments.
 type LoadBalancerRuleArguments struct {
 	Algorithm         *LoadBalancerRuleAlgorithmEnum     `json:"algorithm,omitempty"`
 	BackendSsl        *bool                              `json:"backend_ssl,omitempty"`
@@ -2440,7 +2645,7 @@ type LoadBalancerRuleCheckProtocolEnum string
 // LoadBalancerRuleHTTPStatusesEnum defines model for LoadBalancerRuleHTTPStatusesEnum.
 type LoadBalancerRuleHTTPStatusesEnum string
 
-// LoadBalancerRuleLookup All 'load_balancer_rule[]' params are mutually exclusive, only one can be provided.
+// LoadBalancerRuleLookup defines model for LoadBalancerRuleLookup.
 type LoadBalancerRuleLookup struct {
 	Id *string `json:"id,omitempty"`
 }
@@ -2457,7 +2662,7 @@ type LoadBalancerWeight struct {
 	Weight           *int    `json:"weight,omitempty"`
 }
 
-// LoadBalancerWeightsArguments All 'weights[]' params are mutually exclusive, only one can be provided.
+// LoadBalancerWeightsArguments defines model for LoadBalancerWeightsArguments.
 type LoadBalancerWeightsArguments struct {
 	VirtualMachineId *string `json:"virtual_machine_id,omitempty"`
 	Weight           *int    `json:"weight,omitempty"`
@@ -2473,8 +2678,21 @@ type LocationRequiredSchema struct {
 	Detail      *map[string]interface{} `json:"detail,omitempty"`
 }
 
+// ManagedOrganizationRequiredEnum defines model for ManagedOrganizationRequiredEnum.
+type ManagedOrganizationRequiredEnum string
+
+// ManagedOrganizationRequiredSchema Only managed organizations can be deleted using this endpoint
+type ManagedOrganizationRequiredSchema struct {
+	Code        *ManagedOrganizationRequiredEnum `json:"code,omitempty"`
+	Description *string                          `json:"description,omitempty"`
+	Detail      *map[string]interface{}          `json:"detail,omitempty"`
+}
+
 // MissingAPITokenEnum defines model for MissingAPITokenEnum.
 type MissingAPITokenEnum string
+
+// MultipleObjectStorageBucketsFoundEnum defines model for MultipleObjectStorageBucketsFoundEnum.
+type MultipleObjectStorageBucketsFoundEnum string
 
 // Network defines model for Network.
 type Network struct {
@@ -2483,6 +2701,9 @@ type Network struct {
 	Name       *string                   `json:"name,omitempty"`
 	Permalink  nullable.Nullable[string] `json:"permalink,omitempty"`
 }
+
+// NetworkErrorEnum defines model for NetworkErrorEnum.
+type NetworkErrorEnum string
 
 // NetworkLookup All 'network[]' params are mutually exclusive, only one can be provided.
 type NetworkLookup struct {
@@ -2569,13 +2790,270 @@ type ObjectInTrashSchema struct {
 	Detail      *ObjectInTrash     `json:"detail,omitempty"`
 }
 
+// ObjectNotFoundEnum defines model for ObjectNotFoundEnum.
+type ObjectNotFoundEnum string
+
+// ObjectNotFoundSchema No object was found matching any of the criteria provided in the arguments
+type ObjectNotFoundSchema struct {
+	Code        *ObjectNotFoundEnum     `json:"code,omitempty"`
+	Description *string                 `json:"description,omitempty"`
+	Detail      *map[string]interface{} `json:"detail,omitempty"`
+}
+
+// ObjectStorageAccessKey defines model for ObjectStorageAccessKey.
+type ObjectStorageAccessKey struct {
+	// AllBucketsRead Global access to list all buckets
+	AllBucketsRead *bool `json:"all_buckets_read,omitempty"`
+
+	// AllObjectsRead Global read access for objects in all buckets
+	AllObjectsRead *bool `json:"all_objects_read,omitempty"`
+
+	// AllObjectsWrite Global write access to create and delete objects in all buckets
+	AllObjectsWrite *bool     `json:"all_objects_write,omitempty"`
+	CreatedAt       *int      `json:"created_at,omitempty"`
+	Id              *string   `json:"id,omitempty"`
+	Name            *string   `json:"name,omitempty"`
+	ReadBuckets     *[]string `json:"read_buckets,omitempty"`
+	Region          *string   `json:"region,omitempty"`
+
+	// S3AccessKeyId The S3 access key ID
+	S3AccessKeyId nullable.Nullable[string] `json:"s3_access_key_id,omitempty"`
+
+	// S3SecretAccessKey Only available when using the generate credentials endpoint
+	S3SecretAccessKey nullable.Nullable[string] `json:"s3_secret_access_key,omitempty"`
+
+	// ServerUrl The server URL for the S3 credentials
+	ServerUrl    nullable.Nullable[string]        `json:"server_url,omitempty"`
+	State        *ObjectStorageAccessKeyStateEnum `json:"state,omitempty"`
+	WriteBuckets *[]string                        `json:"write_buckets,omitempty"`
+}
+
+// ObjectStorageAccessKeyArguments defines model for ObjectStorageAccessKeyArguments.
+type ObjectStorageAccessKeyArguments struct {
+	// AllBucketsRead Some S3 clients require this permission to successfully connect to your account.
+	AllBucketsRead *bool `json:"all_buckets_read,omitempty"`
+
+	// AllObjectsRead Global read access for objects in all buckets
+	AllObjectsRead *bool `json:"all_objects_read,omitempty"`
+
+	// AllObjectsWrite Global write access to create and delete objects in all buckets
+	AllObjectsWrite *bool `json:"all_objects_write,omitempty"`
+
+	// Name The name of the access key
+	Name string `json:"name"`
+}
+
+// ObjectStorageAccessKeyLookup defines model for ObjectStorageAccessKeyLookup.
+type ObjectStorageAccessKeyLookup struct {
+	Id *string `json:"id,omitempty"`
+}
+
+// ObjectStorageAccessKeyNotFoundEnum defines model for ObjectStorageAccessKeyNotFoundEnum.
+type ObjectStorageAccessKeyNotFoundEnum string
+
+// ObjectStorageAccessKeyStateEnum defines model for ObjectStorageAccessKeyStateEnum.
+type ObjectStorageAccessKeyStateEnum string
+
+// ObjectStorageAccount defines model for ObjectStorageAccount.
+type ObjectStorageAccount struct {
+	CreatedAt         *int                                       `json:"created_at,omitempty"`
+	DataCenter        *DataCenter                                `json:"data_center,omitempty"`
+	ProvisioningState *ObjectStorageAccountProvisioningStateEnum `json:"provisioning_state,omitempty"`
+	Region            *string                                    `json:"region,omitempty"`
+
+	// Size The total storage used in bytes (updated periodically)
+	Size *int `json:"size,omitempty"`
+}
+
+// ObjectStorageAccountNotFoundEnum defines model for ObjectStorageAccountNotFoundEnum.
+type ObjectStorageAccountNotFoundEnum string
+
+// ObjectStorageAccountNotFoundSchema No object storage account was found matching any of the criteria provided in the arguments
+type ObjectStorageAccountNotFoundSchema struct {
+	Code        *ObjectStorageAccountNotFoundEnum `json:"code,omitempty"`
+	Description *string                           `json:"description,omitempty"`
+	Detail      *map[string]interface{}           `json:"detail,omitempty"`
+}
+
+// ObjectStorageAccountNotProvisionedEnum defines model for ObjectStorageAccountNotProvisionedEnum.
+type ObjectStorageAccountNotProvisionedEnum string
+
+// ObjectStorageAccountNotProvisionedSchema An object storage account was found but it is not provisioned. If the problem persists, try re-creating the account.
+type ObjectStorageAccountNotProvisionedSchema struct {
+	Code        *ObjectStorageAccountNotProvisionedEnum `json:"code,omitempty"`
+	Description *string                                 `json:"description,omitempty"`
+	Detail      *map[string]interface{}                 `json:"detail,omitempty"`
+}
+
+// ObjectStorageAccountProvisioningStateEnum defines model for ObjectStorageAccountProvisioningStateEnum.
+type ObjectStorageAccountProvisioningStateEnum string
+
+// ObjectStorageAccountSuspendedEnum defines model for ObjectStorageAccountSuspendedEnum.
+type ObjectStorageAccountSuspendedEnum string
+
+// ObjectStorageAccountSuspendedSchema An object storage account was found from the arguments provided but it is suspended
+type ObjectStorageAccountSuspendedSchema struct {
+	Code        *ObjectStorageAccountSuspendedEnum `json:"code,omitempty"`
+	Description *string                            `json:"description,omitempty"`
+	Detail      *map[string]interface{}            `json:"detail,omitempty"`
+}
+
+// ObjectStorageBucket defines model for ObjectStorageBucket.
+type ObjectStorageBucket struct {
+	AccessControlList *ObjectStorageBucketAccessControlList `json:"access_control_list,omitempty"`
+	CreatedAt         *int                                  `json:"created_at,omitempty"`
+	CustomDomain      nullable.Nullable[string]             `json:"custom_domain,omitempty"`
+	Label             nullable.Nullable[string]             `json:"label,omitempty"`
+	Name              *string                               `json:"name,omitempty"`
+	ObjectCount       nullable.Nullable[int]                `json:"object_count,omitempty"`
+	PublicUrl         *string                               `json:"public_url,omitempty"`
+	ServeStaticSite   *bool                                 `json:"serve_static_site,omitempty"`
+	Size              nullable.Nullable[int]                `json:"size,omitempty"`
+	State             *ObjectStorageBucketStateEnum         `json:"state,omitempty"`
+	StaticSiteError   nullable.Nullable[string]             `json:"static_site_error,omitempty"`
+	StaticSiteIndex   nullable.Nullable[string]             `json:"static_site_index,omitempty"`
+}
+
+// ObjectStorageBucketACLArguments defines model for ObjectStorageBucketACLArguments.
+type ObjectStorageBucketACLArguments struct {
+	// AllKeysRead Allow any access key to read objects in the bucket.
+	AllKeysRead *bool `json:"all_keys_read,omitempty"`
+
+	// AllKeysWrite Allow any access key to create or delete objects in the bucket.
+	AllKeysWrite *bool `json:"all_keys_write,omitempty"`
+
+	// PublicList Allow anyone to list objects in the bucket (requires public_read).
+	PublicList *bool `json:"public_list,omitempty"`
+
+	// PublicRead Allow anyone to read objects in the bucket.
+	PublicRead  *bool     `json:"public_read,omitempty"`
+	ReadKeyIds  *[]string `json:"read_key_ids,omitempty"`
+	WriteKeyIds *[]string `json:"write_key_ids,omitempty"`
+}
+
+// ObjectStorageBucketAccessControlList defines model for ObjectStorageBucketAccessControlList.
+type ObjectStorageBucketAccessControlList struct {
+	AllKeysRead  *bool     `json:"all_keys_read,omitempty"`
+	AllKeysWrite *bool     `json:"all_keys_write,omitempty"`
+	PublicList   *bool     `json:"public_list,omitempty"`
+	PublicRead   *bool     `json:"public_read,omitempty"`
+	ReadKeyIds   *[]string `json:"read_key_ids,omitempty"`
+	WriteKeyIds  *[]string `json:"write_key_ids,omitempty"`
+}
+
+// ObjectStorageBucketArguments defines model for ObjectStorageBucketArguments.
+type ObjectStorageBucketArguments struct {
+	AccessControlList *ObjectStorageBucketACLArguments `json:"access_control_list,omitempty"`
+
+	// Label Optional alternative name/comment.
+	Label *string `json:"label,omitempty"`
+
+	// Name Can only include lowercase alphanumeric characters and hyphens, has to be globally unique.
+	Name *string `json:"name,omitempty"`
+
+	// ServeStaticSite Whether to serve the bucket as a static website, defaults to false.
+	ServeStaticSite *bool `json:"serve_static_site,omitempty"`
+
+	// StaticSiteError Optional name of the error html page for a static website (requires public_read).
+	StaticSiteError *string `json:"static_site_error,omitempty"`
+
+	// StaticSiteIndex Optional name of the index html page for a static website (requires public_read).
+	StaticSiteIndex *string `json:"static_site_index,omitempty"`
+}
+
+// ObjectStorageBucketDeletionError defines model for ObjectStorageBucketDeletionError.
+type ObjectStorageBucketDeletionError struct {
+	Details nullable.Nullable[string] `json:"details,omitempty"`
+}
+
+// ObjectStorageBucketDeletionErrorEnum defines model for ObjectStorageBucketDeletionErrorEnum.
+type ObjectStorageBucketDeletionErrorEnum string
+
+// ObjectStorageBucketDeletionErrorSchema An error occurred while deleting the bucket.
+type ObjectStorageBucketDeletionErrorSchema struct {
+	Code        *ObjectStorageBucketDeletionErrorEnum `json:"code,omitempty"`
+	Description *string                               `json:"description,omitempty"`
+	Detail      *ObjectStorageBucketDeletionError     `json:"detail,omitempty"`
+}
+
+// ObjectStorageBucketLookup defines model for ObjectStorageBucketLookup.
+type ObjectStorageBucketLookup struct {
+	Name *string `json:"name,omitempty"`
+}
+
+// ObjectStorageBucketNotFoundEnum defines model for ObjectStorageBucketNotFoundEnum.
+type ObjectStorageBucketNotFoundEnum string
+
+// ObjectStorageBucketNotFoundSchema No object storage bucket was found matching any of the criteria provided in the arguments
+type ObjectStorageBucketNotFoundSchema struct {
+	Code        *ObjectStorageBucketNotFoundEnum `json:"code,omitempty"`
+	Description *string                          `json:"description,omitempty"`
+	Detail      *map[string]interface{}          `json:"detail,omitempty"`
+}
+
+// ObjectStorageBucketStateEnum defines model for ObjectStorageBucketStateEnum.
+type ObjectStorageBucketStateEnum string
+
+// ObjectStorageClusterLookup defines model for ObjectStorageClusterLookup.
+type ObjectStorageClusterLookup struct {
+	Region *string `json:"region,omitempty"`
+}
+
+// ObjectStorageClusterNotFoundEnum defines model for ObjectStorageClusterNotFoundEnum.
+type ObjectStorageClusterNotFoundEnum string
+
+// ObjectStorageClusterNotFoundSchema No object storage cluster was found matching any of the criteria provided in the arguments
+type ObjectStorageClusterNotFoundSchema struct {
+	Code        *ObjectStorageClusterNotFoundEnum `json:"code,omitempty"`
+	Description *string                           `json:"description,omitempty"`
+	Detail      *map[string]interface{}           `json:"detail,omitempty"`
+}
+
+// ObjectStorageObject defines model for ObjectStorageObject.
+type ObjectStorageObject struct {
+	BucketName *string `json:"bucket_name,omitempty"`
+	Filename   *string `json:"filename,omitempty"`
+	Folder     *bool   `json:"folder,omitempty"`
+	FullPath   *string `json:"full_path,omitempty"`
+	PublicUrl  *string `json:"public_url,omitempty"`
+
+	// Size The length of the object content in the response body, in bytes.
+	Size nullable.Nullable[int] `json:"size,omitempty"`
+}
+
+// ObjectStorageObjectPresignedURLArguments defines model for ObjectStorageObjectPresignedURLArguments.
+type ObjectStorageObjectPresignedURLArguments struct {
+	// ExpirySeconds The number of seconds the url should be valid for
+	ExpirySeconds *int `json:"expiry_seconds,omitempty"`
+}
+
+// ObjectStorageProvisioningErrorEnum defines model for ObjectStorageProvisioningErrorEnum.
+type ObjectStorageProvisioningErrorEnum string
+
+// ObjectStorageProvisioningErrorSchema Provisioning is in progress. Please try again later.
+type ObjectStorageProvisioningErrorSchema struct {
+	Code        *ObjectStorageProvisioningErrorEnum `json:"code,omitempty"`
+	Description *string                             `json:"description,omitempty"`
+	Detail      *map[string]interface{}             `json:"detail,omitempty"`
+}
+
 // OneOfAPIAuthenticator403Response defines model for OneOfAPIAuthenticator403Response.
 type OneOfAPIAuthenticator403Response struct {
 	union json.RawMessage
 }
 
+// OneOfDataCenterNotFoundOrganizationNotFound404Res defines model for OneOfDataCenterNotFoundOrganizationNotFound404Res.
+type OneOfDataCenterNotFoundOrganizationNotFound404Res struct {
+	union json.RawMessage
+}
+
 // OneOfDataCenterNotFoundVirtualMachinePackageNotFoundZoneNotFound404Res defines model for OneOfDataCenterNotFoundVirtualMachinePackageNotFoundZoneNotFound404Res.
 type OneOfDataCenterNotFoundVirtualMachinePackageNotFoundZoneNotFound404Res struct {
+	union json.RawMessage
+}
+
+// OneOfDeletionStepsNotSatisfiedManagedOrganizationRequired409Res defines model for OneOfDeletionStepsNotSatisfiedManagedOrganizationRequired409Res.
+type OneOfDeletionStepsNotSatisfiedManagedOrganizationRequired409Res struct {
 	union json.RawMessage
 }
 
@@ -2634,13 +3112,18 @@ type OneOfInvalidTimestamp400Res struct {
 	union json.RawMessage
 }
 
-// OneOfLocationRequiredValidationError422Res defines model for OneOfLocationRequiredValidationError422Res.
-type OneOfLocationRequiredValidationError422Res struct {
+// OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res defines model for OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res.
+type OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res struct {
 	union json.RawMessage
 }
 
 // OneOfNetworkNotFoundOrganizationNotFound404Res defines model for OneOfNetworkNotFoundOrganizationNotFound404Res.
 type OneOfNetworkNotFoundOrganizationNotFound404Res struct {
+	union json.RawMessage
+}
+
+// OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res defines model for OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res.
+type OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res struct {
 	union json.RawMessage
 }
 
@@ -2661,6 +3144,41 @@ type OneOfObjectInTrashTaskQueueingError406Res struct {
 
 // OneOfObjectInTrashVirtualMachineMustBeStarted406Res defines model for OneOfObjectInTrashVirtualMachineMustBeStarted406Res.
 type OneOfObjectInTrashVirtualMachineMustBeStarted406Res struct {
+	union json.RawMessage
+}
+
+// OneOfObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res defines model for OneOfObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res.
+type OneOfObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res struct {
+	union json.RawMessage
+}
+
+// OneOfObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res defines model for OneOfObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res.
+type OneOfObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res struct {
+	union json.RawMessage
+}
+
+// OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res defines model for OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res.
+type OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res struct {
+	union json.RawMessage
+}
+
+// OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res defines model for OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res.
+type OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res struct {
+	union json.RawMessage
+}
+
+// OneOfObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res defines model for OneOfObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res.
+type OneOfObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res struct {
+	union json.RawMessage
+}
+
+// OneOfObjectStorageClusterNotFoundOrganizationNotFound404Res defines model for OneOfObjectStorageClusterNotFoundOrganizationNotFound404Res.
+type OneOfObjectStorageClusterNotFoundOrganizationNotFound404Res struct {
+	union json.RawMessage
+}
+
+// OneOfObjectStorageProvisioningErrorValidationError422Res defines model for OneOfObjectStorageProvisioningErrorValidationError422Res.
+type OneOfObjectStorageProvisioningErrorValidationError422Res struct {
 	union json.RawMessage
 }
 
@@ -2694,6 +3212,16 @@ type OneOfPermissionDenied403Res struct {
 	union json.RawMessage
 }
 
+// OneOfPolicyNotAvailableForManagedOrganizations400Res defines model for OneOfPolicyNotAvailableForManagedOrganizations400Res.
+type OneOfPolicyNotAvailableForManagedOrganizations400Res struct {
+	union json.RawMessage
+}
+
+// OneOfPricesNotAvailableForManagedOrganizations400Res defines model for OneOfPricesNotAvailableForManagedOrganizations400Res.
+type OneOfPricesNotAvailableForManagedOrganizations400Res struct {
+	union json.RawMessage
+}
+
 // OneOfUnassignedDiskValidationError422Res defines model for OneOfUnassignedDiskValidationError422Res.
 type OneOfUnassignedDiskValidationError422Res struct {
 	union json.RawMessage
@@ -2702,6 +3230,16 @@ type OneOfUnassignedDiskValidationError422Res struct {
 // OneOfVirtualMachineNotFoundVirtualMachinePackageNotFound404Res defines model for OneOfVirtualMachineNotFoundVirtualMachinePackageNotFound404Res.
 type OneOfVirtualMachineNotFoundVirtualMachinePackageNotFound404Res struct {
 	union json.RawMessage
+}
+
+// OneSystemDiskRequiredEnum defines model for OneSystemDiskRequiredEnum.
+type OneSystemDiskRequiredEnum string
+
+// OneSystemDiskRequiredSchema Exactly one disk must be marked as the system disk
+type OneSystemDiskRequiredSchema struct {
+	Code        *OneSystemDiskRequiredEnum `json:"code,omitempty"`
+	Description *string                    `json:"description,omitempty"`
+	Detail      *map[string]interface{}    `json:"detail,omitempty"`
 }
 
 // OperatingSystem defines model for OperatingSystem.
@@ -2742,6 +3280,31 @@ type Organization struct {
 	SubDomain            *string                         `json:"sub_domain,omitempty"`
 	Suspended            *bool                           `json:"suspended,omitempty"`
 	VatNumber            nullable.Nullable[string]       `json:"vat_number,omitempty"`
+}
+
+// OrganizationDeletionStep defines model for OrganizationDeletionStep.
+type OrganizationDeletionStep struct {
+	Description *string `json:"description,omitempty"`
+	Satisfied   *bool   `json:"satisfied,omitempty"`
+}
+
+// OrganizationDeletionSteps defines model for OrganizationDeletionSteps.
+type OrganizationDeletionSteps struct {
+	DiskBackupPolicies          *OrganizationDeletionStep `json:"disk_backup_policies,omitempty"`
+	DiskTemplates               *OrganizationDeletionStep `json:"disk_templates,omitempty"`
+	Disks                       *OrganizationDeletionStep `json:"disks,omitempty"`
+	DnsZones                    *OrganizationDeletionStep `json:"dns_zones,omitempty"`
+	EmptyTrash                  *OrganizationDeletionStep `json:"empty_trash,omitempty"`
+	EnsureNoOutstandingInvoices *OrganizationDeletionStep `json:"ensure_no_outstanding_invoices,omitempty"`
+	EnsureZeroBalance           *OrganizationDeletionStep `json:"ensure_zero_balance,omitempty"`
+	FileStorageVolumes          *OrganizationDeletionStep `json:"file_storage_volumes,omitempty"`
+	IpAddresses                 *OrganizationDeletionStep `json:"ip_addresses,omitempty"`
+	Isos                        *OrganizationDeletionStep `json:"isos,omitempty"`
+	LoadBalancers               *OrganizationDeletionStep `json:"load_balancers,omitempty"`
+	ManagedOrganizations        *OrganizationDeletionStep `json:"managed_organizations,omitempty"`
+	ObjectStorage               *OrganizationDeletionStep `json:"object_storage,omitempty"`
+	VirtualMachines             *OrganizationDeletionStep `json:"virtual_machines,omitempty"`
+	VirtualNetworks             *OrganizationDeletionStep `json:"virtual_networks,omitempty"`
 }
 
 // OrganizationLimitReachedEnum defines model for OrganizationLimitReachedEnum.
@@ -2993,6 +3556,7 @@ type PatchVirtualMachine200ResponseVirtualMachine struct {
 	Gpus                *[]VirtualMachineGPU                              `json:"gpus,omitempty"`
 	Group               nullable.Nullable[VirtualMachineGroup]            `json:"group,omitempty"`
 	Hostname            *string                                           `json:"hostname,omitempty"`
+	Hypervisor          nullable.Nullable[Hypervisor]                     `json:"hypervisor,omitempty"`
 	Id                  *string                                           `json:"id,omitempty"`
 	InitialRootPassword nullable.Nullable[string]                         `json:"initial_root_password,omitempty"`
 	IpAddresses         *[]IPAddress                                      `json:"ip_addresses,omitempty"`
@@ -3032,6 +3596,65 @@ type PermissionDeniedSchema struct {
 	Description *string               `json:"description,omitempty"`
 	Detail      *PermissionDenied     `json:"detail,omitempty"`
 }
+
+// PolicyFeature defines model for PolicyFeature.
+type PolicyFeature struct {
+	Permitted *bool `json:"permitted,omitempty"`
+}
+
+// PolicyFeatures defines model for PolicyFeatures.
+type PolicyFeatures struct {
+	DiskBusConfiguration            *PolicyFeature `json:"disk_bus_configuration,omitempty"`
+	FlexibleVirtualMachineResources *PolicyFeature `json:"flexible_virtual_machine_resources,omitempty"`
+	RestrictedTrafficTypes          *PolicyFeature `json:"restricted_traffic_types,omitempty"`
+	Suspension                      *PolicyFeature `json:"suspension,omitempty"`
+	ZoneSelection                   *PolicyFeature `json:"zone_selection,omitempty"`
+}
+
+// PolicyLimit defines model for PolicyLimit.
+type PolicyLimit struct {
+	Current *int                      `json:"current,omitempty"`
+	Limit   *int                      `json:"limit,omitempty"`
+	Unit    nullable.Nullable[string] `json:"unit,omitempty"`
+}
+
+// PolicyLimitWithoutCurrent defines model for PolicyLimitWithoutCurrent.
+type PolicyLimitWithoutCurrent struct {
+	Limit *int                      `json:"limit,omitempty"`
+	Unit  nullable.Nullable[string] `json:"unit,omitempty"`
+}
+
+// PolicyLimits defines model for PolicyLimits.
+type PolicyLimits struct {
+	Certificates           *PolicyLimit               `json:"certificates,omitempty"`
+	DiskIops               *PolicyLimitWithoutCurrent `json:"disk_iops,omitempty"`
+	DiskSpace              *PolicyLimit               `json:"disk_space,omitempty"`
+	DnsZones               *PolicyLimit               `json:"dns_zones,omitempty"`
+	FileStorageVolumes     *PolicyLimit               `json:"file_storage_volumes,omitempty"`
+	Isos                   *PolicyLimit               `json:"isos,omitempty"`
+	LoadBalancers          *PolicyLimit               `json:"load_balancers,omitempty"`
+	ManagedOrganizations   *PolicyLimit               `json:"managed_organizations,omitempty"`
+	NetworkSpeed           *PolicyLimitWithoutCurrent `json:"network_speed,omitempty"`
+	SecurityGroups         *PolicyLimit               `json:"security_groups,omitempty"`
+	UnallocatedIpAddresses *PolicyLimit               `json:"unallocated_ip_addresses,omitempty"`
+	UninvoicedBalance      *FinancialPolicyLimit      `json:"uninvoiced_balance,omitempty"`
+	VirtualMachineMemory   *PolicyLimit               `json:"virtual_machine_memory,omitempty"`
+	VirtualMachines        *PolicyLimit               `json:"virtual_machines,omitempty"`
+	VirtualNetworks        *PolicyLimit               `json:"virtual_networks,omitempty"`
+}
+
+// PolicyNotAvailableForManagedOrganizationsEnum defines model for PolicyNotAvailableForManagedOrganizationsEnum.
+type PolicyNotAvailableForManagedOrganizationsEnum string
+
+// PolicyNotAvailableForManagedOrganizationsSchema Managed organizations do not have policies. Make this request on the parent organization instead.
+type PolicyNotAvailableForManagedOrganizationsSchema struct {
+	Code        *PolicyNotAvailableForManagedOrganizationsEnum `json:"code,omitempty"`
+	Description *string                                        `json:"description,omitempty"`
+	Detail      *map[string]interface{}                        `json:"detail,omitempty"`
+}
+
+// PolicyType defines model for PolicyType.
+type PolicyType string
 
 // PostDiskAssign200ResponseDisk defines model for PostDiskAssign200ResponseDisk.
 type PostDiskAssign200ResponseDisk struct {
@@ -3402,13 +4025,14 @@ type PostVirtualMachineDiskBackupPolicies200ResponseDiskBackupPolicy struct {
 
 // PostVirtualMachineNetworkInterfaceAllocateIP200ResponseVirtualMachineNetworkInterface defines model for PostVirtualMachineNetworkInterfaceAllocateIP200ResponseVirtualMachineNetworkInterface.
 type PostVirtualMachineNetworkInterfaceAllocateIP200ResponseVirtualMachineNetworkInterface struct {
-	Id             *string                                                         `json:"id,omitempty"`
-	IpAddresses    *[]PostVirtualMachineNetworkInterfaceAllocateIPPartIPAddresses  `json:"ip_addresses,omitempty"`
-	MacAddress     *string                                                         `json:"mac_address,omitempty"`
-	Name           *string                                                         `json:"name,omitempty"`
-	Network        *PostVirtualMachineNetworkInterfaceAllocateIPPartNetwork        `json:"network,omitempty"`
-	State          *string                                                         `json:"state,omitempty"`
-	VirtualMachine *PostVirtualMachineNetworkInterfaceAllocateIPPartVirtualMachine `json:"virtual_machine,omitempty"`
+	Id             *string                                                                           `json:"id,omitempty"`
+	IpAddresses    *[]PostVirtualMachineNetworkInterfaceAllocateIPPartIPAddresses                    `json:"ip_addresses,omitempty"`
+	MacAddress     *string                                                                           `json:"mac_address,omitempty"`
+	Name           *string                                                                           `json:"name,omitempty"`
+	Network        nullable.Nullable[PostVirtualMachineNetworkInterfaceAllocateIPPartNetwork]        `json:"network,omitempty"`
+	State          *string                                                                           `json:"state,omitempty"`
+	VirtualMachine *PostVirtualMachineNetworkInterfaceAllocateIPPartVirtualMachine                   `json:"virtual_machine,omitempty"`
+	VirtualNetwork nullable.Nullable[PostVirtualMachineNetworkInterfaceAllocateIPPartVirtualNetwork] `json:"virtual_network,omitempty"`
 }
 
 // PostVirtualMachineNetworkInterfaceAllocateIPPartIPAddresses defines model for PostVirtualMachineNetworkInterfaceAllocateIPPartIPAddresses.
@@ -3425,6 +4049,144 @@ type PostVirtualMachineNetworkInterfaceAllocateIPPartNetwork struct {
 
 // PostVirtualMachineNetworkInterfaceAllocateIPPartVirtualMachine defines model for PostVirtualMachineNetworkInterfaceAllocateIPPartVirtualMachine.
 type PostVirtualMachineNetworkInterfaceAllocateIPPartVirtualMachine struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
+// PostVirtualMachineNetworkInterfaceAllocateIPPartVirtualNetwork defines model for PostVirtualMachineNetworkInterfaceAllocateIPPartVirtualNetwork.
+type PostVirtualMachineNetworkInterfaceAllocateIPPartVirtualNetwork struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
+// PostVirtualMachineNetworkInterfaceAttach200ResponseVirtualMachineNetworkInterface defines model for PostVirtualMachineNetworkInterfaceAttach200ResponseVirtualMachineNetworkInterface.
+type PostVirtualMachineNetworkInterfaceAttach200ResponseVirtualMachineNetworkInterface struct {
+	Id             *string                                                                       `json:"id,omitempty"`
+	IpAddresses    *[]PostVirtualMachineNetworkInterfaceAttachPartIPAddresses                    `json:"ip_addresses,omitempty"`
+	MacAddress     *string                                                                       `json:"mac_address,omitempty"`
+	Name           *string                                                                       `json:"name,omitempty"`
+	Network        nullable.Nullable[PostVirtualMachineNetworkInterfaceAttachPartNetwork]        `json:"network,omitempty"`
+	SpeedProfile   *PostVirtualMachineNetworkInterfaceAttachPartSpeedProfile                     `json:"speed_profile,omitempty"`
+	State          *string                                                                       `json:"state,omitempty"`
+	VirtualMachine *PostVirtualMachineNetworkInterfaceAttachPartVirtualMachine                   `json:"virtual_machine,omitempty"`
+	VirtualNetwork nullable.Nullable[PostVirtualMachineNetworkInterfaceAttachPartVirtualNetwork] `json:"virtual_network,omitempty"`
+}
+
+// PostVirtualMachineNetworkInterfaceAttachPartIPAddresses defines model for PostVirtualMachineNetworkInterfaceAttachPartIPAddresses.
+type PostVirtualMachineNetworkInterfaceAttachPartIPAddresses struct {
+	Address *string `json:"address,omitempty"`
+	Id      *string `json:"id,omitempty"`
+}
+
+// PostVirtualMachineNetworkInterfaceAttachPartNetwork defines model for PostVirtualMachineNetworkInterfaceAttachPartNetwork.
+type PostVirtualMachineNetworkInterfaceAttachPartNetwork struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
+// PostVirtualMachineNetworkInterfaceAttachPartSpeedProfile defines model for PostVirtualMachineNetworkInterfaceAttachPartSpeedProfile.
+type PostVirtualMachineNetworkInterfaceAttachPartSpeedProfile struct {
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
+}
+
+// PostVirtualMachineNetworkInterfaceAttachPartVirtualMachine defines model for PostVirtualMachineNetworkInterfaceAttachPartVirtualMachine.
+type PostVirtualMachineNetworkInterfaceAttachPartVirtualMachine struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
+// PostVirtualMachineNetworkInterfaceAttachPartVirtualNetwork defines model for PostVirtualMachineNetworkInterfaceAttachPartVirtualNetwork.
+type PostVirtualMachineNetworkInterfaceAttachPartVirtualNetwork struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
+// PostVirtualMachineNetworkInterfaceDetach200ResponseVirtualMachineNetworkInterface defines model for PostVirtualMachineNetworkInterfaceDetach200ResponseVirtualMachineNetworkInterface.
+type PostVirtualMachineNetworkInterfaceDetach200ResponseVirtualMachineNetworkInterface struct {
+	Id             *string                                                                       `json:"id,omitempty"`
+	IpAddresses    *[]PostVirtualMachineNetworkInterfaceDetachPartIPAddresses                    `json:"ip_addresses,omitempty"`
+	MacAddress     *string                                                                       `json:"mac_address,omitempty"`
+	Name           *string                                                                       `json:"name,omitempty"`
+	Network        nullable.Nullable[PostVirtualMachineNetworkInterfaceDetachPartNetwork]        `json:"network,omitempty"`
+	SpeedProfile   *PostVirtualMachineNetworkInterfaceDetachPartSpeedProfile                     `json:"speed_profile,omitempty"`
+	State          *string                                                                       `json:"state,omitempty"`
+	VirtualMachine *PostVirtualMachineNetworkInterfaceDetachPartVirtualMachine                   `json:"virtual_machine,omitempty"`
+	VirtualNetwork nullable.Nullable[PostVirtualMachineNetworkInterfaceDetachPartVirtualNetwork] `json:"virtual_network,omitempty"`
+}
+
+// PostVirtualMachineNetworkInterfaceDetachPartIPAddresses defines model for PostVirtualMachineNetworkInterfaceDetachPartIPAddresses.
+type PostVirtualMachineNetworkInterfaceDetachPartIPAddresses struct {
+	Address *string `json:"address,omitempty"`
+	Id      *string `json:"id,omitempty"`
+}
+
+// PostVirtualMachineNetworkInterfaceDetachPartNetwork defines model for PostVirtualMachineNetworkInterfaceDetachPartNetwork.
+type PostVirtualMachineNetworkInterfaceDetachPartNetwork struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
+// PostVirtualMachineNetworkInterfaceDetachPartSpeedProfile defines model for PostVirtualMachineNetworkInterfaceDetachPartSpeedProfile.
+type PostVirtualMachineNetworkInterfaceDetachPartSpeedProfile struct {
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
+}
+
+// PostVirtualMachineNetworkInterfaceDetachPartVirtualMachine defines model for PostVirtualMachineNetworkInterfaceDetachPartVirtualMachine.
+type PostVirtualMachineNetworkInterfaceDetachPartVirtualMachine struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
+// PostVirtualMachineNetworkInterfaceDetachPartVirtualNetwork defines model for PostVirtualMachineNetworkInterfaceDetachPartVirtualNetwork.
+type PostVirtualMachineNetworkInterfaceDetachPartVirtualNetwork struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
+// PostVirtualMachineNetworkInterfaces200ResponseVirtualMachineNetworkInterface defines model for PostVirtualMachineNetworkInterfaces200ResponseVirtualMachineNetworkInterface.
+type PostVirtualMachineNetworkInterfaces200ResponseVirtualMachineNetworkInterface struct {
+	Id             *string                                                                  `json:"id,omitempty"`
+	IpAddresses    *[]PostVirtualMachineNetworkInterfacesPartIPAddresses                    `json:"ip_addresses,omitempty"`
+	MacAddress     *string                                                                  `json:"mac_address,omitempty"`
+	Name           *string                                                                  `json:"name,omitempty"`
+	Network        nullable.Nullable[PostVirtualMachineNetworkInterfacesPartNetwork]        `json:"network,omitempty"`
+	SpeedProfile   *PostVirtualMachineNetworkInterfacesPartSpeedProfile                     `json:"speed_profile,omitempty"`
+	State          *string                                                                  `json:"state,omitempty"`
+	VirtualMachine *PostVirtualMachineNetworkInterfacesPartVirtualMachine                   `json:"virtual_machine,omitempty"`
+	VirtualNetwork nullable.Nullable[PostVirtualMachineNetworkInterfacesPartVirtualNetwork] `json:"virtual_network,omitempty"`
+}
+
+// PostVirtualMachineNetworkInterfacesPartIPAddresses defines model for PostVirtualMachineNetworkInterfacesPartIPAddresses.
+type PostVirtualMachineNetworkInterfacesPartIPAddresses struct {
+	Address *string `json:"address,omitempty"`
+	Id      *string `json:"id,omitempty"`
+}
+
+// PostVirtualMachineNetworkInterfacesPartNetwork defines model for PostVirtualMachineNetworkInterfacesPartNetwork.
+type PostVirtualMachineNetworkInterfacesPartNetwork struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
+// PostVirtualMachineNetworkInterfacesPartSpeedProfile defines model for PostVirtualMachineNetworkInterfacesPartSpeedProfile.
+type PostVirtualMachineNetworkInterfacesPartSpeedProfile struct {
+	Id        *string `json:"id,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	Permalink *string `json:"permalink,omitempty"`
+}
+
+// PostVirtualMachineNetworkInterfacesPartVirtualMachine defines model for PostVirtualMachineNetworkInterfacesPartVirtualMachine.
+type PostVirtualMachineNetworkInterfacesPartVirtualMachine struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
+// PostVirtualMachineNetworkInterfacesPartVirtualNetwork defines model for PostVirtualMachineNetworkInterfacesPartVirtualNetwork.
+type PostVirtualMachineNetworkInterfacesPartVirtualNetwork struct {
 	Id   *string `json:"id,omitempty"`
 	Name *string `json:"name,omitempty"`
 }
@@ -3455,6 +4217,25 @@ type PostVirtualMachineStop200ResponseTask struct {
 	Id     *string         `json:"id,omitempty"`
 	Name   *string         `json:"name,omitempty"`
 	Status *TaskStatusEnum `json:"status,omitempty"`
+}
+
+// PriceResourceWithSinglePriceVariant defines model for PriceResourceWithSinglePriceVariant.
+type PriceResourceWithSinglePriceVariant struct {
+	Category    *string               `json:"category,omitempty"`
+	Description *string               `json:"description,omitempty"`
+	Price       *float32              `json:"price,omitempty"`
+	Resource    *string               `json:"resource,omitempty"`
+	Variants    *[]SinglePriceVariant `json:"variants,omitempty"`
+}
+
+// PricesNotAvailableForManagedOrganizationsEnum defines model for PricesNotAvailableForManagedOrganizationsEnum.
+type PricesNotAvailableForManagedOrganizationsEnum string
+
+// PricesNotAvailableForManagedOrganizationsSchema Managed organizations do not have policies. Make this request on the parent organization instead.
+type PricesNotAvailableForManagedOrganizationsSchema struct {
+	Code        *PricesNotAvailableForManagedOrganizationsEnum `json:"code,omitempty"`
+	Description *string                                        `json:"description,omitempty"`
+	Detail      *map[string]interface{}                        `json:"detail,omitempty"`
 }
 
 // PrivacyTypesEnum defines model for PrivacyTypesEnum.
@@ -3647,7 +4428,7 @@ type Schedule struct {
 	Time             *int                      `json:"time,omitempty"`
 }
 
-// ScheduleArguments All 'schedule[]' params are mutually exclusive, only one can be provided.
+// ScheduleArguments defines model for ScheduleArguments.
 type ScheduleArguments struct {
 	Frequency *int                      `json:"frequency,omitempty"`
 	Interval  *ScheduleIntervalTypeEnum `json:"interval,omitempty"`
@@ -3682,7 +4463,7 @@ type SecurityGroup struct {
 	Name             *string   `json:"name,omitempty"`
 }
 
-// SecurityGroupArguments All 'properties[]' params are mutually exclusive, only one can be provided.
+// SecurityGroupArguments defines model for SecurityGroupArguments.
 type SecurityGroupArguments struct {
 	AllowAllInbound  *bool     `json:"allow_all_inbound,omitempty"`
 	AllowAllOutbound *bool     `json:"allow_all_outbound,omitempty"`
@@ -3690,7 +4471,7 @@ type SecurityGroupArguments struct {
 	Name             *string   `json:"name,omitempty"`
 }
 
-// SecurityGroupLookup All 'security_group[]' params are mutually exclusive, only one can be provided.
+// SecurityGroupLookup defines model for SecurityGroupLookup.
 type SecurityGroupLookup struct {
 	Id *string `json:"id,omitempty"`
 }
@@ -3701,7 +4482,7 @@ type SecurityGroupNotFoundEnum string
 // SecurityGroupRuleActionEnum defines model for SecurityGroupRuleActionEnum.
 type SecurityGroupRuleActionEnum string
 
-// SecurityGroupRuleArguments All 'properties[]' params are mutually exclusive, only one can be provided.
+// SecurityGroupRuleArguments defines model for SecurityGroupRuleArguments.
 type SecurityGroupRuleArguments struct {
 	Action    *SecurityGroupRuleActionEnum    `json:"action,omitempty"`
 	Direction *SecurityGroupRuleDirectionEnum `json:"direction,omitempty"`
@@ -3716,7 +4497,7 @@ type SecurityGroupRuleArguments struct {
 // SecurityGroupRuleDirectionEnum defines model for SecurityGroupRuleDirectionEnum.
 type SecurityGroupRuleDirectionEnum string
 
-// SecurityGroupRuleLookup All 'security_group_rule[]' params are mutually exclusive, only one can be provided.
+// SecurityGroupRuleLookup defines model for SecurityGroupRuleLookup.
 type SecurityGroupRuleLookup struct {
 	Id *string `json:"id,omitempty"`
 }
@@ -3729,6 +4510,13 @@ type SecurityGroupRuleProtocolEnum string
 
 // ServiceUnavailableEnum defines model for ServiceUnavailableEnum.
 type ServiceUnavailableEnum string
+
+// SinglePriceVariant defines model for SinglePriceVariant.
+type SinglePriceVariant struct {
+	Description nullable.Nullable[string] `json:"description,omitempty"`
+	Id          *string                   `json:"id,omitempty"`
+	Price       *float32                  `json:"price,omitempty"`
+}
 
 // SpeedProfileAlreadyAssignedEnum defines model for SpeedProfileAlreadyAssignedEnum.
 type SpeedProfileAlreadyAssignedEnum string
@@ -3744,7 +4532,7 @@ type Tag struct {
 	Name      *string        `json:"name,omitempty"`
 }
 
-// TagArguments All 'properties[]' params are mutually exclusive, only one can be provided.
+// TagArguments defines model for TagArguments.
 type TagArguments struct {
 	Color *TagColorsEnum `json:"color,omitempty"`
 	Name  *string        `json:"name,omitempty"`
@@ -3753,7 +4541,7 @@ type TagArguments struct {
 // TagColorsEnum defines model for TagColorsEnum.
 type TagColorsEnum string
 
-// TagLookup All 'tag[]' params are mutually exclusive, only one can be provided.
+// TagLookup defines model for TagLookup.
 type TagLookup struct {
 	Id *string `json:"id,omitempty"`
 }
@@ -3905,6 +4693,7 @@ type VirtualMachine struct {
 	Gpus                *[]VirtualMachineGPU                     `json:"gpus,omitempty"`
 	Group               nullable.Nullable[VirtualMachineGroup]   `json:"group,omitempty"`
 	Hostname            *string                                  `json:"hostname,omitempty"`
+	Hypervisor          nullable.Nullable[Hypervisor]            `json:"hypervisor,omitempty"`
 	Id                  *string                                  `json:"id,omitempty"`
 	InitialRootPassword nullable.Nullable[string]                `json:"initial_root_password,omitempty"`
 	IpAddresses         *[]IPAddress                             `json:"ip_addresses,omitempty"`
@@ -3919,18 +4708,30 @@ type VirtualMachine struct {
 	Zone                *Zone                                    `json:"zone,omitempty"`
 }
 
-// VirtualMachineArguments All 'properties[]' params are mutually exclusive, only one can be provided.
+// VirtualMachineArguments defines model for VirtualMachineArguments.
 type VirtualMachineArguments struct {
 	Description *string `json:"description,omitempty"`
 
 	// GpuType All 'gpu_type[]' params are mutually exclusive, only one can be provided.
-	GpuType *GPUTypeLookup `json:"gpu_type,omitempty"`
-
-	// Group All 'group[]' params are mutually exclusive, only one can be provided.
+	GpuType  *GPUTypeLookup             `json:"gpu_type,omitempty"`
 	Group    *VirtualMachineGroupLookup `json:"group,omitempty"`
 	Hostname *string                    `json:"hostname,omitempty"`
 	Name     *string                    `json:"name,omitempty"`
 	TagNames *[]string                  `json:"tag_names,omitempty"`
+}
+
+// VirtualMachineBuildDiskArguments defines model for VirtualMachineBuildDiskArguments.
+type VirtualMachineBuildDiskArguments struct {
+	InitialFileSystem *FileSystemEnum `json:"initial_file_system,omitempty"`
+
+	// IoProfile All 'io_profile[]' params are mutually exclusive, only one can be provided.
+	IoProfile    *DiskIOProfileLookup `json:"io_profile,omitempty"`
+	Name         *string              `json:"name,omitempty"`
+	SizeInGb     int                  `json:"size_in_gb"`
+	StorageSpeed *StorageSpeedEnum    `json:"storage_speed,omitempty"`
+
+	// System Default false. Exactly one disk must be marked as the system disk
+	System *bool `json:"system,omitempty"`
 }
 
 // VirtualMachineBuildNotFoundEnum defines model for VirtualMachineBuildNotFoundEnum.
@@ -3948,7 +4749,7 @@ type VirtualMachineDisk struct {
 	VirtualMachine *VirtualMachine                        `json:"virtual_machine,omitempty"`
 }
 
-// VirtualMachineDiskArguments All 'virtual_machine_disk[]' params are mutually exclusive, only one can be provided.
+// VirtualMachineDiskArguments defines model for VirtualMachineDiskArguments.
 type VirtualMachineDiskArguments struct {
 	// Attach Attach the disk once built. If the virtual machine is not running the disk will attach when started. Only available when creating disk, existing disks must use the attach endpoint.
 	Attach *bool `json:"attach,omitempty"`
@@ -3964,7 +4765,7 @@ type VirtualMachineDiskArguments struct {
 // VirtualMachineDiskAttachmentStateEnum defines model for VirtualMachineDiskAttachmentStateEnum.
 type VirtualMachineDiskAttachmentStateEnum string
 
-// VirtualMachineFlexibleResources All 'resources[]' params are mutually exclusive, only one can be provided.
+// VirtualMachineFlexibleResources defines model for VirtualMachineFlexibleResources.
 type VirtualMachineFlexibleResources struct {
 	CpuCores         int   `json:"cpu_cores"`
 	MemoryInGb       int   `json:"memory_in_gb"`
@@ -3998,14 +4799,14 @@ type VirtualMachineGroup struct {
 	Segregate     *bool   `json:"segregate,omitempty"`
 }
 
-// VirtualMachineGroupArguments All 'properties[]' params are mutually exclusive, only one can be provided.
+// VirtualMachineGroupArguments defines model for VirtualMachineGroupArguments.
 type VirtualMachineGroupArguments struct {
 	AutoSegregate *bool   `json:"auto_segregate,omitempty"`
 	Name          *string `json:"name,omitempty"`
 	Segregate     *bool   `json:"segregate,omitempty"`
 }
 
-// VirtualMachineGroupLookup All 'group[]' params are mutually exclusive, only one can be provided.
+// VirtualMachineGroupLookup defines model for VirtualMachineGroupLookup.
 type VirtualMachineGroupLookup struct {
 	Id *string `json:"id,omitempty"`
 }
@@ -4034,7 +4835,13 @@ type VirtualMachineMustBeStartedSchema struct {
 	Detail      *VirtualMachineMustBeStarted     `json:"detail,omitempty"`
 }
 
-// VirtualMachineNetworkInterfaceLookup All 'virtual_machine_network_interface[]' params are mutually exclusive, only one can be provided.
+// VirtualMachineNetworkInterfaceAlreadyAttachedEnum defines model for VirtualMachineNetworkInterfaceAlreadyAttachedEnum.
+type VirtualMachineNetworkInterfaceAlreadyAttachedEnum string
+
+// VirtualMachineNetworkInterfaceAlreadyDetachedEnum defines model for VirtualMachineNetworkInterfaceAlreadyDetachedEnum.
+type VirtualMachineNetworkInterfaceAlreadyDetachedEnum string
+
+// VirtualMachineNetworkInterfaceLookup defines model for VirtualMachineNetworkInterfaceLookup.
 type VirtualMachineNetworkInterfaceLookup struct {
 	Id *string `json:"id,omitempty"`
 }
@@ -4062,6 +4869,7 @@ type VirtualMachineNotFoundSchema struct {
 // VirtualMachinePackage defines model for VirtualMachinePackage.
 type VirtualMachinePackage struct {
 	CpuCores                      *int                          `json:"cpu_cores,omitempty"`
+	Group                         *VirtualMachinePackageGroup   `json:"group,omitempty"`
 	Icon                          nullable.Nullable[Attachment] `json:"icon,omitempty"`
 	Id                            *string                       `json:"id,omitempty"`
 	Ipv4Addresses                 *int                          `json:"ipv4_addresses,omitempty"`
@@ -4072,6 +4880,12 @@ type VirtualMachinePackage struct {
 	Privacy                       *PrivacyTypesEnum             `json:"privacy,omitempty"`
 	StorageInGb                   *int                          `json:"storage_in_gb,omitempty"`
 	UseDedicatedCpus              *bool                         `json:"use_dedicated_cpus,omitempty"`
+}
+
+// VirtualMachinePackageGroup defines model for VirtualMachinePackageGroup.
+type VirtualMachinePackageGroup struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
 }
 
 // VirtualMachinePackageLookup All 'virtual_machine_package[]' params are mutually exclusive, only one can be provided.
@@ -4092,6 +4906,33 @@ type VirtualMachinePackageNotFoundSchema struct {
 
 // VirtualMachineStateEnum defines model for VirtualMachineStateEnum.
 type VirtualMachineStateEnum string
+
+// VirtualNetwork defines model for VirtualNetwork.
+type VirtualNetwork struct {
+	DataCenter *DataCenter `json:"data_center,omitempty"`
+	Id         *string     `json:"id,omitempty"`
+	Name       *string     `json:"name,omitempty"`
+}
+
+// VirtualNetworkArguments defines model for VirtualNetworkArguments.
+type VirtualNetworkArguments struct {
+	Name string `json:"name"`
+}
+
+// VirtualNetworkLookup defines model for VirtualNetworkLookup.
+type VirtualNetworkLookup struct {
+	Id *string `json:"id,omitempty"`
+}
+
+// VirtualNetworkNotFoundEnum defines model for VirtualNetworkNotFoundEnum.
+type VirtualNetworkNotFoundEnum string
+
+// VirtualNetworkNotFoundSchema No virtual network was found matching any of the criteria provided in the arguments
+type VirtualNetworkNotFoundSchema struct {
+	Code        *VirtualNetworkNotFoundEnum `json:"code,omitempty"`
+	Description *string                     `json:"description,omitempty"`
+	Detail      *map[string]interface{}     `json:"detail,omitempty"`
+}
 
 // Zone defines model for Zone.
 type Zone struct {
@@ -4211,6 +5052,9 @@ type DNSZoneNotVerifiedResponse struct {
 	Detail      *map[string]interface{} `json:"detail,omitempty"`
 }
 
+// DataCenterNotFoundOrganizationNotFound404Res defines model for DataCenterNotFoundOrganizationNotFound404Res.
+type DataCenterNotFoundOrganizationNotFound404Res = OneOfDataCenterNotFoundOrganizationNotFound404Res
+
 // DataCenterNotFoundResponse defines model for DataCenterNotFoundResponse.
 type DataCenterNotFoundResponse struct {
 	Code        *DataCenterNotFoundEnum `json:"code,omitempty"`
@@ -4221,12 +5065,22 @@ type DataCenterNotFoundResponse struct {
 // DataCenterNotFoundVirtualMachinePackageNotFoundZoneNotFound404Res defines model for DataCenterNotFoundVirtualMachinePackageNotFoundZoneNotFound404Res.
 type DataCenterNotFoundVirtualMachinePackageNotFoundZoneNotFound404Res = OneOfDataCenterNotFoundVirtualMachinePackageNotFoundZoneNotFound404Res
 
+// DeletionFailedResponse defines model for DeletionFailedResponse.
+type DeletionFailedResponse struct {
+	Code        *DeletionFailedEnum     `json:"code,omitempty"`
+	Description *string                 `json:"description,omitempty"`
+	Detail      *map[string]interface{} `json:"detail,omitempty"`
+}
+
 // DeletionRestrictedResponse defines model for DeletionRestrictedResponse.
 type DeletionRestrictedResponse struct {
 	Code        *DeletionRestrictedEnum `json:"code,omitempty"`
 	Description *string                 `json:"description,omitempty"`
 	Detail      *DeletionRestricted     `json:"detail,omitempty"`
 }
+
+// DeletionStepsNotSatisfiedManagedOrganizationRequired409Res defines model for DeletionStepsNotSatisfiedManagedOrganizationRequired409Res.
+type DeletionStepsNotSatisfiedManagedOrganizationRequired409Res = OneOfDeletionStepsNotSatisfiedManagedOrganizationRequired409Res
 
 // DiskBackupPolicyNotFoundResponse defines model for DiskBackupPolicyNotFoundResponse.
 type DiskBackupPolicyNotFoundResponse struct {
@@ -4324,8 +5178,22 @@ type LoadBalancerRuleNotFoundResponse struct {
 	Detail      *map[string]interface{}       `json:"detail,omitempty"`
 }
 
-// LocationRequiredValidationError422Res defines model for LocationRequiredValidationError422Res.
-type LocationRequiredValidationError422Res = OneOfLocationRequiredValidationError422Res
+// LocationRequiredOneSystemDiskRequiredValidationError422Res defines model for LocationRequiredOneSystemDiskRequiredValidationError422Res.
+type LocationRequiredOneSystemDiskRequiredValidationError422Res = OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res
+
+// MultipleObjectStorageBucketsFoundResponse defines model for MultipleObjectStorageBucketsFoundResponse.
+type MultipleObjectStorageBucketsFoundResponse struct {
+	Code        *MultipleObjectStorageBucketsFoundEnum `json:"code,omitempty"`
+	Description *string                                `json:"description,omitempty"`
+	Detail      *map[string]interface{}                `json:"detail,omitempty"`
+}
+
+// NetworkErrorResponse defines model for NetworkErrorResponse.
+type NetworkErrorResponse struct {
+	Code        *NetworkErrorEnum       `json:"code,omitempty"`
+	Description *string                 `json:"description,omitempty"`
+	Detail      *map[string]interface{} `json:"detail,omitempty"`
+}
 
 // NetworkNotFoundOrganizationNotFound404Res defines model for NetworkNotFoundOrganizationNotFound404Res.
 type NetworkNotFoundOrganizationNotFound404Res = OneOfNetworkNotFoundOrganizationNotFound404Res
@@ -4336,6 +5204,9 @@ type NetworkNotFoundResponse struct {
 	Description *string                 `json:"description,omitempty"`
 	Detail      *map[string]interface{} `json:"detail,omitempty"`
 }
+
+// NetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res defines model for NetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res.
+type NetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res = OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res
 
 // NetworkSpeedProfileNotFoundVirtualMachineNetworkInterfaceNotFound404Res defines model for NetworkSpeedProfileNotFoundVirtualMachineNetworkInterfaceNotFound404Res.
 type NetworkSpeedProfileNotFoundVirtualMachineNetworkInterfaceNotFound404Res = OneOfNetworkSpeedProfileNotFoundVirtualMachineNetworkInterfaceNotFound404Res
@@ -4377,6 +5248,41 @@ type ObjectInTrashTaskQueueingError406Res = OneOfObjectInTrashTaskQueueingError4
 // ObjectInTrashVirtualMachineMustBeStarted406Res defines model for ObjectInTrashVirtualMachineMustBeStarted406Res.
 type ObjectInTrashVirtualMachineMustBeStarted406Res = OneOfObjectInTrashVirtualMachineMustBeStarted406Res
 
+// ObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res defines model for ObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res.
+type ObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res = OneOfObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res
+
+// ObjectStorageAccessKeyNotFoundResponse defines model for ObjectStorageAccessKeyNotFoundResponse.
+type ObjectStorageAccessKeyNotFoundResponse struct {
+	Code        *ObjectStorageAccessKeyNotFoundEnum `json:"code,omitempty"`
+	Description *string                             `json:"description,omitempty"`
+	Detail      *map[string]interface{}             `json:"detail,omitempty"`
+}
+
+// ObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res defines model for ObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res.
+type ObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res = OneOfObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res
+
+// ObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res defines model for ObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res.
+type ObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res = OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res
+
+// ObjectStorageBucketDeletionErrorPermissionDenied403Res defines model for ObjectStorageBucketDeletionErrorPermissionDenied403Res.
+type ObjectStorageBucketDeletionErrorPermissionDenied403Res = OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res
+
+// ObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res defines model for ObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res.
+type ObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res = OneOfObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res
+
+// ObjectStorageClusterNotFoundOrganizationNotFound404Res defines model for ObjectStorageClusterNotFoundOrganizationNotFound404Res.
+type ObjectStorageClusterNotFoundOrganizationNotFound404Res = OneOfObjectStorageClusterNotFoundOrganizationNotFound404Res
+
+// ObjectStorageProvisioningErrorResponse defines model for ObjectStorageProvisioningErrorResponse.
+type ObjectStorageProvisioningErrorResponse struct {
+	Code        *ObjectStorageProvisioningErrorEnum `json:"code,omitempty"`
+	Description *string                             `json:"description,omitempty"`
+	Detail      *map[string]interface{}             `json:"detail,omitempty"`
+}
+
+// ObjectStorageProvisioningErrorValidationError422Res defines model for ObjectStorageProvisioningErrorValidationError422Res.
+type ObjectStorageProvisioningErrorValidationError422Res = OneOfObjectStorageProvisioningErrorValidationError422Res
+
 // OperatingSystemNotFoundOrganizationNotFound404Res defines model for OperatingSystemNotFoundOrganizationNotFound404Res.
 type OperatingSystemNotFoundOrganizationNotFound404Res = OneOfOperatingSystemNotFoundOrganizationNotFound404Res
 
@@ -4408,6 +5314,12 @@ type OrganizationNotFoundResponse struct {
 
 // PermissionDenied403Res defines model for PermissionDenied403Res.
 type PermissionDenied403Res = OneOfPermissionDenied403Res
+
+// PolicyNotAvailableForManagedOrganizations400Res defines model for PolicyNotAvailableForManagedOrganizations400Res.
+type PolicyNotAvailableForManagedOrganizations400Res = OneOfPolicyNotAvailableForManagedOrganizations400Res
+
+// PricesNotAvailableForManagedOrganizations400Res defines model for PricesNotAvailableForManagedOrganizations400Res.
+type PricesNotAvailableForManagedOrganizations400Res = OneOfPricesNotAvailableForManagedOrganizations400Res
 
 // ResourceDoesNotSupportUnallocationResponse defines model for ResourceDoesNotSupportUnallocationResponse.
 type ResourceDoesNotSupportUnallocationResponse struct {
@@ -4517,6 +5429,20 @@ type VirtualMachineGroupNotFoundResponse struct {
 	Detail      *map[string]interface{}          `json:"detail,omitempty"`
 }
 
+// VirtualMachineNetworkInterfaceAlreadyAttachedResponse defines model for VirtualMachineNetworkInterfaceAlreadyAttachedResponse.
+type VirtualMachineNetworkInterfaceAlreadyAttachedResponse struct {
+	Code        *VirtualMachineNetworkInterfaceAlreadyAttachedEnum `json:"code,omitempty"`
+	Description *string                                            `json:"description,omitempty"`
+	Detail      *map[string]interface{}                            `json:"detail,omitempty"`
+}
+
+// VirtualMachineNetworkInterfaceAlreadyDetachedResponse defines model for VirtualMachineNetworkInterfaceAlreadyDetachedResponse.
+type VirtualMachineNetworkInterfaceAlreadyDetachedResponse struct {
+	Code        *VirtualMachineNetworkInterfaceAlreadyDetachedEnum `json:"code,omitempty"`
+	Description *string                                            `json:"description,omitempty"`
+	Detail      *map[string]interface{}                            `json:"detail,omitempty"`
+}
+
 // VirtualMachineNetworkInterfaceNotFoundResponse defines model for VirtualMachineNetworkInterfaceNotFoundResponse.
 type VirtualMachineNetworkInterfaceNotFoundResponse struct {
 	Code        *VirtualMachineNetworkInterfaceNotFoundEnum `json:"code,omitempty"`
@@ -4541,6 +5467,13 @@ type VirtualMachinePackageNotFoundResponse struct {
 	Detail      *map[string]interface{}            `json:"detail,omitempty"`
 }
 
+// VirtualNetworkNotFoundResponse defines model for VirtualNetworkNotFoundResponse.
+type VirtualNetworkNotFoundResponse struct {
+	Code        *VirtualNetworkNotFoundEnum `json:"code,omitempty"`
+	Description *string                     `json:"description,omitempty"`
+	Detail      *map[string]interface{}     `json:"detail,omitempty"`
+}
+
 // ZoneNotFoundResponse defines model for ZoneNotFoundResponse.
 type ZoneNotFoundResponse struct {
 	Code        *ZoneNotFoundEnum       `json:"code,omitempty"`
@@ -4550,149 +5483,171 @@ type ZoneNotFoundResponse struct {
 
 // DeleteAddressListEntryJSONBody defines parameters for DeleteAddressListEntry.
 type DeleteAddressListEntryJSONBody struct {
-	// AddressListEntry All 'address_list_entry[]' params are mutually exclusive, only one can be provided.
 	AddressListEntry AddressListEntryLookup `json:"address_list_entry"`
 }
 
 // GetAddressListEntryParams defines parameters for GetAddressListEntry.
 type GetAddressListEntryParams struct {
-	// AddressListEntryId The address list entry to return. All 'address_list_entry[]' params are mutually exclusive, only one can be provided.
+	// AddressListEntryId The address list entry to return.
 	AddressListEntryId *string `form:"address_list_entry[id],omitempty" json:"address_list_entry[id],omitempty"`
 }
 
 // PatchAddressListEntryJSONBody defines parameters for PatchAddressListEntry.
 type PatchAddressListEntryJSONBody struct {
-	// AddressListEntry All 'address_list_entry[]' params are mutually exclusive, only one can be provided.
-	AddressListEntry AddressListEntryLookup `json:"address_list_entry"`
-
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
-	Properties AddressListEntryArguments `json:"properties"`
+	AddressListEntry AddressListEntryLookup    `json:"address_list_entry"`
+	Properties       AddressListEntryArguments `json:"properties"`
 }
 
 // GetAddressListsParams defines parameters for GetAddressLists.
 type GetAddressListsParams struct {
-	Page    *int `form:"page,omitempty" json:"page,omitempty"`
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
 	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // DeleteAddressListJSONBody defines parameters for DeleteAddressList.
 type DeleteAddressListJSONBody struct {
-	// AddressList All 'address_list[]' params are mutually exclusive, only one can be provided.
 	AddressList AddressListLookup `json:"address_list"`
 }
 
 // GetAddressListParams defines parameters for GetAddressList.
 type GetAddressListParams struct {
-	// AddressListId The address list to return. All 'address_list[]' params are mutually exclusive, only one can be provided.
+	// AddressListId The address list to return.
 	AddressListId *string `form:"address_list[id],omitempty" json:"address_list[id],omitempty"`
 }
 
 // PatchAddressListJSONBody defines parameters for PatchAddressList.
 type PatchAddressListJSONBody struct {
-	// AddressList All 'address_list[]' params are mutually exclusive, only one can be provided.
-	AddressList AddressListLookup `json:"address_list"`
-	Annotations *[]KeyValue       `json:"annotations,omitempty"`
-
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
-	Properties AddressListArguments `json:"properties"`
+	AddressList AddressListLookup    `json:"address_list"`
+	Annotations *[]KeyValue          `json:"annotations,omitempty"`
+	Properties  AddressListArguments `json:"properties"`
 }
 
 // GetAddressListEntriesParams defines parameters for GetAddressListEntries.
 type GetAddressListEntriesParams struct {
-	// AddressListId The address list for which the entries should be returned. All 'address_list[]' params are mutually exclusive, only one can be provided.
+	// AddressListId The address list for which the entries should be returned.
 	AddressListId *string `form:"address_list[id],omitempty" json:"address_list[id],omitempty"`
-	Page          *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage       *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // PostAddressListEntriesJSONBody defines parameters for PostAddressListEntries.
 type PostAddressListEntriesJSONBody struct {
-	// AddressList All 'address_list[]' params are mutually exclusive, only one can be provided.
-	AddressList AddressListLookup `json:"address_list"`
+	AddressList AddressListLookup         `json:"address_list"`
+	Properties  AddressListEntryArguments `json:"properties"`
+}
 
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
-	Properties AddressListEntryArguments `json:"properties"`
+// PostAddressListEntriesBulkJSONBody defines parameters for PostAddressListEntriesBulk.
+type PostAddressListEntriesBulkJSONBody struct {
+	Add         *[]AddressListEntryArguments `json:"add,omitempty"`
+	AddressList AddressListLookup            `json:"address_list"`
+	Remove      *[]AddressListEntryArguments `json:"remove,omitempty"`
 }
 
 // DeleteApiTokenJSONBody defines parameters for DeleteApiToken.
 type DeleteApiTokenJSONBody struct {
-	// ApiToken All 'api_token[]' params are mutually exclusive, only one can be provided.
 	ApiToken APITokenLookup `json:"api_token"`
 }
 
 // PatchApiTokenJSONBody defines parameters for PatchApiToken.
 type PatchApiTokenJSONBody struct {
-	Annotations *[]KeyValue `json:"annotations,omitempty"`
-
-	// ApiToken All 'api_token[]' params are mutually exclusive, only one can be provided.
-	ApiToken APITokenLookup `json:"api_token"`
-
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
-	Properties APITokenArguments `json:"properties"`
+	Annotations *[]KeyValue       `json:"annotations,omitempty"`
+	ApiToken    APITokenLookup    `json:"api_token"`
+	Properties  APITokenArguments `json:"properties"`
 }
 
 // PostApiTokenRegenerateSecretJSONBody defines parameters for PostApiTokenRegenerateSecret.
 type PostApiTokenRegenerateSecretJSONBody struct {
-	// ApiToken All 'api_token[]' params are mutually exclusive, only one can be provided.
 	ApiToken APITokenLookup `json:"api_token"`
 }
 
 // GetCertificateParams defines parameters for GetCertificate.
 type GetCertificateParams struct {
-	// CertificateId All 'certificate[]' params are mutually exclusive, only one can be provided.
 	CertificateId *string `form:"certificate[id],omitempty" json:"certificate[id],omitempty"`
 }
 
 // GetCountriesParams defines parameters for GetCountries.
 type GetCountriesParams struct {
-	Page    *int `form:"page,omitempty" json:"page,omitempty"`
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
 	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // GetCountryParams defines parameters for GetCountry.
 type GetCountryParams struct {
-	// CountryId The country to return. All 'country[]' params are mutually exclusive, only one can be provided.
+	// CountryId The country to return.
+	//
+	//  All 'country[]' params are mutually exclusive, only one can be provided.
 	CountryId *string `form:"country[id],omitempty" json:"country[id],omitempty"`
 
-	// CountryIsoCode2 The country to return. All 'country[]' params are mutually exclusive, only one can be provided.
+	// CountryIsoCode2 The country to return.
+	//
+	//  All 'country[]' params are mutually exclusive, only one can be provided.
 	CountryIsoCode2 *string `form:"country[iso_code2],omitempty" json:"country[iso_code2],omitempty"`
 
-	// CountryIsoCode3 The country to return. All 'country[]' params are mutually exclusive, only one can be provided.
+	// CountryIsoCode3 The country to return.
+	//
+	//  All 'country[]' params are mutually exclusive, only one can be provided.
 	CountryIsoCode3 *string `form:"country[iso_code3],omitempty" json:"country[iso_code3],omitempty"`
 }
 
 // GetCountryCountryStatesParams defines parameters for GetCountryCountryStates.
 type GetCountryCountryStatesParams struct {
-	// CountryId The country to return states for. All 'country[]' params are mutually exclusive, only one can be provided.
+	// CountryId The country to return states for.
+	//
+	//  All 'country[]' params are mutually exclusive, only one can be provided.
 	CountryId *string `form:"country[id],omitempty" json:"country[id],omitempty"`
 
-	// CountryIsoCode2 The country to return states for. All 'country[]' params are mutually exclusive, only one can be provided.
+	// CountryIsoCode2 The country to return states for.
+	//
+	//  All 'country[]' params are mutually exclusive, only one can be provided.
 	CountryIsoCode2 *string `form:"country[iso_code2],omitempty" json:"country[iso_code2],omitempty"`
 
-	// CountryIsoCode3 The country to return states for. All 'country[]' params are mutually exclusive, only one can be provided.
+	// CountryIsoCode3 The country to return states for.
+	//
+	//  All 'country[]' params are mutually exclusive, only one can be provided.
 	CountryIsoCode3 *string `form:"country[iso_code3],omitempty" json:"country[iso_code3],omitempty"`
-	Page            *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage         *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // GetCountryStateParams defines parameters for GetCountryState.
 type GetCountryStateParams struct {
-	// CountryStateId The country state to return. All 'country_state[]' params are mutually exclusive, only one can be provided.
+	// CountryStateId The country state to return.
 	CountryStateId *string `form:"country_state[id],omitempty" json:"country_state[id],omitempty"`
 }
 
 // GetCurrenciesParams defines parameters for GetCurrencies.
 type GetCurrenciesParams struct {
-	Page    *int `form:"page,omitempty" json:"page,omitempty"`
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
 	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // GetCurrencyParams defines parameters for GetCurrency.
 type GetCurrencyParams struct {
-	// CurrencyId The currency to return. All 'currency[]' params are mutually exclusive, only one can be provided.
+	// CurrencyId The currency to return.
+	//
+	//  All 'currency[]' params are mutually exclusive, only one can be provided.
 	CurrencyId *string `form:"currency[id],omitempty" json:"currency[id],omitempty"`
 
-	// CurrencyIsoCode The currency to return. All 'currency[]' params are mutually exclusive, only one can be provided.
+	// CurrencyIsoCode The currency to return.
+	//
+	//  All 'currency[]' params are mutually exclusive, only one can be provided.
 	CurrencyIsoCode *string `form:"currency[iso_code],omitempty" json:"currency[iso_code],omitempty"`
 }
 
@@ -4716,39 +5671,42 @@ type GetDataCenterDefaultNetworkParams struct {
 
 // GetDataCenterGpuTypesParams defines parameters for GetDataCenterGpuTypes.
 type GetDataCenterGpuTypesParams struct {
-	// DataCenterId The data center to list GPU types for. All 'data_center[]' params are mutually exclusive, only one can be provided.
+	// DataCenterId The data center to list GPU types for.
+	//
+	//  All 'data_center[]' params are mutually exclusive, only one can be provided.
 	DataCenterId *string `form:"data_center[id],omitempty" json:"data_center[id],omitempty"`
 
-	// DataCenterPermalink The data center to list GPU types for. All 'data_center[]' params are mutually exclusive, only one can be provided.
+	// DataCenterPermalink The data center to list GPU types for.
+	//
+	//  All 'data_center[]' params are mutually exclusive, only one can be provided.
 	DataCenterPermalink *string `form:"data_center[permalink],omitempty" json:"data_center[permalink],omitempty"`
-	Page                *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage             *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // DeleteDiskBackupPolicyJSONBody defines parameters for DeleteDiskBackupPolicy.
 type DeleteDiskBackupPolicyJSONBody struct {
-	// DiskBackupPolicy All 'disk_backup_policy[]' params are mutually exclusive, only one can be provided.
 	DiskBackupPolicy DiskBackupPolicyLookup `json:"disk_backup_policy"`
 }
 
 // GetDiskBackupPolicyParams defines parameters for GetDiskBackupPolicy.
 type GetDiskBackupPolicyParams struct {
-	// DiskBackupPolicyId The disk backup policy to get information for. All 'disk_backup_policy[]' params are mutually exclusive, only one can be provided.
+	// DiskBackupPolicyId The disk backup policy to get information for.
 	DiskBackupPolicyId *string `form:"disk_backup_policy[id],omitempty" json:"disk_backup_policy[id],omitempty"`
 }
 
 // PatchDiskBackupPolicyJSONBody defines parameters for PatchDiskBackupPolicy.
 type PatchDiskBackupPolicyJSONBody struct {
-	// DiskBackupPolicy All 'disk_backup_policy[]' params are mutually exclusive, only one can be provided.
-	DiskBackupPolicy DiskBackupPolicyLookup `json:"disk_backup_policy"`
-
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
-	Properties DiskBackupPolicyArguments `json:"properties"`
+	DiskBackupPolicy DiskBackupPolicyLookup    `json:"disk_backup_policy"`
+	Properties       DiskBackupPolicyArguments `json:"properties"`
 }
 
 // DeleteDiskBackupPolicyScheduleJSONBody defines parameters for DeleteDiskBackupPolicySchedule.
 type DeleteDiskBackupPolicyScheduleJSONBody struct {
-	// DiskBackupPolicy All 'disk_backup_policy[]' params are mutually exclusive, only one can be provided.
 	DiskBackupPolicy DiskBackupPolicyLookup `json:"disk_backup_policy"`
 
 	// Timestamp The time the disk backup policy will be moved to the trash automatically.
@@ -4757,62 +5715,68 @@ type DeleteDiskBackupPolicyScheduleJSONBody struct {
 
 // GetDiskTemplateVersionParams defines parameters for GetDiskTemplateVersion.
 type GetDiskTemplateVersionParams struct {
-	// DiskTemplateVersionId The disk template version to return. All 'disk_template_version[]' params are mutually exclusive, only one can be provided.
+	// DiskTemplateVersionId The disk template version to return.
 	DiskTemplateVersionId *string `form:"disk_template_version[id],omitempty" json:"disk_template_version[id],omitempty"`
 }
 
 // GetDiskTemplateVersionSpecParams defines parameters for GetDiskTemplateVersionSpec.
 type GetDiskTemplateVersionSpecParams struct {
-	// DiskTemplateVersionId The disk template version to return. All 'disk_template_version[]' params are mutually exclusive, only one can be provided.
+	// DiskTemplateVersionId The disk template version to return.
 	DiskTemplateVersionId *string `form:"disk_template_version[id],omitempty" json:"disk_template_version[id],omitempty"`
 }
 
 // GetDiskTemplateParams defines parameters for GetDiskTemplate.
 type GetDiskTemplateParams struct {
-	// DiskTemplateId The disk template to return. All 'disk_template[]' params are mutually exclusive, only one can be provided.
+	// DiskTemplateId The disk template to return.
+	//
+	//  All 'disk_template[]' params are mutually exclusive, only one can be provided.
 	DiskTemplateId *string `form:"disk_template[id],omitempty" json:"disk_template[id],omitempty"`
 
-	// DiskTemplatePermalink The disk template to return. All 'disk_template[]' params are mutually exclusive, only one can be provided.
+	// DiskTemplatePermalink The disk template to return.
+	//
+	//  All 'disk_template[]' params are mutually exclusive, only one can be provided.
 	DiskTemplatePermalink *string `form:"disk_template[permalink],omitempty" json:"disk_template[permalink],omitempty"`
 }
 
 // GetDiskTemplateVersionsParams defines parameters for GetDiskTemplateVersions.
 type GetDiskTemplateVersionsParams struct {
-	// DiskTemplateId The disk template to return the versions for. All 'disk_template[]' params are mutually exclusive, only one can be provided.
+	// DiskTemplateId The disk template to return the versions for.
+	//
+	//  All 'disk_template[]' params are mutually exclusive, only one can be provided.
 	DiskTemplateId *string `form:"disk_template[id],omitempty" json:"disk_template[id],omitempty"`
 
-	// DiskTemplatePermalink The disk template to return the versions for. All 'disk_template[]' params are mutually exclusive, only one can be provided.
+	// DiskTemplatePermalink The disk template to return the versions for.
+	//
+	//  All 'disk_template[]' params are mutually exclusive, only one can be provided.
 	DiskTemplatePermalink *string `form:"disk_template[permalink],omitempty" json:"disk_template[permalink],omitempty"`
-	Page                  *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage               *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // DeleteDiskJSONBody defines parameters for DeleteDisk.
 type DeleteDiskJSONBody struct {
-	// Disk All 'disk[]' params are mutually exclusive, only one can be provided.
 	Disk DiskLookup `json:"disk"`
 }
 
 // GetDiskParams defines parameters for GetDisk.
 type GetDiskParams struct {
-	// DiskId The disk to return. All 'disk[]' params are mutually exclusive, only one can be provided.
+	// DiskId The disk to return.
 	DiskId *string `form:"disk[id],omitempty" json:"disk[id],omitempty"`
 }
 
 // PatchDiskJSONBody defines parameters for PatchDisk.
 type PatchDiskJSONBody struct {
-	Annotations *[]KeyValue `json:"annotations,omitempty"`
-
-	// Disk All 'disk[]' params are mutually exclusive, only one can be provided.
-	Disk DiskLookup `json:"disk"`
-
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
-	Properties DiskArguments `json:"properties"`
+	Annotations *[]KeyValue   `json:"annotations,omitempty"`
+	Disk        DiskLookup    `json:"disk"`
+	Properties  DiskArguments `json:"properties"`
 }
 
 // PostDiskAssignJSONBody defines parameters for PostDiskAssign.
 type PostDiskAssignJSONBody struct {
-	// Disk All 'disk[]' params are mutually exclusive, only one can be provided.
 	Disk DiskLookup `json:"disk"`
 
 	// VirtualMachine All 'virtual_machine[]' params are mutually exclusive, only one can be provided.
@@ -4821,36 +5785,34 @@ type PostDiskAssignJSONBody struct {
 
 // PostDiskAttachJSONBody defines parameters for PostDiskAttach.
 type PostDiskAttachJSONBody struct {
-	// Disk All 'disk[]' params are mutually exclusive, only one can be provided.
 	Disk DiskLookup `json:"disk"`
 }
 
 // PostDiskDetachJSONBody defines parameters for PostDiskDetach.
 type PostDiskDetachJSONBody struct {
-	// Disk All 'disk[]' params are mutually exclusive, only one can be provided.
 	Disk DiskLookup `json:"disk"`
 }
 
 // GetDiskDiskBackupPoliciesParams defines parameters for GetDiskDiskBackupPolicies.
 type GetDiskDiskBackupPoliciesParams struct {
-	// DiskId The disk to return disk backup policies for. All 'disk[]' params are mutually exclusive, only one can be provided.
-	DiskId  *string `form:"disk[id],omitempty" json:"disk[id],omitempty"`
-	Page    *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+	// DiskId The disk to return disk backup policies for.
+	DiskId *string `form:"disk[id],omitempty" json:"disk[id],omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // PostDiskDiskBackupPoliciesJSONBody defines parameters for PostDiskDiskBackupPolicies.
 type PostDiskDiskBackupPoliciesJSONBody struct {
-	// Disk All 'disk[]' params are mutually exclusive, only one can be provided.
-	Disk DiskLookup `json:"disk"`
-
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
+	Disk       DiskLookup                `json:"disk"`
 	Properties DiskBackupPolicyArguments `json:"properties"`
 }
 
 // PutDiskIoProfileJSONBody defines parameters for PutDiskIoProfile.
 type PutDiskIoProfileJSONBody struct {
-	// Disk All 'disk[]' params are mutually exclusive, only one can be provided.
 	Disk DiskLookup `json:"disk"`
 
 	// IoProfile All 'io_profile[]' params are mutually exclusive, only one can be provided.
@@ -4859,7 +5821,6 @@ type PutDiskIoProfileJSONBody struct {
 
 // PutDiskResizeJSONBody defines parameters for PutDiskResize.
 type PutDiskResizeJSONBody struct {
-	// Disk All 'disk[]' params are mutually exclusive, only one can be provided.
 	Disk         DiskLookup        `json:"disk"`
 	ResizeMethod *ResizeMethodEnum `json:"resize_method,omitempty"`
 	SizeInGb     int               `json:"size_in_gb"`
@@ -4867,28 +5828,22 @@ type PutDiskResizeJSONBody struct {
 
 // PostDiskUnassignJSONBody defines parameters for PostDiskUnassign.
 type PostDiskUnassignJSONBody struct {
-	// Disk All 'disk[]' params are mutually exclusive, only one can be provided.
 	Disk DiskLookup `json:"disk"`
 }
 
 // DeleteDnsRecordJSONBody defines parameters for DeleteDnsRecord.
 type DeleteDnsRecordJSONBody struct {
-	// DnsRecord All 'dns_record[]' params are mutually exclusive, only one can be provided.
 	DnsRecord DNSRecordLookup `json:"dns_record"`
 }
 
 // GetDnsRecordParams defines parameters for GetDnsRecord.
 type GetDnsRecordParams struct {
-	// DnsRecordId All 'dns_record[]' params are mutually exclusive, only one can be provided.
 	DnsRecordId *string `form:"dns_record[id],omitempty" json:"dns_record[id],omitempty"`
 }
 
 // PatchDnsRecordJSONBody defines parameters for PatchDnsRecord.
 type PatchDnsRecordJSONBody struct {
-	// DnsRecord All 'dns_record[]' params are mutually exclusive, only one can be provided.
-	DnsRecord DNSRecordLookup `json:"dns_record"`
-
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
+	DnsRecord  DNSRecordLookup    `json:"dns_record"`
 	Properties DNSRecordArguments `json:"properties"`
 }
 
@@ -4910,9 +5865,7 @@ type GetDnsZoneParams struct {
 // PatchDnsZoneJSONBody defines parameters for PatchDnsZone.
 type PatchDnsZoneJSONBody struct {
 	// DnsZone All 'dns_zone[]' params are mutually exclusive, only one can be provided.
-	DnsZone DNSZoneLookup `json:"dns_zone"`
-
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
+	DnsZone    DNSZoneLookup    `json:"dns_zone"`
 	Properties DNSZoneArguments `json:"properties"`
 }
 
@@ -4928,9 +5881,7 @@ type GetDnsZoneRecordsParams struct {
 // PostDnsZoneRecordsJSONBody defines parameters for PostDnsZoneRecords.
 type PostDnsZoneRecordsJSONBody struct {
 	// DnsZone All 'dns_zone[]' params are mutually exclusive, only one can be provided.
-	DnsZone DNSZoneLookup `json:"dns_zone"`
-
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
+	DnsZone    DNSZoneLookup      `json:"dns_zone"`
 	Properties DNSRecordArguments `json:"properties"`
 }
 
@@ -4942,30 +5893,28 @@ type PostDnsZoneVerifyJSONBody struct {
 
 // DeleteFileStorageVolumeJSONBody defines parameters for DeleteFileStorageVolume.
 type DeleteFileStorageVolumeJSONBody struct {
-	// FileStorageVolume All 'file_storage_volume[]' params are mutually exclusive, only one can be provided.
 	FileStorageVolume FileStorageVolumeLookup `json:"file_storage_volume"`
 }
 
 // GetFileStorageVolumeParams defines parameters for GetFileStorageVolume.
 type GetFileStorageVolumeParams struct {
-	// FileStorageVolumeId The file storage volume to return. All 'file_storage_volume[]' params are mutually exclusive, only one can be provided.
+	// FileStorageVolumeId The file storage volume to return.
 	FileStorageVolumeId *string `form:"file_storage_volume[id],omitempty" json:"file_storage_volume[id],omitempty"`
 }
 
 // PatchFileStorageVolumeJSONBody defines parameters for PatchFileStorageVolume.
 type PatchFileStorageVolumeJSONBody struct {
-	Annotations *[]KeyValue `json:"annotations,omitempty"`
-
-	// FileStorageVolume All 'file_storage_volume[]' params are mutually exclusive, only one can be provided.
-	FileStorageVolume FileStorageVolumeLookup `json:"file_storage_volume"`
-
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
-	Properties FileStorageVolumeArguments `json:"properties"`
+	Annotations       *[]KeyValue                `json:"annotations,omitempty"`
+	FileStorageVolume FileStorageVolumeLookup    `json:"file_storage_volume"`
+	Properties        FileStorageVolumeArguments `json:"properties"`
 }
 
 // GetGpuTypesParams defines parameters for GetGpuTypes.
 type GetGpuTypesParams struct {
-	Page    *int `form:"page,omitempty" json:"page,omitempty"`
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
 	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
@@ -4989,10 +5938,14 @@ type DeleteIpAddressJSONBody struct {
 
 // GetIpAddressParams defines parameters for GetIpAddress.
 type GetIpAddressParams struct {
-	// IpAddressId The IP address to find. All 'ip_address[]' params are mutually exclusive, only one can be provided.
+	// IpAddressId The IP address to find.
+	//
+	//  All 'ip_address[]' params are mutually exclusive, only one can be provided.
 	IpAddressId *string `form:"ip_address[id],omitempty" json:"ip_address[id],omitempty"`
 
-	// IpAddressAddress The IP address to find. All 'ip_address[]' params are mutually exclusive, only one can be provided.
+	// IpAddressAddress The IP address to find.
+	//
+	//  All 'ip_address[]' params are mutually exclusive, only one can be provided.
 	IpAddressAddress *string `form:"ip_address[address],omitempty" json:"ip_address[address],omitempty"`
 }
 
@@ -5025,10 +5978,14 @@ type DeleteLoadBalancerJSONBody struct {
 
 // GetLoadBalancerParams defines parameters for GetLoadBalancer.
 type GetLoadBalancerParams struct {
-	// LoadBalancerId The load balancer to return the details for. All 'load_balancer[]' params are mutually exclusive, only one can be provided.
+	// LoadBalancerId The load balancer to return the details for.
+	//
+	//  All 'load_balancer[]' params are mutually exclusive, only one can be provided.
 	LoadBalancerId *string `form:"load_balancer[id],omitempty" json:"load_balancer[id],omitempty"`
 
-	// LoadBalancerApiReference The load balancer to return the details for. All 'load_balancer[]' params are mutually exclusive, only one can be provided.
+	// LoadBalancerApiReference The load balancer to return the details for.
+	//
+	//  All 'load_balancer[]' params are mutually exclusive, only one can be provided.
 	LoadBalancerApiReference *string `form:"load_balancer[api_reference],omitempty" json:"load_balancer[api_reference],omitempty"`
 }
 
@@ -5037,71 +5994,156 @@ type PatchLoadBalancerJSONBody struct {
 	Annotations *[]KeyValue `json:"annotations,omitempty"`
 
 	// LoadBalancer All 'load_balancer[]' params are mutually exclusive, only one can be provided.
-	LoadBalancer LoadBalancerLookup `json:"load_balancer"`
-
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
-	Properties LoadBalancerArguments `json:"properties"`
+	LoadBalancer LoadBalancerLookup    `json:"load_balancer"`
+	Properties   LoadBalancerArguments `json:"properties"`
 }
 
 // GetLoadBalancerRulesParams defines parameters for GetLoadBalancerRules.
 type GetLoadBalancerRulesParams struct {
-	// LoadBalancerId The load balancer to return all load rules for. All 'load_balancer[]' params are mutually exclusive, only one can be provided.
+	// LoadBalancerId The load balancer to return all load rules for.
+	//
+	//  All 'load_balancer[]' params are mutually exclusive, only one can be provided.
 	LoadBalancerId *string `form:"load_balancer[id],omitempty" json:"load_balancer[id],omitempty"`
 
-	// LoadBalancerApiReference The load balancer to return all load rules for. All 'load_balancer[]' params are mutually exclusive, only one can be provided.
+	// LoadBalancerApiReference The load balancer to return all load rules for.
+	//
+	//  All 'load_balancer[]' params are mutually exclusive, only one can be provided.
 	LoadBalancerApiReference *string `form:"load_balancer[api_reference],omitempty" json:"load_balancer[api_reference],omitempty"`
-	Page                     *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage                  *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // PostLoadBalancerRulesJSONBody defines parameters for PostLoadBalancerRules.
 type PostLoadBalancerRulesJSONBody struct {
 	// LoadBalancer All 'load_balancer[]' params are mutually exclusive, only one can be provided.
-	LoadBalancer LoadBalancerLookup `json:"load_balancer"`
-
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
-	Properties LoadBalancerRuleArguments `json:"properties"`
+	LoadBalancer LoadBalancerLookup        `json:"load_balancer"`
+	Properties   LoadBalancerRuleArguments `json:"properties"`
 }
 
 // DeleteLoadBalancersRulesLoadBalancerRuleJSONBody defines parameters for DeleteLoadBalancersRulesLoadBalancerRule.
 type DeleteLoadBalancersRulesLoadBalancerRuleJSONBody struct {
-	// LoadBalancerRule All 'load_balancer_rule[]' params are mutually exclusive, only one can be provided.
 	LoadBalancerRule LoadBalancerRuleLookup `json:"load_balancer_rule"`
 }
 
 // GetLoadBalancersRulesLoadBalancerRuleParams defines parameters for GetLoadBalancersRulesLoadBalancerRule.
 type GetLoadBalancersRulesLoadBalancerRuleParams struct {
-	// LoadBalancerRuleId The load balancer rule to return the details for. All 'load_balancer_rule[]' params are mutually exclusive, only one can be provided.
+	// LoadBalancerRuleId The load balancer rule to return the details for.
 	LoadBalancerRuleId *string `form:"load_balancer_rule[id],omitempty" json:"load_balancer_rule[id],omitempty"`
 }
 
 // PatchLoadBalancersRulesLoadBalancerRuleJSONBody defines parameters for PatchLoadBalancersRulesLoadBalancerRule.
 type PatchLoadBalancersRulesLoadBalancerRuleJSONBody struct {
-	// LoadBalancerRule All 'load_balancer_rule[]' params are mutually exclusive, only one can be provided.
-	LoadBalancerRule LoadBalancerRuleLookup `json:"load_balancer_rule"`
+	LoadBalancerRule LoadBalancerRuleLookup    `json:"load_balancer_rule"`
+	Properties       LoadBalancerRuleArguments `json:"properties"`
+}
 
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
-	Properties LoadBalancerRuleArguments `json:"properties"`
+// DeleteOrganizationJSONBody defines parameters for DeleteOrganization.
+type DeleteOrganizationJSONBody struct {
+	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
+	Organization OrganizationLookup `json:"organization"`
 }
 
 // GetNetworkParams defines parameters for GetNetwork.
 type GetNetworkParams struct {
-	// NetworkId The network to return. All 'network[]' params are mutually exclusive, only one can be provided.
+	// NetworkId The network to return.
+	//
+	//  All 'network[]' params are mutually exclusive, only one can be provided.
 	NetworkId *string `form:"network[id],omitempty" json:"network[id],omitempty"`
 
-	// NetworkPermalink The network to return. All 'network[]' params are mutually exclusive, only one can be provided.
+	// NetworkPermalink The network to return.
+	//
+	//  All 'network[]' params are mutually exclusive, only one can be provided.
 	NetworkPermalink *string `form:"network[permalink],omitempty" json:"network[permalink],omitempty"`
+}
+
+// DeleteObjectStorageAccessKeyJSONBody defines parameters for DeleteObjectStorageAccessKey.
+type DeleteObjectStorageAccessKeyJSONBody struct {
+	AccessKey ObjectStorageAccessKeyLookup `json:"access_key"`
+}
+
+// GetObjectStorageAccessKeyParams defines parameters for GetObjectStorageAccessKey.
+type GetObjectStorageAccessKeyParams struct {
+	// AccessKeyId The object storage access key to find.
+	AccessKeyId *string `form:"access_key[id],omitempty" json:"access_key[id],omitempty"`
+}
+
+// PatchObjectStorageAccessKeyJSONBody defines parameters for PatchObjectStorageAccessKey.
+type PatchObjectStorageAccessKeyJSONBody struct {
+	AccessKey  ObjectStorageAccessKeyLookup    `json:"access_key"`
+	Properties ObjectStorageAccessKeyArguments `json:"properties"`
+}
+
+// PostObjectStorageAccessKeyGenerateCredentialsJSONBody defines parameters for PostObjectStorageAccessKeyGenerateCredentials.
+type PostObjectStorageAccessKeyGenerateCredentialsJSONBody struct {
+	AccessKey ObjectStorageAccessKeyLookup `json:"access_key"`
+}
+
+// DeleteObjectStorageObjectStorageClusterBucketJSONBody defines parameters for DeleteObjectStorageObjectStorageClusterBucket.
+type DeleteObjectStorageObjectStorageClusterBucketJSONBody struct {
+	Bucket               ObjectStorageBucketLookup  `json:"bucket"`
+	ObjectStorageCluster ObjectStorageClusterLookup `json:"object_storage_cluster"`
+}
+
+// GetObjectStorageObjectStorageClusterBucketParams defines parameters for GetObjectStorageObjectStorageClusterBucket.
+type GetObjectStorageObjectStorageClusterBucketParams struct {
+	// ObjectStorageClusterRegion The object storage cluster region for the bucket.
+	ObjectStorageClusterRegion *string `form:"object_storage_cluster[region],omitempty" json:"object_storage_cluster[region],omitempty"`
+
+	// BucketName The name of the object storage bucket.
+	BucketName *string `form:"bucket[name],omitempty" json:"bucket[name],omitempty"`
+}
+
+// PatchObjectStorageObjectStorageClusterBucketJSONBody defines parameters for PatchObjectStorageObjectStorageClusterBucket.
+type PatchObjectStorageObjectStorageClusterBucketJSONBody struct {
+	Bucket               ObjectStorageBucketLookup    `json:"bucket"`
+	ObjectStorageCluster ObjectStorageClusterLookup   `json:"object_storage_cluster"`
+	Properties           ObjectStorageBucketArguments `json:"properties"`
+}
+
+// GetObjectStorageObjectStorageClusterBucketObjectParams defines parameters for GetObjectStorageObjectStorageClusterBucketObject.
+type GetObjectStorageObjectStorageClusterBucketObjectParams struct {
+	// ObjectStorageClusterRegion The object storage cluster region for the bucket.
+	ObjectStorageClusterRegion *string `form:"object_storage_cluster[region],omitempty" json:"object_storage_cluster[region],omitempty"`
+
+	// BucketName The name of the object storage bucket.
+	BucketName *string `form:"bucket[name],omitempty" json:"bucket[name],omitempty"`
+
+	// Path The name or path for the object
+	Path string `form:"path" json:"path"`
+}
+
+// PostObjectStorageObjectStorageClusterBucketPresignedUrlJSONBody defines parameters for PostObjectStorageObjectStorageClusterBucketPresignedUrl.
+type PostObjectStorageObjectStorageClusterBucketPresignedUrlJSONBody struct {
+	Bucket               ObjectStorageBucketLookup  `json:"bucket"`
+	ObjectStorageCluster ObjectStorageClusterLookup `json:"object_storage_cluster"`
+
+	// Path The name or path for the object
+	Path       string                                   `json:"path"`
+	Properties ObjectStorageObjectPresignedURLArguments `json:"properties"`
+}
+
+// PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsJSONBody defines parameters for PostObjectStorageObjectStorageClusterBucketRevokePresignedUrls.
+type PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsJSONBody struct {
+	Bucket               ObjectStorageBucketLookup  `json:"bucket"`
+	ObjectStorageCluster ObjectStorageClusterLookup `json:"object_storage_cluster"`
 }
 
 // GetOperatingSystemsParams defines parameters for GetOperatingSystems.
 type GetOperatingSystemsParams struct {
-	Page    *int `form:"page,omitempty" json:"page,omitempty"`
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
 	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // GetOperatingSystemParams defines parameters for GetOperatingSystem.
 type GetOperatingSystemParams struct {
-	// OperatingSystemId The operating system to return. All 'operating_system[]' params are mutually exclusive, only one can be provided.
+	// OperatingSystemId The operating system to return.
 	OperatingSystemId *string `form:"operating_system[id],omitempty" json:"operating_system[id],omitempty"`
 }
 
@@ -5116,19 +6158,31 @@ type GetOrganizationParams struct {
 
 // GetOrganizationAddressListsParams defines parameters for GetOrganizationAddressLists.
 type GetOrganizationAddressListsParams struct {
-	// OrganizationId The organization for which the address lists should be returned. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationId The organization for which the address lists should be returned.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationId *string `form:"organization[id],omitempty" json:"organization[id],omitempty"`
 
-	// OrganizationSubDomain The organization for which the address lists should be returned. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationSubDomain The organization for which the address lists should be returned.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
 
-	// AnnotationsKey An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
-	AnnotationsKey *string `form:"annotations[key],omitempty" json:"annotations[key],omitempty"`
+	// AnnotationsKey An array of annotations to filter by.
+	//
+	//  All `annotations[]` params should have the same amount of elements.
+	AnnotationsKey *[]string `form:"annotations[][key],omitempty" json:"annotations[][key],omitempty"`
 
-	// AnnotationsValue An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
-	AnnotationsValue *string `form:"annotations[value],omitempty" json:"annotations[value],omitempty"`
-	Page             *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage          *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+	// AnnotationsValue An array of annotations to filter by.
+	//
+	//  All `annotations[]` params should have the same amount of elements.
+	AnnotationsValue *[]string `form:"annotations[][value],omitempty" json:"annotations[][value],omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // PostOrganizationAddressListsJSONBody defines parameters for PostOrganizationAddressLists.
@@ -5136,27 +6190,37 @@ type PostOrganizationAddressListsJSONBody struct {
 	Annotations *[]KeyValue `json:"annotations,omitempty"`
 
 	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
-	Organization OrganizationLookup `json:"organization"`
-
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
-	Properties AddressListArguments `json:"properties"`
+	Organization OrganizationLookup   `json:"organization"`
+	Properties   AddressListArguments `json:"properties"`
 }
 
 // GetOrganizationApiTokensParams defines parameters for GetOrganizationApiTokens.
 type GetOrganizationApiTokensParams struct {
-	// OrganizationId The organization to list API tokens for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationId The organization to list API tokens for.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationId *string `form:"organization[id],omitempty" json:"organization[id],omitempty"`
 
-	// OrganizationSubDomain The organization to list API tokens for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationSubDomain The organization to list API tokens for.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
 
-	// AnnotationsKey An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
-	AnnotationsKey *string `form:"annotations[key],omitempty" json:"annotations[key],omitempty"`
+	// AnnotationsKey An array of annotations to filter by.
+	//
+	//  All `annotations[]` params should have the same amount of elements.
+	AnnotationsKey *[]string `form:"annotations[][key],omitempty" json:"annotations[][key],omitempty"`
 
-	// AnnotationsValue An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
-	AnnotationsValue *string `form:"annotations[value],omitempty" json:"annotations[value],omitempty"`
-	Page             *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage          *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+	// AnnotationsValue An array of annotations to filter by.
+	//
+	//  All `annotations[]` params should have the same amount of elements.
+	AnnotationsValue *[]string `form:"annotations[][value],omitempty" json:"annotations[][value],omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // PostOrganizationApiTokensJSONBody defines parameters for PostOrganizationApiTokens.
@@ -5165,9 +6229,7 @@ type PostOrganizationApiTokensJSONBody struct {
 
 	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
 	Organization OrganizationLookup `json:"organization"`
-
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
-	Properties APITokenArguments `json:"properties"`
+	Properties   APITokenArguments  `json:"properties"`
 }
 
 // GetOrganizationAvailableNetworksParams defines parameters for GetOrganizationAvailableNetworks.
@@ -5186,64 +6248,113 @@ type GetOrganizationCertificatesParams struct {
 
 	// OrganizationSubDomain All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
-	Page                  *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage               *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
+}
+
+// GetOrganizationDeletionStepsParams defines parameters for GetOrganizationDeletionSteps.
+type GetOrganizationDeletionStepsParams struct {
+	// OrganizationId All 'organization[]' params are mutually exclusive, only one can be provided.
+	OrganizationId *string `form:"organization[id],omitempty" json:"organization[id],omitempty"`
+
+	// OrganizationSubDomain All 'organization[]' params are mutually exclusive, only one can be provided.
+	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
 }
 
 // GetOrganizationDiskBackupPoliciesParams defines parameters for GetOrganizationDiskBackupPolicies.
 type GetOrganizationDiskBackupPoliciesParams struct {
-	// OrganizationId The organization to return disk backup policies for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationId The organization to return disk backup policies for.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationId *string `form:"organization[id],omitempty" json:"organization[id],omitempty"`
 
-	// OrganizationSubDomain The organization to return disk backup policies for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationSubDomain The organization to return disk backup policies for.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
-	Page                  *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage               *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // GetOrganizationDiskIoProfilesParams defines parameters for GetOrganizationDiskIoProfiles.
 type GetOrganizationDiskIoProfilesParams struct {
-	// OrganizationId The organization to find disk IO profiles for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationId The organization to find disk IO profiles for.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationId *string `form:"organization[id],omitempty" json:"organization[id],omitempty"`
 
-	// OrganizationSubDomain The organization to find disk IO profiles for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationSubDomain The organization to find disk IO profiles for.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
-	Page                  *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage               *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // GetOrganizationDiskTemplatesParams defines parameters for GetOrganizationDiskTemplates.
 type GetOrganizationDiskTemplatesParams struct {
-	// OrganizationId The organization to find disk templates for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationId The organization to find disk templates for.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationId *string `form:"organization[id],omitempty" json:"organization[id],omitempty"`
 
-	// OrganizationSubDomain The organization to find disk templates for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationSubDomain The organization to find disk templates for.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
 
 	// IncludeUniversal Whether or not to include universal templates
 	IncludeUniversal *bool `form:"include_universal,omitempty" json:"include_universal,omitempty"`
 
-	// OperatingSystemId An operating system to use to filter disk templates. All 'operating_system[]' params are mutually exclusive, only one can be provided.
+	// OperatingSystemId An operating system to use to filter disk templates.
 	OperatingSystemId *string `form:"operating_system[id],omitempty" json:"operating_system[id],omitempty"`
-	Page              *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage           *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // GetOrganizationDisksParams defines parameters for GetOrganizationDisks.
 type GetOrganizationDisksParams struct {
-	// OrganizationId The organization to find disks for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationId The organization to find disks for.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationId *string `form:"organization[id],omitempty" json:"organization[id],omitempty"`
 
-	// OrganizationSubDomain The organization to find disks for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationSubDomain The organization to find disks for.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
 
-	// AnnotationsKey An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
-	AnnotationsKey *string `form:"annotations[key],omitempty" json:"annotations[key],omitempty"`
+	// AnnotationsKey An array of annotations to filter by.
+	//
+	//  All `annotations[]` params should have the same amount of elements.
+	AnnotationsKey *[]string `form:"annotations[][key],omitempty" json:"annotations[][key],omitempty"`
 
-	// AnnotationsValue An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
-	AnnotationsValue *string `form:"annotations[value],omitempty" json:"annotations[value],omitempty"`
-	Page             *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage          *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+	// AnnotationsValue An array of annotations to filter by.
+	//
+	//  All `annotations[]` params should have the same amount of elements.
+	AnnotationsValue *[]string `form:"annotations[][value],omitempty" json:"annotations[][value],omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // PostOrganizationDisksJSONBody defines parameters for PostOrganizationDisks.
@@ -5252,9 +6363,7 @@ type PostOrganizationDisksJSONBody struct {
 
 	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
 	Organization OrganizationLookup `json:"organization"`
-
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
-	Properties DiskArguments `json:"properties"`
+	Properties   DiskArguments      `json:"properties"`
 }
 
 // GetOrganizationDnsZonesParams defines parameters for GetOrganizationDnsZones.
@@ -5264,17 +6373,23 @@ type GetOrganizationDnsZonesParams struct {
 
 	// OrganizationSubDomain All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
-	Page                  *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage               *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // PostOrganizationDnsZonesJSONBody defines parameters for PostOrganizationDnsZones.
 type PostOrganizationDnsZonesJSONBody struct {
 	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
 	Organization OrganizationLookup `json:"organization"`
+	Properties   DNSZoneArguments   `json:"properties"`
 
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
-	Properties DNSZoneArguments `json:"properties"`
+	// Verified Creates a zone without requiring any verification to be performed. Internal use only (this
+	// requires the 'dns_zones:create:verified' capability).
+	Verified *bool `json:"verified,omitempty"`
 }
 
 // GetOrganizationDnsZonesNameserversParams defines parameters for GetOrganizationDnsZonesNameservers.
@@ -5288,19 +6403,31 @@ type GetOrganizationDnsZonesNameserversParams struct {
 
 // GetOrganizationFileStorageVolumesParams defines parameters for GetOrganizationFileStorageVolumes.
 type GetOrganizationFileStorageVolumesParams struct {
-	// OrganizationId The organization to return all file storage volumes for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationId The organization to return all file storage volumes for.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationId *string `form:"organization[id],omitempty" json:"organization[id],omitempty"`
 
-	// OrganizationSubDomain The organization to return all file storage volumes for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationSubDomain The organization to return all file storage volumes for.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
 
-	// AnnotationsKey An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
-	AnnotationsKey *string `form:"annotations[key],omitempty" json:"annotations[key],omitempty"`
+	// AnnotationsKey An array of annotations to filter by.
+	//
+	//  All `annotations[]` params should have the same amount of elements.
+	AnnotationsKey *[]string `form:"annotations[][key],omitempty" json:"annotations[][key],omitempty"`
 
-	// AnnotationsValue An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
-	AnnotationsValue *string `form:"annotations[value],omitempty" json:"annotations[value],omitempty"`
-	Page             *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage          *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+	// AnnotationsValue An array of annotations to filter by.
+	//
+	//  All `annotations[]` params should have the same amount of elements.
+	AnnotationsValue *[]string `form:"annotations[][value],omitempty" json:"annotations[][value],omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // PostOrganizationFileStorageVolumesJSONBody defines parameters for PostOrganizationFileStorageVolumes.
@@ -5308,24 +6435,30 @@ type PostOrganizationFileStorageVolumesJSONBody struct {
 	Annotations *[]KeyValue `json:"annotations,omitempty"`
 
 	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
-	Organization OrganizationLookup `json:"organization"`
-
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
-	Properties FileStorageVolumeArguments `json:"properties"`
+	Organization OrganizationLookup         `json:"organization"`
+	Properties   FileStorageVolumeArguments `json:"properties"`
 }
 
 // GetOrganizationIpAddressesParams defines parameters for GetOrganizationIpAddresses.
 type GetOrganizationIpAddressesParams struct {
-	// OrganizationId The organization to use when looking up IP addresses. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationId The organization to use when looking up IP addresses.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationId *string `form:"organization[id],omitempty" json:"organization[id],omitempty"`
 
-	// OrganizationSubDomain The organization to use when looking up IP addresses. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationSubDomain The organization to use when looking up IP addresses.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
 
 	// Allocated If true, only return allocated IP addresss. If false, only return unallocated IP addresses.
 	Allocated *bool `form:"allocated,omitempty" json:"allocated,omitempty"`
-	Page      *int  `form:"page,omitempty" json:"page,omitempty"`
-	PerPage   *int  `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // PostOrganizationIpAddressesJSONBody defines parameters for PostOrganizationIpAddresses.
@@ -5346,19 +6479,31 @@ type PostOrganizationIpAddressesJSONBody struct {
 
 // GetOrganizationLoadBalancersParams defines parameters for GetOrganizationLoadBalancers.
 type GetOrganizationLoadBalancersParams struct {
-	// OrganizationId The organization to return all load balancers for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationId The organization to return all load balancers for.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationId *string `form:"organization[id],omitempty" json:"organization[id],omitempty"`
 
-	// OrganizationSubDomain The organization to return all load balancers for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationSubDomain The organization to return all load balancers for.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
 
-	// AnnotationsKey An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
-	AnnotationsKey *string `form:"annotations[key],omitempty" json:"annotations[key],omitempty"`
+	// AnnotationsKey An array of annotations to filter by.
+	//
+	//  All `annotations[]` params should have the same amount of elements.
+	AnnotationsKey *[]string `form:"annotations[][key],omitempty" json:"annotations[][key],omitempty"`
 
-	// AnnotationsValue An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
-	AnnotationsValue *string `form:"annotations[value],omitempty" json:"annotations[value],omitempty"`
-	Page             *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage          *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+	// AnnotationsValue An array of annotations to filter by.
+	//
+	//  All `annotations[]` params should have the same amount of elements.
+	AnnotationsValue *[]string `form:"annotations[][value],omitempty" json:"annotations[][value],omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // PostOrganizationLoadBalancersJSONBody defines parameters for PostOrganizationLoadBalancers.
@@ -5366,10 +6511,8 @@ type PostOrganizationLoadBalancersJSONBody struct {
 	Annotations *[]KeyValue `json:"annotations,omitempty"`
 
 	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
-	Organization OrganizationLookup `json:"organization"`
-
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
-	Properties LoadBalancerArguments `json:"properties"`
+	Organization OrganizationLookup    `json:"organization"`
+	Properties   LoadBalancerArguments `json:"properties"`
 }
 
 // GetOrganizationManagedParams defines parameters for GetOrganizationManaged.
@@ -5380,13 +6523,21 @@ type GetOrganizationManagedParams struct {
 	// OrganizationSubDomain All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
 
-	// AnnotationsKey An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
-	AnnotationsKey *string `form:"annotations[key],omitempty" json:"annotations[key],omitempty"`
+	// AnnotationsKey An array of annotations to filter by.
+	//
+	//  All `annotations[]` params should have the same amount of elements.
+	AnnotationsKey *[]string `form:"annotations[][key],omitempty" json:"annotations[][key],omitempty"`
 
-	// AnnotationsValue An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
-	AnnotationsValue *string `form:"annotations[value],omitempty" json:"annotations[value],omitempty"`
-	Page             *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage          *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+	// AnnotationsValue An array of annotations to filter by.
+	//
+	//  All `annotations[]` params should have the same amount of elements.
+	AnnotationsValue *[]string `form:"annotations[][value],omitempty" json:"annotations[][value],omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // PostOrganizationManagedJSONBody defines parameters for PostOrganizationManaged.
@@ -5401,13 +6552,99 @@ type PostOrganizationManagedJSONBody struct {
 
 // GetOrganizationNetworkSpeedProfilesParams defines parameters for GetOrganizationNetworkSpeedProfiles.
 type GetOrganizationNetworkSpeedProfilesParams struct {
-	// OrganizationId The organization to use when looking up network speed profiles. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationId The organization to use when looking up network speed profiles.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationId *string `form:"organization[id],omitempty" json:"organization[id],omitempty"`
 
-	// OrganizationSubDomain The organization to use when looking up network speed profiles. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationSubDomain The organization to use when looking up network speed profiles.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
-	Page                  *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage               *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
+}
+
+// GetOrganizationObjectStorageAccessKeysParams defines parameters for GetOrganizationObjectStorageAccessKeys.
+type GetOrganizationObjectStorageAccessKeysParams struct {
+	// OrganizationId The organization to return access keys for.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
+	OrganizationId *string `form:"organization[id],omitempty" json:"organization[id],omitempty"`
+
+	// OrganizationSubDomain The organization to return access keys for.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
+	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
+}
+
+// DeleteOrganizationObjectStorageObjectStorageClusterJSONBody defines parameters for DeleteOrganizationObjectStorageObjectStorageCluster.
+type DeleteOrganizationObjectStorageObjectStorageClusterJSONBody struct {
+	ObjectStorageCluster ObjectStorageClusterLookup `json:"object_storage_cluster"`
+
+	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
+	Organization OrganizationLookup `json:"organization"`
+}
+
+// GetOrganizationObjectStorageObjectStorageClusterParams defines parameters for GetOrganizationObjectStorageObjectStorageCluster.
+type GetOrganizationObjectStorageObjectStorageClusterParams struct {
+	// OrganizationId The organization that owns the object storage account.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
+	OrganizationId *string `form:"organization[id],omitempty" json:"organization[id],omitempty"`
+
+	// OrganizationSubDomain The organization that owns the object storage account.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
+	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
+
+	// ObjectStorageClusterRegion The object storage cluster region.
+	ObjectStorageClusterRegion *string `form:"object_storage_cluster[region],omitempty" json:"object_storage_cluster[region],omitempty"`
+}
+
+// PostOrganizationObjectStorageObjectStorageClusterJSONBody defines parameters for PostOrganizationObjectStorageObjectStorageCluster.
+type PostOrganizationObjectStorageObjectStorageClusterJSONBody struct {
+	ObjectStorageCluster ObjectStorageClusterLookup `json:"object_storage_cluster"`
+
+	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
+	Organization OrganizationLookup `json:"organization"`
+}
+
+// PostOrganizationObjectStorageObjectStorageClusterAccessKeysJSONBody defines parameters for PostOrganizationObjectStorageObjectStorageClusterAccessKeys.
+type PostOrganizationObjectStorageObjectStorageClusterAccessKeysJSONBody struct {
+	ObjectStorageCluster ObjectStorageClusterLookup `json:"object_storage_cluster"`
+
+	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
+	Organization OrganizationLookup              `json:"organization"`
+	Properties   ObjectStorageAccessKeyArguments `json:"properties"`
+}
+
+// PostOrganizationObjectStorageObjectStorageClusterBucketsJSONBody defines parameters for PostOrganizationObjectStorageObjectStorageClusterBuckets.
+type PostOrganizationObjectStorageObjectStorageClusterBucketsJSONBody struct {
+	ObjectStorageCluster ObjectStorageClusterLookup `json:"object_storage_cluster"`
+
+	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
+	Organization OrganizationLookup           `json:"organization"`
+	Properties   ObjectStorageBucketArguments `json:"properties"`
+}
+
+// GetOrganizationPolicyParams defines parameters for GetOrganizationPolicy.
+type GetOrganizationPolicyParams struct {
+	// OrganizationId All 'organization[]' params are mutually exclusive, only one can be provided.
+	OrganizationId *string `form:"organization[id],omitempty" json:"organization[id],omitempty"`
+
+	// OrganizationSubDomain All 'organization[]' params are mutually exclusive, only one can be provided.
+	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
 }
 
 // GetOrganizationPolicyLimitsParams defines parameters for GetOrganizationPolicyLimits.
@@ -5419,21 +6656,42 @@ type GetOrganizationPolicyLimitsParams struct {
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
 }
 
-// GetOrganizationSecurityGroupsParams defines parameters for GetOrganizationSecurityGroups.
-type GetOrganizationSecurityGroupsParams struct {
-	// OrganizationId The organization to return all security groups for. All 'organization[]' params are mutually exclusive, only one can be provided.
+// GetOrganizationPricesParams defines parameters for GetOrganizationPrices.
+type GetOrganizationPricesParams struct {
+	// OrganizationId All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationId *string `form:"organization[id],omitempty" json:"organization[id],omitempty"`
 
-	// OrganizationSubDomain The organization to return all security groups for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationSubDomain All 'organization[]' params are mutually exclusive, only one can be provided.
+	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
+}
+
+// GetOrganizationSecurityGroupsParams defines parameters for GetOrganizationSecurityGroups.
+type GetOrganizationSecurityGroupsParams struct {
+	// OrganizationId The organization to return all security groups for.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
+	OrganizationId *string `form:"organization[id],omitempty" json:"organization[id],omitempty"`
+
+	// OrganizationSubDomain The organization to return all security groups for.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
 
-	// AnnotationsKey An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
-	AnnotationsKey *string `form:"annotations[key],omitempty" json:"annotations[key],omitempty"`
+	// AnnotationsKey An array of annotations to filter by.
+	//
+	//  All `annotations[]` params should have the same amount of elements.
+	AnnotationsKey *[]string `form:"annotations[][key],omitempty" json:"annotations[][key],omitempty"`
 
-	// AnnotationsValue An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
-	AnnotationsValue *string `form:"annotations[value],omitempty" json:"annotations[value],omitempty"`
-	Page             *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage          *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+	// AnnotationsValue An array of annotations to filter by.
+	//
+	//  All `annotations[]` params should have the same amount of elements.
+	AnnotationsValue *[]string `form:"annotations[][value],omitempty" json:"annotations[][value],omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // PostOrganizationSecurityGroupsJSONBody defines parameters for PostOrganizationSecurityGroups.
@@ -5441,61 +6699,79 @@ type PostOrganizationSecurityGroupsJSONBody struct {
 	Annotations *[]KeyValue `json:"annotations,omitempty"`
 
 	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
-	Organization OrganizationLookup `json:"organization"`
-
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
-	Properties SecurityGroupArguments `json:"properties"`
+	Organization OrganizationLookup     `json:"organization"`
+	Properties   SecurityGroupArguments `json:"properties"`
 }
 
 // GetOrganizationSshKeysParams defines parameters for GetOrganizationSshKeys.
 type GetOrganizationSshKeysParams struct {
-	// OrganizationId The organization to list SSH keys for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationId The organization to list SSH keys for.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationId *string `form:"organization[id],omitempty" json:"organization[id],omitempty"`
 
-	// OrganizationSubDomain The organization to list SSH keys for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationSubDomain The organization to list SSH keys for.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
-	Page                  *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage               *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // PostOrganizationSshKeysJSONBody defines parameters for PostOrganizationSshKeys.
 type PostOrganizationSshKeysJSONBody struct {
 	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
-	Organization OrganizationLookup `json:"organization"`
-
-	// SshKey All 'ssh_key[]' params are mutually exclusive, only one can be provided.
-	SshKey AuthSSHKeyProperties `json:"ssh_key"`
+	Organization OrganizationLookup   `json:"organization"`
+	SshKey       AuthSSHKeyProperties `json:"ssh_key"`
 }
 
 // GetOrganizationTagsParams defines parameters for GetOrganizationTags.
 type GetOrganizationTagsParams struct {
-	// OrganizationId The organization to list the tags for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationId The organization to list the tags for.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationId *string `form:"organization[id],omitempty" json:"organization[id],omitempty"`
 
-	// OrganizationSubDomain The organization to list the tags for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationSubDomain The organization to list the tags for.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
-	Page                  *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage               *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // PostOrganizationTagsJSONBody defines parameters for PostOrganizationTags.
 type PostOrganizationTagsJSONBody struct {
 	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
 	Organization OrganizationLookup `json:"organization"`
-
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
-	Properties TagArguments `json:"properties"`
+	Properties   TagArguments       `json:"properties"`
 }
 
 // GetOrganizationTrashObjectsParams defines parameters for GetOrganizationTrashObjects.
 type GetOrganizationTrashObjectsParams struct {
-	// OrganizationId The organization to find all trash objects for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationId The organization to find all trash objects for.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationId *string `form:"organization[id],omitempty" json:"organization[id],omitempty"`
 
-	// OrganizationSubDomain The organization to find all trash objects for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationSubDomain The organization to find all trash objects for.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
-	Page                  *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage               *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // PostOrganizationTrashObjectsPurgeAllJSONBody defines parameters for PostOrganizationTrashObjectsPurgeAll.
@@ -5511,26 +6787,32 @@ type GetOrganizationUsersWithAccessParams struct {
 
 	// OrganizationSubDomain All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
-	Page                  *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage               *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // GetOrganizationVirtualMachineGroupsParams defines parameters for GetOrganizationVirtualMachineGroups.
 type GetOrganizationVirtualMachineGroupsParams struct {
-	// OrganizationId The organization to return groups for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationId The organization to return groups for.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationId *string `form:"organization[id],omitempty" json:"organization[id],omitempty"`
 
-	// OrganizationSubDomain The organization to return groups for. All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationSubDomain The organization to return groups for.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
 }
 
 // PostOrganizationVirtualMachineGroupsJSONBody defines parameters for PostOrganizationVirtualMachineGroups.
 type PostOrganizationVirtualMachineGroupsJSONBody struct {
 	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
-	Organization OrganizationLookup `json:"organization"`
-
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
-	Properties VirtualMachineGroupArguments `json:"properties"`
+	Organization OrganizationLookup           `json:"organization"`
+	Properties   VirtualMachineGroupArguments `json:"properties"`
 }
 
 // GetOrganizationVirtualMachinesParams defines parameters for GetOrganizationVirtualMachines.
@@ -5541,13 +6823,21 @@ type GetOrganizationVirtualMachinesParams struct {
 	// OrganizationSubDomain All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
 
-	// AnnotationsKey An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
-	AnnotationsKey *string `form:"annotations[key],omitempty" json:"annotations[key],omitempty"`
+	// AnnotationsKey An array of annotations to filter by.
+	//
+	//  All `annotations[]` params should have the same amount of elements.
+	AnnotationsKey *[]string `form:"annotations[][key],omitempty" json:"annotations[][key],omitempty"`
 
-	// AnnotationsValue An array of annotations to filter by. All 'annotations[]' params are mutually exclusive, only one can be provided.
-	AnnotationsValue *string `form:"annotations[value],omitempty" json:"annotations[value],omitempty"`
-	Page             *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage          *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+	// AnnotationsValue An array of annotations to filter by.
+	//
+	//  All `annotations[]` params should have the same amount of elements.
+	AnnotationsValue *[]string `form:"annotations[][value],omitempty" json:"annotations[][value],omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // PostOrganizationVirtualMachinesBuildJSONBody defines parameters for PostOrganizationVirtualMachinesBuild.
@@ -5558,9 +6848,10 @@ type PostOrganizationVirtualMachinesBuildJSONBody struct {
 	DataCenter *DataCenterLookup `json:"data_center,omitempty"`
 
 	// DiskTemplate All 'disk_template[]' params are mutually exclusive, only one can be provided.
-	DiskTemplate        *DiskTemplateLookup `json:"disk_template,omitempty"`
-	DiskTemplateOptions *[]KeyValue         `json:"disk_template_options,omitempty"`
-	Hostname            *string             `json:"hostname,omitempty"`
+	DiskTemplate        *DiskTemplateLookup                 `json:"disk_template,omitempty"`
+	DiskTemplateOptions *[]KeyValue                         `json:"disk_template_options,omitempty"`
+	Disks               *[]VirtualMachineBuildDiskArguments `json:"disks,omitempty"`
+	Hostname            *string                             `json:"hostname,omitempty"`
 
 	// Network All 'network[]' params are mutually exclusive, only one can be provided.
 	Network *NetworkLookup `json:"network,omitempty"`
@@ -5584,97 +6875,112 @@ type PostOrganizationVirtualMachinesBuildFromSpecJSONBody struct {
 	Xml          string             `json:"xml"`
 }
 
-// DeleteSecurityGroupJSONBody defines parameters for DeleteSecurityGroup.
-type DeleteSecurityGroupJSONBody struct {
-	// SecurityGroup All 'security_group[]' params are mutually exclusive, only one can be provided.
-	SecurityGroup SecurityGroupLookup `json:"security_group"`
+// GetOrganizationVirtualNetworksParams defines parameters for GetOrganizationVirtualNetworks.
+type GetOrganizationVirtualNetworksParams struct {
+	// OrganizationId The organization for which to return virtual networks.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
+	OrganizationId *string `form:"organization[id],omitempty" json:"organization[id],omitempty"`
+
+	// OrganizationSubDomain The organization for which to return virtual networks.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
+	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
-// GetSecurityGroupParams defines parameters for GetSecurityGroup.
-type GetSecurityGroupParams struct {
-	// SecurityGroupId The security group to return the details for. All 'security_group[]' params are mutually exclusive, only one can be provided.
-	SecurityGroupId *string `form:"security_group[id],omitempty" json:"security_group[id],omitempty"`
-}
+// PostOrganizationVirtualNetworksJSONBody defines parameters for PostOrganizationVirtualNetworks.
+type PostOrganizationVirtualNetworksJSONBody struct {
+	// DataCenter All 'data_center[]' params are mutually exclusive, only one can be provided.
+	DataCenter DataCenterLookup `json:"data_center"`
 
-// PatchSecurityGroupJSONBody defines parameters for PatchSecurityGroup.
-type PatchSecurityGroupJSONBody struct {
-	Annotations *[]KeyValue `json:"annotations,omitempty"`
-
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
-	Properties SecurityGroupArguments `json:"properties"`
-
-	// SecurityGroup All 'security_group[]' params are mutually exclusive, only one can be provided.
-	SecurityGroup SecurityGroupLookup `json:"security_group"`
-}
-
-// GetSecurityGroupRulesParams defines parameters for GetSecurityGroupRules.
-type GetSecurityGroupRulesParams struct {
-	// SecurityGroupId The security group to return all load rules for. All 'security_group[]' params are mutually exclusive, only one can be provided.
-	SecurityGroupId *string `form:"security_group[id],omitempty" json:"security_group[id],omitempty"`
-	Page            *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage         *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
-}
-
-// PostSecurityGroupRulesJSONBody defines parameters for PostSecurityGroupRules.
-type PostSecurityGroupRulesJSONBody struct {
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
-	Properties SecurityGroupRuleArguments `json:"properties"`
-
-	// SecurityGroup All 'security_group[]' params are mutually exclusive, only one can be provided.
-	SecurityGroup SecurityGroupLookup `json:"security_group"`
+	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
+	Organization OrganizationLookup      `json:"organization"`
+	Properties   VirtualNetworkArguments `json:"properties"`
 }
 
 // DeleteSecurityGroupsRulesSecurityGroupRuleJSONBody defines parameters for DeleteSecurityGroupsRulesSecurityGroupRule.
 type DeleteSecurityGroupsRulesSecurityGroupRuleJSONBody struct {
-	// SecurityGroupRule All 'security_group_rule[]' params are mutually exclusive, only one can be provided.
 	SecurityGroupRule SecurityGroupRuleLookup `json:"security_group_rule"`
 }
 
 // GetSecurityGroupsRulesSecurityGroupRuleParams defines parameters for GetSecurityGroupsRulesSecurityGroupRule.
 type GetSecurityGroupsRulesSecurityGroupRuleParams struct {
-	// SecurityGroupRuleId The security group rule to return the details for. All 'security_group_rule[]' params are mutually exclusive, only one can be provided.
+	// SecurityGroupRuleId The security group rule to return the details for.
 	SecurityGroupRuleId *string `form:"security_group_rule[id],omitempty" json:"security_group_rule[id],omitempty"`
 }
 
 // PatchSecurityGroupsRulesSecurityGroupRuleJSONBody defines parameters for PatchSecurityGroupsRulesSecurityGroupRule.
 type PatchSecurityGroupsRulesSecurityGroupRuleJSONBody struct {
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
-	Properties SecurityGroupRuleArguments `json:"properties"`
+	Properties        SecurityGroupRuleArguments `json:"properties"`
+	SecurityGroupRule SecurityGroupRuleLookup    `json:"security_group_rule"`
+}
 
-	// SecurityGroupRule All 'security_group_rule[]' params are mutually exclusive, only one can be provided.
-	SecurityGroupRule SecurityGroupRuleLookup `json:"security_group_rule"`
+// DeleteSecurityGroupJSONBody defines parameters for DeleteSecurityGroup.
+type DeleteSecurityGroupJSONBody struct {
+	SecurityGroup SecurityGroupLookup `json:"security_group"`
+}
+
+// GetSecurityGroupParams defines parameters for GetSecurityGroup.
+type GetSecurityGroupParams struct {
+	// SecurityGroupId The security group to return the details for.
+	SecurityGroupId *string `form:"security_group[id],omitempty" json:"security_group[id],omitempty"`
+}
+
+// PatchSecurityGroupJSONBody defines parameters for PatchSecurityGroup.
+type PatchSecurityGroupJSONBody struct {
+	Annotations   *[]KeyValue            `json:"annotations,omitempty"`
+	Properties    SecurityGroupArguments `json:"properties"`
+	SecurityGroup SecurityGroupLookup    `json:"security_group"`
+}
+
+// GetSecurityGroupRulesParams defines parameters for GetSecurityGroupRules.
+type GetSecurityGroupRulesParams struct {
+	// SecurityGroupId The security group to return all load rules for.
+	SecurityGroupId *string `form:"security_group[id],omitempty" json:"security_group[id],omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
+}
+
+// PostSecurityGroupRulesJSONBody defines parameters for PostSecurityGroupRules.
+type PostSecurityGroupRulesJSONBody struct {
+	Properties    SecurityGroupRuleArguments `json:"properties"`
+	SecurityGroup SecurityGroupLookup        `json:"security_group"`
 }
 
 // DeleteSshKeyJSONBody defines parameters for DeleteSshKey.
 type DeleteSshKeyJSONBody struct {
-	// SshKey All 'ssh_key[]' params are mutually exclusive, only one can be provided.
 	SshKey AuthSSHKeyLookup `json:"ssh_key"`
 }
 
 // DeleteTagJSONBody defines parameters for DeleteTag.
 type DeleteTagJSONBody struct {
-	// Tag All 'tag[]' params are mutually exclusive, only one can be provided.
 	Tag TagLookup `json:"tag"`
 }
 
 // GetTagParams defines parameters for GetTag.
 type GetTagParams struct {
-	// TagId The tag to load the details for. All 'tag[]' params are mutually exclusive, only one can be provided.
+	// TagId The tag to load the details for.
 	TagId *string `form:"tag[id],omitempty" json:"tag[id],omitempty"`
 }
 
 // PatchTagJSONBody defines parameters for PatchTag.
 type PatchTagJSONBody struct {
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
 	Properties TagArguments `json:"properties"`
-
-	// Tag All 'tag[]' params are mutually exclusive, only one can be provided.
-	Tag TagLookup `json:"tag"`
+	Tag        TagLookup    `json:"tag"`
 }
 
 // GetTaskParams defines parameters for GetTask.
 type GetTaskParams struct {
-	// TaskId All 'task[]' params are mutually exclusive, only one can be provided.
 	TaskId *string `form:"task[id],omitempty" json:"task[id],omitempty"`
 }
 
@@ -5686,10 +6992,14 @@ type DeleteTrashObjectJSONBody struct {
 
 // GetTrashObjectParams defines parameters for GetTrashObject.
 type GetTrashObjectParams struct {
-	// TrashObjectId The trash object to find. All 'trash_object[]' params are mutually exclusive, only one can be provided.
+	// TrashObjectId The trash object to find.
+	//
+	//  All 'trash_object[]' params are mutually exclusive, only one can be provided.
 	TrashObjectId *string `form:"trash_object[id],omitempty" json:"trash_object[id],omitempty"`
 
-	// TrashObjectObjectId The trash object to find. All 'trash_object[]' params are mutually exclusive, only one can be provided.
+	// TrashObjectObjectId The trash object to find.
+	//
+	//  All 'trash_object[]' params are mutually exclusive, only one can be provided.
 	TrashObjectObjectId *string `form:"trash_object[object_id],omitempty" json:"trash_object[object_id],omitempty"`
 }
 
@@ -5701,75 +7011,88 @@ type PostTrashObjectRestoreJSONBody struct {
 
 // DeleteVirtualMachineGroupJSONBody defines parameters for DeleteVirtualMachineGroup.
 type DeleteVirtualMachineGroupJSONBody struct {
-	// VirtualMachineGroup All 'group[]' params are mutually exclusive, only one can be provided.
 	VirtualMachineGroup VirtualMachineGroupLookup `json:"virtual_machine_group"`
 }
 
 // GetVirtualMachineGroupParams defines parameters for GetVirtualMachineGroup.
 type GetVirtualMachineGroupParams struct {
-	// VirtualMachineGroupId The virtual machine group to retrieve. All 'virtual_machine_group[]' params are mutually exclusive, only one can be provided.
+	// VirtualMachineGroupId The virtual machine group to retrieve.
 	VirtualMachineGroupId *string `form:"virtual_machine_group[id],omitempty" json:"virtual_machine_group[id],omitempty"`
 }
 
 // PatchVirtualMachineGroupJSONBody defines parameters for PatchVirtualMachineGroup.
 type PatchVirtualMachineGroupJSONBody struct {
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
-	Properties VirtualMachineGroupArguments `json:"properties"`
+	Properties          VirtualMachineGroupArguments `json:"properties"`
+	VirtualMachineGroup VirtualMachineGroupLookup    `json:"virtual_machine_group"`
+}
 
-	// VirtualMachineGroup All 'group[]' params are mutually exclusive, only one can be provided.
-	VirtualMachineGroup VirtualMachineGroupLookup `json:"virtual_machine_group"`
+// DeleteVirtualMachineNetworkInterfaceJSONBody defines parameters for DeleteVirtualMachineNetworkInterface.
+type DeleteVirtualMachineNetworkInterfaceJSONBody struct {
+	VirtualMachineNetworkInterface VirtualMachineNetworkInterfaceLookup `json:"virtual_machine_network_interface"`
 }
 
 // GetVMNIVMNIParams defines parameters for GetVMNIVMNI.
 type GetVMNIVMNIParams struct {
-	// VirtualMachineNetworkInterfaceId The network interface to show the information for. All 'virtual_machine_network_interface[]' params are mutually exclusive, only one can be provided.
+	// VirtualMachineNetworkInterfaceId The network interface to show the information for.
 	VirtualMachineNetworkInterfaceId *string `form:"virtual_machine_network_interface[id],omitempty" json:"virtual_machine_network_interface[id],omitempty"`
 }
 
 // PostVirtualMachineNetworkInterfaceAllocateIpJSONBody defines parameters for PostVirtualMachineNetworkInterfaceAllocateIp.
 type PostVirtualMachineNetworkInterfaceAllocateIpJSONBody struct {
 	// IpAddress All 'ip_address[]' params are mutually exclusive, only one can be provided.
-	IpAddress IPAddressLookup `json:"ip_address"`
-
-	// VirtualMachineNetworkInterface All 'virtual_machine_network_interface[]' params are mutually exclusive, only one can be provided.
+	IpAddress                      IPAddressLookup                      `json:"ip_address"`
 	VirtualMachineNetworkInterface VirtualMachineNetworkInterfaceLookup `json:"virtual_machine_network_interface"`
 }
 
 // PostVirtualMachineNetworkInterfaceAllocateNewIpJSONBody defines parameters for PostVirtualMachineNetworkInterfaceAllocateNewIp.
 type PostVirtualMachineNetworkInterfaceAllocateNewIpJSONBody struct {
-	AddressVersion IPAddressVersionEnum `json:"address_version"`
+	AddressVersion                 IPAddressVersionEnum                 `json:"address_version"`
+	VirtualMachineNetworkInterface VirtualMachineNetworkInterfaceLookup `json:"virtual_machine_network_interface"`
+}
 
-	// VirtualMachineNetworkInterface All 'virtual_machine_network_interface[]' params are mutually exclusive, only one can be provided.
+// PostVirtualMachineNetworkInterfaceAttachJSONBody defines parameters for PostVirtualMachineNetworkInterfaceAttach.
+type PostVirtualMachineNetworkInterfaceAttachJSONBody struct {
 	VirtualMachineNetworkInterface VirtualMachineNetworkInterfaceLookup `json:"virtual_machine_network_interface"`
 }
 
 // GetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionParams defines parameters for GetVirtualMachineNetworkInterfaceAvailableIpsAddressVersion.
 type GetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionParams struct {
-	// VirtualMachineNetworkInterfaceId The network interface to get IP addresses for. All 'virtual_machine_network_interface[]' params are mutually exclusive, only one can be provided.
+	// VirtualMachineNetworkInterfaceId The network interface to get IP addresses for.
 	VirtualMachineNetworkInterfaceId *string `form:"virtual_machine_network_interface[id],omitempty" json:"virtual_machine_network_interface[id],omitempty"`
 
 	// AddressVersion The IP address version to return results for
 	AddressVersion IPAddressVersionEnum `form:"address_version" json:"address_version"`
 }
 
+// PostVirtualMachineNetworkInterfaceDetachJSONBody defines parameters for PostVirtualMachineNetworkInterfaceDetach.
+type PostVirtualMachineNetworkInterfaceDetachJSONBody struct {
+	VirtualMachineNetworkInterface VirtualMachineNetworkInterfaceLookup `json:"virtual_machine_network_interface"`
+}
+
 // PatchVirtualMachineNetworkInterfaceUpdateSpeedProfileJSONBody defines parameters for PatchVirtualMachineNetworkInterfaceUpdateSpeedProfile.
 type PatchVirtualMachineNetworkInterfaceUpdateSpeedProfileJSONBody struct {
 	// SpeedProfile All 'speed_profile[]' params are mutually exclusive, only one can be provided.
-	SpeedProfile NetworkSpeedProfileLookup `json:"speed_profile"`
-
-	// VirtualMachineNetworkInterface All 'virtual_machine_network_interface[]' params are mutually exclusive, only one can be provided.
+	SpeedProfile                   NetworkSpeedProfileLookup            `json:"speed_profile"`
 	VirtualMachineNetworkInterface VirtualMachineNetworkInterfaceLookup `json:"virtual_machine_network_interface"`
 }
 
 // GetVirtualMachinePackagesParams defines parameters for GetVirtualMachinePackages.
 type GetVirtualMachinePackagesParams struct {
-	// OrganizationId Provide an organization to only show packages available to the given organization (otherwise only public packages will be displayed). All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationId Provide an organization to only show packages available to the given organization (otherwise only public packages will be displayed).
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationId *string `form:"organization[id],omitempty" json:"organization[id],omitempty"`
 
-	// OrganizationSubDomain Provide an organization to only show packages available to the given organization (otherwise only public packages will be displayed). All 'organization[]' params are mutually exclusive, only one can be provided.
+	// OrganizationSubDomain Provide an organization to only show packages available to the given organization (otherwise only public packages will be displayed).
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
 	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
-	Page                  *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage               *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // GetVirtualMachinePackageParams defines parameters for GetVirtualMachinePackage.
@@ -5779,6 +7102,11 @@ type GetVirtualMachinePackageParams struct {
 
 	// VirtualMachinePackagePermalink All 'virtual_machine_package[]' params are mutually exclusive, only one can be provided.
 	VirtualMachinePackagePermalink *string `form:"virtual_machine_package[permalink],omitempty" json:"virtual_machine_package[permalink],omitempty"`
+}
+
+// GetVirtualMachinesBuildsVirtualMachineBuildParams defines parameters for GetVirtualMachinesBuildsVirtualMachineBuild.
+type GetVirtualMachinesBuildsVirtualMachineBuildParams struct {
+	VirtualMachineBuildId *string `form:"virtual_machine_build[id],omitempty" json:"virtual_machine_build[id],omitempty"`
 }
 
 // DeleteVirtualMachineJSONBody defines parameters for DeleteVirtualMachine.
@@ -5798,10 +7126,8 @@ type GetVirtualMachineParams struct {
 
 // PatchVirtualMachineJSONBody defines parameters for PatchVirtualMachine.
 type PatchVirtualMachineJSONBody struct {
-	Annotations *[]KeyValue `json:"annotations,omitempty"`
-
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
-	Properties VirtualMachineArguments `json:"properties"`
+	Annotations *[]KeyValue             `json:"annotations,omitempty"`
+	Properties  VirtualMachineArguments `json:"properties"`
 
 	// VirtualMachine All 'virtual_machine[]' params are mutually exclusive, only one can be provided.
 	VirtualMachine VirtualMachineLookup `json:"virtual_machine"`
@@ -5824,21 +7150,28 @@ type PostVirtualMachineConsoleSessionsJSONBody struct {
 
 // GetVirtualMachineDiskBackupPoliciesParams defines parameters for GetVirtualMachineDiskBackupPolicies.
 type GetVirtualMachineDiskBackupPoliciesParams struct {
-	// VirtualMachineId The virtual machine to return disk backup policies for. All 'virtual_machine[]' params are mutually exclusive, only one can be provided.
+	// VirtualMachineId The virtual machine to return disk backup policies for.
+	//
+	//  All 'virtual_machine[]' params are mutually exclusive, only one can be provided.
 	VirtualMachineId *string `form:"virtual_machine[id],omitempty" json:"virtual_machine[id],omitempty"`
 
-	// VirtualMachineFqdn The virtual machine to return disk backup policies for. All 'virtual_machine[]' params are mutually exclusive, only one can be provided.
+	// VirtualMachineFqdn The virtual machine to return disk backup policies for.
+	//
+	//  All 'virtual_machine[]' params are mutually exclusive, only one can be provided.
 	VirtualMachineFqdn *string `form:"virtual_machine[fqdn],omitempty" json:"virtual_machine[fqdn],omitempty"`
 
 	// IncludeDisks If true, the returned list will include backup policies owned by disks assigned to this virtual machine in addition to those that belong to the whole virtual machine
 	IncludeDisks *bool `form:"include_disks,omitempty" json:"include_disks,omitempty"`
-	Page         *int  `form:"page,omitempty" json:"page,omitempty"`
-	PerPage      *int  `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // PostVirtualMachineDiskBackupPoliciesJSONBody defines parameters for PostVirtualMachineDiskBackupPolicies.
 type PostVirtualMachineDiskBackupPoliciesJSONBody struct {
-	// Properties All 'properties[]' params are mutually exclusive, only one can be provided.
 	Properties DiskBackupPolicyArguments `json:"properties"`
 
 	// VirtualMachine All 'virtual_machine[]' params are mutually exclusive, only one can be provided.
@@ -5847,18 +7180,25 @@ type PostVirtualMachineDiskBackupPoliciesJSONBody struct {
 
 // GetVirtualMachineDisksParams defines parameters for GetVirtualMachineDisks.
 type GetVirtualMachineDisksParams struct {
-	// VirtualMachineId The virtual machine to find disks for. All 'virtual_machine[]' params are mutually exclusive, only one can be provided.
+	// VirtualMachineId The virtual machine to find disks for.
+	//
+	//  All 'virtual_machine[]' params are mutually exclusive, only one can be provided.
 	VirtualMachineId *string `form:"virtual_machine[id],omitempty" json:"virtual_machine[id],omitempty"`
 
-	// VirtualMachineFqdn The virtual machine to find disks for. All 'virtual_machine[]' params are mutually exclusive, only one can be provided.
+	// VirtualMachineFqdn The virtual machine to find disks for.
+	//
+	//  All 'virtual_machine[]' params are mutually exclusive, only one can be provided.
 	VirtualMachineFqdn *string `form:"virtual_machine[fqdn],omitempty" json:"virtual_machine[fqdn],omitempty"`
-	Page               *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage            *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // PutVirtualMachineFlexibleResourcesJSONBody defines parameters for PutVirtualMachineFlexibleResources.
 type PutVirtualMachineFlexibleResourcesJSONBody struct {
-	// Resources All 'resources[]' params are mutually exclusive, only one can be provided.
 	Resources VirtualMachineFlexibleResources `json:"resources"`
 
 	// VirtualMachine All 'virtual_machine[]' params are mutually exclusive, only one can be provided.
@@ -5867,27 +7207,56 @@ type PutVirtualMachineFlexibleResourcesJSONBody struct {
 
 // GetVirtualMachineNetworkInterfacesParams defines parameters for GetVirtualMachineNetworkInterfaces.
 type GetVirtualMachineNetworkInterfacesParams struct {
-	// VirtualMachineId The virtual machine to show network interfaces for. All 'virtual_machine[]' params are mutually exclusive, only one can be provided.
+	// VirtualMachineId The virtual machine to show network interfaces for.
+	//
+	//  All 'virtual_machine[]' params are mutually exclusive, only one can be provided.
 	VirtualMachineId *string `form:"virtual_machine[id],omitempty" json:"virtual_machine[id],omitempty"`
 
-	// VirtualMachineFqdn The virtual machine to show network interfaces for. All 'virtual_machine[]' params are mutually exclusive, only one can be provided.
+	// VirtualMachineFqdn The virtual machine to show network interfaces for.
+	//
+	//  All 'virtual_machine[]' params are mutually exclusive, only one can be provided.
 	VirtualMachineFqdn *string `form:"virtual_machine[fqdn],omitempty" json:"virtual_machine[fqdn],omitempty"`
-	Page               *int    `form:"page,omitempty" json:"page,omitempty"`
-	PerPage            *int    `form:"per_page,omitempty" json:"per_page,omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
+}
+
+// PostVirtualMachineNetworkInterfacesJSONBody defines parameters for PostVirtualMachineNetworkInterfaces.
+type PostVirtualMachineNetworkInterfacesJSONBody struct {
+	// Network All 'network[]' params are mutually exclusive, only one can be provided.
+	Network *NetworkLookup `json:"network,omitempty"`
+
+	// SpeedProfile All 'speed_profile[]' params are mutually exclusive, only one can be provided.
+	SpeedProfile NetworkSpeedProfileLookup `json:"speed_profile"`
+
+	// VirtualMachine All 'virtual_machine[]' params are mutually exclusive, only one can be provided.
+	VirtualMachine VirtualMachineLookup  `json:"virtual_machine"`
+	VirtualNetwork *VirtualNetworkLookup `json:"virtual_network,omitempty"`
 }
 
 // GetVirtualMachineNetworkInterfaceParams defines parameters for GetVirtualMachineNetworkInterface.
 type GetVirtualMachineNetworkInterfaceParams struct {
-	// VirtualMachineId The virtual machine to find the network interface for. All 'virtual_machine[]' params are mutually exclusive, only one can be provided.
+	// VirtualMachineId The virtual machine to find the network interface for.
+	//
+	//  All 'virtual_machine[]' params are mutually exclusive, only one can be provided.
 	VirtualMachineId *string `form:"virtual_machine[id],omitempty" json:"virtual_machine[id],omitempty"`
 
-	// VirtualMachineFqdn The virtual machine to find the network interface for. All 'virtual_machine[]' params are mutually exclusive, only one can be provided.
+	// VirtualMachineFqdn The virtual machine to find the network interface for.
+	//
+	//  All 'virtual_machine[]' params are mutually exclusive, only one can be provided.
 	VirtualMachineFqdn *string `form:"virtual_machine[fqdn],omitempty" json:"virtual_machine[fqdn],omitempty"`
 
-	// NetworkId The network to find the network interface for. All 'network[]' params are mutually exclusive, only one can be provided.
+	// NetworkId The network to find the network interface for.
+	//
+	//  All 'network[]' params are mutually exclusive, only one can be provided.
 	NetworkId *string `form:"network[id],omitempty" json:"network[id],omitempty"`
 
-	// NetworkPermalink The network to find the network interface for. All 'network[]' params are mutually exclusive, only one can be provided.
+	// NetworkPermalink The network to find the network interface for.
+	//
+	//  All 'network[]' params are mutually exclusive, only one can be provided.
 	NetworkPermalink *string `form:"network[permalink],omitempty" json:"network[permalink],omitempty"`
 }
 
@@ -5924,18 +7293,33 @@ type PostVirtualMachineStopJSONBody struct {
 	VirtualMachine VirtualMachineLookup `json:"virtual_machine"`
 }
 
-// GetVirtualMachinesBuildsVirtualMachineBuildParams defines parameters for GetVirtualMachinesBuildsVirtualMachineBuild.
-type GetVirtualMachinesBuildsVirtualMachineBuildParams struct {
-	// VirtualMachineBuildId All 'virtual_machine_build[]' params are mutually exclusive, only one can be provided.
-	VirtualMachineBuildId *string `form:"virtual_machine_build[id],omitempty" json:"virtual_machine_build[id],omitempty"`
+// DeleteVirtualNetworkJSONBody defines parameters for DeleteVirtualNetwork.
+type DeleteVirtualNetworkJSONBody struct {
+	VirtualNetwork VirtualNetworkLookup `json:"virtual_network"`
+}
+
+// GetVirtualNetworkParams defines parameters for GetVirtualNetwork.
+type GetVirtualNetworkParams struct {
+	// VirtualNetworkId The virtual network to retrieve.
+	VirtualNetworkId *string `form:"virtual_network[id],omitempty" json:"virtual_network[id],omitempty"`
+}
+
+// PatchVirtualNetworkJSONBody defines parameters for PatchVirtualNetwork.
+type PatchVirtualNetworkJSONBody struct {
+	Properties     VirtualNetworkArguments `json:"properties"`
+	VirtualNetwork VirtualNetworkLookup    `json:"virtual_network"`
 }
 
 // GetZoneParams defines parameters for GetZone.
 type GetZoneParams struct {
-	// ZoneId The zone to find. All 'zone[]' params are mutually exclusive, only one can be provided.
+	// ZoneId The zone to find.
+	//
+	//  All 'zone[]' params are mutually exclusive, only one can be provided.
 	ZoneId *string `form:"zone[id],omitempty" json:"zone[id],omitempty"`
 
-	// ZonePermalink The zone to find. All 'zone[]' params are mutually exclusive, only one can be provided.
+	// ZonePermalink The zone to find.
+	//
+	//  All 'zone[]' params are mutually exclusive, only one can be provided.
 	ZonePermalink *string `form:"zone[permalink],omitempty" json:"zone[permalink],omitempty"`
 }
 
@@ -5953,6 +7337,9 @@ type PatchAddressListJSONRequestBody PatchAddressListJSONBody
 
 // PostAddressListEntriesJSONRequestBody defines body for PostAddressListEntries for application/json ContentType.
 type PostAddressListEntriesJSONRequestBody PostAddressListEntriesJSONBody
+
+// PostAddressListEntriesBulkJSONRequestBody defines body for PostAddressListEntriesBulk for application/json ContentType.
+type PostAddressListEntriesBulkJSONRequestBody PostAddressListEntriesBulkJSONBody
 
 // DeleteApiTokenJSONRequestBody defines body for DeleteApiToken for application/json ContentType.
 type DeleteApiTokenJSONRequestBody DeleteApiTokenJSONBody
@@ -6050,6 +7437,30 @@ type DeleteLoadBalancersRulesLoadBalancerRuleJSONRequestBody DeleteLoadBalancers
 // PatchLoadBalancersRulesLoadBalancerRuleJSONRequestBody defines body for PatchLoadBalancersRulesLoadBalancerRule for application/json ContentType.
 type PatchLoadBalancersRulesLoadBalancerRuleJSONRequestBody PatchLoadBalancersRulesLoadBalancerRuleJSONBody
 
+// DeleteOrganizationJSONRequestBody defines body for DeleteOrganization for application/json ContentType.
+type DeleteOrganizationJSONRequestBody DeleteOrganizationJSONBody
+
+// DeleteObjectStorageAccessKeyJSONRequestBody defines body for DeleteObjectStorageAccessKey for application/json ContentType.
+type DeleteObjectStorageAccessKeyJSONRequestBody DeleteObjectStorageAccessKeyJSONBody
+
+// PatchObjectStorageAccessKeyJSONRequestBody defines body for PatchObjectStorageAccessKey for application/json ContentType.
+type PatchObjectStorageAccessKeyJSONRequestBody PatchObjectStorageAccessKeyJSONBody
+
+// PostObjectStorageAccessKeyGenerateCredentialsJSONRequestBody defines body for PostObjectStorageAccessKeyGenerateCredentials for application/json ContentType.
+type PostObjectStorageAccessKeyGenerateCredentialsJSONRequestBody PostObjectStorageAccessKeyGenerateCredentialsJSONBody
+
+// DeleteObjectStorageObjectStorageClusterBucketJSONRequestBody defines body for DeleteObjectStorageObjectStorageClusterBucket for application/json ContentType.
+type DeleteObjectStorageObjectStorageClusterBucketJSONRequestBody DeleteObjectStorageObjectStorageClusterBucketJSONBody
+
+// PatchObjectStorageObjectStorageClusterBucketJSONRequestBody defines body for PatchObjectStorageObjectStorageClusterBucket for application/json ContentType.
+type PatchObjectStorageObjectStorageClusterBucketJSONRequestBody PatchObjectStorageObjectStorageClusterBucketJSONBody
+
+// PostObjectStorageObjectStorageClusterBucketPresignedUrlJSONRequestBody defines body for PostObjectStorageObjectStorageClusterBucketPresignedUrl for application/json ContentType.
+type PostObjectStorageObjectStorageClusterBucketPresignedUrlJSONRequestBody PostObjectStorageObjectStorageClusterBucketPresignedUrlJSONBody
+
+// PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsJSONRequestBody defines body for PostObjectStorageObjectStorageClusterBucketRevokePresignedUrls for application/json ContentType.
+type PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsJSONRequestBody PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsJSONBody
+
 // PostOrganizationAddressListsJSONRequestBody defines body for PostOrganizationAddressLists for application/json ContentType.
 type PostOrganizationAddressListsJSONRequestBody PostOrganizationAddressListsJSONBody
 
@@ -6074,6 +7485,18 @@ type PostOrganizationLoadBalancersJSONRequestBody PostOrganizationLoadBalancersJ
 // PostOrganizationManagedJSONRequestBody defines body for PostOrganizationManaged for application/json ContentType.
 type PostOrganizationManagedJSONRequestBody PostOrganizationManagedJSONBody
 
+// DeleteOrganizationObjectStorageObjectStorageClusterJSONRequestBody defines body for DeleteOrganizationObjectStorageObjectStorageCluster for application/json ContentType.
+type DeleteOrganizationObjectStorageObjectStorageClusterJSONRequestBody DeleteOrganizationObjectStorageObjectStorageClusterJSONBody
+
+// PostOrganizationObjectStorageObjectStorageClusterJSONRequestBody defines body for PostOrganizationObjectStorageObjectStorageCluster for application/json ContentType.
+type PostOrganizationObjectStorageObjectStorageClusterJSONRequestBody PostOrganizationObjectStorageObjectStorageClusterJSONBody
+
+// PostOrganizationObjectStorageObjectStorageClusterAccessKeysJSONRequestBody defines body for PostOrganizationObjectStorageObjectStorageClusterAccessKeys for application/json ContentType.
+type PostOrganizationObjectStorageObjectStorageClusterAccessKeysJSONRequestBody PostOrganizationObjectStorageObjectStorageClusterAccessKeysJSONBody
+
+// PostOrganizationObjectStorageObjectStorageClusterBucketsJSONRequestBody defines body for PostOrganizationObjectStorageObjectStorageClusterBuckets for application/json ContentType.
+type PostOrganizationObjectStorageObjectStorageClusterBucketsJSONRequestBody PostOrganizationObjectStorageObjectStorageClusterBucketsJSONBody
+
 // PostOrganizationSecurityGroupsJSONRequestBody defines body for PostOrganizationSecurityGroups for application/json ContentType.
 type PostOrganizationSecurityGroupsJSONRequestBody PostOrganizationSecurityGroupsJSONBody
 
@@ -6095,6 +7518,15 @@ type PostOrganizationVirtualMachinesBuildJSONRequestBody PostOrganizationVirtual
 // PostOrganizationVirtualMachinesBuildFromSpecJSONRequestBody defines body for PostOrganizationVirtualMachinesBuildFromSpec for application/json ContentType.
 type PostOrganizationVirtualMachinesBuildFromSpecJSONRequestBody PostOrganizationVirtualMachinesBuildFromSpecJSONBody
 
+// PostOrganizationVirtualNetworksJSONRequestBody defines body for PostOrganizationVirtualNetworks for application/json ContentType.
+type PostOrganizationVirtualNetworksJSONRequestBody PostOrganizationVirtualNetworksJSONBody
+
+// DeleteSecurityGroupsRulesSecurityGroupRuleJSONRequestBody defines body for DeleteSecurityGroupsRulesSecurityGroupRule for application/json ContentType.
+type DeleteSecurityGroupsRulesSecurityGroupRuleJSONRequestBody DeleteSecurityGroupsRulesSecurityGroupRuleJSONBody
+
+// PatchSecurityGroupsRulesSecurityGroupRuleJSONRequestBody defines body for PatchSecurityGroupsRulesSecurityGroupRule for application/json ContentType.
+type PatchSecurityGroupsRulesSecurityGroupRuleJSONRequestBody PatchSecurityGroupsRulesSecurityGroupRuleJSONBody
+
 // DeleteSecurityGroupJSONRequestBody defines body for DeleteSecurityGroup for application/json ContentType.
 type DeleteSecurityGroupJSONRequestBody DeleteSecurityGroupJSONBody
 
@@ -6103,12 +7535,6 @@ type PatchSecurityGroupJSONRequestBody PatchSecurityGroupJSONBody
 
 // PostSecurityGroupRulesJSONRequestBody defines body for PostSecurityGroupRules for application/json ContentType.
 type PostSecurityGroupRulesJSONRequestBody PostSecurityGroupRulesJSONBody
-
-// DeleteSecurityGroupsRulesSecurityGroupRuleJSONRequestBody defines body for DeleteSecurityGroupsRulesSecurityGroupRule for application/json ContentType.
-type DeleteSecurityGroupsRulesSecurityGroupRuleJSONRequestBody DeleteSecurityGroupsRulesSecurityGroupRuleJSONBody
-
-// PatchSecurityGroupsRulesSecurityGroupRuleJSONRequestBody defines body for PatchSecurityGroupsRulesSecurityGroupRule for application/json ContentType.
-type PatchSecurityGroupsRulesSecurityGroupRuleJSONRequestBody PatchSecurityGroupsRulesSecurityGroupRuleJSONBody
 
 // DeleteSshKeyJSONRequestBody defines body for DeleteSshKey for application/json ContentType.
 type DeleteSshKeyJSONRequestBody DeleteSshKeyJSONBody
@@ -6131,11 +7557,20 @@ type DeleteVirtualMachineGroupJSONRequestBody DeleteVirtualMachineGroupJSONBody
 // PatchVirtualMachineGroupJSONRequestBody defines body for PatchVirtualMachineGroup for application/json ContentType.
 type PatchVirtualMachineGroupJSONRequestBody PatchVirtualMachineGroupJSONBody
 
+// DeleteVirtualMachineNetworkInterfaceJSONRequestBody defines body for DeleteVirtualMachineNetworkInterface for application/json ContentType.
+type DeleteVirtualMachineNetworkInterfaceJSONRequestBody DeleteVirtualMachineNetworkInterfaceJSONBody
+
 // PostVirtualMachineNetworkInterfaceAllocateIpJSONRequestBody defines body for PostVirtualMachineNetworkInterfaceAllocateIp for application/json ContentType.
 type PostVirtualMachineNetworkInterfaceAllocateIpJSONRequestBody PostVirtualMachineNetworkInterfaceAllocateIpJSONBody
 
 // PostVirtualMachineNetworkInterfaceAllocateNewIpJSONRequestBody defines body for PostVirtualMachineNetworkInterfaceAllocateNewIp for application/json ContentType.
 type PostVirtualMachineNetworkInterfaceAllocateNewIpJSONRequestBody PostVirtualMachineNetworkInterfaceAllocateNewIpJSONBody
+
+// PostVirtualMachineNetworkInterfaceAttachJSONRequestBody defines body for PostVirtualMachineNetworkInterfaceAttach for application/json ContentType.
+type PostVirtualMachineNetworkInterfaceAttachJSONRequestBody PostVirtualMachineNetworkInterfaceAttachJSONBody
+
+// PostVirtualMachineNetworkInterfaceDetachJSONRequestBody defines body for PostVirtualMachineNetworkInterfaceDetach for application/json ContentType.
+type PostVirtualMachineNetworkInterfaceDetachJSONRequestBody PostVirtualMachineNetworkInterfaceDetachJSONBody
 
 // PatchVirtualMachineNetworkInterfaceUpdateSpeedProfileJSONRequestBody defines body for PatchVirtualMachineNetworkInterfaceUpdateSpeedProfile for application/json ContentType.
 type PatchVirtualMachineNetworkInterfaceUpdateSpeedProfileJSONRequestBody PatchVirtualMachineNetworkInterfaceUpdateSpeedProfileJSONBody
@@ -6158,6 +7593,9 @@ type PostVirtualMachineDiskBackupPoliciesJSONRequestBody PostVirtualMachineDiskB
 // PutVirtualMachineFlexibleResourcesJSONRequestBody defines body for PutVirtualMachineFlexibleResources for application/json ContentType.
 type PutVirtualMachineFlexibleResourcesJSONRequestBody PutVirtualMachineFlexibleResourcesJSONBody
 
+// PostVirtualMachineNetworkInterfacesJSONRequestBody defines body for PostVirtualMachineNetworkInterfaces for application/json ContentType.
+type PostVirtualMachineNetworkInterfacesJSONRequestBody PostVirtualMachineNetworkInterfacesJSONBody
+
 // PutVirtualMachinePackageJSONRequestBody defines body for PutVirtualMachinePackage for application/json ContentType.
 type PutVirtualMachinePackageJSONRequestBody PutVirtualMachinePackageJSONBody
 
@@ -6172,6 +7610,12 @@ type PostVirtualMachineStartJSONRequestBody PostVirtualMachineStartJSONBody
 
 // PostVirtualMachineStopJSONRequestBody defines body for PostVirtualMachineStop for application/json ContentType.
 type PostVirtualMachineStopJSONRequestBody PostVirtualMachineStopJSONBody
+
+// DeleteVirtualNetworkJSONRequestBody defines body for DeleteVirtualNetwork for application/json ContentType.
+type DeleteVirtualNetworkJSONRequestBody DeleteVirtualNetworkJSONBody
+
+// PatchVirtualNetworkJSONRequestBody defines body for PatchVirtualNetwork for application/json ContentType.
+type PatchVirtualNetworkJSONRequestBody PatchVirtualNetworkJSONBody
 
 // AsVirtualMachine returns the union data inside the DiskBackupPolicyTarget_Target as a VirtualMachine
 func (t DiskBackupPolicyTarget_Target) AsVirtualMachine() (VirtualMachine, error) {
@@ -6375,6 +7819,32 @@ func (t *OneOfAPIAuthenticator403Response) MergeInvalidAPITokenSchema(v InvalidA
 	return err
 }
 
+// AsInvalidCapabilitiesTokenSchema returns the union data inside the OneOfAPIAuthenticator403Response as a InvalidCapabilitiesTokenSchema
+func (t OneOfAPIAuthenticator403Response) AsInvalidCapabilitiesTokenSchema() (InvalidCapabilitiesTokenSchema, error) {
+	var body InvalidCapabilitiesTokenSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromInvalidCapabilitiesTokenSchema overwrites any union data inside the OneOfAPIAuthenticator403Response as the provided InvalidCapabilitiesTokenSchema
+func (t *OneOfAPIAuthenticator403Response) FromInvalidCapabilitiesTokenSchema(v InvalidCapabilitiesTokenSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeInvalidCapabilitiesTokenSchema performs a merge with any union data inside the OneOfAPIAuthenticator403Response, using the provided InvalidCapabilitiesTokenSchema
+func (t *OneOfAPIAuthenticator403Response) MergeInvalidCapabilitiesTokenSchema(v InvalidCapabilitiesTokenSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
 // AsScopeNotGrantedErrorSchema returns the union data inside the OneOfAPIAuthenticator403Response as a ScopeNotGrantedErrorSchema
 func (t OneOfAPIAuthenticator403Response) AsScopeNotGrantedErrorSchema() (ScopeNotGrantedErrorSchema, error) {
 	var body ScopeNotGrantedErrorSchema
@@ -6407,6 +7877,68 @@ func (t OneOfAPIAuthenticator403Response) MarshalJSON() ([]byte, error) {
 }
 
 func (t *OneOfAPIAuthenticator403Response) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsOrganizationNotFoundSchema returns the union data inside the OneOfDataCenterNotFoundOrganizationNotFound404Res as a OrganizationNotFoundSchema
+func (t OneOfDataCenterNotFoundOrganizationNotFound404Res) AsOrganizationNotFoundSchema() (OrganizationNotFoundSchema, error) {
+	var body OrganizationNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromOrganizationNotFoundSchema overwrites any union data inside the OneOfDataCenterNotFoundOrganizationNotFound404Res as the provided OrganizationNotFoundSchema
+func (t *OneOfDataCenterNotFoundOrganizationNotFound404Res) FromOrganizationNotFoundSchema(v OrganizationNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeOrganizationNotFoundSchema performs a merge with any union data inside the OneOfDataCenterNotFoundOrganizationNotFound404Res, using the provided OrganizationNotFoundSchema
+func (t *OneOfDataCenterNotFoundOrganizationNotFound404Res) MergeOrganizationNotFoundSchema(v OrganizationNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsDataCenterNotFoundSchema returns the union data inside the OneOfDataCenterNotFoundOrganizationNotFound404Res as a DataCenterNotFoundSchema
+func (t OneOfDataCenterNotFoundOrganizationNotFound404Res) AsDataCenterNotFoundSchema() (DataCenterNotFoundSchema, error) {
+	var body DataCenterNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromDataCenterNotFoundSchema overwrites any union data inside the OneOfDataCenterNotFoundOrganizationNotFound404Res as the provided DataCenterNotFoundSchema
+func (t *OneOfDataCenterNotFoundOrganizationNotFound404Res) FromDataCenterNotFoundSchema(v DataCenterNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeDataCenterNotFoundSchema performs a merge with any union data inside the OneOfDataCenterNotFoundOrganizationNotFound404Res, using the provided DataCenterNotFoundSchema
+func (t *OneOfDataCenterNotFoundOrganizationNotFound404Res) MergeDataCenterNotFoundSchema(v DataCenterNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t OneOfDataCenterNotFoundOrganizationNotFound404Res) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *OneOfDataCenterNotFoundOrganizationNotFound404Res) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }
@@ -6577,6 +8109,68 @@ func (t *OneOfDataCenterNotFoundVirtualMachinePackageNotFoundZoneNotFound404Res)
 	return err
 }
 
+// AsDeletionStepsNotSatisfiedSchema returns the union data inside the OneOfDeletionStepsNotSatisfiedManagedOrganizationRequired409Res as a DeletionStepsNotSatisfiedSchema
+func (t OneOfDeletionStepsNotSatisfiedManagedOrganizationRequired409Res) AsDeletionStepsNotSatisfiedSchema() (DeletionStepsNotSatisfiedSchema, error) {
+	var body DeletionStepsNotSatisfiedSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromDeletionStepsNotSatisfiedSchema overwrites any union data inside the OneOfDeletionStepsNotSatisfiedManagedOrganizationRequired409Res as the provided DeletionStepsNotSatisfiedSchema
+func (t *OneOfDeletionStepsNotSatisfiedManagedOrganizationRequired409Res) FromDeletionStepsNotSatisfiedSchema(v DeletionStepsNotSatisfiedSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeDeletionStepsNotSatisfiedSchema performs a merge with any union data inside the OneOfDeletionStepsNotSatisfiedManagedOrganizationRequired409Res, using the provided DeletionStepsNotSatisfiedSchema
+func (t *OneOfDeletionStepsNotSatisfiedManagedOrganizationRequired409Res) MergeDeletionStepsNotSatisfiedSchema(v DeletionStepsNotSatisfiedSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsManagedOrganizationRequiredSchema returns the union data inside the OneOfDeletionStepsNotSatisfiedManagedOrganizationRequired409Res as a ManagedOrganizationRequiredSchema
+func (t OneOfDeletionStepsNotSatisfiedManagedOrganizationRequired409Res) AsManagedOrganizationRequiredSchema() (ManagedOrganizationRequiredSchema, error) {
+	var body ManagedOrganizationRequiredSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromManagedOrganizationRequiredSchema overwrites any union data inside the OneOfDeletionStepsNotSatisfiedManagedOrganizationRequired409Res as the provided ManagedOrganizationRequiredSchema
+func (t *OneOfDeletionStepsNotSatisfiedManagedOrganizationRequired409Res) FromManagedOrganizationRequiredSchema(v ManagedOrganizationRequiredSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeManagedOrganizationRequiredSchema performs a merge with any union data inside the OneOfDeletionStepsNotSatisfiedManagedOrganizationRequired409Res, using the provided ManagedOrganizationRequiredSchema
+func (t *OneOfDeletionStepsNotSatisfiedManagedOrganizationRequired409Res) MergeManagedOrganizationRequiredSchema(v ManagedOrganizationRequiredSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t OneOfDeletionStepsNotSatisfiedManagedOrganizationRequired409Res) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *OneOfDeletionStepsNotSatisfiedManagedOrganizationRequired409Res) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
 // AsDiskNotFoundSchema returns the union data inside the OneOfDiskIOProfileNotFoundDiskNotFound404Res as a DiskNotFoundSchema
 func (t OneOfDiskIOProfileNotFoundDiskNotFound404Res) AsDiskNotFoundSchema() (DiskNotFoundSchema, error) {
 	var body DiskNotFoundSchema
@@ -6743,6 +8337,32 @@ func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) 
 
 // MergeInvalidAPITokenSchema performs a merge with any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res, using the provided InvalidAPITokenSchema
 func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) MergeInvalidAPITokenSchema(v InvalidAPITokenSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsInvalidCapabilitiesTokenSchema returns the union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res as a InvalidCapabilitiesTokenSchema
+func (t OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) AsInvalidCapabilitiesTokenSchema() (InvalidCapabilitiesTokenSchema, error) {
+	var body InvalidCapabilitiesTokenSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromInvalidCapabilitiesTokenSchema overwrites any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res as the provided InvalidCapabilitiesTokenSchema
+func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) FromInvalidCapabilitiesTokenSchema(v InvalidCapabilitiesTokenSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeInvalidCapabilitiesTokenSchema performs a merge with any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res, using the provided InvalidCapabilitiesTokenSchema
+func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) MergeInvalidCapabilitiesTokenSchema(v InvalidCapabilitiesTokenSchema) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -7363,22 +8983,22 @@ func (t *OneOfInvalidTimestamp400Res) UnmarshalJSON(b []byte) error {
 	return err
 }
 
-// AsValidationErrorSchema returns the union data inside the OneOfLocationRequiredValidationError422Res as a ValidationErrorSchema
-func (t OneOfLocationRequiredValidationError422Res) AsValidationErrorSchema() (ValidationErrorSchema, error) {
+// AsValidationErrorSchema returns the union data inside the OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res as a ValidationErrorSchema
+func (t OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res) AsValidationErrorSchema() (ValidationErrorSchema, error) {
 	var body ValidationErrorSchema
 	err := json.Unmarshal(t.union, &body)
 	return body, err
 }
 
-// FromValidationErrorSchema overwrites any union data inside the OneOfLocationRequiredValidationError422Res as the provided ValidationErrorSchema
-func (t *OneOfLocationRequiredValidationError422Res) FromValidationErrorSchema(v ValidationErrorSchema) error {
+// FromValidationErrorSchema overwrites any union data inside the OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res as the provided ValidationErrorSchema
+func (t *OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res) FromValidationErrorSchema(v ValidationErrorSchema) error {
 	b, err := json.Marshal(v)
 	t.union = b
 	return err
 }
 
-// MergeValidationErrorSchema performs a merge with any union data inside the OneOfLocationRequiredValidationError422Res, using the provided ValidationErrorSchema
-func (t *OneOfLocationRequiredValidationError422Res) MergeValidationErrorSchema(v ValidationErrorSchema) error {
+// MergeValidationErrorSchema performs a merge with any union data inside the OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res, using the provided ValidationErrorSchema
+func (t *OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res) MergeValidationErrorSchema(v ValidationErrorSchema) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -7389,22 +9009,22 @@ func (t *OneOfLocationRequiredValidationError422Res) MergeValidationErrorSchema(
 	return err
 }
 
-// AsLocationRequiredSchema returns the union data inside the OneOfLocationRequiredValidationError422Res as a LocationRequiredSchema
-func (t OneOfLocationRequiredValidationError422Res) AsLocationRequiredSchema() (LocationRequiredSchema, error) {
+// AsLocationRequiredSchema returns the union data inside the OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res as a LocationRequiredSchema
+func (t OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res) AsLocationRequiredSchema() (LocationRequiredSchema, error) {
 	var body LocationRequiredSchema
 	err := json.Unmarshal(t.union, &body)
 	return body, err
 }
 
-// FromLocationRequiredSchema overwrites any union data inside the OneOfLocationRequiredValidationError422Res as the provided LocationRequiredSchema
-func (t *OneOfLocationRequiredValidationError422Res) FromLocationRequiredSchema(v LocationRequiredSchema) error {
+// FromLocationRequiredSchema overwrites any union data inside the OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res as the provided LocationRequiredSchema
+func (t *OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res) FromLocationRequiredSchema(v LocationRequiredSchema) error {
 	b, err := json.Marshal(v)
 	t.union = b
 	return err
 }
 
-// MergeLocationRequiredSchema performs a merge with any union data inside the OneOfLocationRequiredValidationError422Res, using the provided LocationRequiredSchema
-func (t *OneOfLocationRequiredValidationError422Res) MergeLocationRequiredSchema(v LocationRequiredSchema) error {
+// MergeLocationRequiredSchema performs a merge with any union data inside the OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res, using the provided LocationRequiredSchema
+func (t *OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res) MergeLocationRequiredSchema(v LocationRequiredSchema) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -7415,12 +9035,38 @@ func (t *OneOfLocationRequiredValidationError422Res) MergeLocationRequiredSchema
 	return err
 }
 
-func (t OneOfLocationRequiredValidationError422Res) MarshalJSON() ([]byte, error) {
+// AsOneSystemDiskRequiredSchema returns the union data inside the OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res as a OneSystemDiskRequiredSchema
+func (t OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res) AsOneSystemDiskRequiredSchema() (OneSystemDiskRequiredSchema, error) {
+	var body OneSystemDiskRequiredSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromOneSystemDiskRequiredSchema overwrites any union data inside the OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res as the provided OneSystemDiskRequiredSchema
+func (t *OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res) FromOneSystemDiskRequiredSchema(v OneSystemDiskRequiredSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeOneSystemDiskRequiredSchema performs a merge with any union data inside the OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res, using the provided OneSystemDiskRequiredSchema
+func (t *OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res) MergeOneSystemDiskRequiredSchema(v OneSystemDiskRequiredSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res) MarshalJSON() ([]byte, error) {
 	b, err := t.union.MarshalJSON()
 	return b, err
 }
 
-func (t *OneOfLocationRequiredValidationError422Res) UnmarshalJSON(b []byte) error {
+func (t *OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }
@@ -7483,6 +9129,120 @@ func (t OneOfNetworkNotFoundOrganizationNotFound404Res) MarshalJSON() ([]byte, e
 }
 
 func (t *OneOfNetworkNotFoundOrganizationNotFound404Res) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsVirtualMachineNotFoundSchema returns the union data inside the OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res as a VirtualMachineNotFoundSchema
+func (t OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) AsVirtualMachineNotFoundSchema() (VirtualMachineNotFoundSchema, error) {
+	var body VirtualMachineNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromVirtualMachineNotFoundSchema overwrites any union data inside the OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res as the provided VirtualMachineNotFoundSchema
+func (t *OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) FromVirtualMachineNotFoundSchema(v VirtualMachineNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeVirtualMachineNotFoundSchema performs a merge with any union data inside the OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res, using the provided VirtualMachineNotFoundSchema
+func (t *OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) MergeVirtualMachineNotFoundSchema(v VirtualMachineNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsNetworkNotFoundSchema returns the union data inside the OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res as a NetworkNotFoundSchema
+func (t OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) AsNetworkNotFoundSchema() (NetworkNotFoundSchema, error) {
+	var body NetworkNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromNetworkNotFoundSchema overwrites any union data inside the OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res as the provided NetworkNotFoundSchema
+func (t *OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) FromNetworkNotFoundSchema(v NetworkNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeNetworkNotFoundSchema performs a merge with any union data inside the OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res, using the provided NetworkNotFoundSchema
+func (t *OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) MergeNetworkNotFoundSchema(v NetworkNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsVirtualNetworkNotFoundSchema returns the union data inside the OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res as a VirtualNetworkNotFoundSchema
+func (t OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) AsVirtualNetworkNotFoundSchema() (VirtualNetworkNotFoundSchema, error) {
+	var body VirtualNetworkNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromVirtualNetworkNotFoundSchema overwrites any union data inside the OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res as the provided VirtualNetworkNotFoundSchema
+func (t *OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) FromVirtualNetworkNotFoundSchema(v VirtualNetworkNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeVirtualNetworkNotFoundSchema performs a merge with any union data inside the OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res, using the provided VirtualNetworkNotFoundSchema
+func (t *OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) MergeVirtualNetworkNotFoundSchema(v VirtualNetworkNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsNetworkSpeedProfileNotFoundSchema returns the union data inside the OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res as a NetworkSpeedProfileNotFoundSchema
+func (t OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) AsNetworkSpeedProfileNotFoundSchema() (NetworkSpeedProfileNotFoundSchema, error) {
+	var body NetworkSpeedProfileNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromNetworkSpeedProfileNotFoundSchema overwrites any union data inside the OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res as the provided NetworkSpeedProfileNotFoundSchema
+func (t *OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) FromNetworkSpeedProfileNotFoundSchema(v NetworkSpeedProfileNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeNetworkSpeedProfileNotFoundSchema performs a merge with any union data inside the OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res, using the provided NetworkSpeedProfileNotFoundSchema
+func (t *OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) MergeNetworkSpeedProfileNotFoundSchema(v NetworkSpeedProfileNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }
@@ -7735,6 +9495,778 @@ func (t *OneOfObjectInTrashVirtualMachineMustBeStarted406Res) UnmarshalJSON(b []
 	return err
 }
 
+// AsObjectStorageClusterNotFoundSchema returns the union data inside the OneOfObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res as a ObjectStorageClusterNotFoundSchema
+func (t OneOfObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res) AsObjectStorageClusterNotFoundSchema() (ObjectStorageClusterNotFoundSchema, error) {
+	var body ObjectStorageClusterNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromObjectStorageClusterNotFoundSchema overwrites any union data inside the OneOfObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res as the provided ObjectStorageClusterNotFoundSchema
+func (t *OneOfObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res) FromObjectStorageClusterNotFoundSchema(v ObjectStorageClusterNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeObjectStorageClusterNotFoundSchema performs a merge with any union data inside the OneOfObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res, using the provided ObjectStorageClusterNotFoundSchema
+func (t *OneOfObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res) MergeObjectStorageClusterNotFoundSchema(v ObjectStorageClusterNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsObjectStorageBucketNotFoundSchema returns the union data inside the OneOfObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res as a ObjectStorageBucketNotFoundSchema
+func (t OneOfObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res) AsObjectStorageBucketNotFoundSchema() (ObjectStorageBucketNotFoundSchema, error) {
+	var body ObjectStorageBucketNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromObjectStorageBucketNotFoundSchema overwrites any union data inside the OneOfObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res as the provided ObjectStorageBucketNotFoundSchema
+func (t *OneOfObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res) FromObjectStorageBucketNotFoundSchema(v ObjectStorageBucketNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeObjectStorageBucketNotFoundSchema performs a merge with any union data inside the OneOfObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res, using the provided ObjectStorageBucketNotFoundSchema
+func (t *OneOfObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res) MergeObjectStorageBucketNotFoundSchema(v ObjectStorageBucketNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsObjectNotFoundSchema returns the union data inside the OneOfObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res as a ObjectNotFoundSchema
+func (t OneOfObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res) AsObjectNotFoundSchema() (ObjectNotFoundSchema, error) {
+	var body ObjectNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromObjectNotFoundSchema overwrites any union data inside the OneOfObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res as the provided ObjectNotFoundSchema
+func (t *OneOfObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res) FromObjectNotFoundSchema(v ObjectNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeObjectNotFoundSchema performs a merge with any union data inside the OneOfObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res, using the provided ObjectNotFoundSchema
+func (t *OneOfObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res) MergeObjectNotFoundSchema(v ObjectNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t OneOfObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *OneOfObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsOrganizationNotFoundSchema returns the union data inside the OneOfObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res as a OrganizationNotFoundSchema
+func (t OneOfObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res) AsOrganizationNotFoundSchema() (OrganizationNotFoundSchema, error) {
+	var body OrganizationNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromOrganizationNotFoundSchema overwrites any union data inside the OneOfObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res as the provided OrganizationNotFoundSchema
+func (t *OneOfObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res) FromOrganizationNotFoundSchema(v OrganizationNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeOrganizationNotFoundSchema performs a merge with any union data inside the OneOfObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res, using the provided OrganizationNotFoundSchema
+func (t *OneOfObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res) MergeOrganizationNotFoundSchema(v OrganizationNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsObjectStorageClusterNotFoundSchema returns the union data inside the OneOfObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res as a ObjectStorageClusterNotFoundSchema
+func (t OneOfObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res) AsObjectStorageClusterNotFoundSchema() (ObjectStorageClusterNotFoundSchema, error) {
+	var body ObjectStorageClusterNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromObjectStorageClusterNotFoundSchema overwrites any union data inside the OneOfObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res as the provided ObjectStorageClusterNotFoundSchema
+func (t *OneOfObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res) FromObjectStorageClusterNotFoundSchema(v ObjectStorageClusterNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeObjectStorageClusterNotFoundSchema performs a merge with any union data inside the OneOfObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res, using the provided ObjectStorageClusterNotFoundSchema
+func (t *OneOfObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res) MergeObjectStorageClusterNotFoundSchema(v ObjectStorageClusterNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsObjectStorageAccountNotFoundSchema returns the union data inside the OneOfObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res as a ObjectStorageAccountNotFoundSchema
+func (t OneOfObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res) AsObjectStorageAccountNotFoundSchema() (ObjectStorageAccountNotFoundSchema, error) {
+	var body ObjectStorageAccountNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromObjectStorageAccountNotFoundSchema overwrites any union data inside the OneOfObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res as the provided ObjectStorageAccountNotFoundSchema
+func (t *OneOfObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res) FromObjectStorageAccountNotFoundSchema(v ObjectStorageAccountNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeObjectStorageAccountNotFoundSchema performs a merge with any union data inside the OneOfObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res, using the provided ObjectStorageAccountNotFoundSchema
+func (t *OneOfObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res) MergeObjectStorageAccountNotFoundSchema(v ObjectStorageAccountNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t OneOfObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *OneOfObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsUnauthorizedNetworkForAPITokenSchema returns the union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res as a UnauthorizedNetworkForAPITokenSchema
+func (t OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) AsUnauthorizedNetworkForAPITokenSchema() (UnauthorizedNetworkForAPITokenSchema, error) {
+	var body UnauthorizedNetworkForAPITokenSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromUnauthorizedNetworkForAPITokenSchema overwrites any union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res as the provided UnauthorizedNetworkForAPITokenSchema
+func (t *OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) FromUnauthorizedNetworkForAPITokenSchema(v UnauthorizedNetworkForAPITokenSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeUnauthorizedNetworkForAPITokenSchema performs a merge with any union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res, using the provided UnauthorizedNetworkForAPITokenSchema
+func (t *OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) MergeUnauthorizedNetworkForAPITokenSchema(v UnauthorizedNetworkForAPITokenSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsInvalidAPITokenSchema returns the union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res as a InvalidAPITokenSchema
+func (t OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) AsInvalidAPITokenSchema() (InvalidAPITokenSchema, error) {
+	var body InvalidAPITokenSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromInvalidAPITokenSchema overwrites any union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res as the provided InvalidAPITokenSchema
+func (t *OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) FromInvalidAPITokenSchema(v InvalidAPITokenSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeInvalidAPITokenSchema performs a merge with any union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res, using the provided InvalidAPITokenSchema
+func (t *OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) MergeInvalidAPITokenSchema(v InvalidAPITokenSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsInvalidCapabilitiesTokenSchema returns the union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res as a InvalidCapabilitiesTokenSchema
+func (t OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) AsInvalidCapabilitiesTokenSchema() (InvalidCapabilitiesTokenSchema, error) {
+	var body InvalidCapabilitiesTokenSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromInvalidCapabilitiesTokenSchema overwrites any union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res as the provided InvalidCapabilitiesTokenSchema
+func (t *OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) FromInvalidCapabilitiesTokenSchema(v InvalidCapabilitiesTokenSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeInvalidCapabilitiesTokenSchema performs a merge with any union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res, using the provided InvalidCapabilitiesTokenSchema
+func (t *OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) MergeInvalidCapabilitiesTokenSchema(v InvalidCapabilitiesTokenSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsScopeNotGrantedErrorSchema returns the union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res as a ScopeNotGrantedErrorSchema
+func (t OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) AsScopeNotGrantedErrorSchema() (ScopeNotGrantedErrorSchema, error) {
+	var body ScopeNotGrantedErrorSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromScopeNotGrantedErrorSchema overwrites any union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res as the provided ScopeNotGrantedErrorSchema
+func (t *OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) FromScopeNotGrantedErrorSchema(v ScopeNotGrantedErrorSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeScopeNotGrantedErrorSchema performs a merge with any union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res, using the provided ScopeNotGrantedErrorSchema
+func (t *OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) MergeScopeNotGrantedErrorSchema(v ScopeNotGrantedErrorSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsOrganizationSuspendedSchema returns the union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res as a OrganizationSuspendedSchema
+func (t OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) AsOrganizationSuspendedSchema() (OrganizationSuspendedSchema, error) {
+	var body OrganizationSuspendedSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromOrganizationSuspendedSchema overwrites any union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res as the provided OrganizationSuspendedSchema
+func (t *OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) FromOrganizationSuspendedSchema(v OrganizationSuspendedSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeOrganizationSuspendedSchema performs a merge with any union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res, using the provided OrganizationSuspendedSchema
+func (t *OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) MergeOrganizationSuspendedSchema(v OrganizationSuspendedSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsOrganizationNotActivatedSchema returns the union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res as a OrganizationNotActivatedSchema
+func (t OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) AsOrganizationNotActivatedSchema() (OrganizationNotActivatedSchema, error) {
+	var body OrganizationNotActivatedSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromOrganizationNotActivatedSchema overwrites any union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res as the provided OrganizationNotActivatedSchema
+func (t *OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) FromOrganizationNotActivatedSchema(v OrganizationNotActivatedSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeOrganizationNotActivatedSchema performs a merge with any union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res, using the provided OrganizationNotActivatedSchema
+func (t *OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) MergeOrganizationNotActivatedSchema(v OrganizationNotActivatedSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsPermissionDeniedSchema returns the union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res as a PermissionDeniedSchema
+func (t OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) AsPermissionDeniedSchema() (PermissionDeniedSchema, error) {
+	var body PermissionDeniedSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromPermissionDeniedSchema overwrites any union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res as the provided PermissionDeniedSchema
+func (t *OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) FromPermissionDeniedSchema(v PermissionDeniedSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergePermissionDeniedSchema performs a merge with any union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res, using the provided PermissionDeniedSchema
+func (t *OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) MergePermissionDeniedSchema(v PermissionDeniedSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsObjectStorageAccountNotProvisionedSchema returns the union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res as a ObjectStorageAccountNotProvisionedSchema
+func (t OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) AsObjectStorageAccountNotProvisionedSchema() (ObjectStorageAccountNotProvisionedSchema, error) {
+	var body ObjectStorageAccountNotProvisionedSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromObjectStorageAccountNotProvisionedSchema overwrites any union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res as the provided ObjectStorageAccountNotProvisionedSchema
+func (t *OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) FromObjectStorageAccountNotProvisionedSchema(v ObjectStorageAccountNotProvisionedSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeObjectStorageAccountNotProvisionedSchema performs a merge with any union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res, using the provided ObjectStorageAccountNotProvisionedSchema
+func (t *OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) MergeObjectStorageAccountNotProvisionedSchema(v ObjectStorageAccountNotProvisionedSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsObjectStorageAccountSuspendedSchema returns the union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res as a ObjectStorageAccountSuspendedSchema
+func (t OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) AsObjectStorageAccountSuspendedSchema() (ObjectStorageAccountSuspendedSchema, error) {
+	var body ObjectStorageAccountSuspendedSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromObjectStorageAccountSuspendedSchema overwrites any union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res as the provided ObjectStorageAccountSuspendedSchema
+func (t *OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) FromObjectStorageAccountSuspendedSchema(v ObjectStorageAccountSuspendedSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeObjectStorageAccountSuspendedSchema performs a merge with any union data inside the OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res, using the provided ObjectStorageAccountSuspendedSchema
+func (t *OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) MergeObjectStorageAccountSuspendedSchema(v ObjectStorageAccountSuspendedSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *OneOfObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsUnauthorizedNetworkForAPITokenSchema returns the union data inside the OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res as a UnauthorizedNetworkForAPITokenSchema
+func (t OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res) AsUnauthorizedNetworkForAPITokenSchema() (UnauthorizedNetworkForAPITokenSchema, error) {
+	var body UnauthorizedNetworkForAPITokenSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromUnauthorizedNetworkForAPITokenSchema overwrites any union data inside the OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res as the provided UnauthorizedNetworkForAPITokenSchema
+func (t *OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res) FromUnauthorizedNetworkForAPITokenSchema(v UnauthorizedNetworkForAPITokenSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeUnauthorizedNetworkForAPITokenSchema performs a merge with any union data inside the OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res, using the provided UnauthorizedNetworkForAPITokenSchema
+func (t *OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res) MergeUnauthorizedNetworkForAPITokenSchema(v UnauthorizedNetworkForAPITokenSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsInvalidAPITokenSchema returns the union data inside the OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res as a InvalidAPITokenSchema
+func (t OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res) AsInvalidAPITokenSchema() (InvalidAPITokenSchema, error) {
+	var body InvalidAPITokenSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromInvalidAPITokenSchema overwrites any union data inside the OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res as the provided InvalidAPITokenSchema
+func (t *OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res) FromInvalidAPITokenSchema(v InvalidAPITokenSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeInvalidAPITokenSchema performs a merge with any union data inside the OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res, using the provided InvalidAPITokenSchema
+func (t *OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res) MergeInvalidAPITokenSchema(v InvalidAPITokenSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsInvalidCapabilitiesTokenSchema returns the union data inside the OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res as a InvalidCapabilitiesTokenSchema
+func (t OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res) AsInvalidCapabilitiesTokenSchema() (InvalidCapabilitiesTokenSchema, error) {
+	var body InvalidCapabilitiesTokenSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromInvalidCapabilitiesTokenSchema overwrites any union data inside the OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res as the provided InvalidCapabilitiesTokenSchema
+func (t *OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res) FromInvalidCapabilitiesTokenSchema(v InvalidCapabilitiesTokenSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeInvalidCapabilitiesTokenSchema performs a merge with any union data inside the OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res, using the provided InvalidCapabilitiesTokenSchema
+func (t *OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res) MergeInvalidCapabilitiesTokenSchema(v InvalidCapabilitiesTokenSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsScopeNotGrantedErrorSchema returns the union data inside the OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res as a ScopeNotGrantedErrorSchema
+func (t OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res) AsScopeNotGrantedErrorSchema() (ScopeNotGrantedErrorSchema, error) {
+	var body ScopeNotGrantedErrorSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromScopeNotGrantedErrorSchema overwrites any union data inside the OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res as the provided ScopeNotGrantedErrorSchema
+func (t *OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res) FromScopeNotGrantedErrorSchema(v ScopeNotGrantedErrorSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeScopeNotGrantedErrorSchema performs a merge with any union data inside the OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res, using the provided ScopeNotGrantedErrorSchema
+func (t *OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res) MergeScopeNotGrantedErrorSchema(v ScopeNotGrantedErrorSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsPermissionDeniedSchema returns the union data inside the OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res as a PermissionDeniedSchema
+func (t OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res) AsPermissionDeniedSchema() (PermissionDeniedSchema, error) {
+	var body PermissionDeniedSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromPermissionDeniedSchema overwrites any union data inside the OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res as the provided PermissionDeniedSchema
+func (t *OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res) FromPermissionDeniedSchema(v PermissionDeniedSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergePermissionDeniedSchema performs a merge with any union data inside the OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res, using the provided PermissionDeniedSchema
+func (t *OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res) MergePermissionDeniedSchema(v PermissionDeniedSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsObjectStorageBucketDeletionErrorSchema returns the union data inside the OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res as a ObjectStorageBucketDeletionErrorSchema
+func (t OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res) AsObjectStorageBucketDeletionErrorSchema() (ObjectStorageBucketDeletionErrorSchema, error) {
+	var body ObjectStorageBucketDeletionErrorSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromObjectStorageBucketDeletionErrorSchema overwrites any union data inside the OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res as the provided ObjectStorageBucketDeletionErrorSchema
+func (t *OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res) FromObjectStorageBucketDeletionErrorSchema(v ObjectStorageBucketDeletionErrorSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeObjectStorageBucketDeletionErrorSchema performs a merge with any union data inside the OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res, using the provided ObjectStorageBucketDeletionErrorSchema
+func (t *OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res) MergeObjectStorageBucketDeletionErrorSchema(v ObjectStorageBucketDeletionErrorSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *OneOfObjectStorageBucketDeletionErrorPermissionDenied403Res) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsObjectStorageClusterNotFoundSchema returns the union data inside the OneOfObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res as a ObjectStorageClusterNotFoundSchema
+func (t OneOfObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res) AsObjectStorageClusterNotFoundSchema() (ObjectStorageClusterNotFoundSchema, error) {
+	var body ObjectStorageClusterNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromObjectStorageClusterNotFoundSchema overwrites any union data inside the OneOfObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res as the provided ObjectStorageClusterNotFoundSchema
+func (t *OneOfObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res) FromObjectStorageClusterNotFoundSchema(v ObjectStorageClusterNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeObjectStorageClusterNotFoundSchema performs a merge with any union data inside the OneOfObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res, using the provided ObjectStorageClusterNotFoundSchema
+func (t *OneOfObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res) MergeObjectStorageClusterNotFoundSchema(v ObjectStorageClusterNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsObjectStorageBucketNotFoundSchema returns the union data inside the OneOfObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res as a ObjectStorageBucketNotFoundSchema
+func (t OneOfObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res) AsObjectStorageBucketNotFoundSchema() (ObjectStorageBucketNotFoundSchema, error) {
+	var body ObjectStorageBucketNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromObjectStorageBucketNotFoundSchema overwrites any union data inside the OneOfObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res as the provided ObjectStorageBucketNotFoundSchema
+func (t *OneOfObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res) FromObjectStorageBucketNotFoundSchema(v ObjectStorageBucketNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeObjectStorageBucketNotFoundSchema performs a merge with any union data inside the OneOfObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res, using the provided ObjectStorageBucketNotFoundSchema
+func (t *OneOfObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res) MergeObjectStorageBucketNotFoundSchema(v ObjectStorageBucketNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t OneOfObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *OneOfObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsOrganizationNotFoundSchema returns the union data inside the OneOfObjectStorageClusterNotFoundOrganizationNotFound404Res as a OrganizationNotFoundSchema
+func (t OneOfObjectStorageClusterNotFoundOrganizationNotFound404Res) AsOrganizationNotFoundSchema() (OrganizationNotFoundSchema, error) {
+	var body OrganizationNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromOrganizationNotFoundSchema overwrites any union data inside the OneOfObjectStorageClusterNotFoundOrganizationNotFound404Res as the provided OrganizationNotFoundSchema
+func (t *OneOfObjectStorageClusterNotFoundOrganizationNotFound404Res) FromOrganizationNotFoundSchema(v OrganizationNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeOrganizationNotFoundSchema performs a merge with any union data inside the OneOfObjectStorageClusterNotFoundOrganizationNotFound404Res, using the provided OrganizationNotFoundSchema
+func (t *OneOfObjectStorageClusterNotFoundOrganizationNotFound404Res) MergeOrganizationNotFoundSchema(v OrganizationNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsObjectStorageClusterNotFoundSchema returns the union data inside the OneOfObjectStorageClusterNotFoundOrganizationNotFound404Res as a ObjectStorageClusterNotFoundSchema
+func (t OneOfObjectStorageClusterNotFoundOrganizationNotFound404Res) AsObjectStorageClusterNotFoundSchema() (ObjectStorageClusterNotFoundSchema, error) {
+	var body ObjectStorageClusterNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromObjectStorageClusterNotFoundSchema overwrites any union data inside the OneOfObjectStorageClusterNotFoundOrganizationNotFound404Res as the provided ObjectStorageClusterNotFoundSchema
+func (t *OneOfObjectStorageClusterNotFoundOrganizationNotFound404Res) FromObjectStorageClusterNotFoundSchema(v ObjectStorageClusterNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeObjectStorageClusterNotFoundSchema performs a merge with any union data inside the OneOfObjectStorageClusterNotFoundOrganizationNotFound404Res, using the provided ObjectStorageClusterNotFoundSchema
+func (t *OneOfObjectStorageClusterNotFoundOrganizationNotFound404Res) MergeObjectStorageClusterNotFoundSchema(v ObjectStorageClusterNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t OneOfObjectStorageClusterNotFoundOrganizationNotFound404Res) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *OneOfObjectStorageClusterNotFoundOrganizationNotFound404Res) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsValidationErrorSchema returns the union data inside the OneOfObjectStorageProvisioningErrorValidationError422Res as a ValidationErrorSchema
+func (t OneOfObjectStorageProvisioningErrorValidationError422Res) AsValidationErrorSchema() (ValidationErrorSchema, error) {
+	var body ValidationErrorSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromValidationErrorSchema overwrites any union data inside the OneOfObjectStorageProvisioningErrorValidationError422Res as the provided ValidationErrorSchema
+func (t *OneOfObjectStorageProvisioningErrorValidationError422Res) FromValidationErrorSchema(v ValidationErrorSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeValidationErrorSchema performs a merge with any union data inside the OneOfObjectStorageProvisioningErrorValidationError422Res, using the provided ValidationErrorSchema
+func (t *OneOfObjectStorageProvisioningErrorValidationError422Res) MergeValidationErrorSchema(v ValidationErrorSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsObjectStorageProvisioningErrorSchema returns the union data inside the OneOfObjectStorageProvisioningErrorValidationError422Res as a ObjectStorageProvisioningErrorSchema
+func (t OneOfObjectStorageProvisioningErrorValidationError422Res) AsObjectStorageProvisioningErrorSchema() (ObjectStorageProvisioningErrorSchema, error) {
+	var body ObjectStorageProvisioningErrorSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromObjectStorageProvisioningErrorSchema overwrites any union data inside the OneOfObjectStorageProvisioningErrorValidationError422Res as the provided ObjectStorageProvisioningErrorSchema
+func (t *OneOfObjectStorageProvisioningErrorValidationError422Res) FromObjectStorageProvisioningErrorSchema(v ObjectStorageProvisioningErrorSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeObjectStorageProvisioningErrorSchema performs a merge with any union data inside the OneOfObjectStorageProvisioningErrorValidationError422Res, using the provided ObjectStorageProvisioningErrorSchema
+func (t *OneOfObjectStorageProvisioningErrorValidationError422Res) MergeObjectStorageProvisioningErrorSchema(v ObjectStorageProvisioningErrorSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t OneOfObjectStorageProvisioningErrorValidationError422Res) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *OneOfObjectStorageProvisioningErrorValidationError422Res) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
 // AsOrganizationNotFoundSchema returns the union data inside the OneOfOperatingSystemNotFoundOrganizationNotFound404Res as a OrganizationNotFoundSchema
 func (t OneOfOperatingSystemNotFoundOrganizationNotFound404Res) AsOrganizationNotFoundSchema() (OrganizationNotFoundSchema, error) {
 	var body OrganizationNotFoundSchema
@@ -7911,6 +10443,32 @@ func (t *OneOfOrganizationNotActivatedOrganizationSuspended403Res) MergeInvalidA
 	return err
 }
 
+// AsInvalidCapabilitiesTokenSchema returns the union data inside the OneOfOrganizationNotActivatedOrganizationSuspended403Res as a InvalidCapabilitiesTokenSchema
+func (t OneOfOrganizationNotActivatedOrganizationSuspended403Res) AsInvalidCapabilitiesTokenSchema() (InvalidCapabilitiesTokenSchema, error) {
+	var body InvalidCapabilitiesTokenSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromInvalidCapabilitiesTokenSchema overwrites any union data inside the OneOfOrganizationNotActivatedOrganizationSuspended403Res as the provided InvalidCapabilitiesTokenSchema
+func (t *OneOfOrganizationNotActivatedOrganizationSuspended403Res) FromInvalidCapabilitiesTokenSchema(v InvalidCapabilitiesTokenSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeInvalidCapabilitiesTokenSchema performs a merge with any union data inside the OneOfOrganizationNotActivatedOrganizationSuspended403Res, using the provided InvalidCapabilitiesTokenSchema
+func (t *OneOfOrganizationNotActivatedOrganizationSuspended403Res) MergeInvalidCapabilitiesTokenSchema(v InvalidCapabilitiesTokenSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
 // AsScopeNotGrantedErrorSchema returns the union data inside the OneOfOrganizationNotActivatedOrganizationSuspended403Res as a ScopeNotGrantedErrorSchema
 func (t OneOfOrganizationNotActivatedOrganizationSuspended403Res) AsScopeNotGrantedErrorSchema() (ScopeNotGrantedErrorSchema, error) {
 	var body ScopeNotGrantedErrorSchema
@@ -8041,6 +10599,32 @@ func (t *OneOfOrganizationNotActivatedOrganizationSuspendedPermissionDenied403Re
 
 // MergeInvalidAPITokenSchema performs a merge with any union data inside the OneOfOrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res, using the provided InvalidAPITokenSchema
 func (t *OneOfOrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res) MergeInvalidAPITokenSchema(v InvalidAPITokenSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsInvalidCapabilitiesTokenSchema returns the union data inside the OneOfOrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res as a InvalidCapabilitiesTokenSchema
+func (t OneOfOrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res) AsInvalidCapabilitiesTokenSchema() (InvalidCapabilitiesTokenSchema, error) {
+	var body InvalidCapabilitiesTokenSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromInvalidCapabilitiesTokenSchema overwrites any union data inside the OneOfOrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res as the provided InvalidCapabilitiesTokenSchema
+func (t *OneOfOrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res) FromInvalidCapabilitiesTokenSchema(v InvalidCapabilitiesTokenSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeInvalidCapabilitiesTokenSchema performs a merge with any union data inside the OneOfOrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res, using the provided InvalidCapabilitiesTokenSchema
+func (t *OneOfOrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res) MergeInvalidCapabilitiesTokenSchema(v InvalidCapabilitiesTokenSchema) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -8207,6 +10791,32 @@ func (t *OneOfOrganizationNotActivatedPermissionDeniedResourceCreationRestricted
 
 // MergeInvalidAPITokenSchema performs a merge with any union data inside the OneOfOrganizationNotActivatedPermissionDeniedResourceCreationRestricted403Res, using the provided InvalidAPITokenSchema
 func (t *OneOfOrganizationNotActivatedPermissionDeniedResourceCreationRestricted403Res) MergeInvalidAPITokenSchema(v InvalidAPITokenSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsInvalidCapabilitiesTokenSchema returns the union data inside the OneOfOrganizationNotActivatedPermissionDeniedResourceCreationRestricted403Res as a InvalidCapabilitiesTokenSchema
+func (t OneOfOrganizationNotActivatedPermissionDeniedResourceCreationRestricted403Res) AsInvalidCapabilitiesTokenSchema() (InvalidCapabilitiesTokenSchema, error) {
+	var body InvalidCapabilitiesTokenSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromInvalidCapabilitiesTokenSchema overwrites any union data inside the OneOfOrganizationNotActivatedPermissionDeniedResourceCreationRestricted403Res as the provided InvalidCapabilitiesTokenSchema
+func (t *OneOfOrganizationNotActivatedPermissionDeniedResourceCreationRestricted403Res) FromInvalidCapabilitiesTokenSchema(v InvalidCapabilitiesTokenSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeInvalidCapabilitiesTokenSchema performs a merge with any union data inside the OneOfOrganizationNotActivatedPermissionDeniedResourceCreationRestricted403Res, using the provided InvalidCapabilitiesTokenSchema
+func (t *OneOfOrganizationNotActivatedPermissionDeniedResourceCreationRestricted403Res) MergeInvalidCapabilitiesTokenSchema(v InvalidCapabilitiesTokenSchema) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -8409,6 +11019,32 @@ func (t *OneOfPermissionDenied403Res) MergeInvalidAPITokenSchema(v InvalidAPITok
 	return err
 }
 
+// AsInvalidCapabilitiesTokenSchema returns the union data inside the OneOfPermissionDenied403Res as a InvalidCapabilitiesTokenSchema
+func (t OneOfPermissionDenied403Res) AsInvalidCapabilitiesTokenSchema() (InvalidCapabilitiesTokenSchema, error) {
+	var body InvalidCapabilitiesTokenSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromInvalidCapabilitiesTokenSchema overwrites any union data inside the OneOfPermissionDenied403Res as the provided InvalidCapabilitiesTokenSchema
+func (t *OneOfPermissionDenied403Res) FromInvalidCapabilitiesTokenSchema(v InvalidCapabilitiesTokenSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeInvalidCapabilitiesTokenSchema performs a merge with any union data inside the OneOfPermissionDenied403Res, using the provided InvalidCapabilitiesTokenSchema
+func (t *OneOfPermissionDenied403Res) MergeInvalidCapabilitiesTokenSchema(v InvalidCapabilitiesTokenSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
 // AsScopeNotGrantedErrorSchema returns the union data inside the OneOfPermissionDenied403Res as a ScopeNotGrantedErrorSchema
 func (t OneOfPermissionDenied403Res) AsScopeNotGrantedErrorSchema() (ScopeNotGrantedErrorSchema, error) {
 	var body ScopeNotGrantedErrorSchema
@@ -8467,6 +11103,130 @@ func (t OneOfPermissionDenied403Res) MarshalJSON() ([]byte, error) {
 }
 
 func (t *OneOfPermissionDenied403Res) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsAPIAuthenticator400Schema returns the union data inside the OneOfPolicyNotAvailableForManagedOrganizations400Res as a APIAuthenticator400Schema
+func (t OneOfPolicyNotAvailableForManagedOrganizations400Res) AsAPIAuthenticator400Schema() (APIAuthenticator400Schema, error) {
+	var body APIAuthenticator400Schema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromAPIAuthenticator400Schema overwrites any union data inside the OneOfPolicyNotAvailableForManagedOrganizations400Res as the provided APIAuthenticator400Schema
+func (t *OneOfPolicyNotAvailableForManagedOrganizations400Res) FromAPIAuthenticator400Schema(v APIAuthenticator400Schema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeAPIAuthenticator400Schema performs a merge with any union data inside the OneOfPolicyNotAvailableForManagedOrganizations400Res, using the provided APIAuthenticator400Schema
+func (t *OneOfPolicyNotAvailableForManagedOrganizations400Res) MergeAPIAuthenticator400Schema(v APIAuthenticator400Schema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsPolicyNotAvailableForManagedOrganizationsSchema returns the union data inside the OneOfPolicyNotAvailableForManagedOrganizations400Res as a PolicyNotAvailableForManagedOrganizationsSchema
+func (t OneOfPolicyNotAvailableForManagedOrganizations400Res) AsPolicyNotAvailableForManagedOrganizationsSchema() (PolicyNotAvailableForManagedOrganizationsSchema, error) {
+	var body PolicyNotAvailableForManagedOrganizationsSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromPolicyNotAvailableForManagedOrganizationsSchema overwrites any union data inside the OneOfPolicyNotAvailableForManagedOrganizations400Res as the provided PolicyNotAvailableForManagedOrganizationsSchema
+func (t *OneOfPolicyNotAvailableForManagedOrganizations400Res) FromPolicyNotAvailableForManagedOrganizationsSchema(v PolicyNotAvailableForManagedOrganizationsSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergePolicyNotAvailableForManagedOrganizationsSchema performs a merge with any union data inside the OneOfPolicyNotAvailableForManagedOrganizations400Res, using the provided PolicyNotAvailableForManagedOrganizationsSchema
+func (t *OneOfPolicyNotAvailableForManagedOrganizations400Res) MergePolicyNotAvailableForManagedOrganizationsSchema(v PolicyNotAvailableForManagedOrganizationsSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t OneOfPolicyNotAvailableForManagedOrganizations400Res) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *OneOfPolicyNotAvailableForManagedOrganizations400Res) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsAPIAuthenticator400Schema returns the union data inside the OneOfPricesNotAvailableForManagedOrganizations400Res as a APIAuthenticator400Schema
+func (t OneOfPricesNotAvailableForManagedOrganizations400Res) AsAPIAuthenticator400Schema() (APIAuthenticator400Schema, error) {
+	var body APIAuthenticator400Schema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromAPIAuthenticator400Schema overwrites any union data inside the OneOfPricesNotAvailableForManagedOrganizations400Res as the provided APIAuthenticator400Schema
+func (t *OneOfPricesNotAvailableForManagedOrganizations400Res) FromAPIAuthenticator400Schema(v APIAuthenticator400Schema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeAPIAuthenticator400Schema performs a merge with any union data inside the OneOfPricesNotAvailableForManagedOrganizations400Res, using the provided APIAuthenticator400Schema
+func (t *OneOfPricesNotAvailableForManagedOrganizations400Res) MergeAPIAuthenticator400Schema(v APIAuthenticator400Schema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsPricesNotAvailableForManagedOrganizationsSchema returns the union data inside the OneOfPricesNotAvailableForManagedOrganizations400Res as a PricesNotAvailableForManagedOrganizationsSchema
+func (t OneOfPricesNotAvailableForManagedOrganizations400Res) AsPricesNotAvailableForManagedOrganizationsSchema() (PricesNotAvailableForManagedOrganizationsSchema, error) {
+	var body PricesNotAvailableForManagedOrganizationsSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromPricesNotAvailableForManagedOrganizationsSchema overwrites any union data inside the OneOfPricesNotAvailableForManagedOrganizations400Res as the provided PricesNotAvailableForManagedOrganizationsSchema
+func (t *OneOfPricesNotAvailableForManagedOrganizations400Res) FromPricesNotAvailableForManagedOrganizationsSchema(v PricesNotAvailableForManagedOrganizationsSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergePricesNotAvailableForManagedOrganizationsSchema performs a merge with any union data inside the OneOfPricesNotAvailableForManagedOrganizations400Res, using the provided PricesNotAvailableForManagedOrganizationsSchema
+func (t *OneOfPricesNotAvailableForManagedOrganizations400Res) MergePricesNotAvailableForManagedOrganizationsSchema(v PricesNotAvailableForManagedOrganizationsSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t OneOfPricesNotAvailableForManagedOrganizations400Res) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *OneOfPricesNotAvailableForManagedOrganizations400Res) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }
@@ -8728,6 +11488,11 @@ type ClientInterface interface {
 
 	PostAddressListEntries(ctx context.Context, body PostAddressListEntriesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// PostAddressListEntriesBulkWithBody request with any body
+	PostAddressListEntriesBulkWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostAddressListEntriesBulk(ctx context.Context, body PostAddressListEntriesBulkJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// DeleteApiTokenWithBody request with any body
 	DeleteApiTokenWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -8972,8 +11737,57 @@ type ClientInterface interface {
 
 	PatchLoadBalancersRulesLoadBalancerRule(ctx context.Context, body PatchLoadBalancersRulesLoadBalancerRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DeleteOrganizationWithBody request with any body
+	DeleteOrganizationWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	DeleteOrganization(ctx context.Context, body DeleteOrganizationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetNetwork request
 	GetNetwork(ctx context.Context, params *GetNetworkParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteObjectStorageAccessKeyWithBody request with any body
+	DeleteObjectStorageAccessKeyWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	DeleteObjectStorageAccessKey(ctx context.Context, body DeleteObjectStorageAccessKeyJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetObjectStorageAccessKey request
+	GetObjectStorageAccessKey(ctx context.Context, params *GetObjectStorageAccessKeyParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PatchObjectStorageAccessKeyWithBody request with any body
+	PatchObjectStorageAccessKeyWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PatchObjectStorageAccessKey(ctx context.Context, body PatchObjectStorageAccessKeyJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostObjectStorageAccessKeyGenerateCredentialsWithBody request with any body
+	PostObjectStorageAccessKeyGenerateCredentialsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostObjectStorageAccessKeyGenerateCredentials(ctx context.Context, body PostObjectStorageAccessKeyGenerateCredentialsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteObjectStorageObjectStorageClusterBucketWithBody request with any body
+	DeleteObjectStorageObjectStorageClusterBucketWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	DeleteObjectStorageObjectStorageClusterBucket(ctx context.Context, body DeleteObjectStorageObjectStorageClusterBucketJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetObjectStorageObjectStorageClusterBucket request
+	GetObjectStorageObjectStorageClusterBucket(ctx context.Context, params *GetObjectStorageObjectStorageClusterBucketParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PatchObjectStorageObjectStorageClusterBucketWithBody request with any body
+	PatchObjectStorageObjectStorageClusterBucketWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PatchObjectStorageObjectStorageClusterBucket(ctx context.Context, body PatchObjectStorageObjectStorageClusterBucketJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetObjectStorageObjectStorageClusterBucketObject request
+	GetObjectStorageObjectStorageClusterBucketObject(ctx context.Context, params *GetObjectStorageObjectStorageClusterBucketObjectParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostObjectStorageObjectStorageClusterBucketPresignedUrlWithBody request with any body
+	PostObjectStorageObjectStorageClusterBucketPresignedUrlWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostObjectStorageObjectStorageClusterBucketPresignedUrl(ctx context.Context, body PostObjectStorageObjectStorageClusterBucketPresignedUrlJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsWithBody request with any body
+	PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostObjectStorageObjectStorageClusterBucketRevokePresignedUrls(ctx context.Context, body PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetOperatingSystems request
 	GetOperatingSystems(ctx context.Context, params *GetOperatingSystemsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -9008,6 +11822,9 @@ type ClientInterface interface {
 
 	// GetOrganizationCertificates request
 	GetOrganizationCertificates(ctx context.Context, params *GetOrganizationCertificatesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetOrganizationDeletionSteps request
+	GetOrganizationDeletionSteps(ctx context.Context, params *GetOrganizationDeletionStepsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetOrganizationDiskBackupPolicies request
 	GetOrganizationDiskBackupPolicies(ctx context.Context, params *GetOrganizationDiskBackupPoliciesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -9072,8 +11889,40 @@ type ClientInterface interface {
 	// GetOrganizationNetworkSpeedProfiles request
 	GetOrganizationNetworkSpeedProfiles(ctx context.Context, params *GetOrganizationNetworkSpeedProfilesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetOrganizationObjectStorageAccessKeys request
+	GetOrganizationObjectStorageAccessKeys(ctx context.Context, params *GetOrganizationObjectStorageAccessKeysParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteOrganizationObjectStorageObjectStorageClusterWithBody request with any body
+	DeleteOrganizationObjectStorageObjectStorageClusterWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	DeleteOrganizationObjectStorageObjectStorageCluster(ctx context.Context, body DeleteOrganizationObjectStorageObjectStorageClusterJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetOrganizationObjectStorageObjectStorageCluster request
+	GetOrganizationObjectStorageObjectStorageCluster(ctx context.Context, params *GetOrganizationObjectStorageObjectStorageClusterParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostOrganizationObjectStorageObjectStorageClusterWithBody request with any body
+	PostOrganizationObjectStorageObjectStorageClusterWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostOrganizationObjectStorageObjectStorageCluster(ctx context.Context, body PostOrganizationObjectStorageObjectStorageClusterJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostOrganizationObjectStorageObjectStorageClusterAccessKeysWithBody request with any body
+	PostOrganizationObjectStorageObjectStorageClusterAccessKeysWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostOrganizationObjectStorageObjectStorageClusterAccessKeys(ctx context.Context, body PostOrganizationObjectStorageObjectStorageClusterAccessKeysJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostOrganizationObjectStorageObjectStorageClusterBucketsWithBody request with any body
+	PostOrganizationObjectStorageObjectStorageClusterBucketsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostOrganizationObjectStorageObjectStorageClusterBuckets(ctx context.Context, body PostOrganizationObjectStorageObjectStorageClusterBucketsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetOrganizationPolicy request
+	GetOrganizationPolicy(ctx context.Context, params *GetOrganizationPolicyParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetOrganizationPolicyLimits request
 	GetOrganizationPolicyLimits(ctx context.Context, params *GetOrganizationPolicyLimitsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetOrganizationPrices request
+	GetOrganizationPrices(ctx context.Context, params *GetOrganizationPricesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetOrganizationSecurityGroups request
 	GetOrganizationSecurityGroups(ctx context.Context, params *GetOrganizationSecurityGroupsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -9131,6 +11980,27 @@ type ClientInterface interface {
 
 	PostOrganizationVirtualMachinesBuildFromSpec(ctx context.Context, body PostOrganizationVirtualMachinesBuildFromSpecJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetOrganizationVirtualNetworks request
+	GetOrganizationVirtualNetworks(ctx context.Context, params *GetOrganizationVirtualNetworksParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostOrganizationVirtualNetworksWithBody request with any body
+	PostOrganizationVirtualNetworksWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostOrganizationVirtualNetworks(ctx context.Context, body PostOrganizationVirtualNetworksJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteSecurityGroupsRulesSecurityGroupRuleWithBody request with any body
+	DeleteSecurityGroupsRulesSecurityGroupRuleWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	DeleteSecurityGroupsRulesSecurityGroupRule(ctx context.Context, body DeleteSecurityGroupsRulesSecurityGroupRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetSecurityGroupsRulesSecurityGroupRule request
+	GetSecurityGroupsRulesSecurityGroupRule(ctx context.Context, params *GetSecurityGroupsRulesSecurityGroupRuleParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PatchSecurityGroupsRulesSecurityGroupRuleWithBody request with any body
+	PatchSecurityGroupsRulesSecurityGroupRuleWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PatchSecurityGroupsRulesSecurityGroupRule(ctx context.Context, body PatchSecurityGroupsRulesSecurityGroupRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// DeleteSecurityGroupWithBody request with any body
 	DeleteSecurityGroupWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -9151,19 +12021,6 @@ type ClientInterface interface {
 	PostSecurityGroupRulesWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	PostSecurityGroupRules(ctx context.Context, body PostSecurityGroupRulesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// DeleteSecurityGroupsRulesSecurityGroupRuleWithBody request with any body
-	DeleteSecurityGroupsRulesSecurityGroupRuleWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	DeleteSecurityGroupsRulesSecurityGroupRule(ctx context.Context, body DeleteSecurityGroupsRulesSecurityGroupRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// GetSecurityGroupsRulesSecurityGroupRule request
-	GetSecurityGroupsRulesSecurityGroupRule(ctx context.Context, params *GetSecurityGroupsRulesSecurityGroupRuleParams, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// PatchSecurityGroupsRulesSecurityGroupRuleWithBody request with any body
-	PatchSecurityGroupsRulesSecurityGroupRuleWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	PatchSecurityGroupsRulesSecurityGroupRule(ctx context.Context, body PatchSecurityGroupsRulesSecurityGroupRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeleteSshKeyWithBody request with any body
 	DeleteSshKeyWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -9218,6 +12075,11 @@ type ClientInterface interface {
 
 	PatchVirtualMachineGroup(ctx context.Context, body PatchVirtualMachineGroupJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DeleteVirtualMachineNetworkInterfaceWithBody request with any body
+	DeleteVirtualMachineNetworkInterfaceWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	DeleteVirtualMachineNetworkInterface(ctx context.Context, body DeleteVirtualMachineNetworkInterfaceJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetVMNIVMNI request
 	GetVMNIVMNI(ctx context.Context, params *GetVMNIVMNIParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -9231,8 +12093,18 @@ type ClientInterface interface {
 
 	PostVirtualMachineNetworkInterfaceAllocateNewIp(ctx context.Context, body PostVirtualMachineNetworkInterfaceAllocateNewIpJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// PostVirtualMachineNetworkInterfaceAttachWithBody request with any body
+	PostVirtualMachineNetworkInterfaceAttachWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostVirtualMachineNetworkInterfaceAttach(ctx context.Context, body PostVirtualMachineNetworkInterfaceAttachJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetVirtualMachineNetworkInterfaceAvailableIpsAddressVersion request
 	GetVirtualMachineNetworkInterfaceAvailableIpsAddressVersion(ctx context.Context, params *GetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostVirtualMachineNetworkInterfaceDetachWithBody request with any body
+	PostVirtualMachineNetworkInterfaceDetachWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostVirtualMachineNetworkInterfaceDetach(ctx context.Context, body PostVirtualMachineNetworkInterfaceDetachJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// PatchVirtualMachineNetworkInterfaceUpdateSpeedProfileWithBody request with any body
 	PatchVirtualMachineNetworkInterfaceUpdateSpeedProfileWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -9244,6 +12116,9 @@ type ClientInterface interface {
 
 	// GetVirtualMachinePackage request
 	GetVirtualMachinePackage(ctx context.Context, params *GetVirtualMachinePackageParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetVirtualMachinesBuildsVirtualMachineBuild request
+	GetVirtualMachinesBuildsVirtualMachineBuild(ctx context.Context, params *GetVirtualMachinesBuildsVirtualMachineBuildParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeleteVirtualMachineWithBody request with any body
 	DeleteVirtualMachineWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -9287,6 +12162,11 @@ type ClientInterface interface {
 	// GetVirtualMachineNetworkInterfaces request
 	GetVirtualMachineNetworkInterfaces(ctx context.Context, params *GetVirtualMachineNetworkInterfacesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// PostVirtualMachineNetworkInterfacesWithBody request with any body
+	PostVirtualMachineNetworkInterfacesWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostVirtualMachineNetworkInterfaces(ctx context.Context, body PostVirtualMachineNetworkInterfacesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetVirtualMachineNetworkInterface request
 	GetVirtualMachineNetworkInterface(ctx context.Context, params *GetVirtualMachineNetworkInterfaceParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -9315,8 +12195,18 @@ type ClientInterface interface {
 
 	PostVirtualMachineStop(ctx context.Context, body PostVirtualMachineStopJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetVirtualMachinesBuildsVirtualMachineBuild request
-	GetVirtualMachinesBuildsVirtualMachineBuild(ctx context.Context, params *GetVirtualMachinesBuildsVirtualMachineBuildParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// DeleteVirtualNetworkWithBody request with any body
+	DeleteVirtualNetworkWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	DeleteVirtualNetwork(ctx context.Context, body DeleteVirtualNetworkJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetVirtualNetwork request
+	GetVirtualNetwork(ctx context.Context, params *GetVirtualNetworkParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PatchVirtualNetworkWithBody request with any body
+	PatchVirtualNetworkWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PatchVirtualNetwork(ctx context.Context, body PatchVirtualNetworkJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetZones request
 	GetZones(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -9483,6 +12373,30 @@ func (c *Client) PostAddressListEntriesWithBody(ctx context.Context, contentType
 
 func (c *Client) PostAddressListEntries(ctx context.Context, body PostAddressListEntriesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPostAddressListEntriesRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostAddressListEntriesBulkWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostAddressListEntriesBulkRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostAddressListEntriesBulk(ctx context.Context, body PostAddressListEntriesBulkJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostAddressListEntriesBulkRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -10597,8 +13511,236 @@ func (c *Client) PatchLoadBalancersRulesLoadBalancerRule(ctx context.Context, bo
 	return c.Client.Do(req)
 }
 
+func (c *Client) DeleteOrganizationWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteOrganizationRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteOrganization(ctx context.Context, body DeleteOrganizationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteOrganizationRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetNetwork(ctx context.Context, params *GetNetworkParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetNetworkRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteObjectStorageAccessKeyWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteObjectStorageAccessKeyRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteObjectStorageAccessKey(ctx context.Context, body DeleteObjectStorageAccessKeyJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteObjectStorageAccessKeyRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetObjectStorageAccessKey(ctx context.Context, params *GetObjectStorageAccessKeyParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetObjectStorageAccessKeyRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchObjectStorageAccessKeyWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchObjectStorageAccessKeyRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchObjectStorageAccessKey(ctx context.Context, body PatchObjectStorageAccessKeyJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchObjectStorageAccessKeyRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostObjectStorageAccessKeyGenerateCredentialsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostObjectStorageAccessKeyGenerateCredentialsRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostObjectStorageAccessKeyGenerateCredentials(ctx context.Context, body PostObjectStorageAccessKeyGenerateCredentialsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostObjectStorageAccessKeyGenerateCredentialsRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteObjectStorageObjectStorageClusterBucketWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteObjectStorageObjectStorageClusterBucketRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteObjectStorageObjectStorageClusterBucket(ctx context.Context, body DeleteObjectStorageObjectStorageClusterBucketJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteObjectStorageObjectStorageClusterBucketRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetObjectStorageObjectStorageClusterBucket(ctx context.Context, params *GetObjectStorageObjectStorageClusterBucketParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetObjectStorageObjectStorageClusterBucketRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchObjectStorageObjectStorageClusterBucketWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchObjectStorageObjectStorageClusterBucketRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchObjectStorageObjectStorageClusterBucket(ctx context.Context, body PatchObjectStorageObjectStorageClusterBucketJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchObjectStorageObjectStorageClusterBucketRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetObjectStorageObjectStorageClusterBucketObject(ctx context.Context, params *GetObjectStorageObjectStorageClusterBucketObjectParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetObjectStorageObjectStorageClusterBucketObjectRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostObjectStorageObjectStorageClusterBucketPresignedUrlWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostObjectStorageObjectStorageClusterBucketPresignedUrlRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostObjectStorageObjectStorageClusterBucketPresignedUrl(ctx context.Context, body PostObjectStorageObjectStorageClusterBucketPresignedUrlJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostObjectStorageObjectStorageClusterBucketPresignedUrlRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostObjectStorageObjectStorageClusterBucketRevokePresignedUrls(ctx context.Context, body PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -10743,6 +13885,18 @@ func (c *Client) GetOrganizationAvailableNetworks(ctx context.Context, params *G
 
 func (c *Client) GetOrganizationCertificates(ctx context.Context, params *GetOrganizationCertificatesParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetOrganizationCertificatesRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetOrganizationDeletionSteps(ctx context.Context, params *GetOrganizationDeletionStepsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetOrganizationDeletionStepsRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -11029,8 +14183,152 @@ func (c *Client) GetOrganizationNetworkSpeedProfiles(ctx context.Context, params
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetOrganizationObjectStorageAccessKeys(ctx context.Context, params *GetOrganizationObjectStorageAccessKeysParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetOrganizationObjectStorageAccessKeysRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteOrganizationObjectStorageObjectStorageClusterWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteOrganizationObjectStorageObjectStorageClusterRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteOrganizationObjectStorageObjectStorageCluster(ctx context.Context, body DeleteOrganizationObjectStorageObjectStorageClusterJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteOrganizationObjectStorageObjectStorageClusterRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetOrganizationObjectStorageObjectStorageCluster(ctx context.Context, params *GetOrganizationObjectStorageObjectStorageClusterParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetOrganizationObjectStorageObjectStorageClusterRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostOrganizationObjectStorageObjectStorageClusterWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostOrganizationObjectStorageObjectStorageClusterRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostOrganizationObjectStorageObjectStorageCluster(ctx context.Context, body PostOrganizationObjectStorageObjectStorageClusterJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostOrganizationObjectStorageObjectStorageClusterRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostOrganizationObjectStorageObjectStorageClusterAccessKeysWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostOrganizationObjectStorageObjectStorageClusterAccessKeysRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostOrganizationObjectStorageObjectStorageClusterAccessKeys(ctx context.Context, body PostOrganizationObjectStorageObjectStorageClusterAccessKeysJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostOrganizationObjectStorageObjectStorageClusterAccessKeysRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostOrganizationObjectStorageObjectStorageClusterBucketsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostOrganizationObjectStorageObjectStorageClusterBucketsRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostOrganizationObjectStorageObjectStorageClusterBuckets(ctx context.Context, body PostOrganizationObjectStorageObjectStorageClusterBucketsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostOrganizationObjectStorageObjectStorageClusterBucketsRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetOrganizationPolicy(ctx context.Context, params *GetOrganizationPolicyParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetOrganizationPolicyRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetOrganizationPolicyLimits(ctx context.Context, params *GetOrganizationPolicyLimitsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetOrganizationPolicyLimitsRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetOrganizationPrices(ctx context.Context, params *GetOrganizationPricesParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetOrganizationPricesRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -11293,6 +14591,102 @@ func (c *Client) PostOrganizationVirtualMachinesBuildFromSpec(ctx context.Contex
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetOrganizationVirtualNetworks(ctx context.Context, params *GetOrganizationVirtualNetworksParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetOrganizationVirtualNetworksRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostOrganizationVirtualNetworksWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostOrganizationVirtualNetworksRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostOrganizationVirtualNetworks(ctx context.Context, body PostOrganizationVirtualNetworksJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostOrganizationVirtualNetworksRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteSecurityGroupsRulesSecurityGroupRuleWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteSecurityGroupsRulesSecurityGroupRuleRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteSecurityGroupsRulesSecurityGroupRule(ctx context.Context, body DeleteSecurityGroupsRulesSecurityGroupRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteSecurityGroupsRulesSecurityGroupRuleRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetSecurityGroupsRulesSecurityGroupRule(ctx context.Context, params *GetSecurityGroupsRulesSecurityGroupRuleParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetSecurityGroupsRulesSecurityGroupRuleRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchSecurityGroupsRulesSecurityGroupRuleWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchSecurityGroupsRulesSecurityGroupRuleRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchSecurityGroupsRulesSecurityGroupRule(ctx context.Context, body PatchSecurityGroupsRulesSecurityGroupRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchSecurityGroupsRulesSecurityGroupRuleRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) DeleteSecurityGroupWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDeleteSecurityGroupRequestWithBody(c.Server, contentType, body)
 	if err != nil {
@@ -11379,66 +14773,6 @@ func (c *Client) PostSecurityGroupRulesWithBody(ctx context.Context, contentType
 
 func (c *Client) PostSecurityGroupRules(ctx context.Context, body PostSecurityGroupRulesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPostSecurityGroupRulesRequest(c.Server, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) DeleteSecurityGroupsRulesSecurityGroupRuleWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDeleteSecurityGroupsRulesSecurityGroupRuleRequestWithBody(c.Server, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) DeleteSecurityGroupsRulesSecurityGroupRule(ctx context.Context, body DeleteSecurityGroupsRulesSecurityGroupRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDeleteSecurityGroupsRulesSecurityGroupRuleRequest(c.Server, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) GetSecurityGroupsRulesSecurityGroupRule(ctx context.Context, params *GetSecurityGroupsRulesSecurityGroupRuleParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetSecurityGroupsRulesSecurityGroupRuleRequest(c.Server, params)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) PatchSecurityGroupsRulesSecurityGroupRuleWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPatchSecurityGroupsRulesSecurityGroupRuleRequestWithBody(c.Server, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) PatchSecurityGroupsRulesSecurityGroupRule(ctx context.Context, body PatchSecurityGroupsRulesSecurityGroupRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPatchSecurityGroupsRulesSecurityGroupRuleRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -11689,6 +15023,30 @@ func (c *Client) PatchVirtualMachineGroup(ctx context.Context, body PatchVirtual
 	return c.Client.Do(req)
 }
 
+func (c *Client) DeleteVirtualMachineNetworkInterfaceWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteVirtualMachineNetworkInterfaceRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteVirtualMachineNetworkInterface(ctx context.Context, body DeleteVirtualMachineNetworkInterfaceJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteVirtualMachineNetworkInterfaceRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetVMNIVMNI(ctx context.Context, params *GetVMNIVMNIParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetVMNIVMNIRequest(c.Server, params)
 	if err != nil {
@@ -11749,8 +15107,56 @@ func (c *Client) PostVirtualMachineNetworkInterfaceAllocateNewIp(ctx context.Con
 	return c.Client.Do(req)
 }
 
+func (c *Client) PostVirtualMachineNetworkInterfaceAttachWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostVirtualMachineNetworkInterfaceAttachRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostVirtualMachineNetworkInterfaceAttach(ctx context.Context, body PostVirtualMachineNetworkInterfaceAttachJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostVirtualMachineNetworkInterfaceAttachRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetVirtualMachineNetworkInterfaceAvailableIpsAddressVersion(ctx context.Context, params *GetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostVirtualMachineNetworkInterfaceDetachWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostVirtualMachineNetworkInterfaceDetachRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostVirtualMachineNetworkInterfaceDetach(ctx context.Context, body PostVirtualMachineNetworkInterfaceDetachJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostVirtualMachineNetworkInterfaceDetachRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -11799,6 +15205,18 @@ func (c *Client) GetVirtualMachinePackages(ctx context.Context, params *GetVirtu
 
 func (c *Client) GetVirtualMachinePackage(ctx context.Context, params *GetVirtualMachinePackageParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetVirtualMachinePackageRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetVirtualMachinesBuildsVirtualMachineBuild(ctx context.Context, params *GetVirtualMachinesBuildsVirtualMachineBuildParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetVirtualMachinesBuildsVirtualMachineBuildRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -12001,6 +15419,30 @@ func (c *Client) GetVirtualMachineNetworkInterfaces(ctx context.Context, params 
 	return c.Client.Do(req)
 }
 
+func (c *Client) PostVirtualMachineNetworkInterfacesWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostVirtualMachineNetworkInterfacesRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostVirtualMachineNetworkInterfaces(ctx context.Context, body PostVirtualMachineNetworkInterfacesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostVirtualMachineNetworkInterfacesRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetVirtualMachineNetworkInterface(ctx context.Context, params *GetVirtualMachineNetworkInterfaceParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetVirtualMachineNetworkInterfaceRequest(c.Server, params)
 	if err != nil {
@@ -12133,8 +15575,56 @@ func (c *Client) PostVirtualMachineStop(ctx context.Context, body PostVirtualMac
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetVirtualMachinesBuildsVirtualMachineBuild(ctx context.Context, params *GetVirtualMachinesBuildsVirtualMachineBuildParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetVirtualMachinesBuildsVirtualMachineBuildRequest(c.Server, params)
+func (c *Client) DeleteVirtualNetworkWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteVirtualNetworkRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteVirtualNetwork(ctx context.Context, body DeleteVirtualNetworkJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteVirtualNetworkRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetVirtualNetwork(ctx context.Context, params *GetVirtualNetworkParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetVirtualNetworkRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchVirtualNetworkWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchVirtualNetworkRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchVirtualNetwork(ctx context.Context, body PatchVirtualNetworkJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchVirtualNetworkRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -12189,7 +15679,7 @@ func NewDeleteAddressListEntryRequestWithBody(server string, contentType string,
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/address_list_entries/:address_list_entry")
+	operationPath := fmt.Sprintf("/address_list_entries/address_list_entry")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -12218,7 +15708,7 @@ func NewGetAddressListEntryRequest(server string, params *GetAddressListEntryPar
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/address_list_entries/:address_list_entry")
+	operationPath := fmt.Sprintf("/address_list_entries/address_list_entry")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -12278,7 +15768,7 @@ func NewPatchAddressListEntryRequestWithBody(server string, contentType string, 
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/address_list_entries/:address_list_entry")
+	operationPath := fmt.Sprintf("/address_list_entries/address_list_entry")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -12383,7 +15873,7 @@ func NewDeleteAddressListRequestWithBody(server string, contentType string, body
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/address_lists/:address_list")
+	operationPath := fmt.Sprintf("/address_lists/address_list")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -12412,7 +15902,7 @@ func NewGetAddressListRequest(server string, params *GetAddressListParams) (*htt
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/address_lists/:address_list")
+	operationPath := fmt.Sprintf("/address_lists/address_list")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -12472,7 +15962,7 @@ func NewPatchAddressListRequestWithBody(server string, contentType string, body 
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/address_lists/:address_list")
+	operationPath := fmt.Sprintf("/address_lists/address_list")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -12501,7 +15991,7 @@ func NewGetAddressListEntriesRequest(server string, params *GetAddressListEntrie
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/address_lists/:address_list/entries")
+	operationPath := fmt.Sprintf("/address_lists/address_list/entries")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -12593,7 +16083,47 @@ func NewPostAddressListEntriesRequestWithBody(server string, contentType string,
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/address_lists/:address_list/entries")
+	operationPath := fmt.Sprintf("/address_lists/address_list/entries")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewPostAddressListEntriesBulkRequest calls the generic PostAddressListEntriesBulk builder with application/json body
+func NewPostAddressListEntriesBulkRequest(server string, body PostAddressListEntriesBulkJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostAddressListEntriesBulkRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostAddressListEntriesBulkRequestWithBody generates requests for PostAddressListEntriesBulk with any type of body
+func NewPostAddressListEntriesBulkRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/address_lists/address_list/entries/bulk")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -12633,7 +16163,7 @@ func NewDeleteApiTokenRequestWithBody(server string, contentType string, body io
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api_tokens/:api_token")
+	operationPath := fmt.Sprintf("/api_tokens/api_token")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -12673,7 +16203,7 @@ func NewPatchApiTokenRequestWithBody(server string, contentType string, body io.
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api_tokens/:api_token")
+	operationPath := fmt.Sprintf("/api_tokens/api_token")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -12713,7 +16243,7 @@ func NewPostApiTokenRegenerateSecretRequestWithBody(server string, contentType s
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api_tokens/:api_token/regenerate_secret")
+	operationPath := fmt.Sprintf("/api_tokens/api_token/regenerate_secret")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -12742,7 +16272,7 @@ func NewGetCertificateRequest(server string, params *GetCertificateParams) (*htt
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/certificates/:certificate")
+	operationPath := fmt.Sprintf("/certificates/certificate")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -12856,7 +16386,7 @@ func NewGetCountryRequest(server string, params *GetCountryParams) (*http.Reques
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/countries/:country")
+	operationPath := fmt.Sprintf("/countries/country")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -12937,7 +16467,7 @@ func NewGetCountryCountryStatesRequest(server string, params *GetCountryCountryS
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/countries/:country/country_states")
+	operationPath := fmt.Sprintf("/countries/country/country_states")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -13050,7 +16580,7 @@ func NewGetCountryStateRequest(server string, params *GetCountryStateParams) (*h
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/country_states/:country_state")
+	operationPath := fmt.Sprintf("/country_states/country_state")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -13164,7 +16694,7 @@ func NewGetCurrencyRequest(server string, params *GetCurrencyParams) (*http.Requ
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/currencies/:currency")
+	operationPath := fmt.Sprintf("/currencies/currency")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -13256,7 +16786,7 @@ func NewGetDataCenterRequest(server string, params *GetDataCenterParams) (*http.
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/data_centers/:data_center")
+	operationPath := fmt.Sprintf("/data_centers/data_center")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -13321,7 +16851,7 @@ func NewGetDataCenterDefaultNetworkRequest(server string, params *GetDataCenterD
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/data_centers/:data_center/default_network")
+	operationPath := fmt.Sprintf("/data_centers/data_center/default_network")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -13386,7 +16916,7 @@ func NewGetDataCenterGpuTypesRequest(server string, params *GetDataCenterGpuType
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/data_centers/:data_center/gpu_types")
+	operationPath := fmt.Sprintf("/data_centers/data_center/gpu_types")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -13494,7 +17024,7 @@ func NewDeleteDiskBackupPolicyRequestWithBody(server string, contentType string,
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/disk_backup_policies/:disk_backup_policy")
+	operationPath := fmt.Sprintf("/disk_backup_policies/disk_backup_policy")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -13523,7 +17053,7 @@ func NewGetDiskBackupPolicyRequest(server string, params *GetDiskBackupPolicyPar
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/disk_backup_policies/:disk_backup_policy")
+	operationPath := fmt.Sprintf("/disk_backup_policies/disk_backup_policy")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -13583,7 +17113,7 @@ func NewPatchDiskBackupPolicyRequestWithBody(server string, contentType string, 
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/disk_backup_policies/:disk_backup_policy")
+	operationPath := fmt.Sprintf("/disk_backup_policies/disk_backup_policy")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -13623,7 +17153,7 @@ func NewDeleteDiskBackupPolicyScheduleRequestWithBody(server string, contentType
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/disk_backup_policies/:disk_backup_policy/schedule")
+	operationPath := fmt.Sprintf("/disk_backup_policies/disk_backup_policy/schedule")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -13652,7 +17182,7 @@ func NewGetDiskTemplateVersionRequest(server string, params *GetDiskTemplateVers
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/disk_template_versions/:disk_template_version")
+	operationPath := fmt.Sprintf("/disk_template_versions/disk_template_version")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -13701,7 +17231,7 @@ func NewGetDiskTemplateVersionSpecRequest(server string, params *GetDiskTemplate
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/disk_template_versions/:disk_template_version/spec")
+	operationPath := fmt.Sprintf("/disk_template_versions/disk_template_version/spec")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -13750,7 +17280,7 @@ func NewGetDiskTemplateRequest(server string, params *GetDiskTemplateParams) (*h
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/disk_templates/:disk_template")
+	operationPath := fmt.Sprintf("/disk_templates/disk_template")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -13815,7 +17345,7 @@ func NewGetDiskTemplateVersionsRequest(server string, params *GetDiskTemplateVer
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/disk_templates/:disk_template/versions")
+	operationPath := fmt.Sprintf("/disk_templates/disk_template/versions")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -13923,7 +17453,7 @@ func NewDeleteDiskRequestWithBody(server string, contentType string, body io.Rea
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/disks/:disk")
+	operationPath := fmt.Sprintf("/disks/disk")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -13952,7 +17482,7 @@ func NewGetDiskRequest(server string, params *GetDiskParams) (*http.Request, err
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/disks/:disk")
+	operationPath := fmt.Sprintf("/disks/disk")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -14012,7 +17542,7 @@ func NewPatchDiskRequestWithBody(server string, contentType string, body io.Read
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/disks/:disk")
+	operationPath := fmt.Sprintf("/disks/disk")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -14052,7 +17582,7 @@ func NewPostDiskAssignRequestWithBody(server string, contentType string, body io
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/disks/:disk/assign")
+	operationPath := fmt.Sprintf("/disks/disk/assign")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -14092,7 +17622,7 @@ func NewPostDiskAttachRequestWithBody(server string, contentType string, body io
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/disks/:disk/attach")
+	operationPath := fmt.Sprintf("/disks/disk/attach")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -14132,7 +17662,7 @@ func NewPostDiskDetachRequestWithBody(server string, contentType string, body io
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/disks/:disk/detach")
+	operationPath := fmt.Sprintf("/disks/disk/detach")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -14161,7 +17691,7 @@ func NewGetDiskDiskBackupPoliciesRequest(server string, params *GetDiskDiskBacku
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/disks/:disk/disk_backup_policies")
+	operationPath := fmt.Sprintf("/disks/disk/disk_backup_policies")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -14253,7 +17783,7 @@ func NewPostDiskDiskBackupPoliciesRequestWithBody(server string, contentType str
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/disks/:disk/disk_backup_policies")
+	operationPath := fmt.Sprintf("/disks/disk/disk_backup_policies")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -14293,7 +17823,7 @@ func NewPutDiskIoProfileRequestWithBody(server string, contentType string, body 
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/disks/:disk/io_profile")
+	operationPath := fmt.Sprintf("/disks/disk/io_profile")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -14333,7 +17863,7 @@ func NewPutDiskResizeRequestWithBody(server string, contentType string, body io.
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/disks/:disk/resize")
+	operationPath := fmt.Sprintf("/disks/disk/resize")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -14373,7 +17903,7 @@ func NewPostDiskUnassignRequestWithBody(server string, contentType string, body 
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/disks/:disk/unassign")
+	operationPath := fmt.Sprintf("/disks/disk/unassign")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -14413,7 +17943,7 @@ func NewDeleteDnsRecordRequestWithBody(server string, contentType string, body i
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/dns_records/:dns_record")
+	operationPath := fmt.Sprintf("/dns_records/dns_record")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -14442,7 +17972,7 @@ func NewGetDnsRecordRequest(server string, params *GetDnsRecordParams) (*http.Re
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/dns_records/:dns_record")
+	operationPath := fmt.Sprintf("/dns_records/dns_record")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -14502,7 +18032,7 @@ func NewPatchDnsRecordRequestWithBody(server string, contentType string, body io
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/dns_records/:dns_record")
+	operationPath := fmt.Sprintf("/dns_records/dns_record")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -14542,7 +18072,7 @@ func NewDeleteDnsZoneRequestWithBody(server string, contentType string, body io.
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/dns_zones/:dns_zone")
+	operationPath := fmt.Sprintf("/dns_zones/dns_zone")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -14571,7 +18101,7 @@ func NewGetDnsZoneRequest(server string, params *GetDnsZoneParams) (*http.Reques
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/dns_zones/:dns_zone")
+	operationPath := fmt.Sprintf("/dns_zones/dns_zone")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -14647,7 +18177,7 @@ func NewPatchDnsZoneRequestWithBody(server string, contentType string, body io.R
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/dns_zones/:dns_zone")
+	operationPath := fmt.Sprintf("/dns_zones/dns_zone")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -14676,7 +18206,7 @@ func NewGetDnsZoneRecordsRequest(server string, params *GetDnsZoneRecordsParams)
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/dns_zones/:dns_zone/records")
+	operationPath := fmt.Sprintf("/dns_zones/dns_zone/records")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -14752,7 +18282,7 @@ func NewPostDnsZoneRecordsRequestWithBody(server string, contentType string, bod
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/dns_zones/:dns_zone/records")
+	operationPath := fmt.Sprintf("/dns_zones/dns_zone/records")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -14792,7 +18322,7 @@ func NewPostDnsZoneVerifyRequestWithBody(server string, contentType string, body
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/dns_zones/:dns_zone/verify")
+	operationPath := fmt.Sprintf("/dns_zones/dns_zone/verify")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -14832,7 +18362,7 @@ func NewDeleteFileStorageVolumeRequestWithBody(server string, contentType string
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/file_storage_volumes/:file_storage_volume")
+	operationPath := fmt.Sprintf("/file_storage_volumes/file_storage_volume")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -14861,7 +18391,7 @@ func NewGetFileStorageVolumeRequest(server string, params *GetFileStorageVolumeP
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/file_storage_volumes/:file_storage_volume")
+	operationPath := fmt.Sprintf("/file_storage_volumes/file_storage_volume")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -14921,7 +18451,7 @@ func NewPatchFileStorageVolumeRequestWithBody(server string, contentType string,
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/file_storage_volumes/:file_storage_volume")
+	operationPath := fmt.Sprintf("/file_storage_volumes/file_storage_volume")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -15015,7 +18545,7 @@ func NewGetGpuTypeRequest(server string, params *GetGpuTypeParams) (*http.Reques
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/gpu_types/:gpu_type")
+	operationPath := fmt.Sprintf("/gpu_types/gpu_type")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -15131,7 +18661,7 @@ func NewDeleteIpAddressRequestWithBody(server string, contentType string, body i
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/ip_addresses/:ip_address")
+	operationPath := fmt.Sprintf("/ip_addresses/ip_address")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -15160,7 +18690,7 @@ func NewGetIpAddressRequest(server string, params *GetIpAddressParams) (*http.Re
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/ip_addresses/:ip_address")
+	operationPath := fmt.Sprintf("/ip_addresses/ip_address")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -15236,7 +18766,7 @@ func NewPatchIpAddressRequestWithBody(server string, contentType string, body io
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/ip_addresses/:ip_address")
+	operationPath := fmt.Sprintf("/ip_addresses/ip_address")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -15276,7 +18806,7 @@ func NewPostIpAddressUnallocateRequestWithBody(server string, contentType string
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/ip_addresses/:ip_address/unallocate")
+	operationPath := fmt.Sprintf("/ip_addresses/ip_address/unallocate")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -15316,7 +18846,7 @@ func NewDeleteLoadBalancerRequestWithBody(server string, contentType string, bod
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/load_balancers/:load_balancer")
+	operationPath := fmt.Sprintf("/load_balancers/load_balancer")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -15345,7 +18875,7 @@ func NewGetLoadBalancerRequest(server string, params *GetLoadBalancerParams) (*h
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/load_balancers/:load_balancer")
+	operationPath := fmt.Sprintf("/load_balancers/load_balancer")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -15421,7 +18951,7 @@ func NewPatchLoadBalancerRequestWithBody(server string, contentType string, body
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/load_balancers/:load_balancer")
+	operationPath := fmt.Sprintf("/load_balancers/load_balancer")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -15450,7 +18980,7 @@ func NewGetLoadBalancerRulesRequest(server string, params *GetLoadBalancerRulesP
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/load_balancers/:load_balancer/rules")
+	operationPath := fmt.Sprintf("/load_balancers/load_balancer/rules")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -15558,7 +19088,7 @@ func NewPostLoadBalancerRulesRequestWithBody(server string, contentType string, 
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/load_balancers/:load_balancer/rules")
+	operationPath := fmt.Sprintf("/load_balancers/load_balancer/rules")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -15598,7 +19128,7 @@ func NewDeleteLoadBalancersRulesLoadBalancerRuleRequestWithBody(server string, c
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/load_balancers/rules/:load_balancer_rule")
+	operationPath := fmt.Sprintf("/load_balancers/rules/load_balancer_rule")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -15627,7 +19157,7 @@ func NewGetLoadBalancersRulesLoadBalancerRuleRequest(server string, params *GetL
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/load_balancers/rules/:load_balancer_rule")
+	operationPath := fmt.Sprintf("/load_balancers/rules/load_balancer_rule")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -15687,7 +19217,7 @@ func NewPatchLoadBalancersRulesLoadBalancerRuleRequestWithBody(server string, co
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/load_balancers/rules/:load_balancer_rule")
+	operationPath := fmt.Sprintf("/load_balancers/rules/load_balancer_rule")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -15707,6 +19237,46 @@ func NewPatchLoadBalancersRulesLoadBalancerRuleRequestWithBody(server string, co
 	return req, nil
 }
 
+// NewDeleteOrganizationRequest calls the generic DeleteOrganization builder with application/json body
+func NewDeleteOrganizationRequest(server string, body DeleteOrganizationJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDeleteOrganizationRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewDeleteOrganizationRequestWithBody generates requests for DeleteOrganization with any type of body
+func NewDeleteOrganizationRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/managed_organizations/organization")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewGetNetworkRequest generates requests for GetNetwork
 func NewGetNetworkRequest(server string, params *GetNetworkParams) (*http.Request, error) {
 	var err error
@@ -15716,7 +19286,7 @@ func NewGetNetworkRequest(server string, params *GetNetworkParams) (*http.Reques
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/networks/:network")
+	operationPath := fmt.Sprintf("/networks/network")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -15768,6 +19338,477 @@ func NewGetNetworkRequest(server string, params *GetNetworkParams) (*http.Reques
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewDeleteObjectStorageAccessKeyRequest calls the generic DeleteObjectStorageAccessKey builder with application/json body
+func NewDeleteObjectStorageAccessKeyRequest(server string, body DeleteObjectStorageAccessKeyJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDeleteObjectStorageAccessKeyRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewDeleteObjectStorageAccessKeyRequestWithBody generates requests for DeleteObjectStorageAccessKey with any type of body
+func NewDeleteObjectStorageAccessKeyRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/object_storage/access_keys/access_key")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetObjectStorageAccessKeyRequest generates requests for GetObjectStorageAccessKey
+func NewGetObjectStorageAccessKeyRequest(server string, params *GetObjectStorageAccessKeyParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/object_storage/access_keys/access_key")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.AccessKeyId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "access_key[id]", runtime.ParamLocationQuery, *params.AccessKeyId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPatchObjectStorageAccessKeyRequest calls the generic PatchObjectStorageAccessKey builder with application/json body
+func NewPatchObjectStorageAccessKeyRequest(server string, body PatchObjectStorageAccessKeyJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchObjectStorageAccessKeyRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPatchObjectStorageAccessKeyRequestWithBody generates requests for PatchObjectStorageAccessKey with any type of body
+func NewPatchObjectStorageAccessKeyRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/object_storage/access_keys/access_key")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewPostObjectStorageAccessKeyGenerateCredentialsRequest calls the generic PostObjectStorageAccessKeyGenerateCredentials builder with application/json body
+func NewPostObjectStorageAccessKeyGenerateCredentialsRequest(server string, body PostObjectStorageAccessKeyGenerateCredentialsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostObjectStorageAccessKeyGenerateCredentialsRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostObjectStorageAccessKeyGenerateCredentialsRequestWithBody generates requests for PostObjectStorageAccessKeyGenerateCredentials with any type of body
+func NewPostObjectStorageAccessKeyGenerateCredentialsRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/object_storage/access_keys/access_key/generate_credentials")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteObjectStorageObjectStorageClusterBucketRequest calls the generic DeleteObjectStorageObjectStorageClusterBucket builder with application/json body
+func NewDeleteObjectStorageObjectStorageClusterBucketRequest(server string, body DeleteObjectStorageObjectStorageClusterBucketJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDeleteObjectStorageObjectStorageClusterBucketRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewDeleteObjectStorageObjectStorageClusterBucketRequestWithBody generates requests for DeleteObjectStorageObjectStorageClusterBucket with any type of body
+func NewDeleteObjectStorageObjectStorageClusterBucketRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/object_storage/object_storage_cluster/buckets/bucket")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetObjectStorageObjectStorageClusterBucketRequest generates requests for GetObjectStorageObjectStorageClusterBucket
+func NewGetObjectStorageObjectStorageClusterBucketRequest(server string, params *GetObjectStorageObjectStorageClusterBucketParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/object_storage/object_storage_cluster/buckets/bucket")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.ObjectStorageClusterRegion != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "object_storage_cluster[region]", runtime.ParamLocationQuery, *params.ObjectStorageClusterRegion); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.BucketName != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "bucket[name]", runtime.ParamLocationQuery, *params.BucketName); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPatchObjectStorageObjectStorageClusterBucketRequest calls the generic PatchObjectStorageObjectStorageClusterBucket builder with application/json body
+func NewPatchObjectStorageObjectStorageClusterBucketRequest(server string, body PatchObjectStorageObjectStorageClusterBucketJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchObjectStorageObjectStorageClusterBucketRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPatchObjectStorageObjectStorageClusterBucketRequestWithBody generates requests for PatchObjectStorageObjectStorageClusterBucket with any type of body
+func NewPatchObjectStorageObjectStorageClusterBucketRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/object_storage/object_storage_cluster/buckets/bucket")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetObjectStorageObjectStorageClusterBucketObjectRequest generates requests for GetObjectStorageObjectStorageClusterBucketObject
+func NewGetObjectStorageObjectStorageClusterBucketObjectRequest(server string, params *GetObjectStorageObjectStorageClusterBucketObjectParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/object_storage/object_storage_cluster/buckets/bucket/object")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.ObjectStorageClusterRegion != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "object_storage_cluster[region]", runtime.ParamLocationQuery, *params.ObjectStorageClusterRegion); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.BucketName != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "bucket[name]", runtime.ParamLocationQuery, *params.BucketName); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "path", runtime.ParamLocationQuery, params.Path); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPostObjectStorageObjectStorageClusterBucketPresignedUrlRequest calls the generic PostObjectStorageObjectStorageClusterBucketPresignedUrl builder with application/json body
+func NewPostObjectStorageObjectStorageClusterBucketPresignedUrlRequest(server string, body PostObjectStorageObjectStorageClusterBucketPresignedUrlJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostObjectStorageObjectStorageClusterBucketPresignedUrlRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostObjectStorageObjectStorageClusterBucketPresignedUrlRequestWithBody generates requests for PostObjectStorageObjectStorageClusterBucketPresignedUrl with any type of body
+func NewPostObjectStorageObjectStorageClusterBucketPresignedUrlRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/object_storage/object_storage_cluster/buckets/bucket/presigned_url")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewPostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsRequest calls the generic PostObjectStorageObjectStorageClusterBucketRevokePresignedUrls builder with application/json body
+func NewPostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsRequest(server string, body PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsRequestWithBody generates requests for PostObjectStorageObjectStorageClusterBucketRevokePresignedUrls with any type of body
+func NewPostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/object_storage/object_storage_cluster/buckets/bucket/revoke_presigned_urls")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -15846,7 +19887,7 @@ func NewGetOperatingSystemRequest(server string, params *GetOperatingSystemParam
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/operating_systems/:operating_system")
+	operationPath := fmt.Sprintf("/operating_systems/operating_system")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -15922,7 +19963,7 @@ func NewGetOrganizationRequest(server string, params *GetOrganizationParams) (*h
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization")
+	operationPath := fmt.Sprintf("/organizations/organization")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -15987,7 +20028,7 @@ func NewGetOrganizationAddressListsRequest(server string, params *GetOrganizatio
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/address_lists")
+	operationPath := fmt.Sprintf("/organizations/organization/address_lists")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -16034,7 +20075,7 @@ func NewGetOrganizationAddressListsRequest(server string, params *GetOrganizatio
 
 		if params.AnnotationsKey != nil {
 
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[key]", runtime.ParamLocationQuery, *params.AnnotationsKey); err != nil {
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[][key]", runtime.ParamLocationQuery, *params.AnnotationsKey); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -16050,7 +20091,7 @@ func NewGetOrganizationAddressListsRequest(server string, params *GetOrganizatio
 
 		if params.AnnotationsValue != nil {
 
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[value]", runtime.ParamLocationQuery, *params.AnnotationsValue); err != nil {
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[][value]", runtime.ParamLocationQuery, *params.AnnotationsValue); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -16127,7 +20168,7 @@ func NewPostOrganizationAddressListsRequestWithBody(server string, contentType s
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/address_lists")
+	operationPath := fmt.Sprintf("/organizations/organization/address_lists")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -16156,7 +20197,7 @@ func NewGetOrganizationApiTokensRequest(server string, params *GetOrganizationAp
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/api_tokens")
+	operationPath := fmt.Sprintf("/organizations/organization/api_tokens")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -16203,7 +20244,7 @@ func NewGetOrganizationApiTokensRequest(server string, params *GetOrganizationAp
 
 		if params.AnnotationsKey != nil {
 
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[key]", runtime.ParamLocationQuery, *params.AnnotationsKey); err != nil {
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[][key]", runtime.ParamLocationQuery, *params.AnnotationsKey); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -16219,7 +20260,7 @@ func NewGetOrganizationApiTokensRequest(server string, params *GetOrganizationAp
 
 		if params.AnnotationsValue != nil {
 
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[value]", runtime.ParamLocationQuery, *params.AnnotationsValue); err != nil {
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[][value]", runtime.ParamLocationQuery, *params.AnnotationsValue); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -16296,7 +20337,7 @@ func NewPostOrganizationApiTokensRequestWithBody(server string, contentType stri
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/api_tokens")
+	operationPath := fmt.Sprintf("/organizations/organization/api_tokens")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -16325,7 +20366,7 @@ func NewGetOrganizationAvailableNetworksRequest(server string, params *GetOrgani
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/available_networks")
+	operationPath := fmt.Sprintf("/organizations/organization/available_networks")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -16390,7 +20431,7 @@ func NewGetOrganizationCertificatesRequest(server string, params *GetOrganizatio
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/certificates")
+	operationPath := fmt.Sprintf("/organizations/organization/certificates")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -16478,6 +20519,71 @@ func NewGetOrganizationCertificatesRequest(server string, params *GetOrganizatio
 	return req, nil
 }
 
+// NewGetOrganizationDeletionStepsRequest generates requests for GetOrganizationDeletionSteps
+func NewGetOrganizationDeletionStepsRequest(server string, params *GetOrganizationDeletionStepsParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/organizations/organization/deletion_steps")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "organization[id]", runtime.ParamLocationQuery, *params.OrganizationId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.OrganizationSubDomain != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "organization[sub_domain]", runtime.ParamLocationQuery, *params.OrganizationSubDomain); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetOrganizationDiskBackupPoliciesRequest generates requests for GetOrganizationDiskBackupPolicies
 func NewGetOrganizationDiskBackupPoliciesRequest(server string, params *GetOrganizationDiskBackupPoliciesParams) (*http.Request, error) {
 	var err error
@@ -16487,7 +20593,7 @@ func NewGetOrganizationDiskBackupPoliciesRequest(server string, params *GetOrgan
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/disk_backup_policies")
+	operationPath := fmt.Sprintf("/organizations/organization/disk_backup_policies")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -16584,7 +20690,7 @@ func NewGetOrganizationDiskIoProfilesRequest(server string, params *GetOrganizat
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/disk_io_profiles")
+	operationPath := fmt.Sprintf("/organizations/organization/disk_io_profiles")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -16681,7 +20787,7 @@ func NewGetOrganizationDiskTemplatesRequest(server string, params *GetOrganizati
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/disk_templates")
+	operationPath := fmt.Sprintf("/organizations/organization/disk_templates")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -16810,7 +20916,7 @@ func NewGetOrganizationDisksRequest(server string, params *GetOrganizationDisksP
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/disks")
+	operationPath := fmt.Sprintf("/organizations/organization/disks")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -16857,7 +20963,7 @@ func NewGetOrganizationDisksRequest(server string, params *GetOrganizationDisksP
 
 		if params.AnnotationsKey != nil {
 
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[key]", runtime.ParamLocationQuery, *params.AnnotationsKey); err != nil {
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[][key]", runtime.ParamLocationQuery, *params.AnnotationsKey); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -16873,7 +20979,7 @@ func NewGetOrganizationDisksRequest(server string, params *GetOrganizationDisksP
 
 		if params.AnnotationsValue != nil {
 
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[value]", runtime.ParamLocationQuery, *params.AnnotationsValue); err != nil {
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[][value]", runtime.ParamLocationQuery, *params.AnnotationsValue); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -16950,7 +21056,7 @@ func NewPostOrganizationDisksRequestWithBody(server string, contentType string, 
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/disks")
+	operationPath := fmt.Sprintf("/organizations/organization/disks")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -16979,7 +21085,7 @@ func NewGetOrganizationDnsZonesRequest(server string, params *GetOrganizationDns
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/dns_zones")
+	operationPath := fmt.Sprintf("/organizations/organization/dns_zones")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -17087,7 +21193,7 @@ func NewPostOrganizationDnsZonesRequestWithBody(server string, contentType strin
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/dns_zones")
+	operationPath := fmt.Sprintf("/organizations/organization/dns_zones")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -17116,7 +21222,7 @@ func NewGetOrganizationDnsZonesNameserversRequest(server string, params *GetOrga
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/dns_zones/nameservers")
+	operationPath := fmt.Sprintf("/organizations/organization/dns_zones/nameservers")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -17181,7 +21287,7 @@ func NewGetOrganizationFileStorageVolumesRequest(server string, params *GetOrgan
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/file_storage_volumes")
+	operationPath := fmt.Sprintf("/organizations/organization/file_storage_volumes")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -17228,7 +21334,7 @@ func NewGetOrganizationFileStorageVolumesRequest(server string, params *GetOrgan
 
 		if params.AnnotationsKey != nil {
 
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[key]", runtime.ParamLocationQuery, *params.AnnotationsKey); err != nil {
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[][key]", runtime.ParamLocationQuery, *params.AnnotationsKey); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -17244,7 +21350,7 @@ func NewGetOrganizationFileStorageVolumesRequest(server string, params *GetOrgan
 
 		if params.AnnotationsValue != nil {
 
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[value]", runtime.ParamLocationQuery, *params.AnnotationsValue); err != nil {
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[][value]", runtime.ParamLocationQuery, *params.AnnotationsValue); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -17321,7 +21427,7 @@ func NewPostOrganizationFileStorageVolumesRequestWithBody(server string, content
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/file_storage_volumes")
+	operationPath := fmt.Sprintf("/organizations/organization/file_storage_volumes")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -17350,7 +21456,7 @@ func NewGetOrganizationIpAddressesRequest(server string, params *GetOrganization
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/ip_addresses")
+	operationPath := fmt.Sprintf("/organizations/organization/ip_addresses")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -17474,7 +21580,7 @@ func NewPostOrganizationIpAddressesRequestWithBody(server string, contentType st
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/ip_addresses")
+	operationPath := fmt.Sprintf("/organizations/organization/ip_addresses")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -17503,7 +21609,7 @@ func NewGetOrganizationLoadBalancersRequest(server string, params *GetOrganizati
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/load_balancers")
+	operationPath := fmt.Sprintf("/organizations/organization/load_balancers")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -17550,7 +21656,7 @@ func NewGetOrganizationLoadBalancersRequest(server string, params *GetOrganizati
 
 		if params.AnnotationsKey != nil {
 
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[key]", runtime.ParamLocationQuery, *params.AnnotationsKey); err != nil {
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[][key]", runtime.ParamLocationQuery, *params.AnnotationsKey); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -17566,7 +21672,7 @@ func NewGetOrganizationLoadBalancersRequest(server string, params *GetOrganizati
 
 		if params.AnnotationsValue != nil {
 
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[value]", runtime.ParamLocationQuery, *params.AnnotationsValue); err != nil {
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[][value]", runtime.ParamLocationQuery, *params.AnnotationsValue); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -17643,7 +21749,7 @@ func NewPostOrganizationLoadBalancersRequestWithBody(server string, contentType 
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/load_balancers")
+	operationPath := fmt.Sprintf("/organizations/organization/load_balancers")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -17672,7 +21778,7 @@ func NewGetOrganizationManagedRequest(server string, params *GetOrganizationMana
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/managed")
+	operationPath := fmt.Sprintf("/organizations/organization/managed")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -17719,7 +21825,7 @@ func NewGetOrganizationManagedRequest(server string, params *GetOrganizationMana
 
 		if params.AnnotationsKey != nil {
 
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[key]", runtime.ParamLocationQuery, *params.AnnotationsKey); err != nil {
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[][key]", runtime.ParamLocationQuery, *params.AnnotationsKey); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -17735,7 +21841,7 @@ func NewGetOrganizationManagedRequest(server string, params *GetOrganizationMana
 
 		if params.AnnotationsValue != nil {
 
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[value]", runtime.ParamLocationQuery, *params.AnnotationsValue); err != nil {
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[][value]", runtime.ParamLocationQuery, *params.AnnotationsValue); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -17812,7 +21918,7 @@ func NewPostOrganizationManagedRequestWithBody(server string, contentType string
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/managed")
+	operationPath := fmt.Sprintf("/organizations/organization/managed")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -17841,7 +21947,7 @@ func NewGetOrganizationNetworkSpeedProfilesRequest(server string, params *GetOrg
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/network_speed_profiles")
+	operationPath := fmt.Sprintf("/organizations/organization/network_speed_profiles")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -17929,6 +22035,409 @@ func NewGetOrganizationNetworkSpeedProfilesRequest(server string, params *GetOrg
 	return req, nil
 }
 
+// NewGetOrganizationObjectStorageAccessKeysRequest generates requests for GetOrganizationObjectStorageAccessKeys
+func NewGetOrganizationObjectStorageAccessKeysRequest(server string, params *GetOrganizationObjectStorageAccessKeysParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/organizations/organization/object_storage/access_keys")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "organization[id]", runtime.ParamLocationQuery, *params.OrganizationId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.OrganizationSubDomain != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "organization[sub_domain]", runtime.ParamLocationQuery, *params.OrganizationSubDomain); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Page != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "page", runtime.ParamLocationQuery, *params.Page); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.PerPage != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "per_page", runtime.ParamLocationQuery, *params.PerPage); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewDeleteOrganizationObjectStorageObjectStorageClusterRequest calls the generic DeleteOrganizationObjectStorageObjectStorageCluster builder with application/json body
+func NewDeleteOrganizationObjectStorageObjectStorageClusterRequest(server string, body DeleteOrganizationObjectStorageObjectStorageClusterJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDeleteOrganizationObjectStorageObjectStorageClusterRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewDeleteOrganizationObjectStorageObjectStorageClusterRequestWithBody generates requests for DeleteOrganizationObjectStorageObjectStorageCluster with any type of body
+func NewDeleteOrganizationObjectStorageObjectStorageClusterRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/organizations/organization/object_storage/object_storage_cluster")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetOrganizationObjectStorageObjectStorageClusterRequest generates requests for GetOrganizationObjectStorageObjectStorageCluster
+func NewGetOrganizationObjectStorageObjectStorageClusterRequest(server string, params *GetOrganizationObjectStorageObjectStorageClusterParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/organizations/organization/object_storage/object_storage_cluster")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "organization[id]", runtime.ParamLocationQuery, *params.OrganizationId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.OrganizationSubDomain != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "organization[sub_domain]", runtime.ParamLocationQuery, *params.OrganizationSubDomain); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.ObjectStorageClusterRegion != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "object_storage_cluster[region]", runtime.ParamLocationQuery, *params.ObjectStorageClusterRegion); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPostOrganizationObjectStorageObjectStorageClusterRequest calls the generic PostOrganizationObjectStorageObjectStorageCluster builder with application/json body
+func NewPostOrganizationObjectStorageObjectStorageClusterRequest(server string, body PostOrganizationObjectStorageObjectStorageClusterJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostOrganizationObjectStorageObjectStorageClusterRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostOrganizationObjectStorageObjectStorageClusterRequestWithBody generates requests for PostOrganizationObjectStorageObjectStorageCluster with any type of body
+func NewPostOrganizationObjectStorageObjectStorageClusterRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/organizations/organization/object_storage/object_storage_cluster")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewPostOrganizationObjectStorageObjectStorageClusterAccessKeysRequest calls the generic PostOrganizationObjectStorageObjectStorageClusterAccessKeys builder with application/json body
+func NewPostOrganizationObjectStorageObjectStorageClusterAccessKeysRequest(server string, body PostOrganizationObjectStorageObjectStorageClusterAccessKeysJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostOrganizationObjectStorageObjectStorageClusterAccessKeysRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostOrganizationObjectStorageObjectStorageClusterAccessKeysRequestWithBody generates requests for PostOrganizationObjectStorageObjectStorageClusterAccessKeys with any type of body
+func NewPostOrganizationObjectStorageObjectStorageClusterAccessKeysRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/organizations/organization/object_storage/object_storage_cluster/access_keys")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewPostOrganizationObjectStorageObjectStorageClusterBucketsRequest calls the generic PostOrganizationObjectStorageObjectStorageClusterBuckets builder with application/json body
+func NewPostOrganizationObjectStorageObjectStorageClusterBucketsRequest(server string, body PostOrganizationObjectStorageObjectStorageClusterBucketsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostOrganizationObjectStorageObjectStorageClusterBucketsRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostOrganizationObjectStorageObjectStorageClusterBucketsRequestWithBody generates requests for PostOrganizationObjectStorageObjectStorageClusterBuckets with any type of body
+func NewPostOrganizationObjectStorageObjectStorageClusterBucketsRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/organizations/organization/object_storage/object_storage_cluster/buckets")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetOrganizationPolicyRequest generates requests for GetOrganizationPolicy
+func NewGetOrganizationPolicyRequest(server string, params *GetOrganizationPolicyParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/organizations/organization/policy")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "organization[id]", runtime.ParamLocationQuery, *params.OrganizationId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.OrganizationSubDomain != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "organization[sub_domain]", runtime.ParamLocationQuery, *params.OrganizationSubDomain); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetOrganizationPolicyLimitsRequest generates requests for GetOrganizationPolicyLimits
 func NewGetOrganizationPolicyLimitsRequest(server string, params *GetOrganizationPolicyLimitsParams) (*http.Request, error) {
 	var err error
@@ -17938,7 +22447,72 @@ func NewGetOrganizationPolicyLimitsRequest(server string, params *GetOrganizatio
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/policy_limits")
+	operationPath := fmt.Sprintf("/organizations/organization/policy_limits")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "organization[id]", runtime.ParamLocationQuery, *params.OrganizationId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.OrganizationSubDomain != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "organization[sub_domain]", runtime.ParamLocationQuery, *params.OrganizationSubDomain); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetOrganizationPricesRequest generates requests for GetOrganizationPrices
+func NewGetOrganizationPricesRequest(server string, params *GetOrganizationPricesParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/organizations/organization/prices")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -18003,7 +22577,7 @@ func NewGetOrganizationSecurityGroupsRequest(server string, params *GetOrganizat
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/security_groups")
+	operationPath := fmt.Sprintf("/organizations/organization/security_groups")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -18050,7 +22624,7 @@ func NewGetOrganizationSecurityGroupsRequest(server string, params *GetOrganizat
 
 		if params.AnnotationsKey != nil {
 
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[key]", runtime.ParamLocationQuery, *params.AnnotationsKey); err != nil {
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[][key]", runtime.ParamLocationQuery, *params.AnnotationsKey); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -18066,7 +22640,7 @@ func NewGetOrganizationSecurityGroupsRequest(server string, params *GetOrganizat
 
 		if params.AnnotationsValue != nil {
 
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[value]", runtime.ParamLocationQuery, *params.AnnotationsValue); err != nil {
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[][value]", runtime.ParamLocationQuery, *params.AnnotationsValue); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -18143,7 +22717,7 @@ func NewPostOrganizationSecurityGroupsRequestWithBody(server string, contentType
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/security_groups")
+	operationPath := fmt.Sprintf("/organizations/organization/security_groups")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -18172,7 +22746,7 @@ func NewGetOrganizationSshKeysRequest(server string, params *GetOrganizationSshK
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/ssh_keys")
+	operationPath := fmt.Sprintf("/organizations/organization/ssh_keys")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -18280,7 +22854,7 @@ func NewPostOrganizationSshKeysRequestWithBody(server string, contentType string
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/ssh_keys")
+	operationPath := fmt.Sprintf("/organizations/organization/ssh_keys")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -18309,7 +22883,7 @@ func NewGetOrganizationTagsRequest(server string, params *GetOrganizationTagsPar
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/tags")
+	operationPath := fmt.Sprintf("/organizations/organization/tags")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -18417,7 +22991,7 @@ func NewPostOrganizationTagsRequestWithBody(server string, contentType string, b
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/tags")
+	operationPath := fmt.Sprintf("/organizations/organization/tags")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -18446,7 +23020,7 @@ func NewGetOrganizationTrashObjectsRequest(server string, params *GetOrganizatio
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/trash_objects")
+	operationPath := fmt.Sprintf("/organizations/organization/trash_objects")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -18554,7 +23128,7 @@ func NewPostOrganizationTrashObjectsPurgeAllRequestWithBody(server string, conte
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/trash_objects/purge_all")
+	operationPath := fmt.Sprintf("/organizations/organization/trash_objects/purge_all")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -18583,7 +23157,7 @@ func NewGetOrganizationUsersWithAccessRequest(server string, params *GetOrganiza
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/users_with_access")
+	operationPath := fmt.Sprintf("/organizations/organization/users_with_access")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -18680,7 +23254,7 @@ func NewGetOrganizationVirtualMachineGroupsRequest(server string, params *GetOrg
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/virtual_machine_groups")
+	operationPath := fmt.Sprintf("/organizations/organization/virtual_machine_groups")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -18756,7 +23330,7 @@ func NewPostOrganizationVirtualMachineGroupsRequestWithBody(server string, conte
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/virtual_machine_groups")
+	operationPath := fmt.Sprintf("/organizations/organization/virtual_machine_groups")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -18785,7 +23359,7 @@ func NewGetOrganizationVirtualMachinesRequest(server string, params *GetOrganiza
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/virtual_machines")
+	operationPath := fmt.Sprintf("/organizations/organization/virtual_machines")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -18832,7 +23406,7 @@ func NewGetOrganizationVirtualMachinesRequest(server string, params *GetOrganiza
 
 		if params.AnnotationsKey != nil {
 
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[key]", runtime.ParamLocationQuery, *params.AnnotationsKey); err != nil {
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[][key]", runtime.ParamLocationQuery, *params.AnnotationsKey); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -18848,7 +23422,7 @@ func NewGetOrganizationVirtualMachinesRequest(server string, params *GetOrganiza
 
 		if params.AnnotationsValue != nil {
 
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[value]", runtime.ParamLocationQuery, *params.AnnotationsValue); err != nil {
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "annotations[][value]", runtime.ParamLocationQuery, *params.AnnotationsValue); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -18925,7 +23499,7 @@ func NewPostOrganizationVirtualMachinesBuildRequestWithBody(server string, conte
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/virtual_machines/build")
+	operationPath := fmt.Sprintf("/organizations/organization/virtual_machines/build")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -18965,7 +23539,7 @@ func NewPostOrganizationVirtualMachinesBuildFromSpecRequestWithBody(server strin
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/organizations/:organization/virtual_machines/build_from_spec")
+	operationPath := fmt.Sprintf("/organizations/organization/virtual_machines/build_from_spec")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -18976,6 +23550,272 @@ func NewPostOrganizationVirtualMachinesBuildFromSpecRequestWithBody(server strin
 	}
 
 	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetOrganizationVirtualNetworksRequest generates requests for GetOrganizationVirtualNetworks
+func NewGetOrganizationVirtualNetworksRequest(server string, params *GetOrganizationVirtualNetworksParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/organizations/organization/virtual_networks")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "organization[id]", runtime.ParamLocationQuery, *params.OrganizationId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.OrganizationSubDomain != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "organization[sub_domain]", runtime.ParamLocationQuery, *params.OrganizationSubDomain); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Page != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "page", runtime.ParamLocationQuery, *params.Page); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.PerPage != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "per_page", runtime.ParamLocationQuery, *params.PerPage); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPostOrganizationVirtualNetworksRequest calls the generic PostOrganizationVirtualNetworks builder with application/json body
+func NewPostOrganizationVirtualNetworksRequest(server string, body PostOrganizationVirtualNetworksJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostOrganizationVirtualNetworksRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostOrganizationVirtualNetworksRequestWithBody generates requests for PostOrganizationVirtualNetworks with any type of body
+func NewPostOrganizationVirtualNetworksRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/organizations/organization/virtual_networks")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteSecurityGroupsRulesSecurityGroupRuleRequest calls the generic DeleteSecurityGroupsRulesSecurityGroupRule builder with application/json body
+func NewDeleteSecurityGroupsRulesSecurityGroupRuleRequest(server string, body DeleteSecurityGroupsRulesSecurityGroupRuleJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDeleteSecurityGroupsRulesSecurityGroupRuleRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewDeleteSecurityGroupsRulesSecurityGroupRuleRequestWithBody generates requests for DeleteSecurityGroupsRulesSecurityGroupRule with any type of body
+func NewDeleteSecurityGroupsRulesSecurityGroupRuleRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/security_groups/rules/security_group_rule")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetSecurityGroupsRulesSecurityGroupRuleRequest generates requests for GetSecurityGroupsRulesSecurityGroupRule
+func NewGetSecurityGroupsRulesSecurityGroupRuleRequest(server string, params *GetSecurityGroupsRulesSecurityGroupRuleParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/security_groups/rules/security_group_rule")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.SecurityGroupRuleId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "security_group_rule[id]", runtime.ParamLocationQuery, *params.SecurityGroupRuleId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPatchSecurityGroupsRulesSecurityGroupRuleRequest calls the generic PatchSecurityGroupsRulesSecurityGroupRule builder with application/json body
+func NewPatchSecurityGroupsRulesSecurityGroupRuleRequest(server string, body PatchSecurityGroupsRulesSecurityGroupRuleJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchSecurityGroupsRulesSecurityGroupRuleRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPatchSecurityGroupsRulesSecurityGroupRuleRequestWithBody generates requests for PatchSecurityGroupsRulesSecurityGroupRule with any type of body
+func NewPatchSecurityGroupsRulesSecurityGroupRuleRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/security_groups/rules/security_group_rule")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -19005,7 +23845,7 @@ func NewDeleteSecurityGroupRequestWithBody(server string, contentType string, bo
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/security_groups/:security_group")
+	operationPath := fmt.Sprintf("/security_groups/security_group")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -19034,7 +23874,7 @@ func NewGetSecurityGroupRequest(server string, params *GetSecurityGroupParams) (
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/security_groups/:security_group")
+	operationPath := fmt.Sprintf("/security_groups/security_group")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -19094,7 +23934,7 @@ func NewPatchSecurityGroupRequestWithBody(server string, contentType string, bod
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/security_groups/:security_group")
+	operationPath := fmt.Sprintf("/security_groups/security_group")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -19123,7 +23963,7 @@ func NewGetSecurityGroupRulesRequest(server string, params *GetSecurityGroupRule
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/security_groups/:security_group/rules")
+	operationPath := fmt.Sprintf("/security_groups/security_group/rules")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -19215,7 +24055,7 @@ func NewPostSecurityGroupRulesRequestWithBody(server string, contentType string,
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/security_groups/:security_group/rules")
+	operationPath := fmt.Sprintf("/security_groups/security_group/rules")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -19226,135 +24066,6 @@ func NewPostSecurityGroupRulesRequestWithBody(server string, contentType string,
 	}
 
 	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
-// NewDeleteSecurityGroupsRulesSecurityGroupRuleRequest calls the generic DeleteSecurityGroupsRulesSecurityGroupRule builder with application/json body
-func NewDeleteSecurityGroupsRulesSecurityGroupRuleRequest(server string, body DeleteSecurityGroupsRulesSecurityGroupRuleJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewDeleteSecurityGroupsRulesSecurityGroupRuleRequestWithBody(server, "application/json", bodyReader)
-}
-
-// NewDeleteSecurityGroupsRulesSecurityGroupRuleRequestWithBody generates requests for DeleteSecurityGroupsRulesSecurityGroupRule with any type of body
-func NewDeleteSecurityGroupsRulesSecurityGroupRuleRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/security_groups/rules/:security_group_rule")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("DELETE", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
-// NewGetSecurityGroupsRulesSecurityGroupRuleRequest generates requests for GetSecurityGroupsRulesSecurityGroupRule
-func NewGetSecurityGroupsRulesSecurityGroupRuleRequest(server string, params *GetSecurityGroupsRulesSecurityGroupRuleParams) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/security_groups/rules/:security_group_rule")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	if params != nil {
-		queryValues := queryURL.Query()
-
-		if params.SecurityGroupRuleId != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "security_group_rule[id]", runtime.ParamLocationQuery, *params.SecurityGroupRuleId); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
-		queryURL.RawQuery = queryValues.Encode()
-	}
-
-	req, err := http.NewRequest("GET", queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewPatchSecurityGroupsRulesSecurityGroupRuleRequest calls the generic PatchSecurityGroupsRulesSecurityGroupRule builder with application/json body
-func NewPatchSecurityGroupsRulesSecurityGroupRuleRequest(server string, body PatchSecurityGroupsRulesSecurityGroupRuleJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewPatchSecurityGroupsRulesSecurityGroupRuleRequestWithBody(server, "application/json", bodyReader)
-}
-
-// NewPatchSecurityGroupsRulesSecurityGroupRuleRequestWithBody generates requests for PatchSecurityGroupsRulesSecurityGroupRule with any type of body
-func NewPatchSecurityGroupsRulesSecurityGroupRuleRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/security_groups/rules/:security_group_rule")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("PATCH", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -19384,7 +24095,7 @@ func NewDeleteSshKeyRequestWithBody(server string, contentType string, body io.R
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/ssh_keys/:ssh_key")
+	operationPath := fmt.Sprintf("/ssh_keys/ssh_key")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -19424,7 +24135,7 @@ func NewDeleteTagRequestWithBody(server string, contentType string, body io.Read
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/tags/:tag")
+	operationPath := fmt.Sprintf("/tags/tag")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -19453,7 +24164,7 @@ func NewGetTagRequest(server string, params *GetTagParams) (*http.Request, error
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/tags/:tag")
+	operationPath := fmt.Sprintf("/tags/tag")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -19513,7 +24224,7 @@ func NewPatchTagRequestWithBody(server string, contentType string, body io.Reade
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/tags/:tag")
+	operationPath := fmt.Sprintf("/tags/tag")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -19542,7 +24253,7 @@ func NewGetTaskRequest(server string, params *GetTaskParams) (*http.Request, err
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/tasks/:task")
+	operationPath := fmt.Sprintf("/tasks/task")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -19602,7 +24313,7 @@ func NewDeleteTrashObjectRequestWithBody(server string, contentType string, body
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/trash_objects/:trash_object")
+	operationPath := fmt.Sprintf("/trash_objects/trash_object")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -19631,7 +24342,7 @@ func NewGetTrashObjectRequest(server string, params *GetTrashObjectParams) (*htt
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/trash_objects/:trash_object")
+	operationPath := fmt.Sprintf("/trash_objects/trash_object")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -19707,7 +24418,7 @@ func NewPostTrashObjectRestoreRequestWithBody(server string, contentType string,
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/trash_objects/:trash_object/restore")
+	operationPath := fmt.Sprintf("/trash_objects/trash_object/restore")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -19801,7 +24512,7 @@ func NewDeleteVirtualMachineGroupRequestWithBody(server string, contentType stri
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/virtual_machine_groups/:virtual_machine_group")
+	operationPath := fmt.Sprintf("/virtual_machine_groups/virtual_machine_group")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -19830,7 +24541,7 @@ func NewGetVirtualMachineGroupRequest(server string, params *GetVirtualMachineGr
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/virtual_machine_groups/:virtual_machine_group")
+	operationPath := fmt.Sprintf("/virtual_machine_groups/virtual_machine_group")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -19890,7 +24601,7 @@ func NewPatchVirtualMachineGroupRequestWithBody(server string, contentType strin
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/virtual_machine_groups/:virtual_machine_group")
+	operationPath := fmt.Sprintf("/virtual_machine_groups/virtual_machine_group")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -19910,6 +24621,46 @@ func NewPatchVirtualMachineGroupRequestWithBody(server string, contentType strin
 	return req, nil
 }
 
+// NewDeleteVirtualMachineNetworkInterfaceRequest calls the generic DeleteVirtualMachineNetworkInterface builder with application/json body
+func NewDeleteVirtualMachineNetworkInterfaceRequest(server string, body DeleteVirtualMachineNetworkInterfaceJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDeleteVirtualMachineNetworkInterfaceRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewDeleteVirtualMachineNetworkInterfaceRequestWithBody generates requests for DeleteVirtualMachineNetworkInterface with any type of body
+func NewDeleteVirtualMachineNetworkInterfaceRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/virtual_machine_network_interfaces/virtual_machine_network_interface")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewGetVMNIVMNIRequest generates requests for GetVMNIVMNI
 func NewGetVMNIVMNIRequest(server string, params *GetVMNIVMNIParams) (*http.Request, error) {
 	var err error
@@ -19919,7 +24670,7 @@ func NewGetVMNIVMNIRequest(server string, params *GetVMNIVMNIParams) (*http.Requ
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/virtual_machine_network_interfaces/:virtual_machine_network_interface")
+	operationPath := fmt.Sprintf("/virtual_machine_network_interfaces/virtual_machine_network_interface")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -19979,7 +24730,7 @@ func NewPostVirtualMachineNetworkInterfaceAllocateIpRequestWithBody(server strin
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/virtual_machine_network_interfaces/:virtual_machine_network_interface/allocate_ip")
+	operationPath := fmt.Sprintf("/virtual_machine_network_interfaces/virtual_machine_network_interface/allocate_ip")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -20019,7 +24770,47 @@ func NewPostVirtualMachineNetworkInterfaceAllocateNewIpRequestWithBody(server st
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/virtual_machine_network_interfaces/:virtual_machine_network_interface/allocate_new_ip")
+	operationPath := fmt.Sprintf("/virtual_machine_network_interfaces/virtual_machine_network_interface/allocate_new_ip")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewPostVirtualMachineNetworkInterfaceAttachRequest calls the generic PostVirtualMachineNetworkInterfaceAttach builder with application/json body
+func NewPostVirtualMachineNetworkInterfaceAttachRequest(server string, body PostVirtualMachineNetworkInterfaceAttachJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostVirtualMachineNetworkInterfaceAttachRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostVirtualMachineNetworkInterfaceAttachRequestWithBody generates requests for PostVirtualMachineNetworkInterfaceAttach with any type of body
+func NewPostVirtualMachineNetworkInterfaceAttachRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/virtual_machine_network_interfaces/virtual_machine_network_interface/attach")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -20048,7 +24839,7 @@ func NewGetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionRequest(serve
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/virtual_machine_network_interfaces/:virtual_machine_network_interface/available_ips/:address_version")
+	operationPath := fmt.Sprintf("/virtual_machine_network_interfaces/virtual_machine_network_interface/available_ips/address_version")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -20100,6 +24891,46 @@ func NewGetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionRequest(serve
 	return req, nil
 }
 
+// NewPostVirtualMachineNetworkInterfaceDetachRequest calls the generic PostVirtualMachineNetworkInterfaceDetach builder with application/json body
+func NewPostVirtualMachineNetworkInterfaceDetachRequest(server string, body PostVirtualMachineNetworkInterfaceDetachJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostVirtualMachineNetworkInterfaceDetachRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostVirtualMachineNetworkInterfaceDetachRequestWithBody generates requests for PostVirtualMachineNetworkInterfaceDetach with any type of body
+func NewPostVirtualMachineNetworkInterfaceDetachRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/virtual_machine_network_interfaces/virtual_machine_network_interface/detach")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewPatchVirtualMachineNetworkInterfaceUpdateSpeedProfileRequest calls the generic PatchVirtualMachineNetworkInterfaceUpdateSpeedProfile builder with application/json body
 func NewPatchVirtualMachineNetworkInterfaceUpdateSpeedProfileRequest(server string, body PatchVirtualMachineNetworkInterfaceUpdateSpeedProfileJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -20120,7 +24951,7 @@ func NewPatchVirtualMachineNetworkInterfaceUpdateSpeedProfileRequestWithBody(ser
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/virtual_machine_network_interfaces/:virtual_machine_network_interface/update_speed_profile")
+	operationPath := fmt.Sprintf("/virtual_machine_network_interfaces/virtual_machine_network_interface/update_speed_profile")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -20246,7 +25077,7 @@ func NewGetVirtualMachinePackageRequest(server string, params *GetVirtualMachine
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/virtual_machine_packages/:virtual_machine_package")
+	operationPath := fmt.Sprintf("/virtual_machine_packages/virtual_machine_package")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -20302,6 +25133,55 @@ func NewGetVirtualMachinePackageRequest(server string, params *GetVirtualMachine
 	return req, nil
 }
 
+// NewGetVirtualMachinesBuildsVirtualMachineBuildRequest generates requests for GetVirtualMachinesBuildsVirtualMachineBuild
+func NewGetVirtualMachinesBuildsVirtualMachineBuildRequest(server string, params *GetVirtualMachinesBuildsVirtualMachineBuildParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/virtual_machines/builds/virtual_machine_build")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.VirtualMachineBuildId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "virtual_machine_build[id]", runtime.ParamLocationQuery, *params.VirtualMachineBuildId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewDeleteVirtualMachineRequest calls the generic DeleteVirtualMachine builder with application/json body
 func NewDeleteVirtualMachineRequest(server string, body DeleteVirtualMachineJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -20322,7 +25202,7 @@ func NewDeleteVirtualMachineRequestWithBody(server string, contentType string, b
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/virtual_machines/:virtual_machine")
+	operationPath := fmt.Sprintf("/virtual_machines/virtual_machine")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -20351,7 +25231,7 @@ func NewGetVirtualMachineRequest(server string, params *GetVirtualMachineParams)
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/virtual_machines/:virtual_machine")
+	operationPath := fmt.Sprintf("/virtual_machines/virtual_machine")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -20427,7 +25307,7 @@ func NewPatchVirtualMachineRequestWithBody(server string, contentType string, bo
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/virtual_machines/:virtual_machine")
+	operationPath := fmt.Sprintf("/virtual_machines/virtual_machine")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -20467,7 +25347,7 @@ func NewPostVirtualMachineAllocateIpRequestWithBody(server string, contentType s
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/virtual_machines/:virtual_machine/allocate_ip")
+	operationPath := fmt.Sprintf("/virtual_machines/virtual_machine/allocate_ip")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -20507,7 +25387,7 @@ func NewPostVirtualMachineConsoleSessionsRequestWithBody(server string, contentT
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/virtual_machines/:virtual_machine/console_sessions")
+	operationPath := fmt.Sprintf("/virtual_machines/virtual_machine/console_sessions")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -20536,7 +25416,7 @@ func NewGetVirtualMachineDiskBackupPoliciesRequest(server string, params *GetVir
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/virtual_machines/:virtual_machine/disk_backup_policies")
+	operationPath := fmt.Sprintf("/virtual_machines/virtual_machine/disk_backup_policies")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -20660,7 +25540,7 @@ func NewPostVirtualMachineDiskBackupPoliciesRequestWithBody(server string, conte
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/virtual_machines/:virtual_machine/disk_backup_policies")
+	operationPath := fmt.Sprintf("/virtual_machines/virtual_machine/disk_backup_policies")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -20689,7 +25569,7 @@ func NewGetVirtualMachineDisksRequest(server string, params *GetVirtualMachineDi
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/virtual_machines/:virtual_machine/disks")
+	operationPath := fmt.Sprintf("/virtual_machines/virtual_machine/disks")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -20797,7 +25677,7 @@ func NewPutVirtualMachineFlexibleResourcesRequestWithBody(server string, content
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/virtual_machines/:virtual_machine/flexible_resources")
+	operationPath := fmt.Sprintf("/virtual_machines/virtual_machine/flexible_resources")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -20826,7 +25706,7 @@ func NewGetVirtualMachineNetworkInterfacesRequest(server string, params *GetVirt
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/virtual_machines/:virtual_machine/network_interfaces")
+	operationPath := fmt.Sprintf("/virtual_machines/virtual_machine/network_interfaces")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -20914,6 +25794,46 @@ func NewGetVirtualMachineNetworkInterfacesRequest(server string, params *GetVirt
 	return req, nil
 }
 
+// NewPostVirtualMachineNetworkInterfacesRequest calls the generic PostVirtualMachineNetworkInterfaces builder with application/json body
+func NewPostVirtualMachineNetworkInterfacesRequest(server string, body PostVirtualMachineNetworkInterfacesJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostVirtualMachineNetworkInterfacesRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostVirtualMachineNetworkInterfacesRequestWithBody generates requests for PostVirtualMachineNetworkInterfaces with any type of body
+func NewPostVirtualMachineNetworkInterfacesRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/virtual_machines/virtual_machine/network_interfaces")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewGetVirtualMachineNetworkInterfaceRequest generates requests for GetVirtualMachineNetworkInterface
 func NewGetVirtualMachineNetworkInterfaceRequest(server string, params *GetVirtualMachineNetworkInterfaceParams) (*http.Request, error) {
 	var err error
@@ -20923,7 +25843,7 @@ func NewGetVirtualMachineNetworkInterfaceRequest(server string, params *GetVirtu
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/virtual_machines/:virtual_machine/networks/:network/interface")
+	operationPath := fmt.Sprintf("/virtual_machines/virtual_machine/networks/network/interface")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -21031,7 +25951,7 @@ func NewPutVirtualMachinePackageRequestWithBody(server string, contentType strin
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/virtual_machines/:virtual_machine/package")
+	operationPath := fmt.Sprintf("/virtual_machines/virtual_machine/package")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -21071,7 +25991,7 @@ func NewPostVirtualMachineResetRequestWithBody(server string, contentType string
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/virtual_machines/:virtual_machine/reset")
+	operationPath := fmt.Sprintf("/virtual_machines/virtual_machine/reset")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -21111,7 +26031,7 @@ func NewPostVirtualMachineShutdownRequestWithBody(server string, contentType str
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/virtual_machines/:virtual_machine/shutdown")
+	operationPath := fmt.Sprintf("/virtual_machines/virtual_machine/shutdown")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -21151,7 +26071,7 @@ func NewPostVirtualMachineStartRequestWithBody(server string, contentType string
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/virtual_machines/:virtual_machine/start")
+	operationPath := fmt.Sprintf("/virtual_machines/virtual_machine/start")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -21191,7 +26111,7 @@ func NewPostVirtualMachineStopRequestWithBody(server string, contentType string,
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/virtual_machines/:virtual_machine/stop")
+	operationPath := fmt.Sprintf("/virtual_machines/virtual_machine/stop")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -21211,8 +26131,19 @@ func NewPostVirtualMachineStopRequestWithBody(server string, contentType string,
 	return req, nil
 }
 
-// NewGetVirtualMachinesBuildsVirtualMachineBuildRequest generates requests for GetVirtualMachinesBuildsVirtualMachineBuild
-func NewGetVirtualMachinesBuildsVirtualMachineBuildRequest(server string, params *GetVirtualMachinesBuildsVirtualMachineBuildParams) (*http.Request, error) {
+// NewDeleteVirtualNetworkRequest calls the generic DeleteVirtualNetwork builder with application/json body
+func NewDeleteVirtualNetworkRequest(server string, body DeleteVirtualNetworkJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDeleteVirtualNetworkRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewDeleteVirtualNetworkRequestWithBody generates requests for DeleteVirtualNetwork with any type of body
+func NewDeleteVirtualNetworkRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -21220,7 +26151,36 @@ func NewGetVirtualMachinesBuildsVirtualMachineBuildRequest(server string, params
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/virtual_machines/builds/:virtual_machine_build")
+	operationPath := fmt.Sprintf("/virtual_networks/virtual_network")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetVirtualNetworkRequest generates requests for GetVirtualNetwork
+func NewGetVirtualNetworkRequest(server string, params *GetVirtualNetworkParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/virtual_networks/virtual_network")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -21233,9 +26193,9 @@ func NewGetVirtualMachinesBuildsVirtualMachineBuildRequest(server string, params
 	if params != nil {
 		queryValues := queryURL.Query()
 
-		if params.VirtualMachineBuildId != nil {
+		if params.VirtualNetworkId != nil {
 
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "virtual_machine_build[id]", runtime.ParamLocationQuery, *params.VirtualMachineBuildId); err != nil {
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "virtual_network[id]", runtime.ParamLocationQuery, *params.VirtualNetworkId); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -21256,6 +26216,46 @@ func NewGetVirtualMachinesBuildsVirtualMachineBuildRequest(server string, params
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewPatchVirtualNetworkRequest calls the generic PatchVirtualNetwork builder with application/json body
+func NewPatchVirtualNetworkRequest(server string, body PatchVirtualNetworkJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchVirtualNetworkRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPatchVirtualNetworkRequestWithBody generates requests for PatchVirtualNetwork with any type of body
+func NewPatchVirtualNetworkRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/virtual_networks/virtual_network")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -21296,7 +26296,7 @@ func NewGetZoneRequest(server string, params *GetZoneParams) (*http.Request, err
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/zones/:zone")
+	operationPath := fmt.Sprintf("/zones/zone")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -21429,6 +26429,11 @@ type ClientWithResponsesInterface interface {
 	PostAddressListEntriesWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostAddressListEntriesResponse, error)
 
 	PostAddressListEntriesWithResponse(ctx context.Context, body PostAddressListEntriesJSONRequestBody, reqEditors ...RequestEditorFn) (*PostAddressListEntriesResponse, error)
+
+	// PostAddressListEntriesBulkWithBodyWithResponse request with any body
+	PostAddressListEntriesBulkWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostAddressListEntriesBulkResponse, error)
+
+	PostAddressListEntriesBulkWithResponse(ctx context.Context, body PostAddressListEntriesBulkJSONRequestBody, reqEditors ...RequestEditorFn) (*PostAddressListEntriesBulkResponse, error)
 
 	// DeleteApiTokenWithBodyWithResponse request with any body
 	DeleteApiTokenWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteApiTokenResponse, error)
@@ -21674,8 +26679,57 @@ type ClientWithResponsesInterface interface {
 
 	PatchLoadBalancersRulesLoadBalancerRuleWithResponse(ctx context.Context, body PatchLoadBalancersRulesLoadBalancerRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchLoadBalancersRulesLoadBalancerRuleResponse, error)
 
+	// DeleteOrganizationWithBodyWithResponse request with any body
+	DeleteOrganizationWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteOrganizationResponse, error)
+
+	DeleteOrganizationWithResponse(ctx context.Context, body DeleteOrganizationJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteOrganizationResponse, error)
+
 	// GetNetworkWithResponse request
 	GetNetworkWithResponse(ctx context.Context, params *GetNetworkParams, reqEditors ...RequestEditorFn) (*GetNetworkResponse, error)
+
+	// DeleteObjectStorageAccessKeyWithBodyWithResponse request with any body
+	DeleteObjectStorageAccessKeyWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteObjectStorageAccessKeyResponse, error)
+
+	DeleteObjectStorageAccessKeyWithResponse(ctx context.Context, body DeleteObjectStorageAccessKeyJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteObjectStorageAccessKeyResponse, error)
+
+	// GetObjectStorageAccessKeyWithResponse request
+	GetObjectStorageAccessKeyWithResponse(ctx context.Context, params *GetObjectStorageAccessKeyParams, reqEditors ...RequestEditorFn) (*GetObjectStorageAccessKeyResponse, error)
+
+	// PatchObjectStorageAccessKeyWithBodyWithResponse request with any body
+	PatchObjectStorageAccessKeyWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchObjectStorageAccessKeyResponse, error)
+
+	PatchObjectStorageAccessKeyWithResponse(ctx context.Context, body PatchObjectStorageAccessKeyJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchObjectStorageAccessKeyResponse, error)
+
+	// PostObjectStorageAccessKeyGenerateCredentialsWithBodyWithResponse request with any body
+	PostObjectStorageAccessKeyGenerateCredentialsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostObjectStorageAccessKeyGenerateCredentialsResponse, error)
+
+	PostObjectStorageAccessKeyGenerateCredentialsWithResponse(ctx context.Context, body PostObjectStorageAccessKeyGenerateCredentialsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostObjectStorageAccessKeyGenerateCredentialsResponse, error)
+
+	// DeleteObjectStorageObjectStorageClusterBucketWithBodyWithResponse request with any body
+	DeleteObjectStorageObjectStorageClusterBucketWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteObjectStorageObjectStorageClusterBucketResponse, error)
+
+	DeleteObjectStorageObjectStorageClusterBucketWithResponse(ctx context.Context, body DeleteObjectStorageObjectStorageClusterBucketJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteObjectStorageObjectStorageClusterBucketResponse, error)
+
+	// GetObjectStorageObjectStorageClusterBucketWithResponse request
+	GetObjectStorageObjectStorageClusterBucketWithResponse(ctx context.Context, params *GetObjectStorageObjectStorageClusterBucketParams, reqEditors ...RequestEditorFn) (*GetObjectStorageObjectStorageClusterBucketResponse, error)
+
+	// PatchObjectStorageObjectStorageClusterBucketWithBodyWithResponse request with any body
+	PatchObjectStorageObjectStorageClusterBucketWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchObjectStorageObjectStorageClusterBucketResponse, error)
+
+	PatchObjectStorageObjectStorageClusterBucketWithResponse(ctx context.Context, body PatchObjectStorageObjectStorageClusterBucketJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchObjectStorageObjectStorageClusterBucketResponse, error)
+
+	// GetObjectStorageObjectStorageClusterBucketObjectWithResponse request
+	GetObjectStorageObjectStorageClusterBucketObjectWithResponse(ctx context.Context, params *GetObjectStorageObjectStorageClusterBucketObjectParams, reqEditors ...RequestEditorFn) (*GetObjectStorageObjectStorageClusterBucketObjectResponse, error)
+
+	// PostObjectStorageObjectStorageClusterBucketPresignedUrlWithBodyWithResponse request with any body
+	PostObjectStorageObjectStorageClusterBucketPresignedUrlWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostObjectStorageObjectStorageClusterBucketPresignedUrlResponse, error)
+
+	PostObjectStorageObjectStorageClusterBucketPresignedUrlWithResponse(ctx context.Context, body PostObjectStorageObjectStorageClusterBucketPresignedUrlJSONRequestBody, reqEditors ...RequestEditorFn) (*PostObjectStorageObjectStorageClusterBucketPresignedUrlResponse, error)
+
+	// PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsWithBodyWithResponse request with any body
+	PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsResponse, error)
+
+	PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsWithResponse(ctx context.Context, body PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsResponse, error)
 
 	// GetOperatingSystemsWithResponse request
 	GetOperatingSystemsWithResponse(ctx context.Context, params *GetOperatingSystemsParams, reqEditors ...RequestEditorFn) (*GetOperatingSystemsResponse, error)
@@ -21710,6 +26764,9 @@ type ClientWithResponsesInterface interface {
 
 	// GetOrganizationCertificatesWithResponse request
 	GetOrganizationCertificatesWithResponse(ctx context.Context, params *GetOrganizationCertificatesParams, reqEditors ...RequestEditorFn) (*GetOrganizationCertificatesResponse, error)
+
+	// GetOrganizationDeletionStepsWithResponse request
+	GetOrganizationDeletionStepsWithResponse(ctx context.Context, params *GetOrganizationDeletionStepsParams, reqEditors ...RequestEditorFn) (*GetOrganizationDeletionStepsResponse, error)
 
 	// GetOrganizationDiskBackupPoliciesWithResponse request
 	GetOrganizationDiskBackupPoliciesWithResponse(ctx context.Context, params *GetOrganizationDiskBackupPoliciesParams, reqEditors ...RequestEditorFn) (*GetOrganizationDiskBackupPoliciesResponse, error)
@@ -21774,8 +26831,40 @@ type ClientWithResponsesInterface interface {
 	// GetOrganizationNetworkSpeedProfilesWithResponse request
 	GetOrganizationNetworkSpeedProfilesWithResponse(ctx context.Context, params *GetOrganizationNetworkSpeedProfilesParams, reqEditors ...RequestEditorFn) (*GetOrganizationNetworkSpeedProfilesResponse, error)
 
+	// GetOrganizationObjectStorageAccessKeysWithResponse request
+	GetOrganizationObjectStorageAccessKeysWithResponse(ctx context.Context, params *GetOrganizationObjectStorageAccessKeysParams, reqEditors ...RequestEditorFn) (*GetOrganizationObjectStorageAccessKeysResponse, error)
+
+	// DeleteOrganizationObjectStorageObjectStorageClusterWithBodyWithResponse request with any body
+	DeleteOrganizationObjectStorageObjectStorageClusterWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteOrganizationObjectStorageObjectStorageClusterResponse, error)
+
+	DeleteOrganizationObjectStorageObjectStorageClusterWithResponse(ctx context.Context, body DeleteOrganizationObjectStorageObjectStorageClusterJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteOrganizationObjectStorageObjectStorageClusterResponse, error)
+
+	// GetOrganizationObjectStorageObjectStorageClusterWithResponse request
+	GetOrganizationObjectStorageObjectStorageClusterWithResponse(ctx context.Context, params *GetOrganizationObjectStorageObjectStorageClusterParams, reqEditors ...RequestEditorFn) (*GetOrganizationObjectStorageObjectStorageClusterResponse, error)
+
+	// PostOrganizationObjectStorageObjectStorageClusterWithBodyWithResponse request with any body
+	PostOrganizationObjectStorageObjectStorageClusterWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostOrganizationObjectStorageObjectStorageClusterResponse, error)
+
+	PostOrganizationObjectStorageObjectStorageClusterWithResponse(ctx context.Context, body PostOrganizationObjectStorageObjectStorageClusterJSONRequestBody, reqEditors ...RequestEditorFn) (*PostOrganizationObjectStorageObjectStorageClusterResponse, error)
+
+	// PostOrganizationObjectStorageObjectStorageClusterAccessKeysWithBodyWithResponse request with any body
+	PostOrganizationObjectStorageObjectStorageClusterAccessKeysWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostOrganizationObjectStorageObjectStorageClusterAccessKeysResponse, error)
+
+	PostOrganizationObjectStorageObjectStorageClusterAccessKeysWithResponse(ctx context.Context, body PostOrganizationObjectStorageObjectStorageClusterAccessKeysJSONRequestBody, reqEditors ...RequestEditorFn) (*PostOrganizationObjectStorageObjectStorageClusterAccessKeysResponse, error)
+
+	// PostOrganizationObjectStorageObjectStorageClusterBucketsWithBodyWithResponse request with any body
+	PostOrganizationObjectStorageObjectStorageClusterBucketsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostOrganizationObjectStorageObjectStorageClusterBucketsResponse, error)
+
+	PostOrganizationObjectStorageObjectStorageClusterBucketsWithResponse(ctx context.Context, body PostOrganizationObjectStorageObjectStorageClusterBucketsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostOrganizationObjectStorageObjectStorageClusterBucketsResponse, error)
+
+	// GetOrganizationPolicyWithResponse request
+	GetOrganizationPolicyWithResponse(ctx context.Context, params *GetOrganizationPolicyParams, reqEditors ...RequestEditorFn) (*GetOrganizationPolicyResponse, error)
+
 	// GetOrganizationPolicyLimitsWithResponse request
 	GetOrganizationPolicyLimitsWithResponse(ctx context.Context, params *GetOrganizationPolicyLimitsParams, reqEditors ...RequestEditorFn) (*GetOrganizationPolicyLimitsResponse, error)
+
+	// GetOrganizationPricesWithResponse request
+	GetOrganizationPricesWithResponse(ctx context.Context, params *GetOrganizationPricesParams, reqEditors ...RequestEditorFn) (*GetOrganizationPricesResponse, error)
 
 	// GetOrganizationSecurityGroupsWithResponse request
 	GetOrganizationSecurityGroupsWithResponse(ctx context.Context, params *GetOrganizationSecurityGroupsParams, reqEditors ...RequestEditorFn) (*GetOrganizationSecurityGroupsResponse, error)
@@ -21833,6 +26922,27 @@ type ClientWithResponsesInterface interface {
 
 	PostOrganizationVirtualMachinesBuildFromSpecWithResponse(ctx context.Context, body PostOrganizationVirtualMachinesBuildFromSpecJSONRequestBody, reqEditors ...RequestEditorFn) (*PostOrganizationVirtualMachinesBuildFromSpecResponse, error)
 
+	// GetOrganizationVirtualNetworksWithResponse request
+	GetOrganizationVirtualNetworksWithResponse(ctx context.Context, params *GetOrganizationVirtualNetworksParams, reqEditors ...RequestEditorFn) (*GetOrganizationVirtualNetworksResponse, error)
+
+	// PostOrganizationVirtualNetworksWithBodyWithResponse request with any body
+	PostOrganizationVirtualNetworksWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostOrganizationVirtualNetworksResponse, error)
+
+	PostOrganizationVirtualNetworksWithResponse(ctx context.Context, body PostOrganizationVirtualNetworksJSONRequestBody, reqEditors ...RequestEditorFn) (*PostOrganizationVirtualNetworksResponse, error)
+
+	// DeleteSecurityGroupsRulesSecurityGroupRuleWithBodyWithResponse request with any body
+	DeleteSecurityGroupsRulesSecurityGroupRuleWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteSecurityGroupsRulesSecurityGroupRuleResponse, error)
+
+	DeleteSecurityGroupsRulesSecurityGroupRuleWithResponse(ctx context.Context, body DeleteSecurityGroupsRulesSecurityGroupRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteSecurityGroupsRulesSecurityGroupRuleResponse, error)
+
+	// GetSecurityGroupsRulesSecurityGroupRuleWithResponse request
+	GetSecurityGroupsRulesSecurityGroupRuleWithResponse(ctx context.Context, params *GetSecurityGroupsRulesSecurityGroupRuleParams, reqEditors ...RequestEditorFn) (*GetSecurityGroupsRulesSecurityGroupRuleResponse, error)
+
+	// PatchSecurityGroupsRulesSecurityGroupRuleWithBodyWithResponse request with any body
+	PatchSecurityGroupsRulesSecurityGroupRuleWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchSecurityGroupsRulesSecurityGroupRuleResponse, error)
+
+	PatchSecurityGroupsRulesSecurityGroupRuleWithResponse(ctx context.Context, body PatchSecurityGroupsRulesSecurityGroupRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchSecurityGroupsRulesSecurityGroupRuleResponse, error)
+
 	// DeleteSecurityGroupWithBodyWithResponse request with any body
 	DeleteSecurityGroupWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteSecurityGroupResponse, error)
 
@@ -21853,19 +26963,6 @@ type ClientWithResponsesInterface interface {
 	PostSecurityGroupRulesWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostSecurityGroupRulesResponse, error)
 
 	PostSecurityGroupRulesWithResponse(ctx context.Context, body PostSecurityGroupRulesJSONRequestBody, reqEditors ...RequestEditorFn) (*PostSecurityGroupRulesResponse, error)
-
-	// DeleteSecurityGroupsRulesSecurityGroupRuleWithBodyWithResponse request with any body
-	DeleteSecurityGroupsRulesSecurityGroupRuleWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteSecurityGroupsRulesSecurityGroupRuleResponse, error)
-
-	DeleteSecurityGroupsRulesSecurityGroupRuleWithResponse(ctx context.Context, body DeleteSecurityGroupsRulesSecurityGroupRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteSecurityGroupsRulesSecurityGroupRuleResponse, error)
-
-	// GetSecurityGroupsRulesSecurityGroupRuleWithResponse request
-	GetSecurityGroupsRulesSecurityGroupRuleWithResponse(ctx context.Context, params *GetSecurityGroupsRulesSecurityGroupRuleParams, reqEditors ...RequestEditorFn) (*GetSecurityGroupsRulesSecurityGroupRuleResponse, error)
-
-	// PatchSecurityGroupsRulesSecurityGroupRuleWithBodyWithResponse request with any body
-	PatchSecurityGroupsRulesSecurityGroupRuleWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchSecurityGroupsRulesSecurityGroupRuleResponse, error)
-
-	PatchSecurityGroupsRulesSecurityGroupRuleWithResponse(ctx context.Context, body PatchSecurityGroupsRulesSecurityGroupRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchSecurityGroupsRulesSecurityGroupRuleResponse, error)
 
 	// DeleteSshKeyWithBodyWithResponse request with any body
 	DeleteSshKeyWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteSshKeyResponse, error)
@@ -21920,6 +27017,11 @@ type ClientWithResponsesInterface interface {
 
 	PatchVirtualMachineGroupWithResponse(ctx context.Context, body PatchVirtualMachineGroupJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchVirtualMachineGroupResponse, error)
 
+	// DeleteVirtualMachineNetworkInterfaceWithBodyWithResponse request with any body
+	DeleteVirtualMachineNetworkInterfaceWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteVirtualMachineNetworkInterfaceResponse, error)
+
+	DeleteVirtualMachineNetworkInterfaceWithResponse(ctx context.Context, body DeleteVirtualMachineNetworkInterfaceJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteVirtualMachineNetworkInterfaceResponse, error)
+
 	// GetVMNIVMNIWithResponse request
 	GetVMNIVMNIWithResponse(ctx context.Context, params *GetVMNIVMNIParams, reqEditors ...RequestEditorFn) (*GetVMNIVMNIResponse, error)
 
@@ -21933,8 +27035,18 @@ type ClientWithResponsesInterface interface {
 
 	PostVirtualMachineNetworkInterfaceAllocateNewIpWithResponse(ctx context.Context, body PostVirtualMachineNetworkInterfaceAllocateNewIpJSONRequestBody, reqEditors ...RequestEditorFn) (*PostVirtualMachineNetworkInterfaceAllocateNewIpResponse, error)
 
+	// PostVirtualMachineNetworkInterfaceAttachWithBodyWithResponse request with any body
+	PostVirtualMachineNetworkInterfaceAttachWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostVirtualMachineNetworkInterfaceAttachResponse, error)
+
+	PostVirtualMachineNetworkInterfaceAttachWithResponse(ctx context.Context, body PostVirtualMachineNetworkInterfaceAttachJSONRequestBody, reqEditors ...RequestEditorFn) (*PostVirtualMachineNetworkInterfaceAttachResponse, error)
+
 	// GetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionWithResponse request
 	GetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionWithResponse(ctx context.Context, params *GetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionParams, reqEditors ...RequestEditorFn) (*GetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionResponse, error)
+
+	// PostVirtualMachineNetworkInterfaceDetachWithBodyWithResponse request with any body
+	PostVirtualMachineNetworkInterfaceDetachWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostVirtualMachineNetworkInterfaceDetachResponse, error)
+
+	PostVirtualMachineNetworkInterfaceDetachWithResponse(ctx context.Context, body PostVirtualMachineNetworkInterfaceDetachJSONRequestBody, reqEditors ...RequestEditorFn) (*PostVirtualMachineNetworkInterfaceDetachResponse, error)
 
 	// PatchVirtualMachineNetworkInterfaceUpdateSpeedProfileWithBodyWithResponse request with any body
 	PatchVirtualMachineNetworkInterfaceUpdateSpeedProfileWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchVirtualMachineNetworkInterfaceUpdateSpeedProfileResponse, error)
@@ -21946,6 +27058,9 @@ type ClientWithResponsesInterface interface {
 
 	// GetVirtualMachinePackageWithResponse request
 	GetVirtualMachinePackageWithResponse(ctx context.Context, params *GetVirtualMachinePackageParams, reqEditors ...RequestEditorFn) (*GetVirtualMachinePackageResponse, error)
+
+	// GetVirtualMachinesBuildsVirtualMachineBuildWithResponse request
+	GetVirtualMachinesBuildsVirtualMachineBuildWithResponse(ctx context.Context, params *GetVirtualMachinesBuildsVirtualMachineBuildParams, reqEditors ...RequestEditorFn) (*GetVirtualMachinesBuildsVirtualMachineBuildResponse, error)
 
 	// DeleteVirtualMachineWithBodyWithResponse request with any body
 	DeleteVirtualMachineWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteVirtualMachineResponse, error)
@@ -21989,6 +27104,11 @@ type ClientWithResponsesInterface interface {
 	// GetVirtualMachineNetworkInterfacesWithResponse request
 	GetVirtualMachineNetworkInterfacesWithResponse(ctx context.Context, params *GetVirtualMachineNetworkInterfacesParams, reqEditors ...RequestEditorFn) (*GetVirtualMachineNetworkInterfacesResponse, error)
 
+	// PostVirtualMachineNetworkInterfacesWithBodyWithResponse request with any body
+	PostVirtualMachineNetworkInterfacesWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostVirtualMachineNetworkInterfacesResponse, error)
+
+	PostVirtualMachineNetworkInterfacesWithResponse(ctx context.Context, body PostVirtualMachineNetworkInterfacesJSONRequestBody, reqEditors ...RequestEditorFn) (*PostVirtualMachineNetworkInterfacesResponse, error)
+
 	// GetVirtualMachineNetworkInterfaceWithResponse request
 	GetVirtualMachineNetworkInterfaceWithResponse(ctx context.Context, params *GetVirtualMachineNetworkInterfaceParams, reqEditors ...RequestEditorFn) (*GetVirtualMachineNetworkInterfaceResponse, error)
 
@@ -22017,8 +27137,18 @@ type ClientWithResponsesInterface interface {
 
 	PostVirtualMachineStopWithResponse(ctx context.Context, body PostVirtualMachineStopJSONRequestBody, reqEditors ...RequestEditorFn) (*PostVirtualMachineStopResponse, error)
 
-	// GetVirtualMachinesBuildsVirtualMachineBuildWithResponse request
-	GetVirtualMachinesBuildsVirtualMachineBuildWithResponse(ctx context.Context, params *GetVirtualMachinesBuildsVirtualMachineBuildParams, reqEditors ...RequestEditorFn) (*GetVirtualMachinesBuildsVirtualMachineBuildResponse, error)
+	// DeleteVirtualNetworkWithBodyWithResponse request with any body
+	DeleteVirtualNetworkWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteVirtualNetworkResponse, error)
+
+	DeleteVirtualNetworkWithResponse(ctx context.Context, body DeleteVirtualNetworkJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteVirtualNetworkResponse, error)
+
+	// GetVirtualNetworkWithResponse request
+	GetVirtualNetworkWithResponse(ctx context.Context, params *GetVirtualNetworkParams, reqEditors ...RequestEditorFn) (*GetVirtualNetworkResponse, error)
+
+	// PatchVirtualNetworkWithBodyWithResponse request with any body
+	PatchVirtualNetworkWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchVirtualNetworkResponse, error)
+
+	PatchVirtualNetworkWithResponse(ctx context.Context, body PatchVirtualNetworkJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchVirtualNetworkResponse, error)
 
 	// GetZonesWithResponse request
 	GetZonesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetZonesResponse, error)
@@ -22297,6 +27427,34 @@ func (r PostAddressListEntriesResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r PostAddressListEntriesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostAddressListEntriesBulkResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *interface{}
+	JSON400      *APIAuthenticator400Response
+	JSON403      *PermissionDenied403Res
+	JSON404      *AddressListNotFoundResponse
+	JSON422      *ValidationErrorResponse
+	JSON429      *APIAuthenticator429Response
+	JSON503      *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PostAddressListEntriesBulkResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostAddressListEntriesBulkResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -24164,6 +29322,37 @@ func (r PatchLoadBalancersRulesLoadBalancerRuleResponse) StatusCode() int {
 	return 0
 }
 
+type DeleteOrganizationResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Success bool `json:"success"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+	JSON404 *OrganizationNotFoundResponse
+	JSON409 *DeletionStepsNotSatisfiedManagedOrganizationRequired409Res
+	JSON429 *APIAuthenticator429Response
+	JSON500 *DeletionFailedResponse
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteOrganizationResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteOrganizationResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetNetworkResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -24188,6 +29377,321 @@ func (r GetNetworkResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetNetworkResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteObjectStorageAccessKeyResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Success bool `json:"success"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *ObjectStorageAccessKeyNotFoundResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+	JSON504 *NetworkErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteObjectStorageAccessKeyResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteObjectStorageAccessKeyResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetObjectStorageAccessKeyResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		ObjectStorageAccessKey ObjectStorageAccessKey `json:"object_storage_access_key"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *ObjectStorageAccessKeyNotFoundResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r GetObjectStorageAccessKeyResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetObjectStorageAccessKeyResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PatchObjectStorageAccessKeyResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// ObjectStorageAccessKey The new properties for the object storage access key
+		ObjectStorageAccessKey ObjectStorageAccessKey `json:"object_storage_access_key"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *ObjectStorageAccessKeyNotFoundResponse
+	JSON406 *TaskQueueingErrorResponse
+	JSON422 *ObjectStorageProvisioningErrorValidationError422Res
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchObjectStorageAccessKeyResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchObjectStorageAccessKeyResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostObjectStorageAccessKeyGenerateCredentialsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// ObjectStorageAccessKey The object storage access key with newly generated credentials
+		ObjectStorageAccessKey ObjectStorageAccessKey `json:"object_storage_access_key"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *ObjectStorageAccessKeyNotFoundResponse
+	JSON406 *TaskQueueingErrorResponse
+	JSON422 *ObjectStorageProvisioningErrorResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PostObjectStorageAccessKeyGenerateCredentialsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostObjectStorageAccessKeyGenerateCredentialsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteObjectStorageObjectStorageClusterBucketResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Success bool `json:"success"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *ObjectStorageBucketDeletionErrorPermissionDenied403Res
+	JSON404 *ObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res
+	JSON406 *ObjectInTrashResponse
+	JSON429 *APIAuthenticator429Response
+	JSON500 *MultipleObjectStorageBucketsFoundResponse
+	JSON503 *APIAuthenticator503Response
+	JSON504 *NetworkErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteObjectStorageObjectStorageClusterBucketResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteObjectStorageObjectStorageClusterBucketResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetObjectStorageObjectStorageClusterBucketResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		ObjectStorageBucket ObjectStorageBucket `json:"object_storage_bucket"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *ObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res
+	JSON406 *ObjectInTrashResponse
+	JSON429 *APIAuthenticator429Response
+	JSON500 *MultipleObjectStorageBucketsFoundResponse
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r GetObjectStorageObjectStorageClusterBucketResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetObjectStorageObjectStorageClusterBucketResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PatchObjectStorageObjectStorageClusterBucketResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		ObjectStorageBucket ObjectStorageBucket `json:"object_storage_bucket"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *ObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res
+	JSON406 *ObjectInTrashResponse
+	JSON422 *ValidationErrorResponse
+	JSON429 *APIAuthenticator429Response
+	JSON500 *MultipleObjectStorageBucketsFoundResponse
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchObjectStorageObjectStorageClusterBucketResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchObjectStorageObjectStorageClusterBucketResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetObjectStorageObjectStorageClusterBucketObjectResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		ObjectDetails ObjectStorageObject `json:"object_details"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *ObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res
+	JSON406 *ObjectInTrashResponse
+	JSON429 *APIAuthenticator429Response
+	JSON500 *MultipleObjectStorageBucketsFoundResponse
+	JSON503 *APIAuthenticator503Response
+	JSON504 *NetworkErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetObjectStorageObjectStorageClusterBucketObjectResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetObjectStorageObjectStorageClusterBucketObjectResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostObjectStorageObjectStorageClusterBucketPresignedUrlResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Url string `json:"url"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *ObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res
+	JSON406 *ObjectInTrashResponse
+	JSON422 *ValidationErrorResponse
+	JSON429 *APIAuthenticator429Response
+	JSON500 *MultipleObjectStorageBucketsFoundResponse
+	JSON503 *APIAuthenticator503Response
+	JSON504 *NetworkErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r PostObjectStorageObjectStorageClusterBucketPresignedUrlResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostObjectStorageObjectStorageClusterBucketPresignedUrlResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Success bool `json:"success"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *ObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res
+	JSON406 *ObjectInTrashResponse
+	JSON429 *APIAuthenticator429Response
+	JSON500 *MultipleObjectStorageBucketsFoundResponse
+	JSON503 *APIAuthenticator503Response
+	JSON504 *NetworkErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -24492,6 +29996,35 @@ func (r GetOrganizationCertificatesResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetOrganizationCertificatesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetOrganizationDeletionStepsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Steps OrganizationDeletionSteps `json:"steps"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+	JSON404 *OrganizationNotFoundResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r GetOrganizationDeletionStepsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetOrganizationDeletionStepsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -25031,6 +30564,226 @@ func (r GetOrganizationNetworkSpeedProfilesResponse) StatusCode() int {
 	return 0
 }
 
+type GetOrganizationObjectStorageAccessKeysResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// ObjectStorageAccessKeys The object storage access keys for the organization
+		ObjectStorageAccessKeys []ObjectStorageAccessKey `json:"object_storage_access_keys"`
+		Pagination              PaginationObject         `json:"pagination"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+	JSON404 *OrganizationNotFoundResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r GetOrganizationObjectStorageAccessKeysResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetOrganizationObjectStorageAccessKeysResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteOrganizationObjectStorageObjectStorageClusterResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		ObjectStorageAccount ObjectStorageAccount                                                      `json:"object_storage_account"`
+		TrashObject          DeleteOrganizationObjectStorageObjectStorageCluster200ResponseTrashObject `json:"trash_object"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *ObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res
+	JSON404 *ObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res
+	JSON406 *ObjectInTrashResponse
+	JSON422 *ValidationErrorResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteOrganizationObjectStorageObjectStorageClusterResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteOrganizationObjectStorageObjectStorageClusterResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetOrganizationObjectStorageObjectStorageClusterResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		ObjectStorageAccount ObjectStorageAccount `json:"object_storage_account"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *ObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res
+	JSON404 *ObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res
+	JSON406 *ObjectInTrashResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r GetOrganizationObjectStorageObjectStorageClusterResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetOrganizationObjectStorageObjectStorageClusterResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostOrganizationObjectStorageObjectStorageClusterResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *struct {
+		// ObjectStorageAccount The object storage account that was created
+		ObjectStorageAccount ObjectStorageAccount `json:"object_storage_account"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+	JSON404 *ObjectStorageClusterNotFoundOrganizationNotFound404Res
+	JSON406 *ObjectInTrashTaskQueueingError406Res
+	JSON422 *ValidationErrorResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PostOrganizationObjectStorageObjectStorageClusterResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostOrganizationObjectStorageObjectStorageClusterResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostOrganizationObjectStorageObjectStorageClusterAccessKeysResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *struct {
+		ObjectStorageAccessKey ObjectStorageAccessKey `json:"object_storage_access_key"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *ObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res
+	JSON404 *ObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res
+	JSON406 *ObjectInTrashResponse
+	JSON422 *ValidationErrorResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PostOrganizationObjectStorageObjectStorageClusterAccessKeysResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostOrganizationObjectStorageObjectStorageClusterAccessKeysResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostOrganizationObjectStorageObjectStorageClusterBucketsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *struct {
+		ObjectStorageBucket ObjectStorageBucket `json:"object_storage_bucket"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *ObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res
+	JSON404 *ObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res
+	JSON406 *ObjectInTrashResponse
+	JSON422 *ValidationErrorResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PostOrganizationObjectStorageObjectStorageClusterBucketsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostOrganizationObjectStorageObjectStorageClusterBucketsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetOrganizationPolicyResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Features                              PolicyFeatures            `json:"features"`
+		Limits                                PolicyLimits              `json:"limits"`
+		PolicyName                            nullable.Nullable[string] `json:"policy_name"`
+		PolicyType                            PolicyType                `json:"policy_type"`
+		ReasonsForDisallowingResourceCreation []string                  `json:"reasons_for_disallowing_resource_creation"`
+	}
+	JSON400 *PolicyNotAvailableForManagedOrganizations400Res
+	JSON403 *OrganizationNotActivatedOrganizationSuspended403Res
+	JSON404 *OrganizationNotFoundResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r GetOrganizationPolicyResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetOrganizationPolicyResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetOrganizationPolicyLimitsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -25054,6 +30807,38 @@ func (r GetOrganizationPolicyLimitsResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetOrganizationPolicyLimitsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetOrganizationPricesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Currency Currency `json:"currency"`
+
+		// Prices The prices in the default price plan
+		Prices []PriceResourceWithSinglePriceVariant `json:"prices"`
+	}
+	JSON400 *PricesNotAvailableForManagedOrganizations400Res
+	JSON403 *OrganizationNotActivatedOrganizationSuspended403Res
+	JSON404 *OrganizationNotFoundResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r GetOrganizationPricesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetOrganizationPricesResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -25446,7 +31231,7 @@ type PostOrganizationVirtualMachinesBuildResponse struct {
 	JSON400 *APIAuthenticator400Response
 	JSON403 *OrganizationNotActivatedPermissionDeniedResourceCreationRestricted403Res
 	JSON404 *DataCenterNotFoundVirtualMachinePackageNotFoundZoneNotFound404Res
-	JSON422 *LocationRequiredValidationError422Res
+	JSON422 *LocationRequiredOneSystemDiskRequiredValidationError422Res
 	JSON429 *APIAuthenticator429Response
 	JSON503 *APIAuthenticator503Response
 }
@@ -25497,6 +31282,161 @@ func (r PostOrganizationVirtualMachinesBuildFromSpecResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r PostOrganizationVirtualMachinesBuildFromSpecResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetOrganizationVirtualNetworksResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Pagination PaginationObject `json:"pagination"`
+
+		// VirtualNetworks The virtual networks for the provided organization
+		VirtualNetworks []VirtualNetwork `json:"virtual_networks"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+	JSON404 *OrganizationNotFoundResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r GetOrganizationVirtualNetworksResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetOrganizationVirtualNetworksResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostOrganizationVirtualNetworksResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// VirtualNetwork The new virtual network details
+		VirtualNetwork VirtualNetwork `json:"virtual_network"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+	JSON404 *DataCenterNotFoundOrganizationNotFound404Res
+	JSON422 *ValidationErrorResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PostOrganizationVirtualNetworksResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostOrganizationVirtualNetworksResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteSecurityGroupsRulesSecurityGroupRuleResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// SecurityGroupRule The security group rule that has been destroyed
+		SecurityGroupRule DeleteSecurityGroupsRulesSecurityGroupRule200ResponseSecurityGroupRule `json:"security_group_rule"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *SecurityGroupRuleNotFoundResponse
+	JSON422 *ValidationErrorResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteSecurityGroupsRulesSecurityGroupRuleResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteSecurityGroupsRulesSecurityGroupRuleResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetSecurityGroupsRulesSecurityGroupRuleResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// SecurityGroupRule The resolved security group rule
+		SecurityGroupRule GetSecurityGroupsRulesSecurityGroupRule200ResponseSecurityGroupRule `json:"security_group_rule"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *SecurityGroupRuleNotFoundResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r GetSecurityGroupsRulesSecurityGroupRuleResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetSecurityGroupsRulesSecurityGroupRuleResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PatchSecurityGroupsRulesSecurityGroupRuleResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// SecurityGroupRule The security group that has been updated
+		SecurityGroupRule PatchSecurityGroupsRulesSecurityGroupRule200ResponseSecurityGroupRule `json:"security_group_rule"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *SecurityGroupRuleNotFoundResponse
+	JSON422 *ValidationErrorResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchSecurityGroupsRulesSecurityGroupRuleResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchSecurityGroupsRulesSecurityGroupRuleResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -25657,98 +31597,6 @@ func (r PostSecurityGroupRulesResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r PostSecurityGroupRulesResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type DeleteSecurityGroupsRulesSecurityGroupRuleResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *struct {
-		// SecurityGroupRule The security group rule that has been destroyed
-		SecurityGroupRule DeleteSecurityGroupsRulesSecurityGroupRule200ResponseSecurityGroupRule `json:"security_group_rule"`
-	}
-	JSON400 *APIAuthenticator400Response
-	JSON403 *PermissionDenied403Res
-	JSON404 *SecurityGroupRuleNotFoundResponse
-	JSON422 *ValidationErrorResponse
-	JSON429 *APIAuthenticator429Response
-	JSON503 *APIAuthenticator503Response
-}
-
-// Status returns HTTPResponse.Status
-func (r DeleteSecurityGroupsRulesSecurityGroupRuleResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r DeleteSecurityGroupsRulesSecurityGroupRuleResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type GetSecurityGroupsRulesSecurityGroupRuleResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *struct {
-		// SecurityGroupRule The resolved security group rule
-		SecurityGroupRule GetSecurityGroupsRulesSecurityGroupRule200ResponseSecurityGroupRule `json:"security_group_rule"`
-	}
-	JSON400 *APIAuthenticator400Response
-	JSON403 *PermissionDenied403Res
-	JSON404 *SecurityGroupRuleNotFoundResponse
-	JSON429 *APIAuthenticator429Response
-	JSON503 *APIAuthenticator503Response
-}
-
-// Status returns HTTPResponse.Status
-func (r GetSecurityGroupsRulesSecurityGroupRuleResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetSecurityGroupsRulesSecurityGroupRuleResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type PatchSecurityGroupsRulesSecurityGroupRuleResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *struct {
-		// SecurityGroupRule The security group that has been updated
-		SecurityGroupRule PatchSecurityGroupsRulesSecurityGroupRule200ResponseSecurityGroupRule `json:"security_group_rule"`
-	}
-	JSON400 *APIAuthenticator400Response
-	JSON403 *PermissionDenied403Res
-	JSON404 *SecurityGroupRuleNotFoundResponse
-	JSON422 *ValidationErrorResponse
-	JSON429 *APIAuthenticator429Response
-	JSON503 *APIAuthenticator503Response
-}
-
-// Status returns HTTPResponse.Status
-func (r PatchSecurityGroupsRulesSecurityGroupRuleResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r PatchSecurityGroupsRulesSecurityGroupRuleResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -26144,6 +31992,38 @@ func (r PatchVirtualMachineGroupResponse) StatusCode() int {
 	return 0
 }
 
+type DeleteVirtualMachineNetworkInterfaceResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// VirtualMachineNetworkInterface The deleted network interface details
+		VirtualMachineNetworkInterface DeleteVirtualMachineNetworkInterface200ResponseVirtualMachineNetworkInterface `json:"virtual_machine_network_interface"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *APIAuthenticator403Response
+	JSON404 *VirtualMachineNetworkInterfaceNotFoundResponse
+	JSON409 *DeletionRestrictedResponse
+	JSON422 *ValidationErrorResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteVirtualMachineNetworkInterfaceResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteVirtualMachineNetworkInterfaceResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetVMNIVMNIResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -26235,6 +32115,40 @@ func (r PostVirtualMachineNetworkInterfaceAllocateNewIpResponse) StatusCode() in
 	return 0
 }
 
+type PostVirtualMachineNetworkInterfaceAttachResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Task Task `json:"task"`
+
+		// VirtualMachineNetworkInterface The network interface details
+		VirtualMachineNetworkInterface PostVirtualMachineNetworkInterfaceAttach200ResponseVirtualMachineNetworkInterface `json:"virtual_machine_network_interface"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *VirtualMachineNetworkInterfaceNotFoundResponse
+	JSON406 *TaskQueueingErrorResponse
+	JSON422 *VirtualMachineNetworkInterfaceAlreadyAttachedResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PostVirtualMachineNetworkInterfaceAttachResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostVirtualMachineNetworkInterfaceAttachResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -26259,6 +32173,40 @@ func (r GetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionResponse) Sta
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostVirtualMachineNetworkInterfaceDetachResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Task Task `json:"task"`
+
+		// VirtualMachineNetworkInterface The network interface details
+		VirtualMachineNetworkInterface PostVirtualMachineNetworkInterfaceDetach200ResponseVirtualMachineNetworkInterface `json:"virtual_machine_network_interface"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *VirtualMachineNetworkInterfaceNotFoundResponse
+	JSON406 *TaskQueueingErrorResponse
+	JSON422 *VirtualMachineNetworkInterfaceAlreadyDetachedResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PostVirtualMachineNetworkInterfaceDetachResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostVirtualMachineNetworkInterfaceDetachResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -26301,8 +32249,8 @@ type GetVirtualMachinePackagesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
-		Pagination             PaginationObject                                             `json:"pagination"`
-		VirtualMachinePackages []GetVirtualMachinePackages200ResponseVirtualMachinePackages `json:"virtual_machine_packages"`
+		Pagination             PaginationObject        `json:"pagination"`
+		VirtualMachinePackages []VirtualMachinePackage `json:"virtual_machine_packages"`
 	}
 	JSON400 *APIAuthenticator400Response
 	JSON403 *OrganizationNotActivatedOrganizationSuspended403Res
@@ -26350,6 +32298,36 @@ func (r GetVirtualMachinePackageResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetVirtualMachinePackageResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetVirtualMachinesBuildsVirtualMachineBuildResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Annotations         []KeyValue                                                                `json:"annotations"`
+		VirtualMachineBuild GetVirtualMachinesBuildsVirtualMachineBuild200ResponseVirtualMachineBuild `json:"virtual_machine_build"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *APIAuthenticator403Response
+	JSON404 *VirtualMachineBuildNotFoundResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r GetVirtualMachinesBuildsVirtualMachineBuildResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetVirtualMachinesBuildsVirtualMachineBuildResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -26673,6 +32651,38 @@ func (r GetVirtualMachineNetworkInterfacesResponse) StatusCode() int {
 	return 0
 }
 
+type PostVirtualMachineNetworkInterfacesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// VirtualMachineNetworkInterface The network interface details
+		VirtualMachineNetworkInterface PostVirtualMachineNetworkInterfaces200ResponseVirtualMachineNetworkInterface `json:"virtual_machine_network_interface"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *APIAuthenticator403Response
+	JSON404 *NetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res
+	JSON406 *ObjectInTrashResponse
+	JSON422 *ValidationErrorResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PostVirtualMachineNetworkInterfacesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostVirtualMachineNetworkInterfacesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetVirtualMachineNetworkInterfaceResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -26854,22 +32864,23 @@ func (r PostVirtualMachineStopResponse) StatusCode() int {
 	return 0
 }
 
-type GetVirtualMachinesBuildsVirtualMachineBuildResponse struct {
+type DeleteVirtualNetworkResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
-		Annotations         []KeyValue                                                                `json:"annotations"`
-		VirtualMachineBuild GetVirtualMachinesBuildsVirtualMachineBuild200ResponseVirtualMachineBuild `json:"virtual_machine_build"`
+		// VirtualNetwork The details for the deleted virtual network
+		VirtualNetwork VirtualNetwork `json:"virtual_network"`
 	}
 	JSON400 *APIAuthenticator400Response
-	JSON403 *APIAuthenticator403Response
-	JSON404 *VirtualMachineBuildNotFoundResponse
+	JSON403 *PermissionDenied403Res
+	JSON404 *VirtualNetworkNotFoundResponse
+	JSON409 *DeletionRestrictedResponse
 	JSON429 *APIAuthenticator429Response
 	JSON503 *APIAuthenticator503Response
 }
 
 // Status returns HTTPResponse.Status
-func (r GetVirtualMachinesBuildsVirtualMachineBuildResponse) Status() string {
+func (r DeleteVirtualNetworkResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -26877,7 +32888,68 @@ func (r GetVirtualMachinesBuildsVirtualMachineBuildResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r GetVirtualMachinesBuildsVirtualMachineBuildResponse) StatusCode() int {
+func (r DeleteVirtualNetworkResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetVirtualNetworkResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// VirtualNetwork The virtual network details
+		VirtualNetwork VirtualNetwork `json:"virtual_network"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *VirtualNetworkNotFoundResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r GetVirtualNetworkResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetVirtualNetworkResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PatchVirtualNetworkResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// VirtualNetwork The updated virtual network details
+		VirtualNetwork VirtualNetwork `json:"virtual_network"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *VirtualNetworkNotFoundResponse
+	JSON422 *ValidationErrorResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchVirtualNetworkResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchVirtualNetworkResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -27245,6 +33317,51 @@ func (c *ClientWithResponses) PostAddressListEntriesWithResponse(ctx context.Con
 	}
 
 	res, err := ParsePostAddressListEntriesResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PostAddressListEntriesBulkWithBodyWithResponse request with arbitrary body returning *PostAddressListEntriesBulkResponse
+func (c *ClientWithResponses) PostAddressListEntriesBulkWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostAddressListEntriesBulkResponse, error) {
+	rsp, err := c.PostAddressListEntriesBulkWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostAddressListEntriesBulkResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PostAddressListEntriesBulkWithResponse(ctx context.Context, body PostAddressListEntriesBulkJSONRequestBody, reqEditors ...RequestEditorFn) (*PostAddressListEntriesBulkResponse, error) {
+	rsp, err := c.PostAddressListEntriesBulk(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostAddressListEntriesBulkResponse(rsp)
 	if err != nil {
 		return nil, err
 	}
@@ -29344,6 +35461,51 @@ func (c *ClientWithResponses) PatchLoadBalancersRulesLoadBalancerRuleWithRespons
 	return res, nil
 }
 
+// DeleteOrganizationWithBodyWithResponse request with arbitrary body returning *DeleteOrganizationResponse
+func (c *ClientWithResponses) DeleteOrganizationWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteOrganizationResponse, error) {
+	rsp, err := c.DeleteOrganizationWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseDeleteOrganizationResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) DeleteOrganizationWithResponse(ctx context.Context, body DeleteOrganizationJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteOrganizationResponse, error) {
+	rsp, err := c.DeleteOrganization(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseDeleteOrganizationResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
 // GetNetworkWithResponse request returning *GetNetworkResponse
 func (c *ClientWithResponses) GetNetworkWithResponse(ctx context.Context, params *GetNetworkParams, reqEditors ...RequestEditorFn) (*GetNetworkResponse, error) {
 	rsp, err := c.GetNetwork(ctx, params, reqEditors...)
@@ -29352,6 +35514,390 @@ func (c *ClientWithResponses) GetNetworkWithResponse(ctx context.Context, params
 	}
 
 	res, err := ParseGetNetworkResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// DeleteObjectStorageAccessKeyWithBodyWithResponse request with arbitrary body returning *DeleteObjectStorageAccessKeyResponse
+func (c *ClientWithResponses) DeleteObjectStorageAccessKeyWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteObjectStorageAccessKeyResponse, error) {
+	rsp, err := c.DeleteObjectStorageAccessKeyWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseDeleteObjectStorageAccessKeyResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) DeleteObjectStorageAccessKeyWithResponse(ctx context.Context, body DeleteObjectStorageAccessKeyJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteObjectStorageAccessKeyResponse, error) {
+	rsp, err := c.DeleteObjectStorageAccessKey(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseDeleteObjectStorageAccessKeyResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// GetObjectStorageAccessKeyWithResponse request returning *GetObjectStorageAccessKeyResponse
+func (c *ClientWithResponses) GetObjectStorageAccessKeyWithResponse(ctx context.Context, params *GetObjectStorageAccessKeyParams, reqEditors ...RequestEditorFn) (*GetObjectStorageAccessKeyResponse, error) {
+	rsp, err := c.GetObjectStorageAccessKey(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseGetObjectStorageAccessKeyResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PatchObjectStorageAccessKeyWithBodyWithResponse request with arbitrary body returning *PatchObjectStorageAccessKeyResponse
+func (c *ClientWithResponses) PatchObjectStorageAccessKeyWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchObjectStorageAccessKeyResponse, error) {
+	rsp, err := c.PatchObjectStorageAccessKeyWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePatchObjectStorageAccessKeyResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PatchObjectStorageAccessKeyWithResponse(ctx context.Context, body PatchObjectStorageAccessKeyJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchObjectStorageAccessKeyResponse, error) {
+	rsp, err := c.PatchObjectStorageAccessKey(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePatchObjectStorageAccessKeyResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PostObjectStorageAccessKeyGenerateCredentialsWithBodyWithResponse request with arbitrary body returning *PostObjectStorageAccessKeyGenerateCredentialsResponse
+func (c *ClientWithResponses) PostObjectStorageAccessKeyGenerateCredentialsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostObjectStorageAccessKeyGenerateCredentialsResponse, error) {
+	rsp, err := c.PostObjectStorageAccessKeyGenerateCredentialsWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostObjectStorageAccessKeyGenerateCredentialsResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PostObjectStorageAccessKeyGenerateCredentialsWithResponse(ctx context.Context, body PostObjectStorageAccessKeyGenerateCredentialsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostObjectStorageAccessKeyGenerateCredentialsResponse, error) {
+	rsp, err := c.PostObjectStorageAccessKeyGenerateCredentials(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostObjectStorageAccessKeyGenerateCredentialsResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// DeleteObjectStorageObjectStorageClusterBucketWithBodyWithResponse request with arbitrary body returning *DeleteObjectStorageObjectStorageClusterBucketResponse
+func (c *ClientWithResponses) DeleteObjectStorageObjectStorageClusterBucketWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteObjectStorageObjectStorageClusterBucketResponse, error) {
+	rsp, err := c.DeleteObjectStorageObjectStorageClusterBucketWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseDeleteObjectStorageObjectStorageClusterBucketResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) DeleteObjectStorageObjectStorageClusterBucketWithResponse(ctx context.Context, body DeleteObjectStorageObjectStorageClusterBucketJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteObjectStorageObjectStorageClusterBucketResponse, error) {
+	rsp, err := c.DeleteObjectStorageObjectStorageClusterBucket(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseDeleteObjectStorageObjectStorageClusterBucketResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// GetObjectStorageObjectStorageClusterBucketWithResponse request returning *GetObjectStorageObjectStorageClusterBucketResponse
+func (c *ClientWithResponses) GetObjectStorageObjectStorageClusterBucketWithResponse(ctx context.Context, params *GetObjectStorageObjectStorageClusterBucketParams, reqEditors ...RequestEditorFn) (*GetObjectStorageObjectStorageClusterBucketResponse, error) {
+	rsp, err := c.GetObjectStorageObjectStorageClusterBucket(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseGetObjectStorageObjectStorageClusterBucketResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PatchObjectStorageObjectStorageClusterBucketWithBodyWithResponse request with arbitrary body returning *PatchObjectStorageObjectStorageClusterBucketResponse
+func (c *ClientWithResponses) PatchObjectStorageObjectStorageClusterBucketWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchObjectStorageObjectStorageClusterBucketResponse, error) {
+	rsp, err := c.PatchObjectStorageObjectStorageClusterBucketWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePatchObjectStorageObjectStorageClusterBucketResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PatchObjectStorageObjectStorageClusterBucketWithResponse(ctx context.Context, body PatchObjectStorageObjectStorageClusterBucketJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchObjectStorageObjectStorageClusterBucketResponse, error) {
+	rsp, err := c.PatchObjectStorageObjectStorageClusterBucket(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePatchObjectStorageObjectStorageClusterBucketResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// GetObjectStorageObjectStorageClusterBucketObjectWithResponse request returning *GetObjectStorageObjectStorageClusterBucketObjectResponse
+func (c *ClientWithResponses) GetObjectStorageObjectStorageClusterBucketObjectWithResponse(ctx context.Context, params *GetObjectStorageObjectStorageClusterBucketObjectParams, reqEditors ...RequestEditorFn) (*GetObjectStorageObjectStorageClusterBucketObjectResponse, error) {
+	rsp, err := c.GetObjectStorageObjectStorageClusterBucketObject(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseGetObjectStorageObjectStorageClusterBucketObjectResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PostObjectStorageObjectStorageClusterBucketPresignedUrlWithBodyWithResponse request with arbitrary body returning *PostObjectStorageObjectStorageClusterBucketPresignedUrlResponse
+func (c *ClientWithResponses) PostObjectStorageObjectStorageClusterBucketPresignedUrlWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostObjectStorageObjectStorageClusterBucketPresignedUrlResponse, error) {
+	rsp, err := c.PostObjectStorageObjectStorageClusterBucketPresignedUrlWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostObjectStorageObjectStorageClusterBucketPresignedUrlResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PostObjectStorageObjectStorageClusterBucketPresignedUrlWithResponse(ctx context.Context, body PostObjectStorageObjectStorageClusterBucketPresignedUrlJSONRequestBody, reqEditors ...RequestEditorFn) (*PostObjectStorageObjectStorageClusterBucketPresignedUrlResponse, error) {
+	rsp, err := c.PostObjectStorageObjectStorageClusterBucketPresignedUrl(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostObjectStorageObjectStorageClusterBucketPresignedUrlResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsWithBodyWithResponse request with arbitrary body returning *PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsResponse
+func (c *ClientWithResponses) PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsResponse, error) {
+	rsp, err := c.PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsWithResponse(ctx context.Context, body PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsResponse, error) {
+	rsp, err := c.PostObjectStorageObjectStorageClusterBucketRevokePresignedUrls(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsResponse(rsp)
 	if err != nil {
 		return nil, err
 	}
@@ -29626,6 +36172,29 @@ func (c *ClientWithResponses) GetOrganizationCertificatesWithResponse(ctx contex
 	}
 
 	res, err := ParseGetOrganizationCertificatesResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// GetOrganizationDeletionStepsWithResponse request returning *GetOrganizationDeletionStepsResponse
+func (c *ClientWithResponses) GetOrganizationDeletionStepsWithResponse(ctx context.Context, params *GetOrganizationDeletionStepsParams, reqEditors ...RequestEditorFn) (*GetOrganizationDeletionStepsResponse, error) {
+	rsp, err := c.GetOrganizationDeletionSteps(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseGetOrganizationDeletionStepsResponse(rsp)
 	if err != nil {
 		return nil, err
 	}
@@ -30164,6 +36733,255 @@ func (c *ClientWithResponses) GetOrganizationNetworkSpeedProfilesWithResponse(ct
 	return res, nil
 }
 
+// GetOrganizationObjectStorageAccessKeysWithResponse request returning *GetOrganizationObjectStorageAccessKeysResponse
+func (c *ClientWithResponses) GetOrganizationObjectStorageAccessKeysWithResponse(ctx context.Context, params *GetOrganizationObjectStorageAccessKeysParams, reqEditors ...RequestEditorFn) (*GetOrganizationObjectStorageAccessKeysResponse, error) {
+	rsp, err := c.GetOrganizationObjectStorageAccessKeys(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseGetOrganizationObjectStorageAccessKeysResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// DeleteOrganizationObjectStorageObjectStorageClusterWithBodyWithResponse request with arbitrary body returning *DeleteOrganizationObjectStorageObjectStorageClusterResponse
+func (c *ClientWithResponses) DeleteOrganizationObjectStorageObjectStorageClusterWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteOrganizationObjectStorageObjectStorageClusterResponse, error) {
+	rsp, err := c.DeleteOrganizationObjectStorageObjectStorageClusterWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseDeleteOrganizationObjectStorageObjectStorageClusterResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) DeleteOrganizationObjectStorageObjectStorageClusterWithResponse(ctx context.Context, body DeleteOrganizationObjectStorageObjectStorageClusterJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteOrganizationObjectStorageObjectStorageClusterResponse, error) {
+	rsp, err := c.DeleteOrganizationObjectStorageObjectStorageCluster(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseDeleteOrganizationObjectStorageObjectStorageClusterResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// GetOrganizationObjectStorageObjectStorageClusterWithResponse request returning *GetOrganizationObjectStorageObjectStorageClusterResponse
+func (c *ClientWithResponses) GetOrganizationObjectStorageObjectStorageClusterWithResponse(ctx context.Context, params *GetOrganizationObjectStorageObjectStorageClusterParams, reqEditors ...RequestEditorFn) (*GetOrganizationObjectStorageObjectStorageClusterResponse, error) {
+	rsp, err := c.GetOrganizationObjectStorageObjectStorageCluster(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseGetOrganizationObjectStorageObjectStorageClusterResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PostOrganizationObjectStorageObjectStorageClusterWithBodyWithResponse request with arbitrary body returning *PostOrganizationObjectStorageObjectStorageClusterResponse
+func (c *ClientWithResponses) PostOrganizationObjectStorageObjectStorageClusterWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostOrganizationObjectStorageObjectStorageClusterResponse, error) {
+	rsp, err := c.PostOrganizationObjectStorageObjectStorageClusterWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostOrganizationObjectStorageObjectStorageClusterResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PostOrganizationObjectStorageObjectStorageClusterWithResponse(ctx context.Context, body PostOrganizationObjectStorageObjectStorageClusterJSONRequestBody, reqEditors ...RequestEditorFn) (*PostOrganizationObjectStorageObjectStorageClusterResponse, error) {
+	rsp, err := c.PostOrganizationObjectStorageObjectStorageCluster(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostOrganizationObjectStorageObjectStorageClusterResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PostOrganizationObjectStorageObjectStorageClusterAccessKeysWithBodyWithResponse request with arbitrary body returning *PostOrganizationObjectStorageObjectStorageClusterAccessKeysResponse
+func (c *ClientWithResponses) PostOrganizationObjectStorageObjectStorageClusterAccessKeysWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostOrganizationObjectStorageObjectStorageClusterAccessKeysResponse, error) {
+	rsp, err := c.PostOrganizationObjectStorageObjectStorageClusterAccessKeysWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostOrganizationObjectStorageObjectStorageClusterAccessKeysResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PostOrganizationObjectStorageObjectStorageClusterAccessKeysWithResponse(ctx context.Context, body PostOrganizationObjectStorageObjectStorageClusterAccessKeysJSONRequestBody, reqEditors ...RequestEditorFn) (*PostOrganizationObjectStorageObjectStorageClusterAccessKeysResponse, error) {
+	rsp, err := c.PostOrganizationObjectStorageObjectStorageClusterAccessKeys(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostOrganizationObjectStorageObjectStorageClusterAccessKeysResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PostOrganizationObjectStorageObjectStorageClusterBucketsWithBodyWithResponse request with arbitrary body returning *PostOrganizationObjectStorageObjectStorageClusterBucketsResponse
+func (c *ClientWithResponses) PostOrganizationObjectStorageObjectStorageClusterBucketsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostOrganizationObjectStorageObjectStorageClusterBucketsResponse, error) {
+	rsp, err := c.PostOrganizationObjectStorageObjectStorageClusterBucketsWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostOrganizationObjectStorageObjectStorageClusterBucketsResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PostOrganizationObjectStorageObjectStorageClusterBucketsWithResponse(ctx context.Context, body PostOrganizationObjectStorageObjectStorageClusterBucketsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostOrganizationObjectStorageObjectStorageClusterBucketsResponse, error) {
+	rsp, err := c.PostOrganizationObjectStorageObjectStorageClusterBuckets(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostOrganizationObjectStorageObjectStorageClusterBucketsResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// GetOrganizationPolicyWithResponse request returning *GetOrganizationPolicyResponse
+func (c *ClientWithResponses) GetOrganizationPolicyWithResponse(ctx context.Context, params *GetOrganizationPolicyParams, reqEditors ...RequestEditorFn) (*GetOrganizationPolicyResponse, error) {
+	rsp, err := c.GetOrganizationPolicy(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseGetOrganizationPolicyResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
 // GetOrganizationPolicyLimitsWithResponse request returning *GetOrganizationPolicyLimitsResponse
 func (c *ClientWithResponses) GetOrganizationPolicyLimitsWithResponse(ctx context.Context, params *GetOrganizationPolicyLimitsParams, reqEditors ...RequestEditorFn) (*GetOrganizationPolicyLimitsResponse, error) {
 	rsp, err := c.GetOrganizationPolicyLimits(ctx, params, reqEditors...)
@@ -30172,6 +36990,29 @@ func (c *ClientWithResponses) GetOrganizationPolicyLimitsWithResponse(ctx contex
 	}
 
 	res, err := ParseGetOrganizationPolicyLimitsResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// GetOrganizationPricesWithResponse request returning *GetOrganizationPricesResponse
+func (c *ClientWithResponses) GetOrganizationPricesWithResponse(ctx context.Context, params *GetOrganizationPricesParams, reqEditors ...RequestEditorFn) (*GetOrganizationPricesResponse, error) {
+	rsp, err := c.GetOrganizationPrices(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseGetOrganizationPricesResponse(rsp)
 	if err != nil {
 		return nil, err
 	}
@@ -30663,6 +37504,187 @@ func (c *ClientWithResponses) PostOrganizationVirtualMachinesBuildFromSpecWithRe
 	return res, nil
 }
 
+// GetOrganizationVirtualNetworksWithResponse request returning *GetOrganizationVirtualNetworksResponse
+func (c *ClientWithResponses) GetOrganizationVirtualNetworksWithResponse(ctx context.Context, params *GetOrganizationVirtualNetworksParams, reqEditors ...RequestEditorFn) (*GetOrganizationVirtualNetworksResponse, error) {
+	rsp, err := c.GetOrganizationVirtualNetworks(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseGetOrganizationVirtualNetworksResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PostOrganizationVirtualNetworksWithBodyWithResponse request with arbitrary body returning *PostOrganizationVirtualNetworksResponse
+func (c *ClientWithResponses) PostOrganizationVirtualNetworksWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostOrganizationVirtualNetworksResponse, error) {
+	rsp, err := c.PostOrganizationVirtualNetworksWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostOrganizationVirtualNetworksResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PostOrganizationVirtualNetworksWithResponse(ctx context.Context, body PostOrganizationVirtualNetworksJSONRequestBody, reqEditors ...RequestEditorFn) (*PostOrganizationVirtualNetworksResponse, error) {
+	rsp, err := c.PostOrganizationVirtualNetworks(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostOrganizationVirtualNetworksResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// DeleteSecurityGroupsRulesSecurityGroupRuleWithBodyWithResponse request with arbitrary body returning *DeleteSecurityGroupsRulesSecurityGroupRuleResponse
+func (c *ClientWithResponses) DeleteSecurityGroupsRulesSecurityGroupRuleWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteSecurityGroupsRulesSecurityGroupRuleResponse, error) {
+	rsp, err := c.DeleteSecurityGroupsRulesSecurityGroupRuleWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseDeleteSecurityGroupsRulesSecurityGroupRuleResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) DeleteSecurityGroupsRulesSecurityGroupRuleWithResponse(ctx context.Context, body DeleteSecurityGroupsRulesSecurityGroupRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteSecurityGroupsRulesSecurityGroupRuleResponse, error) {
+	rsp, err := c.DeleteSecurityGroupsRulesSecurityGroupRule(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseDeleteSecurityGroupsRulesSecurityGroupRuleResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// GetSecurityGroupsRulesSecurityGroupRuleWithResponse request returning *GetSecurityGroupsRulesSecurityGroupRuleResponse
+func (c *ClientWithResponses) GetSecurityGroupsRulesSecurityGroupRuleWithResponse(ctx context.Context, params *GetSecurityGroupsRulesSecurityGroupRuleParams, reqEditors ...RequestEditorFn) (*GetSecurityGroupsRulesSecurityGroupRuleResponse, error) {
+	rsp, err := c.GetSecurityGroupsRulesSecurityGroupRule(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseGetSecurityGroupsRulesSecurityGroupRuleResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PatchSecurityGroupsRulesSecurityGroupRuleWithBodyWithResponse request with arbitrary body returning *PatchSecurityGroupsRulesSecurityGroupRuleResponse
+func (c *ClientWithResponses) PatchSecurityGroupsRulesSecurityGroupRuleWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchSecurityGroupsRulesSecurityGroupRuleResponse, error) {
+	rsp, err := c.PatchSecurityGroupsRulesSecurityGroupRuleWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePatchSecurityGroupsRulesSecurityGroupRuleResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PatchSecurityGroupsRulesSecurityGroupRuleWithResponse(ctx context.Context, body PatchSecurityGroupsRulesSecurityGroupRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchSecurityGroupsRulesSecurityGroupRuleResponse, error) {
+	rsp, err := c.PatchSecurityGroupsRulesSecurityGroupRule(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePatchSecurityGroupsRulesSecurityGroupRuleResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
 // DeleteSecurityGroupWithBodyWithResponse request with arbitrary body returning *DeleteSecurityGroupResponse
 func (c *ClientWithResponses) DeleteSecurityGroupWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteSecurityGroupResponse, error) {
 	rsp, err := c.DeleteSecurityGroupWithBody(ctx, contentType, body, reqEditors...)
@@ -30829,119 +37851,6 @@ func (c *ClientWithResponses) PostSecurityGroupRulesWithResponse(ctx context.Con
 	}
 
 	res, err := ParsePostSecurityGroupRulesResponse(rsp)
-	if err != nil {
-		return nil, err
-	}
-
-	if rsp.StatusCode == http.StatusNotFound {
-		return res, ErrNotFound
-	}
-
-	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
-		return res, ErrRequestFailed
-	}
-
-	return res, nil
-}
-
-// DeleteSecurityGroupsRulesSecurityGroupRuleWithBodyWithResponse request with arbitrary body returning *DeleteSecurityGroupsRulesSecurityGroupRuleResponse
-func (c *ClientWithResponses) DeleteSecurityGroupsRulesSecurityGroupRuleWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteSecurityGroupsRulesSecurityGroupRuleResponse, error) {
-	rsp, err := c.DeleteSecurityGroupsRulesSecurityGroupRuleWithBody(ctx, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-
-	res, err := ParseDeleteSecurityGroupsRulesSecurityGroupRuleResponse(rsp)
-	if err != nil {
-		return nil, err
-	}
-
-	if rsp.StatusCode == http.StatusNotFound {
-		return res, ErrNotFound
-	}
-
-	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
-		return res, ErrRequestFailed
-	}
-
-	return res, nil
-}
-
-func (c *ClientWithResponses) DeleteSecurityGroupsRulesSecurityGroupRuleWithResponse(ctx context.Context, body DeleteSecurityGroupsRulesSecurityGroupRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteSecurityGroupsRulesSecurityGroupRuleResponse, error) {
-	rsp, err := c.DeleteSecurityGroupsRulesSecurityGroupRule(ctx, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-
-	res, err := ParseDeleteSecurityGroupsRulesSecurityGroupRuleResponse(rsp)
-	if err != nil {
-		return nil, err
-	}
-
-	if rsp.StatusCode == http.StatusNotFound {
-		return res, ErrNotFound
-	}
-
-	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
-		return res, ErrRequestFailed
-	}
-
-	return res, nil
-}
-
-// GetSecurityGroupsRulesSecurityGroupRuleWithResponse request returning *GetSecurityGroupsRulesSecurityGroupRuleResponse
-func (c *ClientWithResponses) GetSecurityGroupsRulesSecurityGroupRuleWithResponse(ctx context.Context, params *GetSecurityGroupsRulesSecurityGroupRuleParams, reqEditors ...RequestEditorFn) (*GetSecurityGroupsRulesSecurityGroupRuleResponse, error) {
-	rsp, err := c.GetSecurityGroupsRulesSecurityGroupRule(ctx, params, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-
-	res, err := ParseGetSecurityGroupsRulesSecurityGroupRuleResponse(rsp)
-	if err != nil {
-		return nil, err
-	}
-
-	if rsp.StatusCode == http.StatusNotFound {
-		return res, ErrNotFound
-	}
-
-	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
-		return res, ErrRequestFailed
-	}
-
-	return res, nil
-}
-
-// PatchSecurityGroupsRulesSecurityGroupRuleWithBodyWithResponse request with arbitrary body returning *PatchSecurityGroupsRulesSecurityGroupRuleResponse
-func (c *ClientWithResponses) PatchSecurityGroupsRulesSecurityGroupRuleWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchSecurityGroupsRulesSecurityGroupRuleResponse, error) {
-	rsp, err := c.PatchSecurityGroupsRulesSecurityGroupRuleWithBody(ctx, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-
-	res, err := ParsePatchSecurityGroupsRulesSecurityGroupRuleResponse(rsp)
-	if err != nil {
-		return nil, err
-	}
-
-	if rsp.StatusCode == http.StatusNotFound {
-		return res, ErrNotFound
-	}
-
-	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
-		return res, ErrRequestFailed
-	}
-
-	return res, nil
-}
-
-func (c *ClientWithResponses) PatchSecurityGroupsRulesSecurityGroupRuleWithResponse(ctx context.Context, body PatchSecurityGroupsRulesSecurityGroupRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchSecurityGroupsRulesSecurityGroupRuleResponse, error) {
-	rsp, err := c.PatchSecurityGroupsRulesSecurityGroupRule(ctx, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-
-	res, err := ParsePatchSecurityGroupsRulesSecurityGroupRuleResponse(rsp)
 	if err != nil {
 		return nil, err
 	}
@@ -31410,6 +38319,51 @@ func (c *ClientWithResponses) PatchVirtualMachineGroupWithResponse(ctx context.C
 	return res, nil
 }
 
+// DeleteVirtualMachineNetworkInterfaceWithBodyWithResponse request with arbitrary body returning *DeleteVirtualMachineNetworkInterfaceResponse
+func (c *ClientWithResponses) DeleteVirtualMachineNetworkInterfaceWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteVirtualMachineNetworkInterfaceResponse, error) {
+	rsp, err := c.DeleteVirtualMachineNetworkInterfaceWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseDeleteVirtualMachineNetworkInterfaceResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) DeleteVirtualMachineNetworkInterfaceWithResponse(ctx context.Context, body DeleteVirtualMachineNetworkInterfaceJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteVirtualMachineNetworkInterfaceResponse, error) {
+	rsp, err := c.DeleteVirtualMachineNetworkInterface(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseDeleteVirtualMachineNetworkInterfaceResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
 // GetVMNIVMNIWithResponse request returning *GetVMNIVMNIResponse
 func (c *ClientWithResponses) GetVMNIVMNIWithResponse(ctx context.Context, params *GetVMNIVMNIParams, reqEditors ...RequestEditorFn) (*GetVMNIVMNIResponse, error) {
 	rsp, err := c.GetVMNIVMNI(ctx, params, reqEditors...)
@@ -31523,6 +38477,51 @@ func (c *ClientWithResponses) PostVirtualMachineNetworkInterfaceAllocateNewIpWit
 	return res, nil
 }
 
+// PostVirtualMachineNetworkInterfaceAttachWithBodyWithResponse request with arbitrary body returning *PostVirtualMachineNetworkInterfaceAttachResponse
+func (c *ClientWithResponses) PostVirtualMachineNetworkInterfaceAttachWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostVirtualMachineNetworkInterfaceAttachResponse, error) {
+	rsp, err := c.PostVirtualMachineNetworkInterfaceAttachWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostVirtualMachineNetworkInterfaceAttachResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PostVirtualMachineNetworkInterfaceAttachWithResponse(ctx context.Context, body PostVirtualMachineNetworkInterfaceAttachJSONRequestBody, reqEditors ...RequestEditorFn) (*PostVirtualMachineNetworkInterfaceAttachResponse, error) {
+	rsp, err := c.PostVirtualMachineNetworkInterfaceAttach(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostVirtualMachineNetworkInterfaceAttachResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
 // GetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionWithResponse request returning *GetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionResponse
 func (c *ClientWithResponses) GetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionWithResponse(ctx context.Context, params *GetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionParams, reqEditors ...RequestEditorFn) (*GetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionResponse, error) {
 	rsp, err := c.GetVirtualMachineNetworkInterfaceAvailableIpsAddressVersion(ctx, params, reqEditors...)
@@ -31531,6 +38530,51 @@ func (c *ClientWithResponses) GetVirtualMachineNetworkInterfaceAvailableIpsAddre
 	}
 
 	res, err := ParseGetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PostVirtualMachineNetworkInterfaceDetachWithBodyWithResponse request with arbitrary body returning *PostVirtualMachineNetworkInterfaceDetachResponse
+func (c *ClientWithResponses) PostVirtualMachineNetworkInterfaceDetachWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostVirtualMachineNetworkInterfaceDetachResponse, error) {
+	rsp, err := c.PostVirtualMachineNetworkInterfaceDetachWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostVirtualMachineNetworkInterfaceDetachResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PostVirtualMachineNetworkInterfaceDetachWithResponse(ctx context.Context, body PostVirtualMachineNetworkInterfaceDetachJSONRequestBody, reqEditors ...RequestEditorFn) (*PostVirtualMachineNetworkInterfaceDetachResponse, error) {
+	rsp, err := c.PostVirtualMachineNetworkInterfaceDetach(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostVirtualMachineNetworkInterfaceDetachResponse(rsp)
 	if err != nil {
 		return nil, err
 	}
@@ -31622,6 +38666,29 @@ func (c *ClientWithResponses) GetVirtualMachinePackageWithResponse(ctx context.C
 	}
 
 	res, err := ParseGetVirtualMachinePackageResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// GetVirtualMachinesBuildsVirtualMachineBuildWithResponse request returning *GetVirtualMachinesBuildsVirtualMachineBuildResponse
+func (c *ClientWithResponses) GetVirtualMachinesBuildsVirtualMachineBuildWithResponse(ctx context.Context, params *GetVirtualMachinesBuildsVirtualMachineBuildParams, reqEditors ...RequestEditorFn) (*GetVirtualMachinesBuildsVirtualMachineBuildResponse, error) {
+	rsp, err := c.GetVirtualMachinesBuildsVirtualMachineBuild(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseGetVirtualMachinesBuildsVirtualMachineBuildResponse(rsp)
 	if err != nil {
 		return nil, err
 	}
@@ -31999,6 +39066,51 @@ func (c *ClientWithResponses) GetVirtualMachineNetworkInterfacesWithResponse(ctx
 	return res, nil
 }
 
+// PostVirtualMachineNetworkInterfacesWithBodyWithResponse request with arbitrary body returning *PostVirtualMachineNetworkInterfacesResponse
+func (c *ClientWithResponses) PostVirtualMachineNetworkInterfacesWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostVirtualMachineNetworkInterfacesResponse, error) {
+	rsp, err := c.PostVirtualMachineNetworkInterfacesWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostVirtualMachineNetworkInterfacesResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PostVirtualMachineNetworkInterfacesWithResponse(ctx context.Context, body PostVirtualMachineNetworkInterfacesJSONRequestBody, reqEditors ...RequestEditorFn) (*PostVirtualMachineNetworkInterfacesResponse, error) {
+	rsp, err := c.PostVirtualMachineNetworkInterfaces(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostVirtualMachineNetworkInterfacesResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
 // GetVirtualMachineNetworkInterfaceWithResponse request returning *GetVirtualMachineNetworkInterfaceResponse
 func (c *ClientWithResponses) GetVirtualMachineNetworkInterfaceWithResponse(ctx context.Context, params *GetVirtualMachineNetworkInterfaceParams, reqEditors ...RequestEditorFn) (*GetVirtualMachineNetworkInterfaceResponse, error) {
 	rsp, err := c.GetVirtualMachineNetworkInterface(ctx, params, reqEditors...)
@@ -32247,14 +39359,104 @@ func (c *ClientWithResponses) PostVirtualMachineStopWithResponse(ctx context.Con
 	return res, nil
 }
 
-// GetVirtualMachinesBuildsVirtualMachineBuildWithResponse request returning *GetVirtualMachinesBuildsVirtualMachineBuildResponse
-func (c *ClientWithResponses) GetVirtualMachinesBuildsVirtualMachineBuildWithResponse(ctx context.Context, params *GetVirtualMachinesBuildsVirtualMachineBuildParams, reqEditors ...RequestEditorFn) (*GetVirtualMachinesBuildsVirtualMachineBuildResponse, error) {
-	rsp, err := c.GetVirtualMachinesBuildsVirtualMachineBuild(ctx, params, reqEditors...)
+// DeleteVirtualNetworkWithBodyWithResponse request with arbitrary body returning *DeleteVirtualNetworkResponse
+func (c *ClientWithResponses) DeleteVirtualNetworkWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteVirtualNetworkResponse, error) {
+	rsp, err := c.DeleteVirtualNetworkWithBody(ctx, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
 
-	res, err := ParseGetVirtualMachinesBuildsVirtualMachineBuildResponse(rsp)
+	res, err := ParseDeleteVirtualNetworkResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) DeleteVirtualNetworkWithResponse(ctx context.Context, body DeleteVirtualNetworkJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteVirtualNetworkResponse, error) {
+	rsp, err := c.DeleteVirtualNetwork(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseDeleteVirtualNetworkResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// GetVirtualNetworkWithResponse request returning *GetVirtualNetworkResponse
+func (c *ClientWithResponses) GetVirtualNetworkWithResponse(ctx context.Context, params *GetVirtualNetworkParams, reqEditors ...RequestEditorFn) (*GetVirtualNetworkResponse, error) {
+	rsp, err := c.GetVirtualNetwork(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseGetVirtualNetworkResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PatchVirtualNetworkWithBodyWithResponse request with arbitrary body returning *PatchVirtualNetworkResponse
+func (c *ClientWithResponses) PatchVirtualNetworkWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchVirtualNetworkResponse, error) {
+	rsp, err := c.PatchVirtualNetworkWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePatchVirtualNetworkResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PatchVirtualNetworkWithResponse(ctx context.Context, body PatchVirtualNetworkJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchVirtualNetworkResponse, error) {
+	rsp, err := c.PatchVirtualNetwork(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePatchVirtualNetworkResponse(rsp)
 	if err != nil {
 		return nil, err
 	}
@@ -32862,6 +40064,74 @@ func ParsePostAddressListEntriesResponse(rsp *http.Response) (*PostAddressListEn
 			return nil, err
 		}
 		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest AddressListNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostAddressListEntriesBulkResponse parses an HTTP response from a PostAddressListEntriesBulkWithResponse call
+func ParsePostAddressListEntriesBulkResponse(rsp *http.Response) (*PostAddressListEntriesBulkResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostAddressListEntriesBulkResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest APIAuthenticator400Response
@@ -37057,6 +44327,83 @@ func ParsePatchLoadBalancersRulesLoadBalancerRuleResponse(rsp *http.Response) (*
 	return response, nil
 }
 
+// ParseDeleteOrganizationResponse parses an HTTP response from a DeleteOrganizationWithResponse call
+func ParseDeleteOrganizationResponse(rsp *http.Response) (*DeleteOrganizationResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteOrganizationResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Success bool `json:"success"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest OrganizationNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest DeletionStepsNotSatisfiedManagedOrganizationRequired409Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest DeletionFailedResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetNetworkResponse parses an HTTP response from a GetNetworkWithResponse call
 func ParseGetNetworkResponse(rsp *http.Response) (*GetNetworkResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -37115,6 +44462,799 @@ func ParseGetNetworkResponse(rsp *http.Response) (*GetNetworkResponse, error) {
 			return nil, err
 		}
 		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteObjectStorageAccessKeyResponse parses an HTTP response from a DeleteObjectStorageAccessKeyWithResponse call
+func ParseDeleteObjectStorageAccessKeyResponse(rsp *http.Response) (*DeleteObjectStorageAccessKeyResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteObjectStorageAccessKeyResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Success bool `json:"success"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ObjectStorageAccessKeyNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 504:
+		var dest NetworkErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON504 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetObjectStorageAccessKeyResponse parses an HTTP response from a GetObjectStorageAccessKeyWithResponse call
+func ParseGetObjectStorageAccessKeyResponse(rsp *http.Response) (*GetObjectStorageAccessKeyResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetObjectStorageAccessKeyResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			ObjectStorageAccessKey ObjectStorageAccessKey `json:"object_storage_access_key"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ObjectStorageAccessKeyNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePatchObjectStorageAccessKeyResponse parses an HTTP response from a PatchObjectStorageAccessKeyWithResponse call
+func ParsePatchObjectStorageAccessKeyResponse(rsp *http.Response) (*PatchObjectStorageAccessKeyResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchObjectStorageAccessKeyResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// ObjectStorageAccessKey The new properties for the object storage access key
+			ObjectStorageAccessKey ObjectStorageAccessKey `json:"object_storage_access_key"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ObjectStorageAccessKeyNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest TaskQueueingErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ObjectStorageProvisioningErrorValidationError422Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostObjectStorageAccessKeyGenerateCredentialsResponse parses an HTTP response from a PostObjectStorageAccessKeyGenerateCredentialsWithResponse call
+func ParsePostObjectStorageAccessKeyGenerateCredentialsResponse(rsp *http.Response) (*PostObjectStorageAccessKeyGenerateCredentialsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostObjectStorageAccessKeyGenerateCredentialsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// ObjectStorageAccessKey The object storage access key with newly generated credentials
+			ObjectStorageAccessKey ObjectStorageAccessKey `json:"object_storage_access_key"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ObjectStorageAccessKeyNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest TaskQueueingErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ObjectStorageProvisioningErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteObjectStorageObjectStorageClusterBucketResponse parses an HTTP response from a DeleteObjectStorageObjectStorageClusterBucketWithResponse call
+func ParseDeleteObjectStorageObjectStorageClusterBucketResponse(rsp *http.Response) (*DeleteObjectStorageObjectStorageClusterBucketResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteObjectStorageObjectStorageClusterBucketResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Success bool `json:"success"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ObjectStorageBucketDeletionErrorPermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest ObjectInTrashResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest MultipleObjectStorageBucketsFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 504:
+		var dest NetworkErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON504 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetObjectStorageObjectStorageClusterBucketResponse parses an HTTP response from a GetObjectStorageObjectStorageClusterBucketWithResponse call
+func ParseGetObjectStorageObjectStorageClusterBucketResponse(rsp *http.Response) (*GetObjectStorageObjectStorageClusterBucketResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetObjectStorageObjectStorageClusterBucketResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			ObjectStorageBucket ObjectStorageBucket `json:"object_storage_bucket"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest ObjectInTrashResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest MultipleObjectStorageBucketsFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePatchObjectStorageObjectStorageClusterBucketResponse parses an HTTP response from a PatchObjectStorageObjectStorageClusterBucketWithResponse call
+func ParsePatchObjectStorageObjectStorageClusterBucketResponse(rsp *http.Response) (*PatchObjectStorageObjectStorageClusterBucketResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchObjectStorageObjectStorageClusterBucketResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			ObjectStorageBucket ObjectStorageBucket `json:"object_storage_bucket"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest ObjectInTrashResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest MultipleObjectStorageBucketsFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetObjectStorageObjectStorageClusterBucketObjectResponse parses an HTTP response from a GetObjectStorageObjectStorageClusterBucketObjectWithResponse call
+func ParseGetObjectStorageObjectStorageClusterBucketObjectResponse(rsp *http.Response) (*GetObjectStorageObjectStorageClusterBucketObjectResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetObjectStorageObjectStorageClusterBucketObjectResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			ObjectDetails ObjectStorageObject `json:"object_details"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ObjectNotFoundObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest ObjectInTrashResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest MultipleObjectStorageBucketsFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 504:
+		var dest NetworkErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON504 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostObjectStorageObjectStorageClusterBucketPresignedUrlResponse parses an HTTP response from a PostObjectStorageObjectStorageClusterBucketPresignedUrlWithResponse call
+func ParsePostObjectStorageObjectStorageClusterBucketPresignedUrlResponse(rsp *http.Response) (*PostObjectStorageObjectStorageClusterBucketPresignedUrlResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostObjectStorageObjectStorageClusterBucketPresignedUrlResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Url string `json:"url"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest ObjectInTrashResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest MultipleObjectStorageBucketsFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 504:
+		var dest NetworkErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON504 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsResponse parses an HTTP response from a PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsWithResponse call
+func ParsePostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsResponse(rsp *http.Response) (*PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostObjectStorageObjectStorageClusterBucketRevokePresignedUrlsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Success bool `json:"success"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ObjectStorageBucketNotFoundObjectStorageClusterNotFound404Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest ObjectInTrashResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest MultipleObjectStorageBucketsFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 504:
+		var dest NetworkErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON504 = &dest
 
 	}
 
@@ -37734,6 +45874,69 @@ func ParseGetOrganizationCertificatesResponse(rsp *http.Response) (*GetOrganizat
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
 		var dest OrganizationNotActivatedOrganizationSuspended403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest OrganizationNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetOrganizationDeletionStepsResponse parses an HTTP response from a GetOrganizationDeletionStepsWithResponse call
+func ParseGetOrganizationDeletionStepsResponse(rsp *http.Response) (*GetOrganizationDeletionStepsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetOrganizationDeletionStepsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Steps OrganizationDeletionSteps `json:"steps"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -38918,6 +47121,518 @@ func ParseGetOrganizationNetworkSpeedProfilesResponse(rsp *http.Response) (*GetO
 	return response, nil
 }
 
+// ParseGetOrganizationObjectStorageAccessKeysResponse parses an HTTP response from a GetOrganizationObjectStorageAccessKeysWithResponse call
+func ParseGetOrganizationObjectStorageAccessKeysResponse(rsp *http.Response) (*GetOrganizationObjectStorageAccessKeysResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetOrganizationObjectStorageAccessKeysResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// ObjectStorageAccessKeys The object storage access keys for the organization
+			ObjectStorageAccessKeys []ObjectStorageAccessKey `json:"object_storage_access_keys"`
+			Pagination              PaginationObject         `json:"pagination"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest OrganizationNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteOrganizationObjectStorageObjectStorageClusterResponse parses an HTTP response from a DeleteOrganizationObjectStorageObjectStorageClusterWithResponse call
+func ParseDeleteOrganizationObjectStorageObjectStorageClusterResponse(rsp *http.Response) (*DeleteOrganizationObjectStorageObjectStorageClusterResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteOrganizationObjectStorageObjectStorageClusterResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			ObjectStorageAccount ObjectStorageAccount                                                      `json:"object_storage_account"`
+			TrashObject          DeleteOrganizationObjectStorageObjectStorageCluster200ResponseTrashObject `json:"trash_object"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest ObjectInTrashResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetOrganizationObjectStorageObjectStorageClusterResponse parses an HTTP response from a GetOrganizationObjectStorageObjectStorageClusterWithResponse call
+func ParseGetOrganizationObjectStorageObjectStorageClusterResponse(rsp *http.Response) (*GetOrganizationObjectStorageObjectStorageClusterResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetOrganizationObjectStorageObjectStorageClusterResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			ObjectStorageAccount ObjectStorageAccount `json:"object_storage_account"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest ObjectInTrashResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostOrganizationObjectStorageObjectStorageClusterResponse parses an HTTP response from a PostOrganizationObjectStorageObjectStorageClusterWithResponse call
+func ParsePostOrganizationObjectStorageObjectStorageClusterResponse(rsp *http.Response) (*PostOrganizationObjectStorageObjectStorageClusterResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostOrganizationObjectStorageObjectStorageClusterResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest struct {
+			// ObjectStorageAccount The object storage account that was created
+			ObjectStorageAccount ObjectStorageAccount `json:"object_storage_account"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ObjectStorageClusterNotFoundOrganizationNotFound404Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest ObjectInTrashTaskQueueingError406Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostOrganizationObjectStorageObjectStorageClusterAccessKeysResponse parses an HTTP response from a PostOrganizationObjectStorageObjectStorageClusterAccessKeysWithResponse call
+func ParsePostOrganizationObjectStorageObjectStorageClusterAccessKeysResponse(rsp *http.Response) (*PostOrganizationObjectStorageObjectStorageClusterAccessKeysResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostOrganizationObjectStorageObjectStorageClusterAccessKeysResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest struct {
+			ObjectStorageAccessKey ObjectStorageAccessKey `json:"object_storage_access_key"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest ObjectInTrashResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostOrganizationObjectStorageObjectStorageClusterBucketsResponse parses an HTTP response from a PostOrganizationObjectStorageObjectStorageClusterBucketsWithResponse call
+func ParsePostOrganizationObjectStorageObjectStorageClusterBucketsResponse(rsp *http.Response) (*PostOrganizationObjectStorageObjectStorageClusterBucketsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostOrganizationObjectStorageObjectStorageClusterBucketsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest struct {
+			ObjectStorageBucket ObjectStorageBucket `json:"object_storage_bucket"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ObjectStorageAccountNotProvisionedOrganizationSuspendedPermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ObjectStorageAccountNotFoundObjectStorageClusterNotFoundOrganizationNotFound404Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest ObjectInTrashResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetOrganizationPolicyResponse parses an HTTP response from a GetOrganizationPolicyWithResponse call
+func ParseGetOrganizationPolicyResponse(rsp *http.Response) (*GetOrganizationPolicyResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetOrganizationPolicyResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Features                              PolicyFeatures            `json:"features"`
+			Limits                                PolicyLimits              `json:"limits"`
+			PolicyName                            nullable.Nullable[string] `json:"policy_name"`
+			PolicyType                            PolicyType                `json:"policy_type"`
+			ReasonsForDisallowingResourceCreation []string                  `json:"reasons_for_disallowing_resource_creation"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest PolicyNotAvailableForManagedOrganizations400Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest OrganizationNotActivatedOrganizationSuspended403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest OrganizationNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetOrganizationPolicyLimitsResponse parses an HTTP response from a GetOrganizationPolicyLimitsWithResponse call
 func ParseGetOrganizationPolicyLimitsResponse(rsp *http.Response) (*GetOrganizationPolicyLimitsResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -38943,6 +47658,72 @@ func ParseGetOrganizationPolicyLimitsResponse(rsp *http.Response) (*GetOrganizat
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest OrganizationNotActivatedOrganizationSuspended403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest OrganizationNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetOrganizationPricesResponse parses an HTTP response from a GetOrganizationPricesWithResponse call
+func ParseGetOrganizationPricesResponse(rsp *http.Response) (*GetOrganizationPricesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetOrganizationPricesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Currency Currency `json:"currency"`
+
+			// Prices The prices in the default price plan
+			Prices []PriceResourceWithSinglePriceVariant `json:"prices"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest PricesNotAvailableForManagedOrganizations400Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -39841,7 +48622,7 @@ func ParsePostOrganizationVirtualMachinesBuildResponse(rsp *http.Response) (*Pos
 		response.JSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest LocationRequiredValidationError422Res
+		var dest LocationRequiredOneSystemDiskRequiredValidationError422Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -39911,6 +48692,349 @@ func ParsePostOrganizationVirtualMachinesBuildFromSpecResponse(rsp *http.Respons
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest OrganizationNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetOrganizationVirtualNetworksResponse parses an HTTP response from a GetOrganizationVirtualNetworksWithResponse call
+func ParseGetOrganizationVirtualNetworksResponse(rsp *http.Response) (*GetOrganizationVirtualNetworksResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetOrganizationVirtualNetworksResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Pagination PaginationObject `json:"pagination"`
+
+			// VirtualNetworks The virtual networks for the provided organization
+			VirtualNetworks []VirtualNetwork `json:"virtual_networks"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest OrganizationNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostOrganizationVirtualNetworksResponse parses an HTTP response from a PostOrganizationVirtualNetworksWithResponse call
+func ParsePostOrganizationVirtualNetworksResponse(rsp *http.Response) (*PostOrganizationVirtualNetworksResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostOrganizationVirtualNetworksResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// VirtualNetwork The new virtual network details
+			VirtualNetwork VirtualNetwork `json:"virtual_network"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest DataCenterNotFoundOrganizationNotFound404Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteSecurityGroupsRulesSecurityGroupRuleResponse parses an HTTP response from a DeleteSecurityGroupsRulesSecurityGroupRuleWithResponse call
+func ParseDeleteSecurityGroupsRulesSecurityGroupRuleResponse(rsp *http.Response) (*DeleteSecurityGroupsRulesSecurityGroupRuleResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteSecurityGroupsRulesSecurityGroupRuleResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// SecurityGroupRule The security group rule that has been destroyed
+			SecurityGroupRule DeleteSecurityGroupsRulesSecurityGroupRule200ResponseSecurityGroupRule `json:"security_group_rule"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest SecurityGroupRuleNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetSecurityGroupsRulesSecurityGroupRuleResponse parses an HTTP response from a GetSecurityGroupsRulesSecurityGroupRuleWithResponse call
+func ParseGetSecurityGroupsRulesSecurityGroupRuleResponse(rsp *http.Response) (*GetSecurityGroupsRulesSecurityGroupRuleResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetSecurityGroupsRulesSecurityGroupRuleResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// SecurityGroupRule The resolved security group rule
+			SecurityGroupRule GetSecurityGroupsRulesSecurityGroupRule200ResponseSecurityGroupRule `json:"security_group_rule"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest SecurityGroupRuleNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePatchSecurityGroupsRulesSecurityGroupRuleResponse parses an HTTP response from a PatchSecurityGroupsRulesSecurityGroupRuleWithResponse call
+func ParsePatchSecurityGroupsRulesSecurityGroupRuleResponse(rsp *http.Response) (*PatchSecurityGroupsRulesSecurityGroupRuleResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchSecurityGroupsRulesSecurityGroupRuleResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// SecurityGroupRule The security group that has been updated
+			SecurityGroupRule PatchSecurityGroupsRulesSecurityGroupRule200ResponseSecurityGroupRule `json:"security_group_rule"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest SecurityGroupRuleNotFoundResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -40265,212 +49389,6 @@ func ParsePostSecurityGroupRulesResponse(rsp *http.Response) (*PostSecurityGroup
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest SecurityGroupNotFoundResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest ValidationErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON422 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
-		var dest APIAuthenticator429Response
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON429 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
-		var dest APIAuthenticator503Response
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON503 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseDeleteSecurityGroupsRulesSecurityGroupRuleResponse parses an HTTP response from a DeleteSecurityGroupsRulesSecurityGroupRuleWithResponse call
-func ParseDeleteSecurityGroupsRulesSecurityGroupRuleResponse(rsp *http.Response) (*DeleteSecurityGroupsRulesSecurityGroupRuleResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &DeleteSecurityGroupsRulesSecurityGroupRuleResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest struct {
-			// SecurityGroupRule The security group rule that has been destroyed
-			SecurityGroupRule DeleteSecurityGroupsRulesSecurityGroupRule200ResponseSecurityGroupRule `json:"security_group_rule"`
-		}
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest APIAuthenticator400Response
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON400 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest PermissionDenied403Res
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON403 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest SecurityGroupRuleNotFoundResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
-		var dest ValidationErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON422 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
-		var dest APIAuthenticator429Response
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON429 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
-		var dest APIAuthenticator503Response
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON503 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParseGetSecurityGroupsRulesSecurityGroupRuleResponse parses an HTTP response from a GetSecurityGroupsRulesSecurityGroupRuleWithResponse call
-func ParseGetSecurityGroupsRulesSecurityGroupRuleResponse(rsp *http.Response) (*GetSecurityGroupsRulesSecurityGroupRuleResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetSecurityGroupsRulesSecurityGroupRuleResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest struct {
-			// SecurityGroupRule The resolved security group rule
-			SecurityGroupRule GetSecurityGroupsRulesSecurityGroupRule200ResponseSecurityGroupRule `json:"security_group_rule"`
-		}
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest APIAuthenticator400Response
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON400 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest PermissionDenied403Res
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON403 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest SecurityGroupRuleNotFoundResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
-		var dest APIAuthenticator429Response
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON429 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
-		var dest APIAuthenticator503Response
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON503 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParsePatchSecurityGroupsRulesSecurityGroupRuleResponse parses an HTTP response from a PatchSecurityGroupsRulesSecurityGroupRuleWithResponse call
-func ParsePatchSecurityGroupsRulesSecurityGroupRuleResponse(rsp *http.Response) (*PatchSecurityGroupsRulesSecurityGroupRuleResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &PatchSecurityGroupsRulesSecurityGroupRuleResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest struct {
-			// SecurityGroupRule The security group that has been updated
-			SecurityGroupRule PatchSecurityGroupsRulesSecurityGroupRule200ResponseSecurityGroupRule `json:"security_group_rule"`
-		}
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest APIAuthenticator400Response
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON400 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest PermissionDenied403Res
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON403 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest SecurityGroupRuleNotFoundResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -41357,6 +50275,84 @@ func ParsePatchVirtualMachineGroupResponse(rsp *http.Response) (*PatchVirtualMac
 	return response, nil
 }
 
+// ParseDeleteVirtualMachineNetworkInterfaceResponse parses an HTTP response from a DeleteVirtualMachineNetworkInterfaceWithResponse call
+func ParseDeleteVirtualMachineNetworkInterfaceResponse(rsp *http.Response) (*DeleteVirtualMachineNetworkInterfaceResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteVirtualMachineNetworkInterfaceResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// VirtualMachineNetworkInterface The deleted network interface details
+			VirtualMachineNetworkInterface DeleteVirtualMachineNetworkInterface200ResponseVirtualMachineNetworkInterface `json:"virtual_machine_network_interface"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest APIAuthenticator403Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest VirtualMachineNetworkInterfaceNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest DeletionRestrictedResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetVMNIVMNIResponse parses an HTTP response from a GetVMNIVMNIWithResponse call
 func ParseGetVMNIVMNIResponse(rsp *http.Response) (*GetVMNIVMNIResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -41556,6 +50552,86 @@ func ParsePostVirtualMachineNetworkInterfaceAllocateNewIpResponse(rsp *http.Resp
 	return response, nil
 }
 
+// ParsePostVirtualMachineNetworkInterfaceAttachResponse parses an HTTP response from a PostVirtualMachineNetworkInterfaceAttachWithResponse call
+func ParsePostVirtualMachineNetworkInterfaceAttachResponse(rsp *http.Response) (*PostVirtualMachineNetworkInterfaceAttachResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostVirtualMachineNetworkInterfaceAttachResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Task Task `json:"task"`
+
+			// VirtualMachineNetworkInterface The network interface details
+			VirtualMachineNetworkInterface PostVirtualMachineNetworkInterfaceAttach200ResponseVirtualMachineNetworkInterface `json:"virtual_machine_network_interface"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest VirtualMachineNetworkInterfaceNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest TaskQueueingErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest VirtualMachineNetworkInterfaceAlreadyAttachedResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionResponse parses an HTTP response from a GetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionWithResponse call
 func ParseGetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionResponse(rsp *http.Response) (*GetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -41600,6 +50676,86 @@ func ParseGetVirtualMachineNetworkInterfaceAvailableIpsAddressVersionResponse(rs
 			return nil, err
 		}
 		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostVirtualMachineNetworkInterfaceDetachResponse parses an HTTP response from a PostVirtualMachineNetworkInterfaceDetachWithResponse call
+func ParsePostVirtualMachineNetworkInterfaceDetachResponse(rsp *http.Response) (*PostVirtualMachineNetworkInterfaceDetachResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostVirtualMachineNetworkInterfaceDetachResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Task Task `json:"task"`
+
+			// VirtualMachineNetworkInterface The network interface details
+			VirtualMachineNetworkInterface PostVirtualMachineNetworkInterfaceDetach200ResponseVirtualMachineNetworkInterface `json:"virtual_machine_network_interface"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest VirtualMachineNetworkInterfaceNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest TaskQueueingErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest VirtualMachineNetworkInterfaceAlreadyDetachedResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest APIAuthenticator429Response
@@ -41714,8 +50870,8 @@ func ParseGetVirtualMachinePackagesResponse(rsp *http.Response) (*GetVirtualMach
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
-			Pagination             PaginationObject                                             `json:"pagination"`
-			VirtualMachinePackages []GetVirtualMachinePackages200ResponseVirtualMachinePackages `json:"virtual_machine_packages"`
+			Pagination             PaginationObject        `json:"pagination"`
+			VirtualMachinePackages []VirtualMachinePackage `json:"virtual_machine_packages"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -41801,6 +50957,70 @@ func ParseGetVirtualMachinePackageResponse(rsp *http.Response) (*GetVirtualMachi
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest VirtualMachinePackageNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetVirtualMachinesBuildsVirtualMachineBuildResponse parses an HTTP response from a GetVirtualMachinesBuildsVirtualMachineBuildWithResponse call
+func ParseGetVirtualMachinesBuildsVirtualMachineBuildResponse(rsp *http.Response) (*GetVirtualMachinesBuildsVirtualMachineBuildResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetVirtualMachinesBuildsVirtualMachineBuildResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Annotations         []KeyValue                                                                `json:"annotations"`
+			VirtualMachineBuild GetVirtualMachinesBuildsVirtualMachineBuild200ResponseVirtualMachineBuild `json:"virtual_machine_build"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest APIAuthenticator403Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest VirtualMachineBuildNotFoundResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -42560,6 +51780,84 @@ func ParseGetVirtualMachineNetworkInterfacesResponse(rsp *http.Response) (*GetVi
 	return response, nil
 }
 
+// ParsePostVirtualMachineNetworkInterfacesResponse parses an HTTP response from a PostVirtualMachineNetworkInterfacesWithResponse call
+func ParsePostVirtualMachineNetworkInterfacesResponse(rsp *http.Response) (*PostVirtualMachineNetworkInterfacesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostVirtualMachineNetworkInterfacesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// VirtualMachineNetworkInterface The network interface details
+			VirtualMachineNetworkInterface PostVirtualMachineNetworkInterfaces200ResponseVirtualMachineNetworkInterface `json:"virtual_machine_network_interface"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest APIAuthenticator403Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest ObjectInTrashResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetVirtualMachineNetworkInterfaceResponse parses an HTTP response from a GetVirtualMachineNetworkInterfaceWithResponse call
 func ParseGetVirtualMachineNetworkInterfaceResponse(rsp *http.Response) (*GetVirtualMachineNetworkInterfaceResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -42981,15 +52279,15 @@ func ParsePostVirtualMachineStopResponse(rsp *http.Response) (*PostVirtualMachin
 	return response, nil
 }
 
-// ParseGetVirtualMachinesBuildsVirtualMachineBuildResponse parses an HTTP response from a GetVirtualMachinesBuildsVirtualMachineBuildWithResponse call
-func ParseGetVirtualMachinesBuildsVirtualMachineBuildResponse(rsp *http.Response) (*GetVirtualMachinesBuildsVirtualMachineBuildResponse, error) {
+// ParseDeleteVirtualNetworkResponse parses an HTTP response from a DeleteVirtualNetworkWithResponse call
+func ParseDeleteVirtualNetworkResponse(rsp *http.Response) (*DeleteVirtualNetworkResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &GetVirtualMachinesBuildsVirtualMachineBuildResponse{
+	response := &DeleteVirtualNetworkResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -42997,8 +52295,8 @@ func ParseGetVirtualMachinesBuildsVirtualMachineBuildResponse(rsp *http.Response
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
-			Annotations         []KeyValue                                                                `json:"annotations"`
-			VirtualMachineBuild GetVirtualMachinesBuildsVirtualMachineBuild200ResponseVirtualMachineBuild `json:"virtual_machine_build"`
+			// VirtualNetwork The details for the deleted virtual network
+			VirtualNetwork VirtualNetwork `json:"virtual_network"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -43013,18 +52311,160 @@ func ParseGetVirtualMachinesBuildsVirtualMachineBuildResponse(rsp *http.Response
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest APIAuthenticator403Response
+		var dest PermissionDenied403Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest VirtualMachineBuildNotFoundResponse
+		var dest VirtualNetworkNotFoundResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
 		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest DeletionRestrictedResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetVirtualNetworkResponse parses an HTTP response from a GetVirtualNetworkWithResponse call
+func ParseGetVirtualNetworkResponse(rsp *http.Response) (*GetVirtualNetworkResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetVirtualNetworkResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// VirtualNetwork The virtual network details
+			VirtualNetwork VirtualNetwork `json:"virtual_network"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest VirtualNetworkNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePatchVirtualNetworkResponse parses an HTTP response from a PatchVirtualNetworkWithResponse call
+func ParsePatchVirtualNetworkResponse(rsp *http.Response) (*PatchVirtualNetworkResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchVirtualNetworkResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// VirtualNetwork The updated virtual network details
+			VirtualNetwork VirtualNetwork `json:"virtual_network"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest VirtualNetworkNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest APIAuthenticator429Response
