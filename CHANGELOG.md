@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.12](https://github.com/krystal/go-katapult/compare/v0.2.11...v0.2.12) (2024-10-22)
+
+
+### Features
+
+* **next:** update to api for katapult v2.61.1 ([#175](https://github.com/krystal/go-katapult/issues/175)) ([0fd6566](https://github.com/krystal/go-katapult/commit/0fd6566d049cae73b535b6791b42d8fadc0dc023))
+
 ## [0.2.11](https://github.com/krystal/go-katapult/compare/v0.2.10...v0.2.11) (2024-08-22)
 
 
