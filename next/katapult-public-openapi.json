@@ -7,7 +7,7 @@
       "url": "https://katapult.io/contact"
     },
     "termsOfService": "https://katapult.io/terms",
-    "x-katapult-version": "2.61.0",
+    "x-katapult-version": "2.61.1",
     "version": "1.0.0",
     "title": "Katapult Public API",
     "description": "Welcome to the documentation for the Katapult Public API"

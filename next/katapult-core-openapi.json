@@ -7,7 +7,7 @@
       "url": "https://katapult.io/contact"
     },
     "termsOfService": "https://katapult.io/terms",
-    "x-katapult-version": "2.61.0",
+    "x-katapult-version": "2.61.1",
     "version": "1.0.0",
     "title": "Katapult Core API",
     "description": "Welcome to the documentation for the Katapult Core API"
@@ -14277,13 +14277,15 @@
                   "network": {
                     "$ref": "#/components/schemas/NetworkLookup"
                   },
+                  "virtual_network": {
+                    "$ref": "#/components/schemas/VirtualNetworkLookup"
+                  },
                   "speed_profile": {
                     "$ref": "#/components/schemas/NetworkSpeedProfileLookup"
                   }
                 },
                 "required": [
                   "virtual_machine",
-                  "network",
                   "speed_profile"
                 ]
               }
@@ -14320,7 +14322,7 @@
             "$ref": "#/components/responses/APIAuthenticator403Response"
           },
           "404": {
-            "$ref": "#/components/responses/NetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res"
+            "$ref": "#/components/responses/NetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res"
           },
           "406": {
             "$ref": "#/components/responses/ObjectInTrashResponse"
@@ -24274,7 +24276,20 @@
             "type": "string"
           },
           "network": {
-            "$ref": "#/components/schemas/GetVirtualMachineNetworkInterfacesPartNetwork"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetVirtualMachineNetworkInterfacesPartNetwork"
+              }
+            ],
+            "nullable": true
+          },
+          "virtual_network": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetVirtualMachineNetworkInterfacesPartVirtualNetwork"
+              }
+            ],
+            "nullable": true
           },
           "ip_addresses": {
             "type": "array",
@@ -24285,6 +24300,17 @@
         }
       },
       "GetVirtualMachineNetworkInterfacesPartNetwork": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "GetVirtualMachineNetworkInterfacesPartVirtualNetwork": {
         "type": "object",
         "properties": {
           "id": {
@@ -24331,7 +24357,20 @@
             "type": "string"
           },
           "network": {
-            "$ref": "#/components/schemas/PostVirtualMachineNetworkInterfacesPartNetwork"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PostVirtualMachineNetworkInterfacesPartNetwork"
+              }
+            ],
+            "nullable": true
+          },
+          "virtual_network": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PostVirtualMachineNetworkInterfacesPartVirtualNetwork"
+              }
+            ],
+            "nullable": true
           },
           "mac_address": {
             "type": "string"
@@ -24372,6 +24411,17 @@
           }
         }
       },
+      "PostVirtualMachineNetworkInterfacesPartVirtualNetwork": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
       "PostVirtualMachineNetworkInterfacesPartIPAddresses": {
         "type": "object",
         "properties": {
@@ -24397,6 +24447,21 @@
           }
         }
       },
+      "VirtualNetworkNotFoundSchema": {
+        "type": "object",
+        "description": "No virtual network was found matching any of the criteria provided in the arguments",
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/VirtualNetworkNotFoundEnum"
+          },
+          "description": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "object"
+          }
+        }
+      },
       "NetworkSpeedProfileNotFoundEnum": {
         "type": "string",
         "enum": [
@@ -24418,13 +24483,16 @@
           }
         }
       },
-      "OneOfNetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res": {
+      "OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res": {
         "oneOf": [
           {
             "$ref": "#/components/schemas/VirtualMachineNotFoundSchema"
           },
           {
             "$ref": "#/components/schemas/NetworkNotFoundSchema"
+          },
+          {
+            "$ref": "#/components/schemas/VirtualNetworkNotFoundSchema"
           },
           {
             "$ref": "#/components/schemas/NetworkSpeedProfileNotFoundSchema"
@@ -24444,7 +24512,20 @@
             "type": "string"
           },
           "network": {
-            "$ref": "#/components/schemas/GetVirtualMachineNetworkInterfacePartNetwork"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetVirtualMachineNetworkInterfacePartNetwork"
+              }
+            ],
+            "nullable": true
+          },
+          "virtual_network": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetVirtualMachineNetworkInterfacePartVirtualNetwork"
+              }
+            ],
+            "nullable": true
           },
           "mac_address": {
             "type": "string"
@@ -24472,6 +24553,17 @@
         }
       },
       "GetVirtualMachineNetworkInterfacePartNetwork": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "GetVirtualMachineNetworkInterfacePartVirtualNetwork": {
         "type": "object",
         "properties": {
           "id": {
@@ -24540,7 +24632,20 @@
             "type": "string"
           },
           "network": {
-            "$ref": "#/components/schemas/GetVMNIVMNIPartNetwork"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetVMNIVMNIPartNetwork"
+              }
+            ],
+            "nullable": true
+          },
+          "virtual_network": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetVMNIVMNIPartVirtualNetwork"
+              }
+            ],
+            "nullable": true
           },
           "mac_address": {
             "type": "string"
@@ -24571,6 +24676,17 @@
         }
       },
       "GetVMNIVMNIPartNetwork": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "GetVMNIVMNIPartVirtualNetwork": {
         "type": "object",
         "properties": {
           "id": {
@@ -24633,7 +24749,20 @@
             "type": "string"
           },
           "network": {
-            "$ref": "#/components/schemas/DeleteVirtualMachineNetworkInterfacePartNetwork"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DeleteVirtualMachineNetworkInterfacePartNetwork"
+              }
+            ],
+            "nullable": true
+          },
+          "virtual_network": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DeleteVirtualMachineNetworkInterfacePartVirtualNetwork"
+              }
+            ],
+            "nullable": true
           },
           "mac_address": {
             "type": "string"
@@ -24664,6 +24793,17 @@
         }
       },
       "DeleteVirtualMachineNetworkInterfacePartNetwork": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "DeleteVirtualMachineNetworkInterfacePartVirtualNetwork": {
         "type": "object",
         "properties": {
           "id": {
@@ -24712,7 +24852,20 @@
             "type": "string"
           },
           "network": {
-            "$ref": "#/components/schemas/PostVirtualMachineNetworkInterfaceAllocateIPPartNetwork"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PostVirtualMachineNetworkInterfaceAllocateIPPartNetwork"
+              }
+            ],
+            "nullable": true
+          },
+          "virtual_network": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PostVirtualMachineNetworkInterfaceAllocateIPPartVirtualNetwork"
+              }
+            ],
+            "nullable": true
           },
           "mac_address": {
             "type": "string"
@@ -24740,6 +24893,17 @@
         }
       },
       "PostVirtualMachineNetworkInterfaceAllocateIPPartNetwork": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "PostVirtualMachineNetworkInterfaceAllocateIPPartVirtualNetwork": {
         "type": "object",
         "properties": {
           "id": {
@@ -24846,7 +25010,20 @@
             "type": "string"
           },
           "network": {
-            "$ref": "#/components/schemas/PostVirtualMachineNetworkInterfaceAttachPartNetwork"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PostVirtualMachineNetworkInterfaceAttachPartNetwork"
+              }
+            ],
+            "nullable": true
+          },
+          "virtual_network": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PostVirtualMachineNetworkInterfaceAttachPartVirtualNetwork"
+              }
+            ],
+            "nullable": true
           },
           "mac_address": {
             "type": "string"
@@ -24877,6 +25054,17 @@
         }
       },
       "PostVirtualMachineNetworkInterfaceAttachPartNetwork": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "PostVirtualMachineNetworkInterfaceAttachPartVirtualNetwork": {
         "type": "object",
         "properties": {
           "id": {
@@ -24931,7 +25119,20 @@
             "type": "string"
           },
           "network": {
-            "$ref": "#/components/schemas/PostVirtualMachineNetworkInterfaceDetachPartNetwork"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PostVirtualMachineNetworkInterfaceDetachPartNetwork"
+              }
+            ],
+            "nullable": true
+          },
+          "virtual_network": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PostVirtualMachineNetworkInterfaceDetachPartVirtualNetwork"
+              }
+            ],
+            "nullable": true
           },
           "mac_address": {
             "type": "string"
@@ -24962,6 +25163,17 @@
         }
       },
       "PostVirtualMachineNetworkInterfaceDetachPartNetwork": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "PostVirtualMachineNetworkInterfaceDetachPartVirtualNetwork": {
         "type": "object",
         "properties": {
           "id": {
@@ -26998,12 +27210,12 @@
           }
         }
       },
-      "NetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res": {
+      "NetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res": {
         "description": "404 error response",
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/OneOfNetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res"
+              "$ref": "#/components/schemas/OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res"
             }
           }
         }

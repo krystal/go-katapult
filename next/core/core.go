@@ -1288,14 +1288,15 @@ type DeleteVirtualMachine200ResponseVirtualMachine struct {
 
 // DeleteVirtualMachineNetworkInterface200ResponseVirtualMachineNetworkInterface defines model for DeleteVirtualMachineNetworkInterface200ResponseVirtualMachineNetworkInterface.
 type DeleteVirtualMachineNetworkInterface200ResponseVirtualMachineNetworkInterface struct {
-	Id             *string                                                 `json:"id,omitempty"`
-	IpAddresses    *[]DeleteVirtualMachineNetworkInterfacePartIPAddresses  `json:"ip_addresses,omitempty"`
-	MacAddress     *string                                                 `json:"mac_address,omitempty"`
-	Name           *string                                                 `json:"name,omitempty"`
-	Network        *DeleteVirtualMachineNetworkInterfacePartNetwork        `json:"network,omitempty"`
-	SpeedProfile   *DeleteVirtualMachineNetworkInterfacePartSpeedProfile   `json:"speed_profile,omitempty"`
-	State          *string                                                 `json:"state,omitempty"`
-	VirtualMachine *DeleteVirtualMachineNetworkInterfacePartVirtualMachine `json:"virtual_machine,omitempty"`
+	Id             *string                                                                   `json:"id,omitempty"`
+	IpAddresses    *[]DeleteVirtualMachineNetworkInterfacePartIPAddresses                    `json:"ip_addresses,omitempty"`
+	MacAddress     *string                                                                   `json:"mac_address,omitempty"`
+	Name           *string                                                                   `json:"name,omitempty"`
+	Network        nullable.Nullable[DeleteVirtualMachineNetworkInterfacePartNetwork]        `json:"network,omitempty"`
+	SpeedProfile   *DeleteVirtualMachineNetworkInterfacePartSpeedProfile                     `json:"speed_profile,omitempty"`
+	State          *string                                                                   `json:"state,omitempty"`
+	VirtualMachine *DeleteVirtualMachineNetworkInterfacePartVirtualMachine                   `json:"virtual_machine,omitempty"`
+	VirtualNetwork nullable.Nullable[DeleteVirtualMachineNetworkInterfacePartVirtualNetwork] `json:"virtual_network,omitempty"`
 }
 
 // DeleteVirtualMachineNetworkInterfacePartIPAddresses defines model for DeleteVirtualMachineNetworkInterfacePartIPAddresses.
@@ -1319,6 +1320,12 @@ type DeleteVirtualMachineNetworkInterfacePartSpeedProfile struct {
 
 // DeleteVirtualMachineNetworkInterfacePartVirtualMachine defines model for DeleteVirtualMachineNetworkInterfacePartVirtualMachine.
 type DeleteVirtualMachineNetworkInterfacePartVirtualMachine struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
+// DeleteVirtualMachineNetworkInterfacePartVirtualNetwork defines model for DeleteVirtualMachineNetworkInterfacePartVirtualNetwork.
+type DeleteVirtualMachineNetworkInterfacePartVirtualNetwork struct {
 	Id   *string `json:"id,omitempty"`
 	Name *string `json:"name,omitempty"`
 }
@@ -2208,14 +2215,15 @@ type GetUsersCurrent200ResponseOrganizations struct {
 
 // GetVMNIVMNI200ResponseVirtualMachineNetworkInterface defines model for GetVMNIVMNI200ResponseVirtualMachineNetworkInterface.
 type GetVMNIVMNI200ResponseVirtualMachineNetworkInterface struct {
-	Id             *string                        `json:"id,omitempty"`
-	IpAddresses    *[]GetVMNIVMNIPartIPAddresses  `json:"ip_addresses,omitempty"`
-	MacAddress     *string                        `json:"mac_address,omitempty"`
-	Name           *string                        `json:"name,omitempty"`
-	Network        *GetVMNIVMNIPartNetwork        `json:"network,omitempty"`
-	SpeedProfile   *GetVMNIVMNIPartSpeedProfile   `json:"speed_profile,omitempty"`
-	State          *string                        `json:"state,omitempty"`
-	VirtualMachine *GetVMNIVMNIPartVirtualMachine `json:"virtual_machine,omitempty"`
+	Id             *string                                          `json:"id,omitempty"`
+	IpAddresses    *[]GetVMNIVMNIPartIPAddresses                    `json:"ip_addresses,omitempty"`
+	MacAddress     *string                                          `json:"mac_address,omitempty"`
+	Name           *string                                          `json:"name,omitempty"`
+	Network        nullable.Nullable[GetVMNIVMNIPartNetwork]        `json:"network,omitempty"`
+	SpeedProfile   *GetVMNIVMNIPartSpeedProfile                     `json:"speed_profile,omitempty"`
+	State          *string                                          `json:"state,omitempty"`
+	VirtualMachine *GetVMNIVMNIPartVirtualMachine                   `json:"virtual_machine,omitempty"`
+	VirtualNetwork nullable.Nullable[GetVMNIVMNIPartVirtualNetwork] `json:"virtual_network,omitempty"`
 }
 
 // GetVMNIVMNIPartIPAddresses defines model for GetVMNIVMNIPartIPAddresses.
@@ -2239,6 +2247,12 @@ type GetVMNIVMNIPartSpeedProfile struct {
 
 // GetVMNIVMNIPartVirtualMachine defines model for GetVMNIVMNIPartVirtualMachine.
 type GetVMNIVMNIPartVirtualMachine struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
+// GetVMNIVMNIPartVirtualNetwork defines model for GetVMNIVMNIPartVirtualNetwork.
+type GetVMNIVMNIPartVirtualNetwork struct {
 	Id   *string `json:"id,omitempty"`
 	Name *string `json:"name,omitempty"`
 }
@@ -2304,13 +2318,14 @@ type GetVirtualMachineDisksPartDisk struct {
 
 // GetVirtualMachineNetworkInterface200ResponseVirtualMachineNetworkInterface defines model for GetVirtualMachineNetworkInterface200ResponseVirtualMachineNetworkInterface.
 type GetVirtualMachineNetworkInterface200ResponseVirtualMachineNetworkInterface struct {
-	Id             *string                                              `json:"id,omitempty"`
-	IpAddresses    *[]GetVirtualMachineNetworkInterfacePartIPAddresses  `json:"ip_addresses,omitempty"`
-	MacAddress     *string                                              `json:"mac_address,omitempty"`
-	Name           *string                                              `json:"name,omitempty"`
-	Network        *GetVirtualMachineNetworkInterfacePartNetwork        `json:"network,omitempty"`
-	State          *string                                              `json:"state,omitempty"`
-	VirtualMachine *GetVirtualMachineNetworkInterfacePartVirtualMachine `json:"virtual_machine,omitempty"`
+	Id             *string                                                                `json:"id,omitempty"`
+	IpAddresses    *[]GetVirtualMachineNetworkInterfacePartIPAddresses                    `json:"ip_addresses,omitempty"`
+	MacAddress     *string                                                                `json:"mac_address,omitempty"`
+	Name           *string                                                                `json:"name,omitempty"`
+	Network        nullable.Nullable[GetVirtualMachineNetworkInterfacePartNetwork]        `json:"network,omitempty"`
+	State          *string                                                                `json:"state,omitempty"`
+	VirtualMachine *GetVirtualMachineNetworkInterfacePartVirtualMachine                   `json:"virtual_machine,omitempty"`
+	VirtualNetwork nullable.Nullable[GetVirtualMachineNetworkInterfacePartVirtualNetwork] `json:"virtual_network,omitempty"`
 }
 
 // GetVirtualMachineNetworkInterfacePartIPAddresses defines model for GetVirtualMachineNetworkInterfacePartIPAddresses.
@@ -2331,12 +2346,19 @@ type GetVirtualMachineNetworkInterfacePartVirtualMachine struct {
 	Name *string `json:"name,omitempty"`
 }
 
+// GetVirtualMachineNetworkInterfacePartVirtualNetwork defines model for GetVirtualMachineNetworkInterfacePartVirtualNetwork.
+type GetVirtualMachineNetworkInterfacePartVirtualNetwork struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
 // GetVirtualMachineNetworkInterfaces200ResponseVirtualMachineNetworkInterfaces defines model for GetVirtualMachineNetworkInterfaces200ResponseVirtualMachineNetworkInterfaces.
 type GetVirtualMachineNetworkInterfaces200ResponseVirtualMachineNetworkInterfaces struct {
-	Id          *string                                              `json:"id,omitempty"`
-	IpAddresses *[]GetVirtualMachineNetworkInterfacesPartIPAddresses `json:"ip_addresses,omitempty"`
-	Name        *string                                              `json:"name,omitempty"`
-	Network     *GetVirtualMachineNetworkInterfacesPartNetwork       `json:"network,omitempty"`
+	Id             *string                                                                 `json:"id,omitempty"`
+	IpAddresses    *[]GetVirtualMachineNetworkInterfacesPartIPAddresses                    `json:"ip_addresses,omitempty"`
+	Name           *string                                                                 `json:"name,omitempty"`
+	Network        nullable.Nullable[GetVirtualMachineNetworkInterfacesPartNetwork]        `json:"network,omitempty"`
+	VirtualNetwork nullable.Nullable[GetVirtualMachineNetworkInterfacesPartVirtualNetwork] `json:"virtual_network,omitempty"`
 }
 
 // GetVirtualMachineNetworkInterfacesPartIPAddresses defines model for GetVirtualMachineNetworkInterfacesPartIPAddresses.
@@ -2347,6 +2369,12 @@ type GetVirtualMachineNetworkInterfacesPartIPAddresses struct {
 
 // GetVirtualMachineNetworkInterfacesPartNetwork defines model for GetVirtualMachineNetworkInterfacesPartNetwork.
 type GetVirtualMachineNetworkInterfacesPartNetwork struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
+// GetVirtualMachineNetworkInterfacesPartVirtualNetwork defines model for GetVirtualMachineNetworkInterfacesPartVirtualNetwork.
+type GetVirtualMachineNetworkInterfacesPartVirtualNetwork struct {
 	Id   *string `json:"id,omitempty"`
 	Name *string `json:"name,omitempty"`
 }
@@ -3089,13 +3117,13 @@ type OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res struct {
 	union json.RawMessage
 }
 
-// OneOfNetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res defines model for OneOfNetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res.
-type OneOfNetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res struct {
+// OneOfNetworkNotFoundOrganizationNotFound404Res defines model for OneOfNetworkNotFoundOrganizationNotFound404Res.
+type OneOfNetworkNotFoundOrganizationNotFound404Res struct {
 	union json.RawMessage
 }
 
-// OneOfNetworkNotFoundOrganizationNotFound404Res defines model for OneOfNetworkNotFoundOrganizationNotFound404Res.
-type OneOfNetworkNotFoundOrganizationNotFound404Res struct {
+// OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res defines model for OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res.
+type OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res struct {
 	union json.RawMessage
 }
 
@@ -3997,13 +4025,14 @@ type PostVirtualMachineDiskBackupPolicies200ResponseDiskBackupPolicy struct {
 
 // PostVirtualMachineNetworkInterfaceAllocateIP200ResponseVirtualMachineNetworkInterface defines model for PostVirtualMachineNetworkInterfaceAllocateIP200ResponseVirtualMachineNetworkInterface.
 type PostVirtualMachineNetworkInterfaceAllocateIP200ResponseVirtualMachineNetworkInterface struct {
-	Id             *string                                                         `json:"id,omitempty"`
-	IpAddresses    *[]PostVirtualMachineNetworkInterfaceAllocateIPPartIPAddresses  `json:"ip_addresses,omitempty"`
-	MacAddress     *string                                                         `json:"mac_address,omitempty"`
-	Name           *string                                                         `json:"name,omitempty"`
-	Network        *PostVirtualMachineNetworkInterfaceAllocateIPPartNetwork        `json:"network,omitempty"`
-	State          *string                                                         `json:"state,omitempty"`
-	VirtualMachine *PostVirtualMachineNetworkInterfaceAllocateIPPartVirtualMachine `json:"virtual_machine,omitempty"`
+	Id             *string                                                                           `json:"id,omitempty"`
+	IpAddresses    *[]PostVirtualMachineNetworkInterfaceAllocateIPPartIPAddresses                    `json:"ip_addresses,omitempty"`
+	MacAddress     *string                                                                           `json:"mac_address,omitempty"`
+	Name           *string                                                                           `json:"name,omitempty"`
+	Network        nullable.Nullable[PostVirtualMachineNetworkInterfaceAllocateIPPartNetwork]        `json:"network,omitempty"`
+	State          *string                                                                           `json:"state,omitempty"`
+	VirtualMachine *PostVirtualMachineNetworkInterfaceAllocateIPPartVirtualMachine                   `json:"virtual_machine,omitempty"`
+	VirtualNetwork nullable.Nullable[PostVirtualMachineNetworkInterfaceAllocateIPPartVirtualNetwork] `json:"virtual_network,omitempty"`
 }
 
 // PostVirtualMachineNetworkInterfaceAllocateIPPartIPAddresses defines model for PostVirtualMachineNetworkInterfaceAllocateIPPartIPAddresses.
@@ -4024,16 +4053,23 @@ type PostVirtualMachineNetworkInterfaceAllocateIPPartVirtualMachine struct {
 	Name *string `json:"name,omitempty"`
 }
 
+// PostVirtualMachineNetworkInterfaceAllocateIPPartVirtualNetwork defines model for PostVirtualMachineNetworkInterfaceAllocateIPPartVirtualNetwork.
+type PostVirtualMachineNetworkInterfaceAllocateIPPartVirtualNetwork struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
 // PostVirtualMachineNetworkInterfaceAttach200ResponseVirtualMachineNetworkInterface defines model for PostVirtualMachineNetworkInterfaceAttach200ResponseVirtualMachineNetworkInterface.
 type PostVirtualMachineNetworkInterfaceAttach200ResponseVirtualMachineNetworkInterface struct {
-	Id             *string                                                     `json:"id,omitempty"`
-	IpAddresses    *[]PostVirtualMachineNetworkInterfaceAttachPartIPAddresses  `json:"ip_addresses,omitempty"`
-	MacAddress     *string                                                     `json:"mac_address,omitempty"`
-	Name           *string                                                     `json:"name,omitempty"`
-	Network        *PostVirtualMachineNetworkInterfaceAttachPartNetwork        `json:"network,omitempty"`
-	SpeedProfile   *PostVirtualMachineNetworkInterfaceAttachPartSpeedProfile   `json:"speed_profile,omitempty"`
-	State          *string                                                     `json:"state,omitempty"`
-	VirtualMachine *PostVirtualMachineNetworkInterfaceAttachPartVirtualMachine `json:"virtual_machine,omitempty"`
+	Id             *string                                                                       `json:"id,omitempty"`
+	IpAddresses    *[]PostVirtualMachineNetworkInterfaceAttachPartIPAddresses                    `json:"ip_addresses,omitempty"`
+	MacAddress     *string                                                                       `json:"mac_address,omitempty"`
+	Name           *string                                                                       `json:"name,omitempty"`
+	Network        nullable.Nullable[PostVirtualMachineNetworkInterfaceAttachPartNetwork]        `json:"network,omitempty"`
+	SpeedProfile   *PostVirtualMachineNetworkInterfaceAttachPartSpeedProfile                     `json:"speed_profile,omitempty"`
+	State          *string                                                                       `json:"state,omitempty"`
+	VirtualMachine *PostVirtualMachineNetworkInterfaceAttachPartVirtualMachine                   `json:"virtual_machine,omitempty"`
+	VirtualNetwork nullable.Nullable[PostVirtualMachineNetworkInterfaceAttachPartVirtualNetwork] `json:"virtual_network,omitempty"`
 }
 
 // PostVirtualMachineNetworkInterfaceAttachPartIPAddresses defines model for PostVirtualMachineNetworkInterfaceAttachPartIPAddresses.
@@ -4061,16 +4097,23 @@ type PostVirtualMachineNetworkInterfaceAttachPartVirtualMachine struct {
 	Name *string `json:"name,omitempty"`
 }
 
+// PostVirtualMachineNetworkInterfaceAttachPartVirtualNetwork defines model for PostVirtualMachineNetworkInterfaceAttachPartVirtualNetwork.
+type PostVirtualMachineNetworkInterfaceAttachPartVirtualNetwork struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
 // PostVirtualMachineNetworkInterfaceDetach200ResponseVirtualMachineNetworkInterface defines model for PostVirtualMachineNetworkInterfaceDetach200ResponseVirtualMachineNetworkInterface.
 type PostVirtualMachineNetworkInterfaceDetach200ResponseVirtualMachineNetworkInterface struct {
-	Id             *string                                                     `json:"id,omitempty"`
-	IpAddresses    *[]PostVirtualMachineNetworkInterfaceDetachPartIPAddresses  `json:"ip_addresses,omitempty"`
-	MacAddress     *string                                                     `json:"mac_address,omitempty"`
-	Name           *string                                                     `json:"name,omitempty"`
-	Network        *PostVirtualMachineNetworkInterfaceDetachPartNetwork        `json:"network,omitempty"`
-	SpeedProfile   *PostVirtualMachineNetworkInterfaceDetachPartSpeedProfile   `json:"speed_profile,omitempty"`
-	State          *string                                                     `json:"state,omitempty"`
-	VirtualMachine *PostVirtualMachineNetworkInterfaceDetachPartVirtualMachine `json:"virtual_machine,omitempty"`
+	Id             *string                                                                       `json:"id,omitempty"`
+	IpAddresses    *[]PostVirtualMachineNetworkInterfaceDetachPartIPAddresses                    `json:"ip_addresses,omitempty"`
+	MacAddress     *string                                                                       `json:"mac_address,omitempty"`
+	Name           *string                                                                       `json:"name,omitempty"`
+	Network        nullable.Nullable[PostVirtualMachineNetworkInterfaceDetachPartNetwork]        `json:"network,omitempty"`
+	SpeedProfile   *PostVirtualMachineNetworkInterfaceDetachPartSpeedProfile                     `json:"speed_profile,omitempty"`
+	State          *string                                                                       `json:"state,omitempty"`
+	VirtualMachine *PostVirtualMachineNetworkInterfaceDetachPartVirtualMachine                   `json:"virtual_machine,omitempty"`
+	VirtualNetwork nullable.Nullable[PostVirtualMachineNetworkInterfaceDetachPartVirtualNetwork] `json:"virtual_network,omitempty"`
 }
 
 // PostVirtualMachineNetworkInterfaceDetachPartIPAddresses defines model for PostVirtualMachineNetworkInterfaceDetachPartIPAddresses.
@@ -4098,16 +4141,23 @@ type PostVirtualMachineNetworkInterfaceDetachPartVirtualMachine struct {
 	Name *string `json:"name,omitempty"`
 }
 
+// PostVirtualMachineNetworkInterfaceDetachPartVirtualNetwork defines model for PostVirtualMachineNetworkInterfaceDetachPartVirtualNetwork.
+type PostVirtualMachineNetworkInterfaceDetachPartVirtualNetwork struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
 // PostVirtualMachineNetworkInterfaces200ResponseVirtualMachineNetworkInterface defines model for PostVirtualMachineNetworkInterfaces200ResponseVirtualMachineNetworkInterface.
 type PostVirtualMachineNetworkInterfaces200ResponseVirtualMachineNetworkInterface struct {
-	Id             *string                                                `json:"id,omitempty"`
-	IpAddresses    *[]PostVirtualMachineNetworkInterfacesPartIPAddresses  `json:"ip_addresses,omitempty"`
-	MacAddress     *string                                                `json:"mac_address,omitempty"`
-	Name           *string                                                `json:"name,omitempty"`
-	Network        *PostVirtualMachineNetworkInterfacesPartNetwork        `json:"network,omitempty"`
-	SpeedProfile   *PostVirtualMachineNetworkInterfacesPartSpeedProfile   `json:"speed_profile,omitempty"`
-	State          *string                                                `json:"state,omitempty"`
-	VirtualMachine *PostVirtualMachineNetworkInterfacesPartVirtualMachine `json:"virtual_machine,omitempty"`
+	Id             *string                                                                  `json:"id,omitempty"`
+	IpAddresses    *[]PostVirtualMachineNetworkInterfacesPartIPAddresses                    `json:"ip_addresses,omitempty"`
+	MacAddress     *string                                                                  `json:"mac_address,omitempty"`
+	Name           *string                                                                  `json:"name,omitempty"`
+	Network        nullable.Nullable[PostVirtualMachineNetworkInterfacesPartNetwork]        `json:"network,omitempty"`
+	SpeedProfile   *PostVirtualMachineNetworkInterfacesPartSpeedProfile                     `json:"speed_profile,omitempty"`
+	State          *string                                                                  `json:"state,omitempty"`
+	VirtualMachine *PostVirtualMachineNetworkInterfacesPartVirtualMachine                   `json:"virtual_machine,omitempty"`
+	VirtualNetwork nullable.Nullable[PostVirtualMachineNetworkInterfacesPartVirtualNetwork] `json:"virtual_network,omitempty"`
 }
 
 // PostVirtualMachineNetworkInterfacesPartIPAddresses defines model for PostVirtualMachineNetworkInterfacesPartIPAddresses.
@@ -4131,6 +4181,12 @@ type PostVirtualMachineNetworkInterfacesPartSpeedProfile struct {
 
 // PostVirtualMachineNetworkInterfacesPartVirtualMachine defines model for PostVirtualMachineNetworkInterfacesPartVirtualMachine.
 type PostVirtualMachineNetworkInterfacesPartVirtualMachine struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
+// PostVirtualMachineNetworkInterfacesPartVirtualNetwork defines model for PostVirtualMachineNetworkInterfacesPartVirtualNetwork.
+type PostVirtualMachineNetworkInterfacesPartVirtualNetwork struct {
 	Id   *string `json:"id,omitempty"`
 	Name *string `json:"name,omitempty"`
 }
@@ -4871,6 +4927,13 @@ type VirtualNetworkLookup struct {
 // VirtualNetworkNotFoundEnum defines model for VirtualNetworkNotFoundEnum.
 type VirtualNetworkNotFoundEnum string
 
+// VirtualNetworkNotFoundSchema No virtual network was found matching any of the criteria provided in the arguments
+type VirtualNetworkNotFoundSchema struct {
+	Code        *VirtualNetworkNotFoundEnum `json:"code,omitempty"`
+	Description *string                     `json:"description,omitempty"`
+	Detail      *map[string]interface{}     `json:"detail,omitempty"`
+}
+
 // Zone defines model for Zone.
 type Zone struct {
 	DataCenter *DataCenter               `json:"data_center,omitempty"`
@@ -5132,9 +5195,6 @@ type NetworkErrorResponse struct {
 	Detail      *map[string]interface{} `json:"detail,omitempty"`
 }
 
-// NetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res defines model for NetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res.
-type NetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res = OneOfNetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res
-
 // NetworkNotFoundOrganizationNotFound404Res defines model for NetworkNotFoundOrganizationNotFound404Res.
 type NetworkNotFoundOrganizationNotFound404Res = OneOfNetworkNotFoundOrganizationNotFound404Res
 
@@ -5144,6 +5204,9 @@ type NetworkNotFoundResponse struct {
 	Description *string                 `json:"description,omitempty"`
 	Detail      *map[string]interface{} `json:"detail,omitempty"`
 }
+
+// NetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res defines model for NetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res.
+type NetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res = OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res
 
 // NetworkSpeedProfileNotFoundVirtualMachineNetworkInterfaceNotFound404Res defines model for NetworkSpeedProfileNotFoundVirtualMachineNetworkInterfaceNotFound404Res.
 type NetworkSpeedProfileNotFoundVirtualMachineNetworkInterfaceNotFound404Res = OneOfNetworkSpeedProfileNotFoundVirtualMachineNetworkInterfaceNotFound404Res
@@ -7164,13 +7227,14 @@ type GetVirtualMachineNetworkInterfacesParams struct {
 // PostVirtualMachineNetworkInterfacesJSONBody defines parameters for PostVirtualMachineNetworkInterfaces.
 type PostVirtualMachineNetworkInterfacesJSONBody struct {
 	// Network All 'network[]' params are mutually exclusive, only one can be provided.
-	Network NetworkLookup `json:"network"`
+	Network *NetworkLookup `json:"network,omitempty"`
 
 	// SpeedProfile All 'speed_profile[]' params are mutually exclusive, only one can be provided.
 	SpeedProfile NetworkSpeedProfileLookup `json:"speed_profile"`
 
 	// VirtualMachine All 'virtual_machine[]' params are mutually exclusive, only one can be provided.
-	VirtualMachine VirtualMachineLookup `json:"virtual_machine"`
+	VirtualMachine VirtualMachineLookup  `json:"virtual_machine"`
+	VirtualNetwork *VirtualNetworkLookup `json:"virtual_network,omitempty"`
 }
 
 // GetVirtualMachineNetworkInterfaceParams defines parameters for GetVirtualMachineNetworkInterface.
@@ -9007,94 +9071,6 @@ func (t *OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res) Unmars
 	return err
 }
 
-// AsVirtualMachineNotFoundSchema returns the union data inside the OneOfNetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res as a VirtualMachineNotFoundSchema
-func (t OneOfNetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res) AsVirtualMachineNotFoundSchema() (VirtualMachineNotFoundSchema, error) {
-	var body VirtualMachineNotFoundSchema
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromVirtualMachineNotFoundSchema overwrites any union data inside the OneOfNetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res as the provided VirtualMachineNotFoundSchema
-func (t *OneOfNetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res) FromVirtualMachineNotFoundSchema(v VirtualMachineNotFoundSchema) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeVirtualMachineNotFoundSchema performs a merge with any union data inside the OneOfNetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res, using the provided VirtualMachineNotFoundSchema
-func (t *OneOfNetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res) MergeVirtualMachineNotFoundSchema(v VirtualMachineNotFoundSchema) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
-// AsNetworkNotFoundSchema returns the union data inside the OneOfNetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res as a NetworkNotFoundSchema
-func (t OneOfNetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res) AsNetworkNotFoundSchema() (NetworkNotFoundSchema, error) {
-	var body NetworkNotFoundSchema
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromNetworkNotFoundSchema overwrites any union data inside the OneOfNetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res as the provided NetworkNotFoundSchema
-func (t *OneOfNetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res) FromNetworkNotFoundSchema(v NetworkNotFoundSchema) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeNetworkNotFoundSchema performs a merge with any union data inside the OneOfNetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res, using the provided NetworkNotFoundSchema
-func (t *OneOfNetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res) MergeNetworkNotFoundSchema(v NetworkNotFoundSchema) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
-// AsNetworkSpeedProfileNotFoundSchema returns the union data inside the OneOfNetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res as a NetworkSpeedProfileNotFoundSchema
-func (t OneOfNetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res) AsNetworkSpeedProfileNotFoundSchema() (NetworkSpeedProfileNotFoundSchema, error) {
-	var body NetworkSpeedProfileNotFoundSchema
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromNetworkSpeedProfileNotFoundSchema overwrites any union data inside the OneOfNetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res as the provided NetworkSpeedProfileNotFoundSchema
-func (t *OneOfNetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res) FromNetworkSpeedProfileNotFoundSchema(v NetworkSpeedProfileNotFoundSchema) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeNetworkSpeedProfileNotFoundSchema performs a merge with any union data inside the OneOfNetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res, using the provided NetworkSpeedProfileNotFoundSchema
-func (t *OneOfNetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res) MergeNetworkSpeedProfileNotFoundSchema(v NetworkSpeedProfileNotFoundSchema) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
-func (t OneOfNetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res) MarshalJSON() ([]byte, error) {
-	b, err := t.union.MarshalJSON()
-	return b, err
-}
-
-func (t *OneOfNetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res) UnmarshalJSON(b []byte) error {
-	err := t.union.UnmarshalJSON(b)
-	return err
-}
-
 // AsOrganizationNotFoundSchema returns the union data inside the OneOfNetworkNotFoundOrganizationNotFound404Res as a OrganizationNotFoundSchema
 func (t OneOfNetworkNotFoundOrganizationNotFound404Res) AsOrganizationNotFoundSchema() (OrganizationNotFoundSchema, error) {
 	var body OrganizationNotFoundSchema
@@ -9153,6 +9129,120 @@ func (t OneOfNetworkNotFoundOrganizationNotFound404Res) MarshalJSON() ([]byte, e
 }
 
 func (t *OneOfNetworkNotFoundOrganizationNotFound404Res) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsVirtualMachineNotFoundSchema returns the union data inside the OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res as a VirtualMachineNotFoundSchema
+func (t OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) AsVirtualMachineNotFoundSchema() (VirtualMachineNotFoundSchema, error) {
+	var body VirtualMachineNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromVirtualMachineNotFoundSchema overwrites any union data inside the OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res as the provided VirtualMachineNotFoundSchema
+func (t *OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) FromVirtualMachineNotFoundSchema(v VirtualMachineNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeVirtualMachineNotFoundSchema performs a merge with any union data inside the OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res, using the provided VirtualMachineNotFoundSchema
+func (t *OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) MergeVirtualMachineNotFoundSchema(v VirtualMachineNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsNetworkNotFoundSchema returns the union data inside the OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res as a NetworkNotFoundSchema
+func (t OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) AsNetworkNotFoundSchema() (NetworkNotFoundSchema, error) {
+	var body NetworkNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromNetworkNotFoundSchema overwrites any union data inside the OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res as the provided NetworkNotFoundSchema
+func (t *OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) FromNetworkNotFoundSchema(v NetworkNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeNetworkNotFoundSchema performs a merge with any union data inside the OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res, using the provided NetworkNotFoundSchema
+func (t *OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) MergeNetworkNotFoundSchema(v NetworkNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsVirtualNetworkNotFoundSchema returns the union data inside the OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res as a VirtualNetworkNotFoundSchema
+func (t OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) AsVirtualNetworkNotFoundSchema() (VirtualNetworkNotFoundSchema, error) {
+	var body VirtualNetworkNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromVirtualNetworkNotFoundSchema overwrites any union data inside the OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res as the provided VirtualNetworkNotFoundSchema
+func (t *OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) FromVirtualNetworkNotFoundSchema(v VirtualNetworkNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeVirtualNetworkNotFoundSchema performs a merge with any union data inside the OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res, using the provided VirtualNetworkNotFoundSchema
+func (t *OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) MergeVirtualNetworkNotFoundSchema(v VirtualNetworkNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsNetworkSpeedProfileNotFoundSchema returns the union data inside the OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res as a NetworkSpeedProfileNotFoundSchema
+func (t OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) AsNetworkSpeedProfileNotFoundSchema() (NetworkSpeedProfileNotFoundSchema, error) {
+	var body NetworkSpeedProfileNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromNetworkSpeedProfileNotFoundSchema overwrites any union data inside the OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res as the provided NetworkSpeedProfileNotFoundSchema
+func (t *OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) FromNetworkSpeedProfileNotFoundSchema(v NetworkSpeedProfileNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeNetworkSpeedProfileNotFoundSchema performs a merge with any union data inside the OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res, using the provided NetworkSpeedProfileNotFoundSchema
+func (t *OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) MergeNetworkSpeedProfileNotFoundSchema(v NetworkSpeedProfileNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *OneOfNetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }
@@ -32570,7 +32660,7 @@ type PostVirtualMachineNetworkInterfacesResponse struct {
 	}
 	JSON400 *APIAuthenticator400Response
 	JSON403 *APIAuthenticator403Response
-	JSON404 *NetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res
+	JSON404 *NetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res
 	JSON406 *ObjectInTrashResponse
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
@@ -51729,7 +51819,7 @@ func ParsePostVirtualMachineNetworkInterfacesResponse(rsp *http.Response) (*Post
 		response.JSON403 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest NetworkNotFoundNetworkSpeedProfileNotFoundVirtualMachineNotFound404Res
+		var dest NetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
