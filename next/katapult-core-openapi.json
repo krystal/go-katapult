@@ -1,13 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "contact": {
-      "name": "Katapult Support",
-      "email": "team@katapult.io",
-      "url": "https://katapult.io/contact"
-    },
-    "termsOfService": "https://katapult.io/terms",
-    "x-katapult-version": "2.61.1",
+    "x-katapult-version": "2.62.1-1-g34e6784b6",
     "version": "1.0.0",
     "title": "Katapult Core API",
     "description": "Welcome to the documentation for the Katapult Core API"
@@ -18,7 +12,7 @@
   },
   "servers": [
     {
-      "url": "https://api.katapult.io/core/v1"
+      "url": "http://api.staging.katapult.dev/core/v1"
     }
   ],
   "paths": {
@@ -25466,6 +25460,9 @@
           "size": {
             "type": "integer",
             "description": "The total storage used in bytes (updated periodically)"
+          },
+          "bucket_count": {
+            "type": "integer"
           },
           "data_center": {
             "$ref": "#/components/schemas/DataCenter"

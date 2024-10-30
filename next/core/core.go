@@ -2856,6 +2856,7 @@ type ObjectStorageAccessKeyStateEnum string
 
 // ObjectStorageAccount defines model for ObjectStorageAccount.
 type ObjectStorageAccount struct {
+	BucketCount       *int                                       `json:"bucket_count,omitempty"`
 	CreatedAt         *int                                       `json:"created_at,omitempty"`
 	DataCenter        *DataCenter                                `json:"data_center,omitempty"`
 	ProvisioningState *ObjectStorageAccountProvisioningStateEnum `json:"provisioning_state,omitempty"`

@@ -1,13 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "contact": {
-      "name": "Katapult Support",
-      "email": "team@katapult.io",
-      "url": "https://katapult.io/contact"
-    },
-    "termsOfService": "https://katapult.io/terms",
-    "x-katapult-version": "2.61.1",
+    "x-katapult-version": "2.62.1-1-g34e6784b6",
     "version": "1.0.0",
     "title": "Katapult Public API",
     "description": "Welcome to the documentation for the Katapult Public API"
@@ -18,7 +12,7 @@
   },
   "servers": [
     {
-      "url": "https://api.katapult.io/public/v1"
+      "url": "http://api.staging.katapult.dev/public/v1"
     }
   ],
   "paths": {
@@ -191,7 +185,7 @@
       "post": {
         "operationId": "post:signups",
         "summary": "Create signup",
-        "description": "This will create a new signup object and e-mail the appropriate welcome e-mail to the given email address",
+        "description": "This will create a new signup object, which can be either verified by e-mail or by the user creating an account in Identity",
         "tags": [
           "Signups"
         ],
@@ -200,6 +194,10 @@
             "application/json": {
               "schema": {
                 "properties": {
+                  "verify_with_email": {
+                    "type": "boolean",
+                    "description": "If true, the user will be sent an email to verify their e-mail address, and if false, the user will need to verify their e-mail address when they create an account in Identity"
+                  },
                   "email_address": {
                     "type": "string",
                     "description": "The e-mail address that should receive the welcome e-mail"
@@ -211,17 +209,14 @@
                   "campaign": {
                     "$ref": "#/components/schemas/SignupCampaignArguments"
                   }
-                },
-                "required": [
-                  "email_address"
-                ]
+                }
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "This will create a new signup object and e-mail the appropriate welcome e-mail to the given email address",
+            "description": "This will create a new signup object, which can be either verified by e-mail or by the user creating an account in Identity",
             "content": {
               "application/json": {
                 "schema": {
@@ -232,12 +227,19 @@
                     },
                     "email_address": {
                       "type": "string",
-                      "description": "The e-mail address that was sent the welcome email"
+                      "description": "The e-mail address that was sent the welcome email",
+                      "nullable": true
+                    },
+                    "url": {
+                      "type": "string",
+                      "description": "The URL for the user to continue their signup process, only available if verify_with_email is false",
+                      "nullable": true
                     }
                   },
                   "required": [
                     "id",
-                    "email_address"
+                    "email_address",
+                    "url"
                   ]
                 }
               }
