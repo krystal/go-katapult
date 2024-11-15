@@ -5,13 +5,12 @@ go 1.20
 require (
 	github.com/augurysys/timestamp v0.3.2
 	github.com/dave/jennifer v1.6.0
+	github.com/deepmap/oapi-codegen v1.16.3
 	github.com/hashicorp/go-hclog v1.4.0
 	github.com/jimeh/go-golden v0.1.0
 	github.com/jimeh/rands v0.3.0
 	github.com/jimeh/undent v1.1.1
 	github.com/mitchellh/copystructure v1.2.0
-	github.com/oapi-codegen/nullable v1.1.0
-	github.com/oapi-codegen/oapi-codegen/v2 v2.3.0
 	github.com/oapi-codegen/runtime v1.1.1
 	github.com/stretchr/testify v1.9.0
 	golang.org/x/text v0.15.0
