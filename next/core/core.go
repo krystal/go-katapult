@@ -15,6 +15,7 @@ import (
 	"strings"
 
 	"github.com/deepmap/oapi-codegen/pkg/securityprovider"
+	"github.com/oapi-codegen/nullable"
 	"github.com/oapi-codegen/runtime"
 )
 
@@ -779,16 +780,16 @@ type APIAuthenticator503Schema struct {
 
 // APIToken defines model for APIToken.
 type APIToken struct {
-	AuthorizedIpAddresses *[]string `json:"authorized_ip_addresses,omitempty"`
-	ExpiresAt             *int      `json:"expires_at"`
-	Id                    *string   `json:"id,omitempty"`
-	Name                  *string   `json:"name,omitempty"`
-	OrganizationId        *string   `json:"organization_id"`
-	RateLimit             *int      `json:"rate_limit,omitempty"`
-	Scopes                *[]string `json:"scopes,omitempty"`
+	AuthorizedIpAddresses *[]string                 `json:"authorized_ip_addresses,omitempty"`
+	ExpiresAt             nullable.Nullable[int]    `json:"expires_at,omitempty"`
+	Id                    *string                   `json:"id,omitempty"`
+	Name                  *string                   `json:"name,omitempty"`
+	OrganizationId        nullable.Nullable[string] `json:"organization_id,omitempty"`
+	RateLimit             *int                      `json:"rate_limit,omitempty"`
+	Scopes                *[]string                 `json:"scopes,omitempty"`
 
 	// Secret The secret will only be returned on token creation or when a new secret is generated.
-	Secret *string `json:"secret"`
+	Secret nullable.Nullable[string] `json:"secret,omitempty"`
 }
 
 // APITokenArguments defines model for APITokenArguments.
@@ -890,22 +891,22 @@ type AuthSSHKeyProperties struct {
 
 // Certificate defines model for Certificate.
 type Certificate struct {
-	AdditionalNames     *[]string `json:"additional_names,omitempty"`
-	AuthorizationMethod *string   `json:"authorization_method"`
-	Certificate         *string   `json:"certificate"`
+	AdditionalNames     *[]string                 `json:"additional_names,omitempty"`
+	AuthorizationMethod nullable.Nullable[string] `json:"authorization_method,omitempty"`
+	Certificate         nullable.Nullable[string] `json:"certificate,omitempty"`
 
 	// CertificateApiUrl This is the URL that can be used to access this certificate's details. through the certificate API (a different API to this one). If null, this means that it is no longer available. If that is the case, you can get a new URL by resetting the API token for this certificate.
-	CertificateApiUrl *string               `json:"certificate_api_url"`
-	Chain             *string               `json:"chain"`
-	CreatedAt         *int                  `json:"created_at,omitempty"`
-	ExpiresAt         *int                  `json:"expires_at"`
-	Id                *string               `json:"id,omitempty"`
-	IssueError        *string               `json:"issue_error"`
-	Issuer            *IssuerEnum           `json:"issuer,omitempty"`
-	LastIssuedAt      *int                  `json:"last_issued_at"`
-	Name              *string               `json:"name,omitempty"`
-	PrivateKey        *string               `json:"private_key"`
-	State             *CertificateStateEnum `json:"state,omitempty"`
+	CertificateApiUrl nullable.Nullable[string] `json:"certificate_api_url,omitempty"`
+	Chain             nullable.Nullable[string] `json:"chain,omitempty"`
+	CreatedAt         *int                      `json:"created_at,omitempty"`
+	ExpiresAt         nullable.Nullable[int]    `json:"expires_at,omitempty"`
+	Id                *string                   `json:"id,omitempty"`
+	IssueError        nullable.Nullable[string] `json:"issue_error,omitempty"`
+	Issuer            *IssuerEnum               `json:"issuer,omitempty"`
+	LastIssuedAt      nullable.Nullable[int]    `json:"last_issued_at,omitempty"`
+	Name              *string                   `json:"name,omitempty"`
+	PrivateKey        nullable.Nullable[string] `json:"private_key,omitempty"`
+	State             *CertificateStateEnum     `json:"state,omitempty"`
 }
 
 // CertificateLookup defines model for CertificateLookup.
@@ -921,12 +922,12 @@ type CertificateStateEnum string
 
 // Country defines model for Country.
 type Country struct {
-	Eu       *bool   `json:"eu,omitempty"`
-	Id       *string `json:"id,omitempty"`
-	IsoCode2 *string `json:"iso_code2,omitempty"`
-	IsoCode3 *string `json:"iso_code3,omitempty"`
-	Name     *string `json:"name,omitempty"`
-	TimeZone *string `json:"time_zone"`
+	Eu       *bool                     `json:"eu,omitempty"`
+	Id       *string                   `json:"id,omitempty"`
+	IsoCode2 *string                   `json:"iso_code2,omitempty"`
+	IsoCode3 *string                   `json:"iso_code3,omitempty"`
+	Name     *string                   `json:"name,omitempty"`
+	TimeZone nullable.Nullable[string] `json:"time_zone,omitempty"`
 }
 
 // CountryNotFoundEnum defines model for CountryNotFoundEnum.
@@ -960,9 +961,9 @@ type DNSRecord struct {
 	ContentAttributes *DNSRecordContentAttributes `json:"content_attributes,omitempty"`
 	FullName          *string                     `json:"full_name,omitempty"`
 	Id                *string                     `json:"id,omitempty"`
-	Name              *string                     `json:"name"`
-	Priority          *int                        `json:"priority"`
-	Ttl               *int                        `json:"ttl"`
+	Name              nullable.Nullable[string]   `json:"name,omitempty"`
+	Priority          nullable.Nullable[int]      `json:"priority,omitempty"`
+	Ttl               nullable.Nullable[int]      `json:"ttl,omitempty"`
 	Type              *DNSRecordTypesEnum         `json:"type,omitempty"`
 }
 
@@ -1075,21 +1076,21 @@ type DNSRecordContentArgumentsForVirtualMachine struct {
 
 // DNSRecordContentAttributes defines model for DNSRecordContentAttributes.
 type DNSRecordContentAttributes struct {
-	A              *RecordContentAttributesForA              `json:"A"`
-	AAAA           *RecordContentAttributesForAAAA           `json:"AAAA"`
-	ALIAS          *RecordContentAttributesForALIAS          `json:"ALIAS"`
-	CAA            *RecordContentAttributesForCAA            `json:"CAA"`
-	CNAME          *RecordContentAttributesForCNAME          `json:"CNAME"`
-	HTTPRedirect   *RecordContentAttributesForHTTPRedirect   `json:"HTTPRedirect"`
-	IPS            *RecordContentAttributesForIPS            `json:"IPS"`
-	MX             *RecordContentAttributesForMX             `json:"MX"`
-	NS             *RecordContentAttributesForNS             `json:"NS"`
-	PTR            *RecordContentAttributesForPTR            `json:"PTR"`
-	SOA            *map[string]interface{}                   `json:"SOA"`
-	SRV            *RecordContentAttributesForSRV            `json:"SRV"`
-	SSHFP          *RecordContentAttributesForSSHFP          `json:"SSHFP"`
-	TXT            *RecordContentAttributesForTXT            `json:"TXT"`
-	VirtualMachine *RecordContentAttributesForVirtualMachine `json:"VirtualMachine"`
+	A              nullable.Nullable[RecordContentAttributesForA]              `json:"A,omitempty"`
+	AAAA           nullable.Nullable[RecordContentAttributesForAAAA]           `json:"AAAA,omitempty"`
+	ALIAS          nullable.Nullable[RecordContentAttributesForALIAS]          `json:"ALIAS,omitempty"`
+	CAA            nullable.Nullable[RecordContentAttributesForCAA]            `json:"CAA,omitempty"`
+	CNAME          nullable.Nullable[RecordContentAttributesForCNAME]          `json:"CNAME,omitempty"`
+	HTTPRedirect   nullable.Nullable[RecordContentAttributesForHTTPRedirect]   `json:"HTTPRedirect,omitempty"`
+	IPS            nullable.Nullable[RecordContentAttributesForIPS]            `json:"IPS,omitempty"`
+	MX             nullable.Nullable[RecordContentAttributesForMX]             `json:"MX,omitempty"`
+	NS             nullable.Nullable[RecordContentAttributesForNS]             `json:"NS,omitempty"`
+	PTR            nullable.Nullable[RecordContentAttributesForPTR]            `json:"PTR,omitempty"`
+	SOA            nullable.Nullable[map[string]interface{}]                   `json:"SOA,omitempty"`
+	SRV            nullable.Nullable[RecordContentAttributesForSRV]            `json:"SRV,omitempty"`
+	SSHFP          nullable.Nullable[RecordContentAttributesForSSHFP]          `json:"SSHFP,omitempty"`
+	TXT            nullable.Nullable[RecordContentAttributesForTXT]            `json:"TXT,omitempty"`
+	VirtualMachine nullable.Nullable[RecordContentAttributesForVirtualMachine] `json:"VirtualMachine,omitempty"`
 }
 
 // DNSRecordLookup defines model for DNSRecordLookup.
@@ -1157,8 +1158,8 @@ type DataCenterNotFoundSchema struct {
 
 // DecimalOrUnlimited defines model for DecimalOrUnlimited.
 type DecimalOrUnlimited struct {
-	Unlimited *bool    `json:"unlimited,omitempty"`
-	Value     *float32 `json:"value"`
+	Unlimited *bool                      `json:"unlimited,omitempty"`
+	Value     nullable.Nullable[float32] `json:"value,omitempty"`
 }
 
 // DeleteAPIToken200ResponseAPIToken defines model for DeleteAPIToken200ResponseAPIToken.
@@ -1169,18 +1170,18 @@ type DeleteAPIToken200ResponseAPIToken struct {
 
 // DeleteDisk200ResponseDisk defines model for DeleteDisk200ResponseDisk.
 type DeleteDisk200ResponseDisk struct {
-	BusType            *DiskBusEnum                      `json:"bus_type"`
-	CreatedAt          *int                              `json:"created_at,omitempty"`
-	DataCenter         *DeleteDiskPartDataCenter         `json:"data_center,omitempty"`
-	Id                 *string                           `json:"id,omitempty"`
-	Installation       *DiskInstallation                 `json:"installation"`
-	IoProfile          *DiskIOProfile                    `json:"io_profile"`
-	Name               *string                           `json:"name,omitempty"`
-	SizeInGb           *int                              `json:"size_in_gb,omitempty"`
-	State              *DiskStateEnum                    `json:"state,omitempty"`
-	StorageSpeed       *StorageSpeedEnum                 `json:"storage_speed,omitempty"`
-	VirtualMachineDisk *DeleteDiskPartVirtualMachineDisk `json:"virtual_machine_disk"`
-	Wwn                *string                           `json:"wwn,omitempty"`
+	BusType            nullable.Nullable[DiskBusEnum]                      `json:"bus_type,omitempty"`
+	CreatedAt          *int                                                `json:"created_at,omitempty"`
+	DataCenter         *DeleteDiskPartDataCenter                           `json:"data_center,omitempty"`
+	Id                 *string                                             `json:"id,omitempty"`
+	Installation       nullable.Nullable[DiskInstallation]                 `json:"installation,omitempty"`
+	IoProfile          nullable.Nullable[DiskIOProfile]                    `json:"io_profile,omitempty"`
+	Name               *string                                             `json:"name,omitempty"`
+	SizeInGb           *int                                                `json:"size_in_gb,omitempty"`
+	State              *DiskStateEnum                                      `json:"state,omitempty"`
+	StorageSpeed       *StorageSpeedEnum                                   `json:"storage_speed,omitempty"`
+	VirtualMachineDisk nullable.Nullable[DeleteDiskPartVirtualMachineDisk] `json:"virtual_machine_disk,omitempty"`
+	Wwn                *string                                             `json:"wwn,omitempty"`
 }
 
 // DeleteDiskBackupPolicy200ResponseDiskBackupPolicy defines model for DeleteDiskBackupPolicy200ResponseDiskBackupPolicy.
@@ -1190,7 +1191,7 @@ type DeleteDiskBackupPolicy200ResponseDiskBackupPolicy struct {
 
 // DeleteDiskBackupPolicySchedule200ResponseDiskBackupPolicy defines model for DeleteDiskBackupPolicySchedule200ResponseDiskBackupPolicy.
 type DeleteDiskBackupPolicySchedule200ResponseDiskBackupPolicy struct {
-	AutoMoveToTrashAt *int                    `json:"auto_move_to_trash_at"`
+	AutoMoveToTrashAt nullable.Nullable[int]  `json:"auto_move_to_trash_at,omitempty"`
 	Id                *string                 `json:"id,omitempty"`
 	Target            *DiskBackupPolicyTarget `json:"target,omitempty"`
 }
@@ -1224,10 +1225,10 @@ type DeleteFileStorageVolume200ResponseFileStorageVolume struct {
 	Name         *string                                `json:"name,omitempty"`
 
 	// NfsLocation The NFS location of where to mount the volume from.
-	NfsLocation *string `json:"nfs_location"`
+	NfsLocation nullable.Nullable[string] `json:"nfs_location,omitempty"`
 
 	// Size The size of the volume in bytes.
-	Size  *int                        `json:"size"`
+	Size  nullable.Nullable[int]      `json:"size,omitempty"`
 	State *FileStorageVolumeStateEnum `json:"state,omitempty"`
 }
 
@@ -1240,9 +1241,9 @@ type DeleteFileStorageVolumePartDataCenter struct {
 
 // DeleteLoadBalancer200ResponseLoadBalancer defines model for DeleteLoadBalancer200ResponseLoadBalancer.
 type DeleteLoadBalancer200ResponseLoadBalancer struct {
-	ApiReference *string `json:"api_reference"`
-	Id           *string `json:"id,omitempty"`
-	Name         *string `json:"name,omitempty"`
+	ApiReference nullable.Nullable[string] `json:"api_reference,omitempty"`
+	Id           *string                   `json:"id,omitempty"`
+	Name         *string                   `json:"name,omitempty"`
 }
 
 // DeleteLoadBalancersRulesLoadBalancerRule200ResponseLoadBalancerRule defines model for DeleteLoadBalancersRulesLoadBalancerRule200ResponseLoadBalancerRule.
@@ -1270,41 +1271,41 @@ type DeleteSecurityGroupsRulesSecurityGroupRule200ResponseSecurityGroupRule stru
 
 // DeleteVirtualMachine200ResponseVirtualMachine defines model for DeleteVirtualMachine200ResponseVirtualMachine.
 type DeleteVirtualMachine200ResponseVirtualMachine struct {
-	AttachedIso         *ISO                             `json:"attached_iso"`
-	CpuCores            *int                             `json:"cpu_cores"`
-	CreatedAt           *int                             `json:"created_at,omitempty"`
-	Description         *string                          `json:"description"`
-	Fqdn                *string                          `json:"fqdn,omitempty"`
-	GpuType             *DeleteVirtualMachinePartGPUType `json:"gpu_type"`
-	Gpus                *[]VirtualMachineGPU             `json:"gpus,omitempty"`
-	Group               *VirtualMachineGroup             `json:"group"`
-	Hostname            *string                          `json:"hostname,omitempty"`
-	Hypervisor          *Hypervisor                      `json:"hypervisor"`
-	Id                  *string                          `json:"id,omitempty"`
-	InitialRootPassword *string                          `json:"initial_root_password"`
-	IpAddresses         *[]IPAddress                     `json:"ip_addresses,omitempty"`
-	MemoryInGb          *int                             `json:"memory_in_gb"`
-	Name                *string                          `json:"name,omitempty"`
-	Organization        *Organization                    `json:"organization,omitempty"`
-	Package             *VirtualMachinePackage           `json:"package"`
-	State               *VirtualMachineStateEnum         `json:"state,omitempty"`
-	TagNames            *[]string                        `json:"tag_names,omitempty"`
-	Tags                *[]Tag                           `json:"tags,omitempty"`
-	UseDedicatedCpus    *bool                            `json:"use_dedicated_cpus"`
-	Zone                *Zone                            `json:"zone,omitempty"`
+	AttachedIso         nullable.Nullable[ISO]                             `json:"attached_iso,omitempty"`
+	CpuCores            nullable.Nullable[int]                             `json:"cpu_cores,omitempty"`
+	CreatedAt           *int                                               `json:"created_at,omitempty"`
+	Description         nullable.Nullable[string]                          `json:"description,omitempty"`
+	Fqdn                *string                                            `json:"fqdn,omitempty"`
+	GpuType             nullable.Nullable[DeleteVirtualMachinePartGPUType] `json:"gpu_type,omitempty"`
+	Gpus                *[]VirtualMachineGPU                               `json:"gpus,omitempty"`
+	Group               nullable.Nullable[VirtualMachineGroup]             `json:"group,omitempty"`
+	Hostname            *string                                            `json:"hostname,omitempty"`
+	Hypervisor          nullable.Nullable[Hypervisor]                      `json:"hypervisor,omitempty"`
+	Id                  *string                                            `json:"id,omitempty"`
+	InitialRootPassword nullable.Nullable[string]                          `json:"initial_root_password,omitempty"`
+	IpAddresses         *[]IPAddress                                       `json:"ip_addresses,omitempty"`
+	MemoryInGb          nullable.Nullable[int]                             `json:"memory_in_gb,omitempty"`
+	Name                *string                                            `json:"name,omitempty"`
+	Organization        *Organization                                      `json:"organization,omitempty"`
+	Package             nullable.Nullable[VirtualMachinePackage]           `json:"package,omitempty"`
+	State               *VirtualMachineStateEnum                           `json:"state,omitempty"`
+	TagNames            *[]string                                          `json:"tag_names,omitempty"`
+	Tags                *[]Tag                                             `json:"tags,omitempty"`
+	UseDedicatedCpus    nullable.Nullable[bool]                            `json:"use_dedicated_cpus,omitempty"`
+	Zone                *Zone                                              `json:"zone,omitempty"`
 }
 
 // DeleteVirtualMachineNetworkInterface200ResponseVirtualMachineNetworkInterface defines model for DeleteVirtualMachineNetworkInterface200ResponseVirtualMachineNetworkInterface.
 type DeleteVirtualMachineNetworkInterface200ResponseVirtualMachineNetworkInterface struct {
-	Id             *string                                                 `json:"id,omitempty"`
-	IpAddresses    *[]DeleteVirtualMachineNetworkInterfacePartIPAddresses  `json:"ip_addresses,omitempty"`
-	MacAddress     *string                                                 `json:"mac_address,omitempty"`
-	Name           *string                                                 `json:"name,omitempty"`
-	Network        *DeleteVirtualMachineNetworkInterfacePartNetwork        `json:"network"`
-	SpeedProfile   *DeleteVirtualMachineNetworkInterfacePartSpeedProfile   `json:"speed_profile,omitempty"`
-	State          *string                                                 `json:"state,omitempty"`
-	VirtualMachine *DeleteVirtualMachineNetworkInterfacePartVirtualMachine `json:"virtual_machine,omitempty"`
-	VirtualNetwork *DeleteVirtualMachineNetworkInterfacePartVirtualNetwork `json:"virtual_network"`
+	Id             *string                                                                   `json:"id,omitempty"`
+	IpAddresses    *[]DeleteVirtualMachineNetworkInterfacePartIPAddresses                    `json:"ip_addresses,omitempty"`
+	MacAddress     *string                                                                   `json:"mac_address,omitempty"`
+	Name           *string                                                                   `json:"name,omitempty"`
+	Network        nullable.Nullable[DeleteVirtualMachineNetworkInterfacePartNetwork]        `json:"network,omitempty"`
+	SpeedProfile   *DeleteVirtualMachineNetworkInterfacePartSpeedProfile                     `json:"speed_profile,omitempty"`
+	State          *string                                                                   `json:"state,omitempty"`
+	VirtualMachine *DeleteVirtualMachineNetworkInterfacePartVirtualMachine                   `json:"virtual_machine,omitempty"`
+	VirtualNetwork nullable.Nullable[DeleteVirtualMachineNetworkInterfacePartVirtualNetwork] `json:"virtual_network,omitempty"`
 }
 
 // DeleteVirtualMachineNetworkInterfacePartIPAddresses defines model for DeleteVirtualMachineNetworkInterfacePartIPAddresses.
@@ -1376,18 +1377,18 @@ type DeletionStepsNotSatisfiedSchema struct {
 
 // Disk defines model for Disk.
 type Disk struct {
-	BusType            *DiskBusEnum        `json:"bus_type"`
-	CreatedAt          *int                `json:"created_at,omitempty"`
-	DataCenter         *DataCenter         `json:"data_center,omitempty"`
-	Id                 *string             `json:"id,omitempty"`
-	Installation       *DiskInstallation   `json:"installation"`
-	IoProfile          *DiskIOProfile      `json:"io_profile"`
-	Name               *string             `json:"name,omitempty"`
-	SizeInGb           *int                `json:"size_in_gb,omitempty"`
-	State              *DiskStateEnum      `json:"state,omitempty"`
-	StorageSpeed       *StorageSpeedEnum   `json:"storage_speed,omitempty"`
-	VirtualMachineDisk *VirtualMachineDisk `json:"virtual_machine_disk"`
-	Wwn                *string             `json:"wwn,omitempty"`
+	BusType            nullable.Nullable[DiskBusEnum]        `json:"bus_type,omitempty"`
+	CreatedAt          *int                                  `json:"created_at,omitempty"`
+	DataCenter         *DataCenter                           `json:"data_center,omitempty"`
+	Id                 *string                               `json:"id,omitempty"`
+	Installation       nullable.Nullable[DiskInstallation]   `json:"installation,omitempty"`
+	IoProfile          nullable.Nullable[DiskIOProfile]      `json:"io_profile,omitempty"`
+	Name               *string                               `json:"name,omitempty"`
+	SizeInGb           *int                                  `json:"size_in_gb,omitempty"`
+	State              *DiskStateEnum                        `json:"state,omitempty"`
+	StorageSpeed       *StorageSpeedEnum                     `json:"storage_speed,omitempty"`
+	VirtualMachineDisk nullable.Nullable[VirtualMachineDisk] `json:"virtual_machine_disk,omitempty"`
+	Wwn                *string                               `json:"wwn,omitempty"`
 }
 
 // DiskArguments defines model for DiskArguments.
@@ -1437,11 +1438,11 @@ type DiskBusEnum string
 
 // DiskIOProfile defines model for DiskIOProfile.
 type DiskIOProfile struct {
-	Id        *string `json:"id,omitempty"`
-	Iops      *int    `json:"iops"`
-	Name      *string `json:"name,omitempty"`
-	Permalink *string `json:"permalink,omitempty"`
-	SpeedInMb *int    `json:"speed_in_mb"`
+	Id        *string                `json:"id,omitempty"`
+	Iops      nullable.Nullable[int] `json:"iops,omitempty"`
+	Name      *string                `json:"name,omitempty"`
+	Permalink *string                `json:"permalink,omitempty"`
+	SpeedInMb nullable.Nullable[int] `json:"speed_in_mb,omitempty"`
 }
 
 // DiskIOProfileLookup All 'io_profile[]' params are mutually exclusive, only one can be provided.
@@ -1469,11 +1470,11 @@ type DiskInstallation struct {
 
 // DiskInstallationAttribute defines model for DiskInstallationAttribute.
 type DiskInstallationAttribute struct {
-	Description *string `json:"description"`
-	Key         *string `json:"key,omitempty"`
-	Label       *string `json:"label,omitempty"`
-	Protect     *bool   `json:"protect,omitempty"`
-	Value       *string `json:"value"`
+	Description nullable.Nullable[string] `json:"description,omitempty"`
+	Key         *string                   `json:"key,omitempty"`
+	Label       *string                   `json:"label,omitempty"`
+	Protect     *bool                     `json:"protect,omitempty"`
+	Value       nullable.Nullable[string] `json:"value,omitempty"`
 }
 
 // DiskLookup defines model for DiskLookup.
@@ -1496,14 +1497,14 @@ type DiskStateEnum string
 
 // DiskTemplate defines model for DiskTemplate.
 type DiskTemplate struct {
-	Description     *string              `json:"description"`
-	Id              *string              `json:"id,omitempty"`
-	LatestVersion   *DiskTemplateVersion `json:"latest_version"`
-	Name            *string              `json:"name,omitempty"`
-	OperatingSystem *OperatingSystem     `json:"operating_system"`
-	Permalink       *string              `json:"permalink,omitempty"`
-	SizeInGb        *int                 `json:"size_in_gb"`
-	Universal       *bool                `json:"universal,omitempty"`
+	Description     nullable.Nullable[string]              `json:"description,omitempty"`
+	Id              *string                                `json:"id,omitempty"`
+	LatestVersion   nullable.Nullable[DiskTemplateVersion] `json:"latest_version,omitempty"`
+	Name            *string                                `json:"name,omitempty"`
+	OperatingSystem nullable.Nullable[OperatingSystem]     `json:"operating_system,omitempty"`
+	Permalink       *string                                `json:"permalink,omitempty"`
+	SizeInGb        nullable.Nullable[int]                 `json:"size_in_gb,omitempty"`
+	Universal       *bool                                  `json:"universal,omitempty"`
 }
 
 // DiskTemplateLookup All 'disk_template[]' params are mutually exclusive, only one can be provided.
@@ -1637,7 +1638,7 @@ type GetDataCenterDefaultNetwork200ResponseNetwork struct {
 	DataCenter *GetDataCenterDefaultNetworkPartDataCenter `json:"data_center,omitempty"`
 	Id         *string                                    `json:"id,omitempty"`
 	Name       *string                                    `json:"name,omitempty"`
-	Permalink  *string                                    `json:"permalink"`
+	Permalink  nullable.Nullable[string]                  `json:"permalink,omitempty"`
 }
 
 // GetDataCenterDefaultNetworkPartDataCenter defines model for GetDataCenterDefaultNetworkPartDataCenter.
@@ -1679,23 +1680,23 @@ type GetDataCentersPartCountry struct {
 
 // GetDisk200ResponseDisk defines model for GetDisk200ResponseDisk.
 type GetDisk200ResponseDisk struct {
-	BusType            *DiskBusEnum                   `json:"bus_type"`
-	CreatedAt          *int                           `json:"created_at,omitempty"`
-	DataCenter         *GetDiskPartDataCenter         `json:"data_center,omitempty"`
-	Id                 *string                        `json:"id,omitempty"`
-	Installation       *DiskInstallation              `json:"installation"`
-	IoProfile          *DiskIOProfile                 `json:"io_profile"`
-	Name               *string                        `json:"name,omitempty"`
-	SizeInGb           *int                           `json:"size_in_gb,omitempty"`
-	State              *DiskStateEnum                 `json:"state,omitempty"`
-	StorageSpeed       *StorageSpeedEnum              `json:"storage_speed,omitempty"`
-	VirtualMachineDisk *GetDiskPartVirtualMachineDisk `json:"virtual_machine_disk"`
-	Wwn                *string                        `json:"wwn,omitempty"`
+	BusType            nullable.Nullable[DiskBusEnum]                   `json:"bus_type,omitempty"`
+	CreatedAt          *int                                             `json:"created_at,omitempty"`
+	DataCenter         *GetDiskPartDataCenter                           `json:"data_center,omitempty"`
+	Id                 *string                                          `json:"id,omitempty"`
+	Installation       nullable.Nullable[DiskInstallation]              `json:"installation,omitempty"`
+	IoProfile          nullable.Nullable[DiskIOProfile]                 `json:"io_profile,omitempty"`
+	Name               *string                                          `json:"name,omitempty"`
+	SizeInGb           *int                                             `json:"size_in_gb,omitempty"`
+	State              *DiskStateEnum                                   `json:"state,omitempty"`
+	StorageSpeed       *StorageSpeedEnum                                `json:"storage_speed,omitempty"`
+	VirtualMachineDisk nullable.Nullable[GetDiskPartVirtualMachineDisk] `json:"virtual_machine_disk,omitempty"`
+	Wwn                *string                                          `json:"wwn,omitempty"`
 }
 
 // GetDiskBackupPolicy200ResponseDiskBackupPolicy defines model for GetDiskBackupPolicy200ResponseDiskBackupPolicy.
 type GetDiskBackupPolicy200ResponseDiskBackupPolicy struct {
-	AutoMoveToTrashAt *int                    `json:"auto_move_to_trash_at"`
+	AutoMoveToTrashAt nullable.Nullable[int]  `json:"auto_move_to_trash_at,omitempty"`
 	Id                *string                 `json:"id,omitempty"`
 	Retention         *int                    `json:"retention,omitempty"`
 	Schedule          *Schedule               `json:"schedule,omitempty"`
@@ -1741,14 +1742,14 @@ type GetDiskPartVirtualMachineDisk struct {
 
 // GetDiskTemplate200ResponseDiskTemplate defines model for GetDiskTemplate200ResponseDiskTemplate.
 type GetDiskTemplate200ResponseDiskTemplate struct {
-	Description     *string                           `json:"description"`
-	Id              *string                           `json:"id,omitempty"`
-	LatestVersion   *GetDiskTemplatePartLatestVersion `json:"latest_version"`
-	Name            *string                           `json:"name,omitempty"`
-	OperatingSystem *OperatingSystem                  `json:"operating_system"`
-	Permalink       *string                           `json:"permalink,omitempty"`
-	SizeInGb        *int                              `json:"size_in_gb"`
-	Universal       *bool                             `json:"universal,omitempty"`
+	Description     nullable.Nullable[string]                           `json:"description,omitempty"`
+	Id              *string                                             `json:"id,omitempty"`
+	LatestVersion   nullable.Nullable[GetDiskTemplatePartLatestVersion] `json:"latest_version,omitempty"`
+	Name            *string                                             `json:"name,omitempty"`
+	OperatingSystem nullable.Nullable[OperatingSystem]                  `json:"operating_system,omitempty"`
+	Permalink       *string                                             `json:"permalink,omitempty"`
+	SizeInGb        nullable.Nullable[int]                              `json:"size_in_gb,omitempty"`
+	Universal       *bool                                               `json:"universal,omitempty"`
 }
 
 // GetDiskTemplatePartLatestVersion defines model for GetDiskTemplatePartLatestVersion.
@@ -1811,10 +1812,10 @@ type GetFileStorageVolume200ResponseFileStorageVolume struct {
 	Name         *string                             `json:"name,omitempty"`
 
 	// NfsLocation The NFS location of where to mount the volume from.
-	NfsLocation *string `json:"nfs_location"`
+	NfsLocation nullable.Nullable[string] `json:"nfs_location,omitempty"`
 
 	// Size The size of the volume in bytes.
-	Size  *int                        `json:"size"`
+	Size  nullable.Nullable[int]      `json:"size,omitempty"`
 	State *FileStorageVolumeStateEnum `json:"state,omitempty"`
 }
 
@@ -1869,7 +1870,7 @@ type GetIPAddress200ResponseAllocation struct {
 
 // GetLoadBalancer200ResponseLoadBalancer defines model for GetLoadBalancer200ResponseLoadBalancer.
 type GetLoadBalancer200ResponseLoadBalancer struct {
-	ApiReference          *string                        `json:"api_reference"`
+	ApiReference          nullable.Nullable[string]      `json:"api_reference,omitempty"`
 	BackendCertificate    *string                        `json:"backend_certificate,omitempty"`
 	BackendCertificateKey *string                        `json:"backend_certificate_key,omitempty"`
 	DataCenter            *GetLoadBalancerPartDataCenter `json:"data_center,omitempty"`
@@ -1922,10 +1923,10 @@ type GetLoadBalancersRulesLoadBalancerRule200ResponseLoadBalancerRule struct {
 	Certificates      *[]GetLoadBalancersRulesLoadBalancerRulePartCertificates `json:"certificates,omitempty"`
 	CheckEnabled      *bool                                                    `json:"check_enabled,omitempty"`
 	CheckFall         *int                                                     `json:"check_fall,omitempty"`
-	CheckHttpStatuses *LoadBalancerRuleHTTPStatusesEnum                        `json:"check_http_statuses"`
+	CheckHttpStatuses nullable.Nullable[LoadBalancerRuleHTTPStatusesEnum]      `json:"check_http_statuses,omitempty"`
 	CheckInterval     *int                                                     `json:"check_interval,omitempty"`
 	CheckPath         *string                                                  `json:"check_path,omitempty"`
-	CheckProtocol     *LoadBalancerRuleCheckProtocolEnum                       `json:"check_protocol"`
+	CheckProtocol     nullable.Nullable[LoadBalancerRuleCheckProtocolEnum]     `json:"check_protocol,omitempty"`
 	CheckRise         *int                                                     `json:"check_rise,omitempty"`
 	CheckTimeout      *int                                                     `json:"check_timeout,omitempty"`
 	DestinationPort   *int                                                     `json:"destination_port,omitempty"`
@@ -1972,7 +1973,7 @@ type GetOrganizationAvailableNetworks200ResponseNetworks struct {
 	DataCenter *GetOrganizationAvailableNetworksPartDataCenter `json:"data_center,omitempty"`
 	Id         *string                                         `json:"id,omitempty"`
 	Name       *string                                         `json:"name,omitempty"`
-	Permalink  *string                                         `json:"permalink"`
+	Permalink  nullable.Nullable[string]                       `json:"permalink,omitempty"`
 }
 
 // GetOrganizationAvailableNetworks200ResponseVirtualNetworks defines model for GetOrganizationAvailableNetworks200ResponseVirtualNetworks.
@@ -1991,12 +1992,12 @@ type GetOrganizationAvailableNetworksPartDataCenter struct {
 
 // GetOrganizationCertificates200ResponseCertificates defines model for GetOrganizationCertificates200ResponseCertificates.
 type GetOrganizationCertificates200ResponseCertificates struct {
-	ExpiresAt    *int                  `json:"expires_at"`
-	Id           *string               `json:"id,omitempty"`
-	Issuer       *IssuerEnum           `json:"issuer,omitempty"`
-	LastIssuedAt *int                  `json:"last_issued_at"`
-	Name         *string               `json:"name,omitempty"`
-	State        *CertificateStateEnum `json:"state,omitempty"`
+	ExpiresAt    nullable.Nullable[int] `json:"expires_at,omitempty"`
+	Id           *string                `json:"id,omitempty"`
+	Issuer       *IssuerEnum            `json:"issuer,omitempty"`
+	LastIssuedAt nullable.Nullable[int] `json:"last_issued_at,omitempty"`
+	Name         *string                `json:"name,omitempty"`
+	State        *CertificateStateEnum  `json:"state,omitempty"`
 }
 
 // GetOrganizationDiskBackupPolicies200ResponseDiskBackupPolicies defines model for GetOrganizationDiskBackupPolicies200ResponseDiskBackupPolicies.
@@ -2016,14 +2017,14 @@ type GetOrganizationDiskBackupPoliciesPartSchedule struct {
 
 // GetOrganizationDiskTemplates200ResponseDiskTemplates defines model for GetOrganizationDiskTemplates200ResponseDiskTemplates.
 type GetOrganizationDiskTemplates200ResponseDiskTemplates struct {
-	Description     *string                                          `json:"description"`
-	Id              *string                                          `json:"id,omitempty"`
-	LatestVersion   *GetOrganizationDiskTemplatesPartLatestVersion   `json:"latest_version"`
-	Name            *string                                          `json:"name,omitempty"`
-	OperatingSystem *GetOrganizationDiskTemplatesPartOperatingSystem `json:"operating_system"`
-	Permalink       *string                                          `json:"permalink,omitempty"`
-	SizeInGb        *int                                             `json:"size_in_gb"`
-	Universal       *bool                                            `json:"universal,omitempty"`
+	Description     nullable.Nullable[string]                                          `json:"description,omitempty"`
+	Id              *string                                                            `json:"id,omitempty"`
+	LatestVersion   nullable.Nullable[GetOrganizationDiskTemplatesPartLatestVersion]   `json:"latest_version,omitempty"`
+	Name            *string                                                            `json:"name,omitempty"`
+	OperatingSystem nullable.Nullable[GetOrganizationDiskTemplatesPartOperatingSystem] `json:"operating_system,omitempty"`
+	Permalink       *string                                                            `json:"permalink,omitempty"`
+	SizeInGb        nullable.Nullable[int]                                             `json:"size_in_gb,omitempty"`
+	Universal       *bool                                                              `json:"universal,omitempty"`
 }
 
 // GetOrganizationDiskTemplatesPartLatestVersion defines model for GetOrganizationDiskTemplatesPartLatestVersion.
@@ -2040,12 +2041,12 @@ type GetOrganizationDiskTemplatesPartOperatingSystem struct {
 
 // GetOrganizationDisks200ResponseDisk defines model for GetOrganizationDisks200ResponseDisk.
 type GetOrganizationDisks200ResponseDisk struct {
-	Id                 *string                                     `json:"id,omitempty"`
-	Name               *string                                     `json:"name,omitempty"`
-	SizeInGb           *int                                        `json:"size_in_gb,omitempty"`
-	State              *DiskStateEnum                              `json:"state,omitempty"`
-	VirtualMachineDisk *GetOrganizationDisksPartVirtualMachineDisk `json:"virtual_machine_disk"`
-	Wwn                *string                                     `json:"wwn,omitempty"`
+	Id                 *string                                                       `json:"id,omitempty"`
+	Name               *string                                                       `json:"name,omitempty"`
+	SizeInGb           *int                                                          `json:"size_in_gb,omitempty"`
+	State              *DiskStateEnum                                                `json:"state,omitempty"`
+	VirtualMachineDisk nullable.Nullable[GetOrganizationDisksPartVirtualMachineDisk] `json:"virtual_machine_disk,omitempty"`
+	Wwn                *string                                                       `json:"wwn,omitempty"`
 }
 
 // GetOrganizationDisksPartVirtualMachine defines model for GetOrganizationDisksPartVirtualMachine.
@@ -2067,10 +2068,10 @@ type GetOrganizationFileStorageVolumes200ResponseFileStorageVolumes struct {
 	Name         *string                                          `json:"name,omitempty"`
 
 	// NfsLocation The NFS location of where to mount the volume from.
-	NfsLocation *string `json:"nfs_location"`
+	NfsLocation nullable.Nullable[string] `json:"nfs_location,omitempty"`
 
 	// Size The size of the volume in bytes.
-	Size  *int                        `json:"size"`
+	Size  nullable.Nullable[int]      `json:"size,omitempty"`
 	State *FileStorageVolumeStateEnum `json:"state,omitempty"`
 }
 
@@ -2083,17 +2084,17 @@ type GetOrganizationFileStorageVolumesPartDataCenter struct {
 
 // GetOrganizationIPAddresses200ResponseIPAddresses defines model for GetOrganizationIPAddresses200ResponseIPAddresses.
 type GetOrganizationIPAddresses200ResponseIPAddresses struct {
-	Address        *string `json:"address,omitempty"`
-	AllocationId   *string `json:"allocation_id"`
-	AllocationType *string `json:"allocation_type"`
-	Id             *string `json:"id,omitempty"`
-	ReverseDns     *string `json:"reverse_dns,omitempty"`
-	Vip            *bool   `json:"vip,omitempty"`
+	Address        *string                   `json:"address,omitempty"`
+	AllocationId   nullable.Nullable[string] `json:"allocation_id,omitempty"`
+	AllocationType nullable.Nullable[string] `json:"allocation_type,omitempty"`
+	Id             *string                   `json:"id,omitempty"`
+	ReverseDns     *string                   `json:"reverse_dns,omitempty"`
+	Vip            *bool                     `json:"vip,omitempty"`
 }
 
 // GetOrganizationLoadBalancers200ResponseLoadBalancers defines model for GetOrganizationLoadBalancers200ResponseLoadBalancers.
 type GetOrganizationLoadBalancers200ResponseLoadBalancers struct {
-	ApiReference *string                                     `json:"api_reference"`
+	ApiReference nullable.Nullable[string]                   `json:"api_reference,omitempty"`
 	DataCenter   *GetOrganizationLoadBalancersPartDataCenter `json:"data_center,omitempty"`
 	Id           *string                                     `json:"id,omitempty"`
 	IpAddress    *GetOrganizationLoadBalancersPartIPAddress  `json:"ip_address,omitempty"`
@@ -2133,21 +2134,21 @@ type GetOrganizationTags200ResponseTags struct {
 
 // GetOrganizationUsersWithAccess200ResponseUsers defines model for GetOrganizationUsersWithAccess200ResponseUsers.
 type GetOrganizationUsersWithAccess200ResponseUsers struct {
-	User *User `json:"user"`
+	User nullable.Nullable[User] `json:"user,omitempty"`
 }
 
 // GetOrganizationVirtualMachines200ResponseVirtualMachines defines model for GetOrganizationVirtualMachines200ResponseVirtualMachines.
 type GetOrganizationVirtualMachines200ResponseVirtualMachines struct {
-	CreatedAt   *int                                             `json:"created_at,omitempty"`
-	Fqdn        *string                                          `json:"fqdn,omitempty"`
-	GpuType     *GetOrganizationVirtualMachinesPartGPUType       `json:"gpu_type"`
-	Hostname    *string                                          `json:"hostname,omitempty"`
-	Hypervisor  *GetOrganizationVirtualMachinesPartHypervisor    `json:"hypervisor"`
-	Id          *string                                          `json:"id,omitempty"`
-	IpAddresses *[]GetOrganizationVirtualMachinesPartIPAddresses `json:"ip_addresses,omitempty"`
-	Name        *string                                          `json:"name,omitempty"`
-	Package     *GetOrganizationVirtualMachinesPartPackage       `json:"package"`
-	Zone        *Zone                                            `json:"zone,omitempty"`
+	CreatedAt   *int                                                            `json:"created_at,omitempty"`
+	Fqdn        *string                                                         `json:"fqdn,omitempty"`
+	GpuType     nullable.Nullable[GetOrganizationVirtualMachinesPartGPUType]    `json:"gpu_type,omitempty"`
+	Hostname    *string                                                         `json:"hostname,omitempty"`
+	Hypervisor  nullable.Nullable[GetOrganizationVirtualMachinesPartHypervisor] `json:"hypervisor,omitempty"`
+	Id          *string                                                         `json:"id,omitempty"`
+	IpAddresses *[]GetOrganizationVirtualMachinesPartIPAddresses                `json:"ip_addresses,omitempty"`
+	Name        *string                                                         `json:"name,omitempty"`
+	Package     nullable.Nullable[GetOrganizationVirtualMachinesPartPackage]    `json:"package,omitempty"`
+	Zone        *Zone                                                           `json:"zone,omitempty"`
 }
 
 // GetOrganizationVirtualMachinesPartGPUType defines model for GetOrganizationVirtualMachinesPartGPUType.
@@ -2175,14 +2176,14 @@ type GetOrganizationVirtualMachinesPartPackage struct {
 
 // GetOrganizations200ResponseOrganizations defines model for GetOrganizations200ResponseOrganizations.
 type GetOrganizations200ResponseOrganizations struct {
-	ActivatedAt          *int    `json:"activated_at"`
-	CreatedAt            *int    `json:"created_at,omitempty"`
-	Id                   *string `json:"id,omitempty"`
-	InfrastructureDomain *string `json:"infrastructure_domain,omitempty"`
-	Managed              *bool   `json:"managed,omitempty"`
-	Name                 *string `json:"name,omitempty"`
-	SubDomain            *string `json:"sub_domain,omitempty"`
-	Suspended            *bool   `json:"suspended,omitempty"`
+	ActivatedAt          nullable.Nullable[int] `json:"activated_at,omitempty"`
+	CreatedAt            *int                   `json:"created_at,omitempty"`
+	Id                   *string                `json:"id,omitempty"`
+	InfrastructureDomain *string                `json:"infrastructure_domain,omitempty"`
+	Managed              *bool                  `json:"managed,omitempty"`
+	Name                 *string                `json:"name,omitempty"`
+	SubDomain            *string                `json:"sub_domain,omitempty"`
+	Suspended            *bool                  `json:"suspended,omitempty"`
 }
 
 // GetSecurityGroupRules200ResponseSecurityGroupRules defines model for GetSecurityGroupRules200ResponseSecurityGroupRules.
@@ -2190,8 +2191,8 @@ type GetSecurityGroupRules200ResponseSecurityGroupRules struct {
 	Action    *SecurityGroupRuleActionEnum    `json:"action,omitempty"`
 	Direction *SecurityGroupRuleDirectionEnum `json:"direction,omitempty"`
 	Id        *string                         `json:"id,omitempty"`
-	Notes     *string                         `json:"notes"`
-	Ports     *string                         `json:"ports"`
+	Notes     nullable.Nullable[string]       `json:"notes,omitempty"`
+	Ports     nullable.Nullable[string]       `json:"ports,omitempty"`
 	Protocol  *SecurityGroupRuleProtocolEnum  `json:"protocol,omitempty"`
 	Targets   *[]string                       `json:"targets,omitempty"`
 }
@@ -2201,8 +2202,8 @@ type GetSecurityGroupsRulesSecurityGroupRule200ResponseSecurityGroupRule struct 
 	Action        *SecurityGroupRuleActionEnum                              `json:"action,omitempty"`
 	Direction     *SecurityGroupRuleDirectionEnum                           `json:"direction,omitempty"`
 	Id            *string                                                   `json:"id,omitempty"`
-	Notes         *string                                                   `json:"notes"`
-	Ports         *string                                                   `json:"ports"`
+	Notes         nullable.Nullable[string]                                 `json:"notes,omitempty"`
+	Ports         nullable.Nullable[string]                                 `json:"ports,omitempty"`
 	Protocol      *SecurityGroupRuleProtocolEnum                            `json:"protocol,omitempty"`
 	SecurityGroup *GetSecurityGroupsRulesSecurityGroupRulePartSecurityGroup `json:"security_group,omitempty"`
 	Targets       *[]string                                                 `json:"targets,omitempty"`
@@ -2223,15 +2224,15 @@ type GetUsersCurrent200ResponseOrganizations struct {
 
 // GetVMNIVMNI200ResponseVirtualMachineNetworkInterface defines model for GetVMNIVMNI200ResponseVirtualMachineNetworkInterface.
 type GetVMNIVMNI200ResponseVirtualMachineNetworkInterface struct {
-	Id             *string                        `json:"id,omitempty"`
-	IpAddresses    *[]GetVMNIVMNIPartIPAddresses  `json:"ip_addresses,omitempty"`
-	MacAddress     *string                        `json:"mac_address,omitempty"`
-	Name           *string                        `json:"name,omitempty"`
-	Network        *GetVMNIVMNIPartNetwork        `json:"network"`
-	SpeedProfile   *GetVMNIVMNIPartSpeedProfile   `json:"speed_profile,omitempty"`
-	State          *string                        `json:"state,omitempty"`
-	VirtualMachine *GetVMNIVMNIPartVirtualMachine `json:"virtual_machine,omitempty"`
-	VirtualNetwork *GetVMNIVMNIPartVirtualNetwork `json:"virtual_network"`
+	Id             *string                                          `json:"id,omitempty"`
+	IpAddresses    *[]GetVMNIVMNIPartIPAddresses                    `json:"ip_addresses,omitempty"`
+	MacAddress     *string                                          `json:"mac_address,omitempty"`
+	Name           *string                                          `json:"name,omitempty"`
+	Network        nullable.Nullable[GetVMNIVMNIPartNetwork]        `json:"network,omitempty"`
+	SpeedProfile   *GetVMNIVMNIPartSpeedProfile                     `json:"speed_profile,omitempty"`
+	State          *string                                          `json:"state,omitempty"`
+	VirtualMachine *GetVMNIVMNIPartVirtualMachine                   `json:"virtual_machine,omitempty"`
+	VirtualNetwork nullable.Nullable[GetVMNIVMNIPartVirtualNetwork] `json:"virtual_network,omitempty"`
 }
 
 // GetVMNIVMNIPartIPAddresses defines model for GetVMNIVMNIPartIPAddresses.
@@ -2267,28 +2268,28 @@ type GetVMNIVMNIPartVirtualNetwork struct {
 
 // GetVirtualMachine200ResponseVirtualMachine defines model for GetVirtualMachine200ResponseVirtualMachine.
 type GetVirtualMachine200ResponseVirtualMachine struct {
-	AttachedIso         *ISO                          `json:"attached_iso"`
-	CpuCores            *int                          `json:"cpu_cores"`
-	CreatedAt           *int                          `json:"created_at,omitempty"`
-	Description         *string                       `json:"description"`
-	Fqdn                *string                       `json:"fqdn,omitempty"`
-	GpuType             *GetVirtualMachinePartGPUType `json:"gpu_type"`
-	Gpus                *[]VirtualMachineGPU          `json:"gpus,omitempty"`
-	Group               *VirtualMachineGroup          `json:"group"`
-	Hostname            *string                       `json:"hostname,omitempty"`
-	Hypervisor          *Hypervisor                   `json:"hypervisor"`
-	Id                  *string                       `json:"id,omitempty"`
-	InitialRootPassword *string                       `json:"initial_root_password"`
-	IpAddresses         *[]IPAddress                  `json:"ip_addresses,omitempty"`
-	MemoryInGb          *int                          `json:"memory_in_gb"`
-	Name                *string                       `json:"name,omitempty"`
-	Organization        *Organization                 `json:"organization,omitempty"`
-	Package             *VirtualMachinePackage        `json:"package"`
-	State               *VirtualMachineStateEnum      `json:"state,omitempty"`
-	TagNames            *[]string                     `json:"tag_names,omitempty"`
-	Tags                *[]Tag                        `json:"tags,omitempty"`
-	UseDedicatedCpus    *bool                         `json:"use_dedicated_cpus"`
-	Zone                *Zone                         `json:"zone,omitempty"`
+	AttachedIso         nullable.Nullable[ISO]                          `json:"attached_iso,omitempty"`
+	CpuCores            nullable.Nullable[int]                          `json:"cpu_cores,omitempty"`
+	CreatedAt           *int                                            `json:"created_at,omitempty"`
+	Description         nullable.Nullable[string]                       `json:"description,omitempty"`
+	Fqdn                *string                                         `json:"fqdn,omitempty"`
+	GpuType             nullable.Nullable[GetVirtualMachinePartGPUType] `json:"gpu_type,omitempty"`
+	Gpus                *[]VirtualMachineGPU                            `json:"gpus,omitempty"`
+	Group               nullable.Nullable[VirtualMachineGroup]          `json:"group,omitempty"`
+	Hostname            *string                                         `json:"hostname,omitempty"`
+	Hypervisor          nullable.Nullable[Hypervisor]                   `json:"hypervisor,omitempty"`
+	Id                  *string                                         `json:"id,omitempty"`
+	InitialRootPassword nullable.Nullable[string]                       `json:"initial_root_password,omitempty"`
+	IpAddresses         *[]IPAddress                                    `json:"ip_addresses,omitempty"`
+	MemoryInGb          nullable.Nullable[int]                          `json:"memory_in_gb,omitempty"`
+	Name                *string                                         `json:"name,omitempty"`
+	Organization        *Organization                                   `json:"organization,omitempty"`
+	Package             nullable.Nullable[VirtualMachinePackage]        `json:"package,omitempty"`
+	State               *VirtualMachineStateEnum                        `json:"state,omitempty"`
+	TagNames            *[]string                                       `json:"tag_names,omitempty"`
+	Tags                *[]Tag                                          `json:"tags,omitempty"`
+	UseDedicatedCpus    nullable.Nullable[bool]                         `json:"use_dedicated_cpus,omitempty"`
+	Zone                *Zone                                           `json:"zone,omitempty"`
 }
 
 // GetVirtualMachineDiskBackupPolicies200ResponseDiskBackupPolicies defines model for GetVirtualMachineDiskBackupPolicies200ResponseDiskBackupPolicies.
@@ -2326,14 +2327,14 @@ type GetVirtualMachineDisksPartDisk struct {
 
 // GetVirtualMachineNetworkInterface200ResponseVirtualMachineNetworkInterface defines model for GetVirtualMachineNetworkInterface200ResponseVirtualMachineNetworkInterface.
 type GetVirtualMachineNetworkInterface200ResponseVirtualMachineNetworkInterface struct {
-	Id             *string                                              `json:"id,omitempty"`
-	IpAddresses    *[]GetVirtualMachineNetworkInterfacePartIPAddresses  `json:"ip_addresses,omitempty"`
-	MacAddress     *string                                              `json:"mac_address,omitempty"`
-	Name           *string                                              `json:"name,omitempty"`
-	Network        *GetVirtualMachineNetworkInterfacePartNetwork        `json:"network"`
-	State          *string                                              `json:"state,omitempty"`
-	VirtualMachine *GetVirtualMachineNetworkInterfacePartVirtualMachine `json:"virtual_machine,omitempty"`
-	VirtualNetwork *GetVirtualMachineNetworkInterfacePartVirtualNetwork `json:"virtual_network"`
+	Id             *string                                                                `json:"id,omitempty"`
+	IpAddresses    *[]GetVirtualMachineNetworkInterfacePartIPAddresses                    `json:"ip_addresses,omitempty"`
+	MacAddress     *string                                                                `json:"mac_address,omitempty"`
+	Name           *string                                                                `json:"name,omitempty"`
+	Network        nullable.Nullable[GetVirtualMachineNetworkInterfacePartNetwork]        `json:"network,omitempty"`
+	State          *string                                                                `json:"state,omitempty"`
+	VirtualMachine *GetVirtualMachineNetworkInterfacePartVirtualMachine                   `json:"virtual_machine,omitempty"`
+	VirtualNetwork nullable.Nullable[GetVirtualMachineNetworkInterfacePartVirtualNetwork] `json:"virtual_network,omitempty"`
 }
 
 // GetVirtualMachineNetworkInterfacePartIPAddresses defines model for GetVirtualMachineNetworkInterfacePartIPAddresses.
@@ -2362,11 +2363,11 @@ type GetVirtualMachineNetworkInterfacePartVirtualNetwork struct {
 
 // GetVirtualMachineNetworkInterfaces200ResponseVirtualMachineNetworkInterfaces defines model for GetVirtualMachineNetworkInterfaces200ResponseVirtualMachineNetworkInterfaces.
 type GetVirtualMachineNetworkInterfaces200ResponseVirtualMachineNetworkInterfaces struct {
-	Id             *string                                               `json:"id,omitempty"`
-	IpAddresses    *[]GetVirtualMachineNetworkInterfacesPartIPAddresses  `json:"ip_addresses,omitempty"`
-	Name           *string                                               `json:"name,omitempty"`
-	Network        *GetVirtualMachineNetworkInterfacesPartNetwork        `json:"network"`
-	VirtualNetwork *GetVirtualMachineNetworkInterfacesPartVirtualNetwork `json:"virtual_network"`
+	Id             *string                                                                 `json:"id,omitempty"`
+	IpAddresses    *[]GetVirtualMachineNetworkInterfacesPartIPAddresses                    `json:"ip_addresses,omitempty"`
+	Name           *string                                                                 `json:"name,omitempty"`
+	Network        nullable.Nullable[GetVirtualMachineNetworkInterfacesPartNetwork]        `json:"network,omitempty"`
+	VirtualNetwork nullable.Nullable[GetVirtualMachineNetworkInterfacesPartVirtualNetwork] `json:"virtual_network,omitempty"`
 }
 
 // GetVirtualMachineNetworkInterfacesPartIPAddresses defines model for GetVirtualMachineNetworkInterfacesPartIPAddresses.
@@ -2399,11 +2400,11 @@ type GetVirtualMachinePartGPUType struct {
 
 // GetVirtualMachinesBuildsVirtualMachineBuild200ResponseVirtualMachineBuild defines model for GetVirtualMachinesBuildsVirtualMachineBuild200ResponseVirtualMachineBuild.
 type GetVirtualMachinesBuildsVirtualMachineBuild200ResponseVirtualMachineBuild struct {
-	CreatedAt      *int                                                           `json:"created_at,omitempty"`
-	Id             *string                                                        `json:"id,omitempty"`
-	SpecXml        *string                                                        `json:"spec_xml,omitempty"`
-	State          *VirtualMachineBuildStateEnum                                  `json:"state,omitempty"`
-	VirtualMachine *GetVirtualMachinesBuildsVirtualMachineBuildPartVirtualMachine `json:"virtual_machine"`
+	CreatedAt      *int                                                                             `json:"created_at,omitempty"`
+	Id             *string                                                                          `json:"id,omitempty"`
+	SpecXml        *string                                                                          `json:"spec_xml,omitempty"`
+	State          *VirtualMachineBuildStateEnum                                                    `json:"state,omitempty"`
+	VirtualMachine nullable.Nullable[GetVirtualMachinesBuildsVirtualMachineBuildPartVirtualMachine] `json:"virtual_machine,omitempty"`
 }
 
 // GetVirtualMachinesBuildsVirtualMachineBuildPartVirtualMachine defines model for GetVirtualMachinesBuildsVirtualMachineBuildPartVirtualMachine.
@@ -2417,10 +2418,10 @@ type GetVirtualMachinesBuildsVirtualMachineBuildPartVirtualMachine struct {
 
 // GetZones200ResponseZones defines model for GetZones200ResponseZones.
 type GetZones200ResponseZones struct {
-	DataCenter *GetZonesPartDataCenter `json:"data_center,omitempty"`
-	Id         *string                 `json:"id,omitempty"`
-	Name       *string                 `json:"name,omitempty"`
-	Permalink  *string                 `json:"permalink"`
+	DataCenter *GetZonesPartDataCenter   `json:"data_center,omitempty"`
+	Id         *string                   `json:"id,omitempty"`
+	Name       *string                   `json:"name,omitempty"`
+	Permalink  nullable.Nullable[string] `json:"permalink,omitempty"`
 }
 
 // GetZonesPartDataCenter defines model for GetZonesPartDataCenter.
@@ -2439,15 +2440,15 @@ type Hypervisor struct {
 
 // IPAddress defines model for IPAddress.
 type IPAddress struct {
-	Address         *string  `json:"address,omitempty"`
-	AddressWithMask *string  `json:"address_with_mask,omitempty"`
-	AllocationId    *string  `json:"allocation_id"`
-	AllocationType  *string  `json:"allocation_type"`
-	Id              *string  `json:"id,omitempty"`
-	Label           *string  `json:"label"`
-	Network         *Network `json:"network,omitempty"`
-	ReverseDns      *string  `json:"reverse_dns,omitempty"`
-	Vip             *bool    `json:"vip,omitempty"`
+	Address         *string                   `json:"address,omitempty"`
+	AddressWithMask *string                   `json:"address_with_mask,omitempty"`
+	AllocationId    nullable.Nullable[string] `json:"allocation_id,omitempty"`
+	AllocationType  nullable.Nullable[string] `json:"allocation_type,omitempty"`
+	Id              *string                   `json:"id,omitempty"`
+	Label           nullable.Nullable[string] `json:"label,omitempty"`
+	Network         *Network                  `json:"network,omitempty"`
+	ReverseDns      *string                   `json:"reverse_dns,omitempty"`
+	Vip             *bool                     `json:"vip,omitempty"`
 }
 
 // IPAddressLookup All 'ip_address[]' params are mutually exclusive, only one can be provided.
@@ -2481,9 +2482,9 @@ type IPAlreadyAllocatedSchema struct {
 
 // ISO defines model for ISO.
 type ISO struct {
-	Id              *string          `json:"id,omitempty"`
-	Name            *string          `json:"name,omitempty"`
-	OperatingSystem *OperatingSystem `json:"operating_system"`
+	Id              *string                            `json:"id,omitempty"`
+	Name            *string                            `json:"name,omitempty"`
+	OperatingSystem nullable.Nullable[OperatingSystem] `json:"operating_system,omitempty"`
 }
 
 // IdentityNotLinkedToWebSessionEnum defines model for IdentityNotLinkedToWebSessionEnum.
@@ -2498,13 +2499,13 @@ type IdentityNotLinkedToWebSessionSchema struct {
 
 // IntegerOrUnlimited defines model for IntegerOrUnlimited.
 type IntegerOrUnlimited struct {
-	Unlimited *bool `json:"unlimited,omitempty"`
-	Value     *int  `json:"value"`
+	Unlimited *bool                  `json:"unlimited,omitempty"`
+	Value     nullable.Nullable[int] `json:"value,omitempty"`
 }
 
 // IntegerValue defines model for IntegerValue.
 type IntegerValue struct {
-	Value *int `json:"value"`
+	Value nullable.Nullable[int] `json:"value,omitempty"`
 }
 
 // InterfaceNotFoundEnum defines model for InterfaceNotFoundEnum.
@@ -2519,7 +2520,7 @@ type InterfaceNotFoundSchema struct {
 
 // InvalidAPIToken defines model for InvalidAPIToken.
 type InvalidAPIToken struct {
-	Details *string `json:"details"`
+	Details nullable.Nullable[string] `json:"details,omitempty"`
 }
 
 // InvalidAPITokenEnum defines model for InvalidAPITokenEnum.
@@ -2704,10 +2705,10 @@ type MultipleObjectStorageBucketsFoundEnum string
 
 // Network defines model for Network.
 type Network struct {
-	DataCenter *DataCenter `json:"data_center,omitempty"`
-	Id         *string     `json:"id,omitempty"`
-	Name       *string     `json:"name,omitempty"`
-	Permalink  *string     `json:"permalink"`
+	DataCenter *DataCenter               `json:"data_center,omitempty"`
+	Id         *string                   `json:"id,omitempty"`
+	Name       *string                   `json:"name,omitempty"`
+	Permalink  nullable.Nullable[string] `json:"permalink,omitempty"`
 }
 
 // NetworkErrorEnum defines model for NetworkErrorEnum.
@@ -2731,11 +2732,11 @@ type NetworkNotFoundSchema struct {
 
 // NetworkSpeedProfile defines model for NetworkSpeedProfile.
 type NetworkSpeedProfile struct {
-	DownloadSpeedInMbit *int    `json:"download_speed_in_mbit"`
-	Id                  *string `json:"id,omitempty"`
-	Name                *string `json:"name,omitempty"`
-	Permalink           *string `json:"permalink,omitempty"`
-	UploadSpeedInMbit   *int    `json:"upload_speed_in_mbit"`
+	DownloadSpeedInMbit nullable.Nullable[int] `json:"download_speed_in_mbit,omitempty"`
+	Id                  *string                `json:"id,omitempty"`
+	Name                *string                `json:"name,omitempty"`
+	Permalink           *string                `json:"permalink,omitempty"`
+	UploadSpeedInMbit   nullable.Nullable[int] `json:"upload_speed_in_mbit,omitempty"`
 }
 
 // NetworkSpeedProfileLookup All 'speed_profile[]' params are mutually exclusive, only one can be provided.
@@ -2785,7 +2786,7 @@ type NoVirtualMachineForAPITokenEnum string
 
 // ObjectInTrash defines model for ObjectInTrash.
 type ObjectInTrash struct {
-	TrashObject *TrashObject `json:"trash_object"`
+	TrashObject nullable.Nullable[TrashObject] `json:"trash_object,omitempty"`
 }
 
 // ObjectInTrashEnum defines model for ObjectInTrashEnum.
@@ -2825,13 +2826,13 @@ type ObjectStorageAccessKey struct {
 	Region          *string   `json:"region,omitempty"`
 
 	// S3AccessKeyId The S3 access key ID
-	S3AccessKeyId *string `json:"s3_access_key_id"`
+	S3AccessKeyId nullable.Nullable[string] `json:"s3_access_key_id,omitempty"`
 
 	// S3SecretAccessKey Only available when using the generate credentials endpoint
-	S3SecretAccessKey *string `json:"s3_secret_access_key"`
+	S3SecretAccessKey nullable.Nullable[string] `json:"s3_secret_access_key,omitempty"`
 
 	// ServerUrl The server URL for the S3 credentials
-	ServerUrl    *string                          `json:"server_url"`
+	ServerUrl    nullable.Nullable[string]        `json:"server_url,omitempty"`
 	State        *ObjectStorageAccessKeyStateEnum `json:"state,omitempty"`
 	WriteBuckets *[]string                        `json:"write_buckets,omitempty"`
 }
@@ -2911,16 +2912,16 @@ type ObjectStorageAccountSuspendedSchema struct {
 type ObjectStorageBucket struct {
 	AccessControlList *ObjectStorageBucketAccessControlList `json:"access_control_list,omitempty"`
 	CreatedAt         *int                                  `json:"created_at,omitempty"`
-	CustomDomain      *string                               `json:"custom_domain"`
-	Label             *string                               `json:"label"`
+	CustomDomain      nullable.Nullable[string]             `json:"custom_domain,omitempty"`
+	Label             nullable.Nullable[string]             `json:"label,omitempty"`
 	Name              *string                               `json:"name,omitempty"`
-	ObjectCount       *int                                  `json:"object_count"`
+	ObjectCount       nullable.Nullable[int]                `json:"object_count,omitempty"`
 	PublicUrl         *string                               `json:"public_url,omitempty"`
 	ServeStaticSite   *bool                                 `json:"serve_static_site,omitempty"`
-	Size              *int                                  `json:"size"`
+	Size              nullable.Nullable[int]                `json:"size,omitempty"`
 	State             *ObjectStorageBucketStateEnum         `json:"state,omitempty"`
-	StaticSiteError   *string                               `json:"static_site_error"`
-	StaticSiteIndex   *string                               `json:"static_site_index"`
+	StaticSiteError   nullable.Nullable[string]             `json:"static_site_error,omitempty"`
+	StaticSiteIndex   nullable.Nullable[string]             `json:"static_site_index,omitempty"`
 }
 
 // ObjectStorageBucketACLArguments defines model for ObjectStorageBucketACLArguments.
@@ -2972,7 +2973,7 @@ type ObjectStorageBucketArguments struct {
 
 // ObjectStorageBucketDeletionError defines model for ObjectStorageBucketDeletionError.
 type ObjectStorageBucketDeletionError struct {
-	Details *string `json:"details"`
+	Details nullable.Nullable[string] `json:"details,omitempty"`
 }
 
 // ObjectStorageBucketDeletionErrorEnum defines model for ObjectStorageBucketDeletionErrorEnum.
@@ -3027,7 +3028,7 @@ type ObjectStorageObject struct {
 	PublicUrl  *string `json:"public_url,omitempty"`
 
 	// Size The length of the object content in the response body, in bytes.
-	Size *int `json:"size"`
+	Size nullable.Nullable[int] `json:"size,omitempty"`
 }
 
 // ObjectStorageObjectPresignedURLArguments defines model for ObjectStorageObjectPresignedURLArguments.
@@ -3253,9 +3254,9 @@ type OneSystemDiskRequiredSchema struct {
 
 // OperatingSystem defines model for OperatingSystem.
 type OperatingSystem struct {
-	Badge *Attachment `json:"badge"`
-	Id    *string     `json:"id,omitempty"`
-	Name  *string     `json:"name,omitempty"`
+	Badge nullable.Nullable[Attachment] `json:"badge,omitempty"`
+	Id    *string                       `json:"id,omitempty"`
+	Name  *string                       `json:"name,omitempty"`
 }
 
 // OperatingSystemNotFoundEnum defines model for OperatingSystemNotFoundEnum.
@@ -3270,25 +3271,25 @@ type OperatingSystemNotFoundSchema struct {
 
 // Organization defines model for Organization.
 type Organization struct {
-	ActivatedAt          *int          `json:"activated_at"`
-	Address1             *string       `json:"address1"`
-	Address2             *string       `json:"address2"`
-	Address3             *string       `json:"address3"`
-	Address4             *string       `json:"address4"`
-	BillingName          *string       `json:"billing_name"`
-	Country              *Country      `json:"country"`
-	CountryState         *CountryState `json:"country_state"`
-	CreatedAt            *int          `json:"created_at,omitempty"`
-	Currency             *Currency     `json:"currency,omitempty"`
-	Id                   *string       `json:"id,omitempty"`
-	InfrastructureDomain *string       `json:"infrastructure_domain,omitempty"`
-	Managed              *bool         `json:"managed,omitempty"`
-	Name                 *string       `json:"name,omitempty"`
-	PhoneNumber          *string       `json:"phone_number"`
-	Postcode             *string       `json:"postcode"`
-	SubDomain            *string       `json:"sub_domain,omitempty"`
-	Suspended            *bool         `json:"suspended,omitempty"`
-	VatNumber            *string       `json:"vat_number"`
+	ActivatedAt          nullable.Nullable[int]          `json:"activated_at,omitempty"`
+	Address1             nullable.Nullable[string]       `json:"address1,omitempty"`
+	Address2             nullable.Nullable[string]       `json:"address2,omitempty"`
+	Address3             nullable.Nullable[string]       `json:"address3,omitempty"`
+	Address4             nullable.Nullable[string]       `json:"address4,omitempty"`
+	BillingName          nullable.Nullable[string]       `json:"billing_name,omitempty"`
+	Country              nullable.Nullable[Country]      `json:"country,omitempty"`
+	CountryState         nullable.Nullable[CountryState] `json:"country_state,omitempty"`
+	CreatedAt            *int                            `json:"created_at,omitempty"`
+	Currency             *Currency                       `json:"currency,omitempty"`
+	Id                   *string                         `json:"id,omitempty"`
+	InfrastructureDomain *string                         `json:"infrastructure_domain,omitempty"`
+	Managed              *bool                           `json:"managed,omitempty"`
+	Name                 *string                         `json:"name,omitempty"`
+	PhoneNumber          nullable.Nullable[string]       `json:"phone_number,omitempty"`
+	Postcode             nullable.Nullable[string]       `json:"postcode,omitempty"`
+	SubDomain            *string                         `json:"sub_domain,omitempty"`
+	Suspended            *bool                           `json:"suspended,omitempty"`
+	VatNumber            nullable.Nullable[string]       `json:"vat_number,omitempty"`
 }
 
 // OrganizationDeletionStep defines model for OrganizationDeletionStep.
@@ -3396,26 +3397,26 @@ type PaginationObject struct {
 	PerPage *int `json:"per_page,omitempty"`
 
 	// Total The total number of items across all pages
-	Total *int `json:"total"`
+	Total nullable.Nullable[int] `json:"total,omitempty"`
 
 	// TotalPages The total number of pages
-	TotalPages *int `json:"total_pages"`
+	TotalPages nullable.Nullable[int] `json:"total_pages,omitempty"`
 }
 
 // PatchDisk200ResponseDisk defines model for PatchDisk200ResponseDisk.
 type PatchDisk200ResponseDisk struct {
-	BusType            *DiskBusEnum                     `json:"bus_type"`
-	CreatedAt          *int                             `json:"created_at,omitempty"`
-	DataCenter         *PatchDiskPartDataCenter         `json:"data_center,omitempty"`
-	Id                 *string                          `json:"id,omitempty"`
-	Installation       *DiskInstallation                `json:"installation"`
-	IoProfile          *DiskIOProfile                   `json:"io_profile"`
-	Name               *string                          `json:"name,omitempty"`
-	SizeInGb           *int                             `json:"size_in_gb,omitempty"`
-	State              *DiskStateEnum                   `json:"state,omitempty"`
-	StorageSpeed       *StorageSpeedEnum                `json:"storage_speed,omitempty"`
-	VirtualMachineDisk *PatchDiskPartVirtualMachineDisk `json:"virtual_machine_disk"`
-	Wwn                *string                          `json:"wwn,omitempty"`
+	BusType            nullable.Nullable[DiskBusEnum]                     `json:"bus_type,omitempty"`
+	CreatedAt          *int                                               `json:"created_at,omitempty"`
+	DataCenter         *PatchDiskPartDataCenter                           `json:"data_center,omitempty"`
+	Id                 *string                                            `json:"id,omitempty"`
+	Installation       nullable.Nullable[DiskInstallation]                `json:"installation,omitempty"`
+	IoProfile          nullable.Nullable[DiskIOProfile]                   `json:"io_profile,omitempty"`
+	Name               *string                                            `json:"name,omitempty"`
+	SizeInGb           *int                                               `json:"size_in_gb,omitempty"`
+	State              *DiskStateEnum                                     `json:"state,omitempty"`
+	StorageSpeed       *StorageSpeedEnum                                  `json:"storage_speed,omitempty"`
+	VirtualMachineDisk nullable.Nullable[PatchDiskPartVirtualMachineDisk] `json:"virtual_machine_disk,omitempty"`
+	Wwn                *string                                            `json:"wwn,omitempty"`
 }
 
 // PatchDiskBackupPolicy200ResponseDiskBackupPolicy defines model for PatchDiskBackupPolicy200ResponseDiskBackupPolicy.
@@ -3455,10 +3456,10 @@ type PatchFileStorageVolume200ResponseFileStorageVolume struct {
 	Name         *string                               `json:"name,omitempty"`
 
 	// NfsLocation The NFS location of where to mount the volume from.
-	NfsLocation *string `json:"nfs_location"`
+	NfsLocation nullable.Nullable[string] `json:"nfs_location,omitempty"`
 
 	// Size The size of the volume in bytes.
-	Size  *int                        `json:"size"`
+	Size  nullable.Nullable[int]      `json:"size,omitempty"`
 	State *FileStorageVolumeStateEnum `json:"state,omitempty"`
 }
 
@@ -3471,7 +3472,7 @@ type PatchFileStorageVolumePartDataCenter struct {
 
 // PatchLoadBalancer200ResponseLoadBalancer defines model for PatchLoadBalancer200ResponseLoadBalancer.
 type PatchLoadBalancer200ResponseLoadBalancer struct {
-	ApiReference          *string                          `json:"api_reference"`
+	ApiReference          nullable.Nullable[string]        `json:"api_reference,omitempty"`
 	BackendCertificate    *string                          `json:"backend_certificate,omitempty"`
 	BackendCertificateKey *string                          `json:"backend_certificate_key,omitempty"`
 	DataCenter            *PatchLoadBalancerPartDataCenter `json:"data_center,omitempty"`
@@ -3507,10 +3508,10 @@ type PatchLoadBalancersRulesLoadBalancerRule200ResponseLoadBalancerRule struct {
 	Certificates      *[]PatchLoadBalancersRulesLoadBalancerRulePartCertificates `json:"certificates,omitempty"`
 	CheckEnabled      *bool                                                      `json:"check_enabled,omitempty"`
 	CheckFall         *int                                                       `json:"check_fall,omitempty"`
-	CheckHttpStatuses *LoadBalancerRuleHTTPStatusesEnum                          `json:"check_http_statuses"`
+	CheckHttpStatuses nullable.Nullable[LoadBalancerRuleHTTPStatusesEnum]        `json:"check_http_statuses,omitempty"`
 	CheckInterval     *int                                                       `json:"check_interval,omitempty"`
 	CheckPath         *string                                                    `json:"check_path,omitempty"`
-	CheckProtocol     *LoadBalancerRuleCheckProtocolEnum                         `json:"check_protocol"`
+	CheckProtocol     nullable.Nullable[LoadBalancerRuleCheckProtocolEnum]       `json:"check_protocol,omitempty"`
 	CheckRise         *int                                                       `json:"check_rise,omitempty"`
 	CheckTimeout      *int                                                       `json:"check_timeout,omitempty"`
 	DestinationPort   *int                                                       `json:"destination_port,omitempty"`
@@ -3541,8 +3542,8 @@ type PatchSecurityGroupsRulesSecurityGroupRule200ResponseSecurityGroupRule struc
 	Action        *SecurityGroupRuleActionEnum                                `json:"action,omitempty"`
 	Direction     *SecurityGroupRuleDirectionEnum                             `json:"direction,omitempty"`
 	Id            *string                                                     `json:"id,omitempty"`
-	Notes         *string                                                     `json:"notes"`
-	Ports         *string                                                     `json:"ports"`
+	Notes         nullable.Nullable[string]                                   `json:"notes,omitempty"`
+	Ports         nullable.Nullable[string]                                   `json:"ports,omitempty"`
 	Protocol      *SecurityGroupRuleProtocolEnum                              `json:"protocol,omitempty"`
 	SecurityGroup *PatchSecurityGroupsRulesSecurityGroupRulePartSecurityGroup `json:"security_group,omitempty"`
 	Targets       *[]string                                                   `json:"targets,omitempty"`
@@ -3556,28 +3557,28 @@ type PatchSecurityGroupsRulesSecurityGroupRulePartSecurityGroup struct {
 
 // PatchVirtualMachine200ResponseVirtualMachine defines model for PatchVirtualMachine200ResponseVirtualMachine.
 type PatchVirtualMachine200ResponseVirtualMachine struct {
-	AttachedIso         *ISO                            `json:"attached_iso"`
-	CpuCores            *int                            `json:"cpu_cores"`
-	CreatedAt           *int                            `json:"created_at,omitempty"`
-	Description         *string                         `json:"description"`
-	Fqdn                *string                         `json:"fqdn,omitempty"`
-	GpuType             *PatchVirtualMachinePartGPUType `json:"gpu_type"`
-	Gpus                *[]VirtualMachineGPU            `json:"gpus,omitempty"`
-	Group               *VirtualMachineGroup            `json:"group"`
-	Hostname            *string                         `json:"hostname,omitempty"`
-	Hypervisor          *Hypervisor                     `json:"hypervisor"`
-	Id                  *string                         `json:"id,omitempty"`
-	InitialRootPassword *string                         `json:"initial_root_password"`
-	IpAddresses         *[]IPAddress                    `json:"ip_addresses,omitempty"`
-	MemoryInGb          *int                            `json:"memory_in_gb"`
-	Name                *string                         `json:"name,omitempty"`
-	Organization        *Organization                   `json:"organization,omitempty"`
-	Package             *VirtualMachinePackage          `json:"package"`
-	State               *VirtualMachineStateEnum        `json:"state,omitempty"`
-	TagNames            *[]string                       `json:"tag_names,omitempty"`
-	Tags                *[]Tag                          `json:"tags,omitempty"`
-	UseDedicatedCpus    *bool                           `json:"use_dedicated_cpus"`
-	Zone                *Zone                           `json:"zone,omitempty"`
+	AttachedIso         nullable.Nullable[ISO]                            `json:"attached_iso,omitempty"`
+	CpuCores            nullable.Nullable[int]                            `json:"cpu_cores,omitempty"`
+	CreatedAt           *int                                              `json:"created_at,omitempty"`
+	Description         nullable.Nullable[string]                         `json:"description,omitempty"`
+	Fqdn                *string                                           `json:"fqdn,omitempty"`
+	GpuType             nullable.Nullable[PatchVirtualMachinePartGPUType] `json:"gpu_type,omitempty"`
+	Gpus                *[]VirtualMachineGPU                              `json:"gpus,omitempty"`
+	Group               nullable.Nullable[VirtualMachineGroup]            `json:"group,omitempty"`
+	Hostname            *string                                           `json:"hostname,omitempty"`
+	Hypervisor          nullable.Nullable[Hypervisor]                     `json:"hypervisor,omitempty"`
+	Id                  *string                                           `json:"id,omitempty"`
+	InitialRootPassword nullable.Nullable[string]                         `json:"initial_root_password,omitempty"`
+	IpAddresses         *[]IPAddress                                      `json:"ip_addresses,omitempty"`
+	MemoryInGb          nullable.Nullable[int]                            `json:"memory_in_gb,omitempty"`
+	Name                *string                                           `json:"name,omitempty"`
+	Organization        *Organization                                     `json:"organization,omitempty"`
+	Package             nullable.Nullable[VirtualMachinePackage]          `json:"package,omitempty"`
+	State               *VirtualMachineStateEnum                          `json:"state,omitempty"`
+	TagNames            *[]string                                         `json:"tag_names,omitempty"`
+	Tags                *[]Tag                                            `json:"tags,omitempty"`
+	UseDedicatedCpus    nullable.Nullable[bool]                           `json:"use_dedicated_cpus,omitempty"`
+	Zone                *Zone                                             `json:"zone,omitempty"`
 }
 
 // PatchVirtualMachinePartGPUType defines model for PatchVirtualMachinePartGPUType.
@@ -3593,7 +3594,7 @@ type PatchVirtualMachinePartGPUType struct {
 // PermissionDenied defines model for PermissionDenied.
 type PermissionDenied struct {
 	// Details Additional information regarding the reason why permission was denied
-	Details *string `json:"details"`
+	Details nullable.Nullable[string] `json:"details,omitempty"`
 }
 
 // PermissionDeniedEnum defines model for PermissionDeniedEnum.
@@ -3622,15 +3623,15 @@ type PolicyFeatures struct {
 
 // PolicyLimit defines model for PolicyLimit.
 type PolicyLimit struct {
-	Current *int    `json:"current,omitempty"`
-	Limit   *int    `json:"limit,omitempty"`
-	Unit    *string `json:"unit"`
+	Current *int                      `json:"current,omitempty"`
+	Limit   *int                      `json:"limit,omitempty"`
+	Unit    nullable.Nullable[string] `json:"unit,omitempty"`
 }
 
 // PolicyLimitWithoutCurrent defines model for PolicyLimitWithoutCurrent.
 type PolicyLimitWithoutCurrent struct {
-	Limit *int    `json:"limit,omitempty"`
-	Unit  *string `json:"unit"`
+	Limit *int                      `json:"limit,omitempty"`
+	Unit  nullable.Nullable[string] `json:"unit,omitempty"`
 }
 
 // PolicyLimits defines model for PolicyLimits.
@@ -3667,18 +3668,18 @@ type PolicyType string
 
 // PostDiskAssign200ResponseDisk defines model for PostDiskAssign200ResponseDisk.
 type PostDiskAssign200ResponseDisk struct {
-	BusType            *DiskBusEnum                          `json:"bus_type"`
-	CreatedAt          *int                                  `json:"created_at,omitempty"`
-	DataCenter         *PostDiskAssignPartDataCenter         `json:"data_center,omitempty"`
-	Id                 *string                               `json:"id,omitempty"`
-	Installation       *DiskInstallation                     `json:"installation"`
-	IoProfile          *DiskIOProfile                        `json:"io_profile"`
-	Name               *string                               `json:"name,omitempty"`
-	SizeInGb           *int                                  `json:"size_in_gb,omitempty"`
-	State              *DiskStateEnum                        `json:"state,omitempty"`
-	StorageSpeed       *StorageSpeedEnum                     `json:"storage_speed,omitempty"`
-	VirtualMachineDisk *PostDiskAssignPartVirtualMachineDisk `json:"virtual_machine_disk"`
-	Wwn                *string                               `json:"wwn,omitempty"`
+	BusType            nullable.Nullable[DiskBusEnum]                          `json:"bus_type,omitempty"`
+	CreatedAt          *int                                                    `json:"created_at,omitempty"`
+	DataCenter         *PostDiskAssignPartDataCenter                           `json:"data_center,omitempty"`
+	Id                 *string                                                 `json:"id,omitempty"`
+	Installation       nullable.Nullable[DiskInstallation]                     `json:"installation,omitempty"`
+	IoProfile          nullable.Nullable[DiskIOProfile]                        `json:"io_profile,omitempty"`
+	Name               *string                                                 `json:"name,omitempty"`
+	SizeInGb           *int                                                    `json:"size_in_gb,omitempty"`
+	State              *DiskStateEnum                                          `json:"state,omitempty"`
+	StorageSpeed       *StorageSpeedEnum                                       `json:"storage_speed,omitempty"`
+	VirtualMachineDisk nullable.Nullable[PostDiskAssignPartVirtualMachineDisk] `json:"virtual_machine_disk,omitempty"`
+	Wwn                *string                                                 `json:"wwn,omitempty"`
 }
 
 // PostDiskAssignPartDataCenter defines model for PostDiskAssignPartDataCenter.
@@ -3704,18 +3705,18 @@ type PostDiskAssignPartVirtualMachineDisk struct {
 
 // PostDiskAttach200ResponseDisk defines model for PostDiskAttach200ResponseDisk.
 type PostDiskAttach200ResponseDisk struct {
-	BusType            *DiskBusEnum                          `json:"bus_type"`
-	CreatedAt          *int                                  `json:"created_at,omitempty"`
-	DataCenter         *PostDiskAttachPartDataCenter         `json:"data_center,omitempty"`
-	Id                 *string                               `json:"id,omitempty"`
-	Installation       *DiskInstallation                     `json:"installation"`
-	IoProfile          *DiskIOProfile                        `json:"io_profile"`
-	Name               *string                               `json:"name,omitempty"`
-	SizeInGb           *int                                  `json:"size_in_gb,omitempty"`
-	State              *DiskStateEnum                        `json:"state,omitempty"`
-	StorageSpeed       *StorageSpeedEnum                     `json:"storage_speed,omitempty"`
-	VirtualMachineDisk *PostDiskAttachPartVirtualMachineDisk `json:"virtual_machine_disk"`
-	Wwn                *string                               `json:"wwn,omitempty"`
+	BusType            nullable.Nullable[DiskBusEnum]                          `json:"bus_type,omitempty"`
+	CreatedAt          *int                                                    `json:"created_at,omitempty"`
+	DataCenter         *PostDiskAttachPartDataCenter                           `json:"data_center,omitempty"`
+	Id                 *string                                                 `json:"id,omitempty"`
+	Installation       nullable.Nullable[DiskInstallation]                     `json:"installation,omitempty"`
+	IoProfile          nullable.Nullable[DiskIOProfile]                        `json:"io_profile,omitempty"`
+	Name               *string                                                 `json:"name,omitempty"`
+	SizeInGb           *int                                                    `json:"size_in_gb,omitempty"`
+	State              *DiskStateEnum                                          `json:"state,omitempty"`
+	StorageSpeed       *StorageSpeedEnum                                       `json:"storage_speed,omitempty"`
+	VirtualMachineDisk nullable.Nullable[PostDiskAttachPartVirtualMachineDisk] `json:"virtual_machine_disk,omitempty"`
+	Wwn                *string                                                 `json:"wwn,omitempty"`
 }
 
 // PostDiskAttachPartDataCenter defines model for PostDiskAttachPartDataCenter.
@@ -3741,18 +3742,18 @@ type PostDiskAttachPartVirtualMachineDisk struct {
 
 // PostDiskDetach200ResponseDisk defines model for PostDiskDetach200ResponseDisk.
 type PostDiskDetach200ResponseDisk struct {
-	BusType            *DiskBusEnum                          `json:"bus_type"`
-	CreatedAt          *int                                  `json:"created_at,omitempty"`
-	DataCenter         *PostDiskDetachPartDataCenter         `json:"data_center,omitempty"`
-	Id                 *string                               `json:"id,omitempty"`
-	Installation       *DiskInstallation                     `json:"installation"`
-	IoProfile          *DiskIOProfile                        `json:"io_profile"`
-	Name               *string                               `json:"name,omitempty"`
-	SizeInGb           *int                                  `json:"size_in_gb,omitempty"`
-	State              *DiskStateEnum                        `json:"state,omitempty"`
-	StorageSpeed       *StorageSpeedEnum                     `json:"storage_speed,omitempty"`
-	VirtualMachineDisk *PostDiskDetachPartVirtualMachineDisk `json:"virtual_machine_disk"`
-	Wwn                *string                               `json:"wwn,omitempty"`
+	BusType            nullable.Nullable[DiskBusEnum]                          `json:"bus_type,omitempty"`
+	CreatedAt          *int                                                    `json:"created_at,omitempty"`
+	DataCenter         *PostDiskDetachPartDataCenter                           `json:"data_center,omitempty"`
+	Id                 *string                                                 `json:"id,omitempty"`
+	Installation       nullable.Nullable[DiskInstallation]                     `json:"installation,omitempty"`
+	IoProfile          nullable.Nullable[DiskIOProfile]                        `json:"io_profile,omitempty"`
+	Name               *string                                                 `json:"name,omitempty"`
+	SizeInGb           *int                                                    `json:"size_in_gb,omitempty"`
+	State              *DiskStateEnum                                          `json:"state,omitempty"`
+	StorageSpeed       *StorageSpeedEnum                                       `json:"storage_speed,omitempty"`
+	VirtualMachineDisk nullable.Nullable[PostDiskDetachPartVirtualMachineDisk] `json:"virtual_machine_disk,omitempty"`
+	Wwn                *string                                                 `json:"wwn,omitempty"`
 }
 
 // PostDiskDetachPartDataCenter defines model for PostDiskDetachPartDataCenter.
@@ -3778,7 +3779,7 @@ type PostDiskDetachPartVirtualMachineDisk struct {
 
 // PostDiskDiskBackupPolicies200ResponseDiskBackupPolicy defines model for PostDiskDiskBackupPolicies200ResponseDiskBackupPolicy.
 type PostDiskDiskBackupPolicies200ResponseDiskBackupPolicy struct {
-	AutoMoveToTrashAt *int                    `json:"auto_move_to_trash_at"`
+	AutoMoveToTrashAt nullable.Nullable[int]  `json:"auto_move_to_trash_at,omitempty"`
 	Id                *string                 `json:"id,omitempty"`
 	Retention         *int                    `json:"retention,omitempty"`
 	Schedule          *Schedule               `json:"schedule,omitempty"`
@@ -3788,18 +3789,18 @@ type PostDiskDiskBackupPolicies200ResponseDiskBackupPolicy struct {
 
 // PostDiskUnassign200ResponseDisk defines model for PostDiskUnassign200ResponseDisk.
 type PostDiskUnassign200ResponseDisk struct {
-	BusType            *DiskBusEnum                            `json:"bus_type"`
-	CreatedAt          *int                                    `json:"created_at,omitempty"`
-	DataCenter         *PostDiskUnassignPartDataCenter         `json:"data_center,omitempty"`
-	Id                 *string                                 `json:"id,omitempty"`
-	Installation       *DiskInstallation                       `json:"installation"`
-	IoProfile          *DiskIOProfile                          `json:"io_profile"`
-	Name               *string                                 `json:"name,omitempty"`
-	SizeInGb           *int                                    `json:"size_in_gb,omitempty"`
-	State              *DiskStateEnum                          `json:"state,omitempty"`
-	StorageSpeed       *StorageSpeedEnum                       `json:"storage_speed,omitempty"`
-	VirtualMachineDisk *PostDiskUnassignPartVirtualMachineDisk `json:"virtual_machine_disk"`
-	Wwn                *string                                 `json:"wwn,omitempty"`
+	BusType            nullable.Nullable[DiskBusEnum]                            `json:"bus_type,omitempty"`
+	CreatedAt          *int                                                      `json:"created_at,omitempty"`
+	DataCenter         *PostDiskUnassignPartDataCenter                           `json:"data_center,omitempty"`
+	Id                 *string                                                   `json:"id,omitempty"`
+	Installation       nullable.Nullable[DiskInstallation]                       `json:"installation,omitempty"`
+	IoProfile          nullable.Nullable[DiskIOProfile]                          `json:"io_profile,omitempty"`
+	Name               *string                                                   `json:"name,omitempty"`
+	SizeInGb           *int                                                      `json:"size_in_gb,omitempty"`
+	State              *DiskStateEnum                                            `json:"state,omitempty"`
+	StorageSpeed       *StorageSpeedEnum                                         `json:"storage_speed,omitempty"`
+	VirtualMachineDisk nullable.Nullable[PostDiskUnassignPartVirtualMachineDisk] `json:"virtual_machine_disk,omitempty"`
+	Wwn                *string                                                   `json:"wwn,omitempty"`
 }
 
 // PostDiskUnassignPartDataCenter defines model for PostDiskUnassignPartDataCenter.
@@ -3825,24 +3826,24 @@ type PostDiskUnassignPartVirtualMachineDisk struct {
 
 // PostLoadBalancerRules200ResponseLoadBalancerRule defines model for PostLoadBalancerRules200ResponseLoadBalancerRule.
 type PostLoadBalancerRules200ResponseLoadBalancerRule struct {
-	Algorithm         *LoadBalancerRuleAlgorithmEnum           `json:"algorithm,omitempty"`
-	BackendSsl        *bool                                    `json:"backend_ssl,omitempty"`
-	Certificates      *[]PostLoadBalancerRulesPartCertificates `json:"certificates,omitempty"`
-	CheckEnabled      *bool                                    `json:"check_enabled,omitempty"`
-	CheckFall         *int                                     `json:"check_fall,omitempty"`
-	CheckHttpStatuses *LoadBalancerRuleHTTPStatusesEnum        `json:"check_http_statuses"`
-	CheckInterval     *int                                     `json:"check_interval,omitempty"`
-	CheckPath         *string                                  `json:"check_path,omitempty"`
-	CheckProtocol     *LoadBalancerRuleCheckProtocolEnum       `json:"check_protocol"`
-	CheckRise         *int                                     `json:"check_rise,omitempty"`
-	CheckTimeout      *int                                     `json:"check_timeout,omitempty"`
-	DestinationPort   *int                                     `json:"destination_port,omitempty"`
-	Id                *string                                  `json:"id,omitempty"`
-	ListenPort        *int                                     `json:"listen_port,omitempty"`
-	LoadBalancer      *PostLoadBalancerRulesPartLoadBalancer   `json:"load_balancer,omitempty"`
-	PassthroughSsl    *bool                                    `json:"passthrough_ssl,omitempty"`
-	Protocol          *LoadBalancerRuleProtocolEnum            `json:"protocol,omitempty"`
-	ProxyProtocol     *bool                                    `json:"proxy_protocol,omitempty"`
+	Algorithm         *LoadBalancerRuleAlgorithmEnum                       `json:"algorithm,omitempty"`
+	BackendSsl        *bool                                                `json:"backend_ssl,omitempty"`
+	Certificates      *[]PostLoadBalancerRulesPartCertificates             `json:"certificates,omitempty"`
+	CheckEnabled      *bool                                                `json:"check_enabled,omitempty"`
+	CheckFall         *int                                                 `json:"check_fall,omitempty"`
+	CheckHttpStatuses nullable.Nullable[LoadBalancerRuleHTTPStatusesEnum]  `json:"check_http_statuses,omitempty"`
+	CheckInterval     *int                                                 `json:"check_interval,omitempty"`
+	CheckPath         *string                                              `json:"check_path,omitempty"`
+	CheckProtocol     nullable.Nullable[LoadBalancerRuleCheckProtocolEnum] `json:"check_protocol,omitempty"`
+	CheckRise         *int                                                 `json:"check_rise,omitempty"`
+	CheckTimeout      *int                                                 `json:"check_timeout,omitempty"`
+	DestinationPort   *int                                                 `json:"destination_port,omitempty"`
+	Id                *string                                              `json:"id,omitempty"`
+	ListenPort        *int                                                 `json:"listen_port,omitempty"`
+	LoadBalancer      *PostLoadBalancerRulesPartLoadBalancer               `json:"load_balancer,omitempty"`
+	PassthroughSsl    *bool                                                `json:"passthrough_ssl,omitempty"`
+	Protocol          *LoadBalancerRuleProtocolEnum                        `json:"protocol,omitempty"`
+	ProxyProtocol     *bool                                                `json:"proxy_protocol,omitempty"`
 }
 
 // PostLoadBalancerRulesPartCertificates defines model for PostLoadBalancerRulesPartCertificates.
@@ -3861,18 +3862,18 @@ type PostLoadBalancerRulesPartLoadBalancer struct {
 
 // PostOrganizationDisks201ResponseDisk defines model for PostOrganizationDisks201ResponseDisk.
 type PostOrganizationDisks201ResponseDisk struct {
-	BusType            *DiskBusEnum                                 `json:"bus_type"`
-	CreatedAt          *int                                         `json:"created_at,omitempty"`
-	DataCenter         *PostOrganizationDisksPartDataCenter         `json:"data_center,omitempty"`
-	Id                 *string                                      `json:"id,omitempty"`
-	Installation       *DiskInstallation                            `json:"installation"`
-	IoProfile          *DiskIOProfile                               `json:"io_profile"`
-	Name               *string                                      `json:"name,omitempty"`
-	SizeInGb           *int                                         `json:"size_in_gb,omitempty"`
-	State              *DiskStateEnum                               `json:"state,omitempty"`
-	StorageSpeed       *StorageSpeedEnum                            `json:"storage_speed,omitempty"`
-	VirtualMachineDisk *PostOrganizationDisksPartVirtualMachineDisk `json:"virtual_machine_disk"`
-	Wwn                *string                                      `json:"wwn,omitempty"`
+	BusType            nullable.Nullable[DiskBusEnum]                                 `json:"bus_type,omitempty"`
+	CreatedAt          *int                                                           `json:"created_at,omitempty"`
+	DataCenter         *PostOrganizationDisksPartDataCenter                           `json:"data_center,omitempty"`
+	Id                 *string                                                        `json:"id,omitempty"`
+	Installation       nullable.Nullable[DiskInstallation]                            `json:"installation,omitempty"`
+	IoProfile          nullable.Nullable[DiskIOProfile]                               `json:"io_profile,omitempty"`
+	Name               *string                                                        `json:"name,omitempty"`
+	SizeInGb           *int                                                           `json:"size_in_gb,omitempty"`
+	State              *DiskStateEnum                                                 `json:"state,omitempty"`
+	StorageSpeed       *StorageSpeedEnum                                              `json:"storage_speed,omitempty"`
+	VirtualMachineDisk nullable.Nullable[PostOrganizationDisksPartVirtualMachineDisk] `json:"virtual_machine_disk,omitempty"`
+	Wwn                *string                                                        `json:"wwn,omitempty"`
 }
 
 // PostOrganizationDisksPartDataCenter defines model for PostOrganizationDisksPartDataCenter.
@@ -3904,10 +3905,10 @@ type PostOrganizationFileStorageVolumes201ResponseFileStorageVolume struct {
 	Name         *string                                           `json:"name,omitempty"`
 
 	// NfsLocation The NFS location of where to mount the volume from.
-	NfsLocation *string `json:"nfs_location"`
+	NfsLocation nullable.Nullable[string] `json:"nfs_location,omitempty"`
 
 	// Size The size of the volume in bytes.
-	Size  *int                        `json:"size"`
+	Size  nullable.Nullable[int]      `json:"size,omitempty"`
 	State *FileStorageVolumeStateEnum `json:"state,omitempty"`
 }
 
@@ -3920,7 +3921,7 @@ type PostOrganizationFileStorageVolumesPartDataCenter struct {
 
 // PostOrganizationLoadBalancers201ResponseLoadBalancer defines model for PostOrganizationLoadBalancers201ResponseLoadBalancer.
 type PostOrganizationLoadBalancers201ResponseLoadBalancer struct {
-	ApiReference          *string                                      `json:"api_reference"`
+	ApiReference          nullable.Nullable[string]                    `json:"api_reference,omitempty"`
 	BackendCertificate    *string                                      `json:"backend_certificate,omitempty"`
 	BackendCertificateKey *string                                      `json:"backend_certificate_key,omitempty"`
 	DataCenter            *PostOrganizationLoadBalancersPartDataCenter `json:"data_center,omitempty"`
@@ -3992,8 +3993,8 @@ type PostSecurityGroupRules200ResponseSecurityGroupRule struct {
 	Action        *SecurityGroupRuleActionEnum             `json:"action,omitempty"`
 	Direction     *SecurityGroupRuleDirectionEnum          `json:"direction,omitempty"`
 	Id            *string                                  `json:"id,omitempty"`
-	Notes         *string                                  `json:"notes"`
-	Ports         *string                                  `json:"ports"`
+	Notes         nullable.Nullable[string]                `json:"notes,omitempty"`
+	Ports         nullable.Nullable[string]                `json:"ports,omitempty"`
 	Protocol      *SecurityGroupRuleProtocolEnum           `json:"protocol,omitempty"`
 	SecurityGroup *PostSecurityGroupRulesPartSecurityGroup `json:"security_group,omitempty"`
 	Targets       *[]string                                `json:"targets,omitempty"`
@@ -4024,7 +4025,7 @@ type PostVirtualMachineConsoleSessionsPartVirtualMachine struct {
 
 // PostVirtualMachineDiskBackupPolicies200ResponseDiskBackupPolicy defines model for PostVirtualMachineDiskBackupPolicies200ResponseDiskBackupPolicy.
 type PostVirtualMachineDiskBackupPolicies200ResponseDiskBackupPolicy struct {
-	AutoMoveToTrashAt *int                    `json:"auto_move_to_trash_at"`
+	AutoMoveToTrashAt nullable.Nullable[int]  `json:"auto_move_to_trash_at,omitempty"`
 	Id                *string                 `json:"id,omitempty"`
 	Retention         *int                    `json:"retention,omitempty"`
 	Schedule          *Schedule               `json:"schedule,omitempty"`
@@ -4034,14 +4035,14 @@ type PostVirtualMachineDiskBackupPolicies200ResponseDiskBackupPolicy struct {
 
 // PostVirtualMachineNetworkInterfaceAllocateIP200ResponseVirtualMachineNetworkInterface defines model for PostVirtualMachineNetworkInterfaceAllocateIP200ResponseVirtualMachineNetworkInterface.
 type PostVirtualMachineNetworkInterfaceAllocateIP200ResponseVirtualMachineNetworkInterface struct {
-	Id             *string                                                         `json:"id,omitempty"`
-	IpAddresses    *[]PostVirtualMachineNetworkInterfaceAllocateIPPartIPAddresses  `json:"ip_addresses,omitempty"`
-	MacAddress     *string                                                         `json:"mac_address,omitempty"`
-	Name           *string                                                         `json:"name,omitempty"`
-	Network        *PostVirtualMachineNetworkInterfaceAllocateIPPartNetwork        `json:"network"`
-	State          *string                                                         `json:"state,omitempty"`
-	VirtualMachine *PostVirtualMachineNetworkInterfaceAllocateIPPartVirtualMachine `json:"virtual_machine,omitempty"`
-	VirtualNetwork *PostVirtualMachineNetworkInterfaceAllocateIPPartVirtualNetwork `json:"virtual_network"`
+	Id             *string                                                                           `json:"id,omitempty"`
+	IpAddresses    *[]PostVirtualMachineNetworkInterfaceAllocateIPPartIPAddresses                    `json:"ip_addresses,omitempty"`
+	MacAddress     *string                                                                           `json:"mac_address,omitempty"`
+	Name           *string                                                                           `json:"name,omitempty"`
+	Network        nullable.Nullable[PostVirtualMachineNetworkInterfaceAllocateIPPartNetwork]        `json:"network,omitempty"`
+	State          *string                                                                           `json:"state,omitempty"`
+	VirtualMachine *PostVirtualMachineNetworkInterfaceAllocateIPPartVirtualMachine                   `json:"virtual_machine,omitempty"`
+	VirtualNetwork nullable.Nullable[PostVirtualMachineNetworkInterfaceAllocateIPPartVirtualNetwork] `json:"virtual_network,omitempty"`
 }
 
 // PostVirtualMachineNetworkInterfaceAllocateIPPartIPAddresses defines model for PostVirtualMachineNetworkInterfaceAllocateIPPartIPAddresses.
@@ -4070,15 +4071,15 @@ type PostVirtualMachineNetworkInterfaceAllocateIPPartVirtualNetwork struct {
 
 // PostVirtualMachineNetworkInterfaceAttach200ResponseVirtualMachineNetworkInterface defines model for PostVirtualMachineNetworkInterfaceAttach200ResponseVirtualMachineNetworkInterface.
 type PostVirtualMachineNetworkInterfaceAttach200ResponseVirtualMachineNetworkInterface struct {
-	Id             *string                                                     `json:"id,omitempty"`
-	IpAddresses    *[]PostVirtualMachineNetworkInterfaceAttachPartIPAddresses  `json:"ip_addresses,omitempty"`
-	MacAddress     *string                                                     `json:"mac_address,omitempty"`
-	Name           *string                                                     `json:"name,omitempty"`
-	Network        *PostVirtualMachineNetworkInterfaceAttachPartNetwork        `json:"network"`
-	SpeedProfile   *PostVirtualMachineNetworkInterfaceAttachPartSpeedProfile   `json:"speed_profile,omitempty"`
-	State          *string                                                     `json:"state,omitempty"`
-	VirtualMachine *PostVirtualMachineNetworkInterfaceAttachPartVirtualMachine `json:"virtual_machine,omitempty"`
-	VirtualNetwork *PostVirtualMachineNetworkInterfaceAttachPartVirtualNetwork `json:"virtual_network"`
+	Id             *string                                                                       `json:"id,omitempty"`
+	IpAddresses    *[]PostVirtualMachineNetworkInterfaceAttachPartIPAddresses                    `json:"ip_addresses,omitempty"`
+	MacAddress     *string                                                                       `json:"mac_address,omitempty"`
+	Name           *string                                                                       `json:"name,omitempty"`
+	Network        nullable.Nullable[PostVirtualMachineNetworkInterfaceAttachPartNetwork]        `json:"network,omitempty"`
+	SpeedProfile   *PostVirtualMachineNetworkInterfaceAttachPartSpeedProfile                     `json:"speed_profile,omitempty"`
+	State          *string                                                                       `json:"state,omitempty"`
+	VirtualMachine *PostVirtualMachineNetworkInterfaceAttachPartVirtualMachine                   `json:"virtual_machine,omitempty"`
+	VirtualNetwork nullable.Nullable[PostVirtualMachineNetworkInterfaceAttachPartVirtualNetwork] `json:"virtual_network,omitempty"`
 }
 
 // PostVirtualMachineNetworkInterfaceAttachPartIPAddresses defines model for PostVirtualMachineNetworkInterfaceAttachPartIPAddresses.
@@ -4114,15 +4115,15 @@ type PostVirtualMachineNetworkInterfaceAttachPartVirtualNetwork struct {
 
 // PostVirtualMachineNetworkInterfaceDetach200ResponseVirtualMachineNetworkInterface defines model for PostVirtualMachineNetworkInterfaceDetach200ResponseVirtualMachineNetworkInterface.
 type PostVirtualMachineNetworkInterfaceDetach200ResponseVirtualMachineNetworkInterface struct {
-	Id             *string                                                     `json:"id,omitempty"`
-	IpAddresses    *[]PostVirtualMachineNetworkInterfaceDetachPartIPAddresses  `json:"ip_addresses,omitempty"`
-	MacAddress     *string                                                     `json:"mac_address,omitempty"`
-	Name           *string                                                     `json:"name,omitempty"`
-	Network        *PostVirtualMachineNetworkInterfaceDetachPartNetwork        `json:"network"`
-	SpeedProfile   *PostVirtualMachineNetworkInterfaceDetachPartSpeedProfile   `json:"speed_profile,omitempty"`
-	State          *string                                                     `json:"state,omitempty"`
-	VirtualMachine *PostVirtualMachineNetworkInterfaceDetachPartVirtualMachine `json:"virtual_machine,omitempty"`
-	VirtualNetwork *PostVirtualMachineNetworkInterfaceDetachPartVirtualNetwork `json:"virtual_network"`
+	Id             *string                                                                       `json:"id,omitempty"`
+	IpAddresses    *[]PostVirtualMachineNetworkInterfaceDetachPartIPAddresses                    `json:"ip_addresses,omitempty"`
+	MacAddress     *string                                                                       `json:"mac_address,omitempty"`
+	Name           *string                                                                       `json:"name,omitempty"`
+	Network        nullable.Nullable[PostVirtualMachineNetworkInterfaceDetachPartNetwork]        `json:"network,omitempty"`
+	SpeedProfile   *PostVirtualMachineNetworkInterfaceDetachPartSpeedProfile                     `json:"speed_profile,omitempty"`
+	State          *string                                                                       `json:"state,omitempty"`
+	VirtualMachine *PostVirtualMachineNetworkInterfaceDetachPartVirtualMachine                   `json:"virtual_machine,omitempty"`
+	VirtualNetwork nullable.Nullable[PostVirtualMachineNetworkInterfaceDetachPartVirtualNetwork] `json:"virtual_network,omitempty"`
 }
 
 // PostVirtualMachineNetworkInterfaceDetachPartIPAddresses defines model for PostVirtualMachineNetworkInterfaceDetachPartIPAddresses.
@@ -4158,15 +4159,15 @@ type PostVirtualMachineNetworkInterfaceDetachPartVirtualNetwork struct {
 
 // PostVirtualMachineNetworkInterfaces200ResponseVirtualMachineNetworkInterface defines model for PostVirtualMachineNetworkInterfaces200ResponseVirtualMachineNetworkInterface.
 type PostVirtualMachineNetworkInterfaces200ResponseVirtualMachineNetworkInterface struct {
-	Id             *string                                                `json:"id,omitempty"`
-	IpAddresses    *[]PostVirtualMachineNetworkInterfacesPartIPAddresses  `json:"ip_addresses,omitempty"`
-	MacAddress     *string                                                `json:"mac_address,omitempty"`
-	Name           *string                                                `json:"name,omitempty"`
-	Network        *PostVirtualMachineNetworkInterfacesPartNetwork        `json:"network"`
-	SpeedProfile   *PostVirtualMachineNetworkInterfacesPartSpeedProfile   `json:"speed_profile,omitempty"`
-	State          *string                                                `json:"state,omitempty"`
-	VirtualMachine *PostVirtualMachineNetworkInterfacesPartVirtualMachine `json:"virtual_machine,omitempty"`
-	VirtualNetwork *PostVirtualMachineNetworkInterfacesPartVirtualNetwork `json:"virtual_network"`
+	Id             *string                                                                  `json:"id,omitempty"`
+	IpAddresses    *[]PostVirtualMachineNetworkInterfacesPartIPAddresses                    `json:"ip_addresses,omitempty"`
+	MacAddress     *string                                                                  `json:"mac_address,omitempty"`
+	Name           *string                                                                  `json:"name,omitempty"`
+	Network        nullable.Nullable[PostVirtualMachineNetworkInterfacesPartNetwork]        `json:"network,omitempty"`
+	SpeedProfile   *PostVirtualMachineNetworkInterfacesPartSpeedProfile                     `json:"speed_profile,omitempty"`
+	State          *string                                                                  `json:"state,omitempty"`
+	VirtualMachine *PostVirtualMachineNetworkInterfacesPartVirtualMachine                   `json:"virtual_machine,omitempty"`
+	VirtualNetwork nullable.Nullable[PostVirtualMachineNetworkInterfacesPartVirtualNetwork] `json:"virtual_network,omitempty"`
 }
 
 // PostVirtualMachineNetworkInterfacesPartIPAddresses defines model for PostVirtualMachineNetworkInterfacesPartIPAddresses.
@@ -4252,18 +4253,18 @@ type PrivacyTypesEnum string
 
 // PutDiskIOProfile200ResponseDisk defines model for PutDiskIOProfile200ResponseDisk.
 type PutDiskIOProfile200ResponseDisk struct {
-	BusType            *DiskBusEnum                            `json:"bus_type"`
-	CreatedAt          *int                                    `json:"created_at,omitempty"`
-	DataCenter         *PutDiskIOProfilePartDataCenter         `json:"data_center,omitempty"`
-	Id                 *string                                 `json:"id,omitempty"`
-	Installation       *DiskInstallation                       `json:"installation"`
-	IoProfile          *DiskIOProfile                          `json:"io_profile"`
-	Name               *string                                 `json:"name,omitempty"`
-	SizeInGb           *int                                    `json:"size_in_gb,omitempty"`
-	State              *DiskStateEnum                          `json:"state,omitempty"`
-	StorageSpeed       *StorageSpeedEnum                       `json:"storage_speed,omitempty"`
-	VirtualMachineDisk *PutDiskIOProfilePartVirtualMachineDisk `json:"virtual_machine_disk"`
-	Wwn                *string                                 `json:"wwn,omitempty"`
+	BusType            nullable.Nullable[DiskBusEnum]                            `json:"bus_type,omitempty"`
+	CreatedAt          *int                                                      `json:"created_at,omitempty"`
+	DataCenter         *PutDiskIOProfilePartDataCenter                           `json:"data_center,omitempty"`
+	Id                 *string                                                   `json:"id,omitempty"`
+	Installation       nullable.Nullable[DiskInstallation]                       `json:"installation,omitempty"`
+	IoProfile          nullable.Nullable[DiskIOProfile]                          `json:"io_profile,omitempty"`
+	Name               *string                                                   `json:"name,omitempty"`
+	SizeInGb           *int                                                      `json:"size_in_gb,omitempty"`
+	State              *DiskStateEnum                                            `json:"state,omitempty"`
+	StorageSpeed       *StorageSpeedEnum                                         `json:"storage_speed,omitempty"`
+	VirtualMachineDisk nullable.Nullable[PutDiskIOProfilePartVirtualMachineDisk] `json:"virtual_machine_disk,omitempty"`
+	Wwn                *string                                                   `json:"wwn,omitempty"`
 }
 
 // PutDiskIOProfilePartDataCenter defines model for PutDiskIOProfilePartDataCenter.
@@ -4289,18 +4290,18 @@ type PutDiskIOProfilePartVirtualMachineDisk struct {
 
 // PutDiskResize200ResponseDisk defines model for PutDiskResize200ResponseDisk.
 type PutDiskResize200ResponseDisk struct {
-	BusType            *DiskBusEnum                         `json:"bus_type"`
-	CreatedAt          *int                                 `json:"created_at,omitempty"`
-	DataCenter         *PutDiskResizePartDataCenter         `json:"data_center,omitempty"`
-	Id                 *string                              `json:"id,omitempty"`
-	Installation       *DiskInstallation                    `json:"installation"`
-	IoProfile          *DiskIOProfile                       `json:"io_profile"`
-	Name               *string                              `json:"name,omitempty"`
-	SizeInGb           *int                                 `json:"size_in_gb,omitempty"`
-	State              *DiskStateEnum                       `json:"state,omitempty"`
-	StorageSpeed       *StorageSpeedEnum                    `json:"storage_speed,omitempty"`
-	VirtualMachineDisk *PutDiskResizePartVirtualMachineDisk `json:"virtual_machine_disk"`
-	Wwn                *string                              `json:"wwn,omitempty"`
+	BusType            nullable.Nullable[DiskBusEnum]                         `json:"bus_type,omitempty"`
+	CreatedAt          *int                                                   `json:"created_at,omitempty"`
+	DataCenter         *PutDiskResizePartDataCenter                           `json:"data_center,omitempty"`
+	Id                 *string                                                `json:"id,omitempty"`
+	Installation       nullable.Nullable[DiskInstallation]                    `json:"installation,omitempty"`
+	IoProfile          nullable.Nullable[DiskIOProfile]                       `json:"io_profile,omitempty"`
+	Name               *string                                                `json:"name,omitempty"`
+	SizeInGb           *int                                                   `json:"size_in_gb,omitempty"`
+	State              *DiskStateEnum                                         `json:"state,omitempty"`
+	StorageSpeed       *StorageSpeedEnum                                      `json:"storage_speed,omitempty"`
+	VirtualMachineDisk nullable.Nullable[PutDiskResizePartVirtualMachineDisk] `json:"virtual_machine_disk,omitempty"`
+	Wwn                *string                                                `json:"wwn,omitempty"`
 }
 
 // PutDiskResizePartDataCenter defines model for PutDiskResizePartDataCenter.
@@ -4335,79 +4336,79 @@ type RateLimitReachedEnum string
 
 // RecordContentAttributesForA defines model for RecordContentAttributesForA.
 type RecordContentAttributesForA struct {
-	IpAddress *string `json:"ip_address"`
+	IpAddress nullable.Nullable[string] `json:"ip_address,omitempty"`
 }
 
 // RecordContentAttributesForAAAA defines model for RecordContentAttributesForAAAA.
 type RecordContentAttributesForAAAA struct {
-	IpAddress *string `json:"ip_address"`
+	IpAddress nullable.Nullable[string] `json:"ip_address,omitempty"`
 }
 
 // RecordContentAttributesForALIAS defines model for RecordContentAttributesForALIAS.
 type RecordContentAttributesForALIAS struct {
-	Hostname *string `json:"hostname"`
+	Hostname nullable.Nullable[string] `json:"hostname,omitempty"`
 }
 
 // RecordContentAttributesForCAA defines model for RecordContentAttributesForCAA.
 type RecordContentAttributesForCAA struct {
-	Flag  *string `json:"flag"`
-	Tag   *string `json:"tag"`
-	Value *string `json:"value"`
+	Flag  nullable.Nullable[string] `json:"flag,omitempty"`
+	Tag   nullable.Nullable[string] `json:"tag,omitempty"`
+	Value nullable.Nullable[string] `json:"value,omitempty"`
 }
 
 // RecordContentAttributesForCNAME defines model for RecordContentAttributesForCNAME.
 type RecordContentAttributesForCNAME struct {
-	Hostname *string `json:"hostname"`
+	Hostname nullable.Nullable[string] `json:"hostname,omitempty"`
 }
 
 // RecordContentAttributesForHTTPRedirect defines model for RecordContentAttributesForHTTPRedirect.
 type RecordContentAttributesForHTTPRedirect struct {
-	HttpStatus *string `json:"http_status"`
-	Url        *string `json:"url"`
+	HttpStatus nullable.Nullable[string] `json:"http_status,omitempty"`
+	Url        nullable.Nullable[string] `json:"url,omitempty"`
 }
 
 // RecordContentAttributesForIPS defines model for RecordContentAttributesForIPS.
 type RecordContentAttributesForIPS struct {
-	IpAddresses *string `json:"ip_addresses"`
+	IpAddresses nullable.Nullable[string] `json:"ip_addresses,omitempty"`
 }
 
 // RecordContentAttributesForMX defines model for RecordContentAttributesForMX.
 type RecordContentAttributesForMX struct {
-	Hostname *string `json:"hostname"`
+	Hostname nullable.Nullable[string] `json:"hostname,omitempty"`
 }
 
 // RecordContentAttributesForNS defines model for RecordContentAttributesForNS.
 type RecordContentAttributesForNS struct {
-	Hostname *string `json:"hostname"`
+	Hostname nullable.Nullable[string] `json:"hostname,omitempty"`
 }
 
 // RecordContentAttributesForPTR defines model for RecordContentAttributesForPTR.
 type RecordContentAttributesForPTR struct {
-	Hostname *string `json:"hostname"`
+	Hostname nullable.Nullable[string] `json:"hostname,omitempty"`
 }
 
 // RecordContentAttributesForSRV defines model for RecordContentAttributesForSRV.
 type RecordContentAttributesForSRV struct {
-	Port   *string `json:"port"`
-	Target *string `json:"target"`
-	Weight *string `json:"weight"`
+	Port   nullable.Nullable[string] `json:"port,omitempty"`
+	Target nullable.Nullable[string] `json:"target,omitempty"`
+	Weight nullable.Nullable[string] `json:"weight,omitempty"`
 }
 
 // RecordContentAttributesForSSHFP defines model for RecordContentAttributesForSSHFP.
 type RecordContentAttributesForSSHFP struct {
-	Algorithm       *string `json:"algorithm"`
-	Fingerprint     *string `json:"fingerprint"`
-	FingerprintType *string `json:"fingerprint_type"`
+	Algorithm       nullable.Nullable[string] `json:"algorithm,omitempty"`
+	Fingerprint     nullable.Nullable[string] `json:"fingerprint,omitempty"`
+	FingerprintType nullable.Nullable[string] `json:"fingerprint_type,omitempty"`
 }
 
 // RecordContentAttributesForTXT defines model for RecordContentAttributesForTXT.
 type RecordContentAttributesForTXT struct {
-	Content *string `json:"content"`
+	Content nullable.Nullable[string] `json:"content,omitempty"`
 }
 
 // RecordContentAttributesForVirtualMachine defines model for RecordContentAttributesForVirtualMachine.
 type RecordContentAttributesForVirtualMachine struct {
-	VirtualMachine *string `json:"virtual_machine"`
+	VirtualMachine nullable.Nullable[string] `json:"virtual_machine,omitempty"`
 }
 
 // ResizeMethodEnum defines model for ResizeMethodEnum.
@@ -4528,9 +4529,9 @@ type ServiceUnavailableEnum string
 
 // SinglePriceVariant defines model for SinglePriceVariant.
 type SinglePriceVariant struct {
-	Description *string  `json:"description"`
-	Id          *string  `json:"id,omitempty"`
-	Price       *float32 `json:"price,omitempty"`
+	Description nullable.Nullable[string] `json:"description,omitempty"`
+	Id          *string                   `json:"id,omitempty"`
+	Price       *float32                  `json:"price,omitempty"`
 }
 
 // SpeedProfileAlreadyAssignedEnum defines model for SpeedProfileAlreadyAssignedEnum.
@@ -4566,13 +4567,13 @@ type TagNotFoundEnum string
 
 // Task defines model for Task.
 type Task struct {
-	CreatedAt  *int            `json:"created_at,omitempty"`
-	FinishedAt *int            `json:"finished_at"`
-	Id         *string         `json:"id,omitempty"`
-	Name       *string         `json:"name,omitempty"`
-	Progress   *int            `json:"progress,omitempty"`
-	StartedAt  *int            `json:"started_at"`
-	Status     *TaskStatusEnum `json:"status,omitempty"`
+	CreatedAt  *int                   `json:"created_at,omitempty"`
+	FinishedAt nullable.Nullable[int] `json:"finished_at,omitempty"`
+	Id         *string                `json:"id,omitempty"`
+	Name       *string                `json:"name,omitempty"`
+	Progress   *int                   `json:"progress,omitempty"`
+	StartedAt  nullable.Nullable[int] `json:"started_at,omitempty"`
+	Status     *TaskStatusEnum        `json:"status,omitempty"`
 }
 
 // TaskNotFoundEnum defines model for TaskNotFoundEnum.
@@ -4603,11 +4604,11 @@ type TemplateSpec struct {
 
 // TemplateSpecField defines model for TemplateSpecField.
 type TemplateSpecField struct {
-	Description *string                    `json:"description"`
+	Description nullable.Nullable[string]  `json:"description,omitempty"`
 	Label       *string                    `json:"label,omitempty"`
 	Name        *string                    `json:"name,omitempty"`
-	Placeholder *string                    `json:"placeholder"`
-	Prefill     *string                    `json:"prefill"`
+	Placeholder nullable.Nullable[string]  `json:"placeholder,omitempty"`
+	Prefill     nullable.Nullable[string]  `json:"prefill,omitempty"`
 	Required    *bool                      `json:"required,omitempty"`
 	Type        *TemplateSpecFieldTypeEnum `json:"type,omitempty"`
 }
@@ -4699,28 +4700,28 @@ type ValidationErrorSchema struct {
 
 // VirtualMachine defines model for VirtualMachine.
 type VirtualMachine struct {
-	AttachedIso         *ISO                     `json:"attached_iso"`
-	CpuCores            *int                     `json:"cpu_cores"`
-	CreatedAt           *int                     `json:"created_at,omitempty"`
-	Description         *string                  `json:"description"`
-	Fqdn                *string                  `json:"fqdn,omitempty"`
-	GpuType             *GPUType                 `json:"gpu_type"`
-	Gpus                *[]VirtualMachineGPU     `json:"gpus,omitempty"`
-	Group               *VirtualMachineGroup     `json:"group"`
-	Hostname            *string                  `json:"hostname,omitempty"`
-	Hypervisor          *Hypervisor              `json:"hypervisor"`
-	Id                  *string                  `json:"id,omitempty"`
-	InitialRootPassword *string                  `json:"initial_root_password"`
-	IpAddresses         *[]IPAddress             `json:"ip_addresses,omitempty"`
-	MemoryInGb          *int                     `json:"memory_in_gb"`
-	Name                *string                  `json:"name,omitempty"`
-	Organization        *Organization            `json:"organization,omitempty"`
-	Package             *VirtualMachinePackage   `json:"package"`
-	State               *VirtualMachineStateEnum `json:"state,omitempty"`
-	TagNames            *[]string                `json:"tag_names,omitempty"`
-	Tags                *[]Tag                   `json:"tags,omitempty"`
-	UseDedicatedCpus    *bool                    `json:"use_dedicated_cpus"`
-	Zone                *Zone                    `json:"zone,omitempty"`
+	AttachedIso         nullable.Nullable[ISO]                   `json:"attached_iso,omitempty"`
+	CpuCores            nullable.Nullable[int]                   `json:"cpu_cores,omitempty"`
+	CreatedAt           *int                                     `json:"created_at,omitempty"`
+	Description         nullable.Nullable[string]                `json:"description,omitempty"`
+	Fqdn                *string                                  `json:"fqdn,omitempty"`
+	GpuType             nullable.Nullable[GPUType]               `json:"gpu_type,omitempty"`
+	Gpus                *[]VirtualMachineGPU                     `json:"gpus,omitempty"`
+	Group               nullable.Nullable[VirtualMachineGroup]   `json:"group,omitempty"`
+	Hostname            *string                                  `json:"hostname,omitempty"`
+	Hypervisor          nullable.Nullable[Hypervisor]            `json:"hypervisor,omitempty"`
+	Id                  *string                                  `json:"id,omitempty"`
+	InitialRootPassword nullable.Nullable[string]                `json:"initial_root_password,omitempty"`
+	IpAddresses         *[]IPAddress                             `json:"ip_addresses,omitempty"`
+	MemoryInGb          nullable.Nullable[int]                   `json:"memory_in_gb,omitempty"`
+	Name                *string                                  `json:"name,omitempty"`
+	Organization        *Organization                            `json:"organization,omitempty"`
+	Package             nullable.Nullable[VirtualMachinePackage] `json:"package,omitempty"`
+	State               *VirtualMachineStateEnum                 `json:"state,omitempty"`
+	TagNames            *[]string                                `json:"tag_names,omitempty"`
+	Tags                *[]Tag                                   `json:"tags,omitempty"`
+	UseDedicatedCpus    nullable.Nullable[bool]                  `json:"use_dedicated_cpus,omitempty"`
+	Zone                *Zone                                    `json:"zone,omitempty"`
 }
 
 // VirtualMachineArguments defines model for VirtualMachineArguments.
@@ -4793,10 +4794,10 @@ type VirtualMachineGPU struct {
 	Available *bool `json:"available,omitempty"`
 
 	// Id Unique ID for this GPU. Not available when status is "detached".
-	Id            *string                             `json:"id"`
-	PendingAction *VirtualMachineGPUPendingActionEnum `json:"pending_action"`
-	Status        *VirtualMachineGPUStatusEnum        `json:"status,omitempty"`
-	Type          *GPUType                            `json:"type,omitempty"`
+	Id            nullable.Nullable[string]                             `json:"id,omitempty"`
+	PendingAction nullable.Nullable[VirtualMachineGPUPendingActionEnum] `json:"pending_action,omitempty"`
+	Status        *VirtualMachineGPUStatusEnum                          `json:"status,omitempty"`
+	Type          *GPUType                                              `json:"type,omitempty"`
 }
 
 // VirtualMachineGPUPendingActionEnum defines model for VirtualMachineGPUPendingActionEnum.
@@ -4883,18 +4884,18 @@ type VirtualMachineNotFoundSchema struct {
 
 // VirtualMachinePackage defines model for VirtualMachinePackage.
 type VirtualMachinePackage struct {
-	CpuCores                      *int                        `json:"cpu_cores,omitempty"`
-	Group                         *VirtualMachinePackageGroup `json:"group,omitempty"`
-	Icon                          *Attachment                 `json:"icon"`
-	Id                            *string                     `json:"id,omitempty"`
-	Ipv4Addresses                 *int                        `json:"ipv4_addresses,omitempty"`
-	MemoryInGb                    *int                        `json:"memory_in_gb,omitempty"`
-	MonthlyBandwidthAllowanceInGb *int                        `json:"monthly_bandwidth_allowance_in_gb"`
-	Name                          *string                     `json:"name,omitempty"`
-	Permalink                     *string                     `json:"permalink,omitempty"`
-	Privacy                       *PrivacyTypesEnum           `json:"privacy,omitempty"`
-	StorageInGb                   *int                        `json:"storage_in_gb,omitempty"`
-	UseDedicatedCpus              *bool                       `json:"use_dedicated_cpus,omitempty"`
+	CpuCores                      *int                          `json:"cpu_cores,omitempty"`
+	Group                         *VirtualMachinePackageGroup   `json:"group,omitempty"`
+	Icon                          nullable.Nullable[Attachment] `json:"icon,omitempty"`
+	Id                            *string                       `json:"id,omitempty"`
+	Ipv4Addresses                 *int                          `json:"ipv4_addresses,omitempty"`
+	MemoryInGb                    *int                          `json:"memory_in_gb,omitempty"`
+	MonthlyBandwidthAllowanceInGb nullable.Nullable[int]        `json:"monthly_bandwidth_allowance_in_gb,omitempty"`
+	Name                          *string                       `json:"name,omitempty"`
+	Permalink                     *string                       `json:"permalink,omitempty"`
+	Privacy                       *PrivacyTypesEnum             `json:"privacy,omitempty"`
+	StorageInGb                   *int                          `json:"storage_in_gb,omitempty"`
+	UseDedicatedCpus              *bool                         `json:"use_dedicated_cpus,omitempty"`
 }
 
 // VirtualMachinePackageGroup defines model for VirtualMachinePackageGroup.
@@ -4951,10 +4952,10 @@ type VirtualNetworkNotFoundSchema struct {
 
 // Zone defines model for Zone.
 type Zone struct {
-	DataCenter *DataCenter `json:"data_center,omitempty"`
-	Id         *string     `json:"id,omitempty"`
-	Name       *string     `json:"name,omitempty"`
-	Permalink  *string     `json:"permalink"`
+	DataCenter *DataCenter               `json:"data_center,omitempty"`
+	Id         *string                   `json:"id,omitempty"`
+	Name       *string                   `json:"name,omitempty"`
+	Permalink  nullable.Nullable[string] `json:"permalink,omitempty"`
 }
 
 // ZoneLookup All 'zone[]' params are mutually exclusive, only one can be provided.
@@ -28999,7 +29000,7 @@ type GetIpAddressResponse struct {
 	HTTPResponse *http.Response
 	JSON200      *struct {
 		// Allocation The resource this address is allocated to
-		Allocation *GetIPAddress200ResponseAllocation `json:"allocation"`
+		Allocation nullable.Nullable[GetIPAddress200ResponseAllocation] `json:"allocation"`
 
 		// IpAddress The IP address that has been located
 		IpAddress IPAddress `json:"ip_address"`
@@ -30770,11 +30771,11 @@ type GetOrganizationPolicyResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
-		Features                              PolicyFeatures `json:"features"`
-		Limits                                PolicyLimits   `json:"limits"`
-		PolicyName                            *string        `json:"policy_name"`
-		PolicyType                            PolicyType     `json:"policy_type"`
-		ReasonsForDisallowingResourceCreation []string       `json:"reasons_for_disallowing_resource_creation"`
+		Features                              PolicyFeatures            `json:"features"`
+		Limits                                PolicyLimits              `json:"limits"`
+		PolicyName                            nullable.Nullable[string] `json:"policy_name"`
+		PolicyType                            PolicyType                `json:"policy_type"`
+		ReasonsForDisallowingResourceCreation []string                  `json:"reasons_for_disallowing_resource_creation"`
 	}
 	JSON400 *PolicyNotAvailableForManagedOrganizations400Res
 	JSON403 *OrganizationNotActivatedOrganizationSuspended403Res
@@ -31862,7 +31863,7 @@ type GetUsersCurrentResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
-		ApiTokenId    *string                                   `json:"api_token_id"`
+		ApiTokenId    nullable.Nullable[string]                 `json:"api_token_id"`
 		Organizations []GetUsersCurrent200ResponseOrganizations `json:"organizations"`
 		User          User                                      `json:"user"`
 	}
@@ -43594,7 +43595,7 @@ func ParseGetIpAddressResponse(rsp *http.Response) (*GetIpAddressResponse, error
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
 			// Allocation The resource this address is allocated to
-			Allocation *GetIPAddress200ResponseAllocation `json:"allocation"`
+			Allocation nullable.Nullable[GetIPAddress200ResponseAllocation] `json:"allocation"`
 
 			// IpAddress The IP address that has been located
 			IpAddress IPAddress `json:"ip_address"`
@@ -47597,11 +47598,11 @@ func ParseGetOrganizationPolicyResponse(rsp *http.Response) (*GetOrganizationPol
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
-			Features                              PolicyFeatures `json:"features"`
-			Limits                                PolicyLimits   `json:"limits"`
-			PolicyName                            *string        `json:"policy_name"`
-			PolicyType                            PolicyType     `json:"policy_type"`
-			ReasonsForDisallowingResourceCreation []string       `json:"reasons_for_disallowing_resource_creation"`
+			Features                              PolicyFeatures            `json:"features"`
+			Limits                                PolicyLimits              `json:"limits"`
+			PolicyName                            nullable.Nullable[string] `json:"policy_name"`
+			PolicyType                            PolicyType                `json:"policy_type"`
+			ReasonsForDisallowingResourceCreation []string                  `json:"reasons_for_disallowing_resource_creation"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -49981,7 +49982,7 @@ func ParseGetUsersCurrentResponse(rsp *http.Response) (*GetUsersCurrentResponse,
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
-			ApiTokenId    *string                                   `json:"api_token_id"`
+			ApiTokenId    nullable.Nullable[string]                 `json:"api_token_id"`
 			Organizations []GetUsersCurrent200ResponseOrganizations `json:"organizations"`
 			User          User                                      `json:"user"`
 		}
