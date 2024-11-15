@@ -14,8 +14,8 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/deepmap/oapi-codegen/pkg/securityprovider"
 	"github.com/oapi-codegen/nullable"
+	"github.com/oapi-codegen/oapi-codegen/v2/pkg/securityprovider"
 	"github.com/oapi-codegen/runtime"
 )
 
