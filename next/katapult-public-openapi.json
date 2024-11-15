@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "x-katapult-version": "2.62.1-1-g34e6784b6",
+    "x-katapult-version": "2.64.0",
     "version": "1.0.0",
     "title": "Katapult Public API",
     "description": "Welcome to the documentation for the Katapult Public API"
@@ -12,7 +12,7 @@
   },
   "servers": [
     {
-      "url": "http://api.staging.katapult.dev/public/v1"
+      "url": "https://api.katapult.io/public/v1"
     }
   ],
   "paths": {

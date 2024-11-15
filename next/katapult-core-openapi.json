@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "x-katapult-version": "2.62.1-1-g34e6784b6",
+    "x-katapult-version": "2.64.0",
     "version": "1.0.0",
     "title": "Katapult Core API",
     "description": "Welcome to the documentation for the Katapult Core API"
@@ -12,7 +12,7 @@
   },
   "servers": [
     {
-      "url": "http://api.staging.katapult.dev/core/v1"
+      "url": "https://api.katapult.io/core/v1"
     }
   ],
   "paths": {
@@ -4169,7 +4169,7 @@
       "post": {
         "operationId": "post:dns_zone_verify",
         "summary": "Verify DNS zone",
-        "description": "Attempt to verify the nameservers for a given DNS zone\n## Scopes\n- `dns`\n\n### OAuth2 Scopes\nWhen using OAuth2 authentication, scopes are prefixed with `api.katapult.io/core/v1/`.\n",
+        "description": "Attempt to verify either the nameservers or root TXT record for a given DNS zone\n## Scopes\n- `dns`\n\n### OAuth2 Scopes\nWhen using OAuth2 authentication, scopes are prefixed with `api.katapult.io/core/v1/`.\n",
         "tags": [
           "DNS zones"
         ],
@@ -4203,7 +4203,7 @@
         },
         "responses": {
           "200": {
-            "description": "Attempt to verify the nameservers for a given DNS zone",
+            "description": "Attempt to verify either the nameservers or root TXT record for a given DNS zone",
             "content": {
               "application/json": {
                 "schema": {
@@ -21853,6 +21853,7 @@
           "ALIAS",
           "CAA",
           "CNAME",
+          "HTTPRedirect",
           "IPS",
           "MX",
           "NS",
@@ -21903,6 +21904,14 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/RecordContentAttributesForCNAME"
+              }
+            ],
+            "nullable": true
+          },
+          "HTTPRedirect": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RecordContentAttributesForHTTPRedirect"
               }
             ],
             "nullable": true
@@ -22025,6 +22034,19 @@
         "type": "object",
         "properties": {
           "hostname": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "RecordContentAttributesForHTTPRedirect": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "nullable": true
+          },
+          "http_status": {
             "type": "string",
             "nullable": true
           }
@@ -22157,6 +22179,9 @@
           "CNAME": {
             "$ref": "#/components/schemas/DNSRecordContentArgumentsForCNAME"
           },
+          "HTTPRedirect": {
+            "$ref": "#/components/schemas/DNSRecordContentArgumentsForHTTPRedirect"
+          },
           "IPS": {
             "$ref": "#/components/schemas/DNSRecordContentArgumentsForIPS"
           },
@@ -22228,6 +22253,17 @@
         "type": "object",
         "properties": {
           "hostname": {
+            "type": "string"
+          }
+        }
+      },
+      "DNSRecordContentArgumentsForHTTPRedirect": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "http_status": {
             "type": "string"
           }
         }
@@ -26878,7 +26914,7 @@
         }
       },
       "DNSZoneNotVerifiedResponse": {
-        "description": "The DNS zone could not be verified, check the nameservers are set correctly",
+        "description": "The DNS zone could not be verified, check the nameservers or root TXT record are set correctly",
         "content": {
           "application/json": {
             "schema": {
