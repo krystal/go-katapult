@@ -1,14 +1,14 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "x-katapult-version": "2.64.0",
+    "x-katapult-version": "2.68.0",
     "version": "1.0.0",
     "title": "Katapult Core API",
     "description": "Welcome to the documentation for the Katapult Core API"
   },
   "externalDocs": {
     "description": "Katapult API Documentation",
-    "url": "https://developers.katapult.io/docs/category/core-api"
+    "url": "https://docs.katapult.io/docs/category/core-api"
   },
   "servers": [
     {
@@ -15943,6 +15943,9 @@
           "404": {
             "$ref": "#/components/responses/NoVirtualMachineForAPITokenResponse"
           },
+          "409": {
+            "$ref": "#/components/responses/ContinuousManagementDisabledResponse"
+          },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
           },
@@ -16299,6 +16302,10 @@
           "permalink": {
             "type": "string",
             "nullable": true
+          },
+          "default": {
+            "type": "boolean",
+            "description": "Indicates if this network is the default network for the data center."
           },
           "data_center": {
             "$ref": "#/components/schemas/GetDataCenterDefaultNetworkPartDataCenter"
@@ -19976,6 +19983,10 @@
             "type": "string",
             "nullable": true
           },
+          "default": {
+            "type": "boolean",
+            "description": "Indicates if this network is the default network for the data center."
+          },
           "data_center": {
             "$ref": "#/components/schemas/DataCenter"
           }
@@ -20516,6 +20527,12 @@
         "type": "string",
         "enum": [
           "no_virtual_machine_for_api_token"
+        ]
+      },
+      "ContinuousManagementDisabledEnum": {
+        "type": "string",
+        "enum": [
+          "continuous_management_disabled"
         ]
       },
       "ZoneLookup": {
@@ -22954,6 +22971,10 @@
           "permalink": {
             "type": "string",
             "nullable": true
+          },
+          "default": {
+            "type": "boolean",
+            "description": "Indicates if this network is the default network for the data center."
           },
           "data_center": {
             "$ref": "#/components/schemas/GetOrganizationAvailableNetworksPartDataCenter"
@@ -26701,6 +26722,26 @@
               "properties": {
                 "code": {
                   "$ref": "#/components/schemas/NoVirtualMachineForAPITokenEnum"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "detail": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ContinuousManagementDisabledResponse": {
+        "description": "SSH Key Continuous management is not enabled for this virtual machine",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "$ref": "#/components/schemas/ContinuousManagementDisabledEnum"
                 },
                 "description": {
                   "type": "string"
