@@ -1,14 +1,14 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "x-katapult-version": "2.64.0",
+    "x-katapult-version": "2.68.0",
     "version": "1.0.0",
     "title": "Katapult Public API",
     "description": "Welcome to the documentation for the Katapult Public API"
   },
   "externalDocs": {
     "description": "Katapult API Documentation",
-    "url": "https://developers.katapult.io/docs/category/public-api"
+    "url": "https://docs.katapult.io/docs/category/public-api"
   },
   "servers": [
     {

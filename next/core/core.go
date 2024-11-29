@@ -52,6 +52,11 @@ const (
 	CertificateStateEnumPending     CertificateStateEnum = "pending"
 )
 
+// Defines values for ContinuousManagementDisabledEnum.
+const (
+	ContinuousManagementDisabled ContinuousManagementDisabledEnum = "continuous_management_disabled"
+)
+
 // Defines values for CountryNotFoundEnum.
 const (
 	CountryNotFound CountryNotFoundEnum = "country_not_found"
@@ -920,6 +925,9 @@ type CertificateNotFoundEnum string
 // CertificateStateEnum defines model for CertificateStateEnum.
 type CertificateStateEnum string
 
+// ContinuousManagementDisabledEnum defines model for ContinuousManagementDisabledEnum.
+type ContinuousManagementDisabledEnum string
+
 // Country defines model for Country.
 type Country struct {
 	Eu       *bool                     `json:"eu,omitempty"`
@@ -1636,9 +1644,12 @@ type GetDataCenter200ResponseDataCenter struct {
 // GetDataCenterDefaultNetwork200ResponseNetwork defines model for GetDataCenterDefaultNetwork200ResponseNetwork.
 type GetDataCenterDefaultNetwork200ResponseNetwork struct {
 	DataCenter *GetDataCenterDefaultNetworkPartDataCenter `json:"data_center,omitempty"`
-	Id         *string                                    `json:"id,omitempty"`
-	Name       *string                                    `json:"name,omitempty"`
-	Permalink  nullable.Nullable[string]                  `json:"permalink,omitempty"`
+
+	// Default Indicates if this network is the default network for the data center.
+	Default   *bool                     `json:"default,omitempty"`
+	Id        *string                   `json:"id,omitempty"`
+	Name      *string                   `json:"name,omitempty"`
+	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
 }
 
 // GetDataCenterDefaultNetworkPartDataCenter defines model for GetDataCenterDefaultNetworkPartDataCenter.
@@ -1971,9 +1982,12 @@ type GetOrganizationAddressLists200ResponseAddressLists struct {
 // GetOrganizationAvailableNetworks200ResponseNetworks defines model for GetOrganizationAvailableNetworks200ResponseNetworks.
 type GetOrganizationAvailableNetworks200ResponseNetworks struct {
 	DataCenter *GetOrganizationAvailableNetworksPartDataCenter `json:"data_center,omitempty"`
-	Id         *string                                         `json:"id,omitempty"`
-	Name       *string                                         `json:"name,omitempty"`
-	Permalink  nullable.Nullable[string]                       `json:"permalink,omitempty"`
+
+	// Default Indicates if this network is the default network for the data center.
+	Default   *bool                     `json:"default,omitempty"`
+	Id        *string                   `json:"id,omitempty"`
+	Name      *string                   `json:"name,omitempty"`
+	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
 }
 
 // GetOrganizationAvailableNetworks200ResponseVirtualNetworks defines model for GetOrganizationAvailableNetworks200ResponseVirtualNetworks.
@@ -2705,10 +2719,13 @@ type MultipleObjectStorageBucketsFoundEnum string
 
 // Network defines model for Network.
 type Network struct {
-	DataCenter *DataCenter               `json:"data_center,omitempty"`
-	Id         *string                   `json:"id,omitempty"`
-	Name       *string                   `json:"name,omitempty"`
-	Permalink  nullable.Nullable[string] `json:"permalink,omitempty"`
+	DataCenter *DataCenter `json:"data_center,omitempty"`
+
+	// Default Indicates if this network is the default network for the data center.
+	Default   *bool                     `json:"default,omitempty"`
+	Id        *string                   `json:"id,omitempty"`
+	Name      *string                   `json:"name,omitempty"`
+	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
 }
 
 // NetworkErrorEnum defines model for NetworkErrorEnum.
@@ -5024,6 +5041,13 @@ type CertificateNotFoundResponse struct {
 	Code        *CertificateNotFoundEnum `json:"code,omitempty"`
 	Description *string                  `json:"description,omitempty"`
 	Detail      *map[string]interface{}  `json:"detail,omitempty"`
+}
+
+// ContinuousManagementDisabledResponse defines model for ContinuousManagementDisabledResponse.
+type ContinuousManagementDisabledResponse struct {
+	Code        *ContinuousManagementDisabledEnum `json:"code,omitempty"`
+	Description *string                           `json:"description,omitempty"`
+	Detail      *map[string]interface{}           `json:"detail,omitempty"`
 }
 
 // CountryNotFoundResponse defines model for CountryNotFoundResponse.
@@ -31896,6 +31920,7 @@ type GetVirtualMachineAuthorizedKeysResponse struct {
 	JSON400      *APIAuthenticator400Response
 	JSON403      *APIAuthenticator403Response
 	JSON404      *NoVirtualMachineForAPITokenResponse
+	JSON409      *ContinuousManagementDisabledResponse
 	JSON429      *APIAuthenticator429Response
 	JSON503      *APIAuthenticator503Response
 }
@@ -50065,6 +50090,13 @@ func ParseGetVirtualMachineAuthorizedKeysResponse(rsp *http.Response) (*GetVirtu
 			return nil, err
 		}
 		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ContinuousManagementDisabledResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest APIAuthenticator429Response

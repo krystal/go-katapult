@@ -7,6 +7,8 @@ import (
 	"github.com/krystal/go-katapult/next/public"
 )
 
+//go:generate ./generate.sh
+
 type Client struct {
 	Core   core.ClientInterface
 	Public public.ClientInterface
