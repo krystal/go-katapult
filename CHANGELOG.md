@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.13](https://github.com/krystal/go-katapult/compare/v0.2.12...v0.2.13) (2024-11-29)
+
+
+### Features
+
+* **next:** update generated core and public clients from Katapult 2.68.0 schemas ([#179](https://github.com/krystal/go-katapult/issues/179)) ([4c8efb9](https://github.com/krystal/go-katapult/commit/4c8efb9164b7e95317c85f067bce2257463e72a1))
+* update next client for v2.64.0 ([#177](https://github.com/krystal/go-katapult/issues/177)) ([7af4d65](https://github.com/krystal/go-katapult/commit/7af4d652b61e4a6f0c0abb00a31b744284833acb))
+
 ## [0.2.12](https://github.com/krystal/go-katapult/compare/v0.2.11...v0.2.12) (2024-10-22)
 
 
