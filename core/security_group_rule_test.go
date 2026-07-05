@@ -88,6 +88,7 @@ func TestSecurityGroupRule_JSONMarshalling(t *testing.T) {
 				},
 				Direction: "inbound",
 				Protocol:  "TCP",
+				Action:    "allow",
 				Ports:     port,
 				Targets:   []string{"192.168.0.1"},
 				Notes:     note,
@@ -116,6 +117,7 @@ func TestSecurityGroupRuleArguments_JSONMarshalling(t *testing.T) {
 			obj: &SecurityGroupRuleArguments{
 				Direction: "inbound",
 				Protocol:  "TCP",
+				Action:    "deny",
 				Ports:     &port,
 				Targets:   &[]string{"192.168.0.1"},
 				Notes:     &note,
@@ -195,6 +197,7 @@ func Test_securityGroupRuleCreateRequest_JSONMarshalling(t *testing.T) {
 				Properties: &SecurityGroupRuleArguments{
 					Direction: "inbound",
 					Protocol:  "TCP",
+					Action:    "allow",
 					Ports:     &port,
 					Targets:   &[]string{"192.168.0.1"},
 					Notes:     &note,
@@ -225,6 +228,7 @@ func Test_securityGroupRuleUpdateRequest_JSONMarshalling(t *testing.T) {
 				Properties: &SecurityGroupRuleArguments{
 					Direction: "inbound",
 					Protocol:  "TCP",
+					Action:    "deny",
 					Ports:     &port,
 					Targets:   &[]string{"192.168.0.1"},
 					Notes:     &note,

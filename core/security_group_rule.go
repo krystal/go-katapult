@@ -13,6 +13,7 @@ type SecurityGroupRule struct {
 	SecurityGroup *SecurityGroupRef `json:"security_group,omitempty"`
 	Direction     string            `json:"direction,omitempty"`
 	Protocol      string            `json:"protocol,omitempty"`
+	Action        string            `json:"action,omitempty"`
 	Ports         string            `json:"ports,omitempty"`
 	Targets       []string          `json:"targets,omitempty"`
 	Notes         string            `json:"notes,omitempty"`
@@ -33,6 +34,7 @@ func (sgr SecurityGroupRuleRef) queryValues() *url.Values {
 type SecurityGroupRuleArguments struct {
 	Direction string    `json:"direction,omitempty"`
 	Protocol  string    `json:"protocol,omitempty"`
+	Action    string    `json:"action,omitempty"`
 	Ports     *string   `json:"ports,omitempty"`
 	Targets   *[]string `json:"targets,omitempty"`
 	Notes     *string   `json:"notes,omitempty"`
