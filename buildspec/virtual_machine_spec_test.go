@@ -236,6 +236,28 @@ packages:
 			},
 		},
 		{
+			name: "empty cloud-init user data",
+			xml: undent.String(`
+				<VirtualMachineSpec>
+					<CloudInit>
+						<UserData></UserData>
+					</CloudInit>
+				</VirtualMachineSpec>`,
+			),
+			want: &VirtualMachineSpec{},
+		},
+		{
+			name: "whitespace-only cloud-init user data",
+			xml: undent.String(`
+				<VirtualMachineSpec>
+					<CloudInit>
+						<UserData>  &#xA;&#x9;</UserData>
+					</CloudInit>
+				</VirtualMachineSpec>`,
+			),
+			want: &VirtualMachineSpec{},
+		},
+		{
 			name: "plain text entity substitution",
 			xml: undent.String(`
 				<?xml version="1.0"?>
