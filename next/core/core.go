@@ -39,6 +39,11 @@ const (
 	AddressListNotFound AddressListNotFoundEnum = "address_list_not_found"
 )
 
+// Defines values for ArtifactNotFoundEnum.
+const (
+	ArtifactNotFound ArtifactNotFoundEnum = "artifact_not_found"
+)
+
 // Defines values for CertificateNotFoundEnum.
 const (
 	CertificateNotFound CertificateNotFoundEnum = "certificate_not_found"
@@ -50,6 +55,11 @@ const (
 	CertificateStateEnumIssued      CertificateStateEnum = "issued"
 	CertificateStateEnumIssuing     CertificateStateEnum = "issuing"
 	CertificateStateEnumPending     CertificateStateEnum = "pending"
+)
+
+// Defines values for ContainerRegistryRegionNotFoundEnum.
+const (
+	ContainerRegistryRegionNotFound ContainerRegistryRegionNotFoundEnum = "container_registry_region_not_found"
 )
 
 // Defines values for ContinuousManagementDisabledEnum.
@@ -214,11 +224,6 @@ const (
 // Defines values for IPAlreadyAllocatedEnum.
 const (
 	IpAlreadyAllocated IPAlreadyAllocatedEnum = "ip_already_allocated"
-)
-
-// Defines values for IdentityNotLinkedToWebSessionEnum.
-const (
-	IdentityNotLinkedToWebSession IdentityNotLinkedToWebSessionEnum = "identity_not_linked_to_web_session"
 )
 
 // Defines values for InterfaceNotFoundEnum.
@@ -441,6 +446,11 @@ const (
 	OperatingSystemNotFound OperatingSystemNotFoundEnum = "operating_system_not_found"
 )
 
+// Defines values for OperationNotSupportedEnum.
+const (
+	OperationNotSupportedEnumOperationNotSupported OperationNotSupportedEnum = "operation_not_supported"
+)
+
 // Defines values for OrganizationLimitReachedEnum.
 const (
 	OrganizationLimitReached OrganizationLimitReachedEnum = "organization_limit_reached"
@@ -492,6 +502,11 @@ const (
 // Defines values for RateLimitReachedEnum.
 const (
 	RateLimitReachedEnumRateLimitReached RateLimitReachedEnum = "rate_limit_reached"
+)
+
+// Defines values for RepositoryNotFoundEnum.
+const (
+	RepositoryNotFound RepositoryNotFoundEnum = "repository_not_found"
 )
 
 // Defines values for ResizeMethodEnum.
@@ -759,6 +774,11 @@ const (
 	Transferring VirtualMachineStateEnum = "transferring"
 )
 
+// Defines values for VirtualMachineSuspendedEnum.
+const (
+	VirtualMachineSuspended VirtualMachineSuspendedEnum = "virtual_machine_suspended"
+)
+
 // Defines values for VirtualNetworkNotFoundEnum.
 const (
 	VirtualNetworkNotFound VirtualNetworkNotFoundEnum = "virtual_network_not_found"
@@ -866,6 +886,16 @@ type AddressListLookup struct {
 // AddressListNotFoundEnum defines model for AddressListNotFoundEnum.
 type AddressListNotFoundEnum string
 
+// ArtifactNotFoundEnum defines model for ArtifactNotFoundEnum.
+type ArtifactNotFoundEnum string
+
+// ArtifactNotFoundSchema No container registry artifact was found matching any of the criteria provided in the arguments.
+type ArtifactNotFoundSchema struct {
+	Code        *ArtifactNotFoundEnum   `json:"code,omitempty"`
+	Description *string                 `json:"description,omitempty"`
+	Detail      *map[string]interface{} `json:"detail,omitempty"`
+}
+
 // Attachment defines model for Attachment.
 type Attachment struct {
 	Digest   *string `json:"digest,omitempty"`
@@ -914,6 +944,17 @@ type Certificate struct {
 	State             *CertificateStateEnum     `json:"state,omitempty"`
 }
 
+// CertificateArguments defines model for CertificateArguments.
+type CertificateArguments struct {
+	AdditionalNames     *[]string  `json:"additional_names,omitempty"`
+	AuthorizationMethod *string    `json:"authorization_method,omitempty"`
+	Certificate         *string    `json:"certificate,omitempty"`
+	Chain               *string    `json:"chain,omitempty"`
+	Issuer              IssuerEnum `json:"issuer"`
+	Name                *string    `json:"name,omitempty"`
+	PrivateKey          *string    `json:"private_key,omitempty"`
+}
+
 // CertificateLookup defines model for CertificateLookup.
 type CertificateLookup struct {
 	Id *string `json:"id,omitempty"`
@@ -924,6 +965,91 @@ type CertificateNotFoundEnum string
 
 // CertificateStateEnum defines model for CertificateStateEnum.
 type CertificateStateEnum string
+
+// CloudInit defines model for CloudInit.
+type CloudInit struct {
+	UserData nullable.Nullable[string] `json:"user_data,omitempty"`
+}
+
+// CloudInitArguments defines model for CloudInitArguments.
+type CloudInitArguments struct {
+	// UserData The configuration data provided to the instance by the user
+	UserData *string `json:"user_data,omitempty"`
+}
+
+// ContainerRegistryArtifact defines model for ContainerRegistryArtifact.
+type ContainerRegistryArtifact struct {
+	Annotations      *[]KeyValue               `json:"annotations,omitempty"`
+	Architecture     nullable.Nullable[string] `json:"architecture,omitempty"`
+	ChildIds         *[]string                 `json:"child_ids,omitempty"`
+	Digest           *string                   `json:"digest,omitempty"`
+	Id               *string                   `json:"id,omitempty"`
+	LastPulledAt     nullable.Nullable[int]    `json:"last_pulled_at,omitempty"`
+	LastPushedAt     nullable.Nullable[int]    `json:"last_pushed_at,omitempty"`
+	LastReconciledAt nullable.Nullable[int]    `json:"last_reconciled_at,omitempty"`
+	MediaType        nullable.Nullable[string] `json:"media_type,omitempty"`
+	Os               nullable.Nullable[string] `json:"os,omitempty"`
+
+	// Size Size of the artifact in bytes
+	Size    nullable.Nullable[int]    `json:"size,omitempty"`
+	Tags    *[]string                 `json:"tags,omitempty"`
+	Variant nullable.Nullable[string] `json:"variant,omitempty"`
+}
+
+// ContainerRegistryArtifactLookup All 'artifact[]' params are mutually exclusive, only one can be provided.
+type ContainerRegistryArtifactLookup struct {
+	Digest *string `json:"digest,omitempty"`
+	Id     *string `json:"id,omitempty"`
+	Tag    *string `json:"tag,omitempty"`
+}
+
+// ContainerRegistryBlob defines model for ContainerRegistryBlob.
+type ContainerRegistryBlob struct {
+	Digest    *string `json:"digest,omitempty"`
+	MediaType *string `json:"media_type,omitempty"`
+
+	// Size Size of the blob in bytes
+	Size *int `json:"size,omitempty"`
+}
+
+// ContainerRegistryRegionLookup defines model for ContainerRegistryRegionLookup.
+type ContainerRegistryRegionLookup struct {
+	Id *string `json:"id,omitempty"`
+}
+
+// ContainerRegistryRegionNotFoundEnum defines model for ContainerRegistryRegionNotFoundEnum.
+type ContainerRegistryRegionNotFoundEnum string
+
+// ContainerRegistryRegionNotFoundSchema No container registry region was found matching any of the criteria provided in the arguments
+type ContainerRegistryRegionNotFoundSchema struct {
+	Code        *ContainerRegistryRegionNotFoundEnum `json:"code,omitempty"`
+	Description *string                              `json:"description,omitempty"`
+	Detail      *map[string]interface{}              `json:"detail,omitempty"`
+}
+
+// ContainerRegistryRepository defines model for ContainerRegistryRepository.
+type ContainerRegistryRepository struct {
+	ArtifactIds      *[]string              `json:"artifact_ids,omitempty"`
+	Id               *string                `json:"id,omitempty"`
+	LastReconciledAt nullable.Nullable[int] `json:"last_reconciled_at,omitempty"`
+	Name             *string                `json:"name,omitempty"`
+
+	// TotalSize Total size of the repository and all its artifacts and blobs in bytes
+	TotalSize nullable.Nullable[int] `json:"total_size,omitempty"`
+}
+
+// ContainerRegistryRepositoryLookup All 'repository[]' params are mutually exclusive, only one can be provided.
+type ContainerRegistryRepositoryLookup struct {
+	Id   *string `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
+// ContainerRegistryTag defines model for ContainerRegistryTag.
+type ContainerRegistryTag struct {
+	LastPulledAt nullable.Nullable[int] `json:"last_pulled_at,omitempty"`
+	LastPushedAt nullable.Nullable[int] `json:"last_pushed_at,omitempty"`
+	Name         *string                `json:"name,omitempty"`
+}
 
 // ContinuousManagementDisabledEnum defines model for ContinuousManagementDisabledEnum.
 type ContinuousManagementDisabledEnum string
@@ -1199,9 +1325,9 @@ type DeleteDiskBackupPolicy200ResponseDiskBackupPolicy struct {
 
 // DeleteDiskBackupPolicySchedule200ResponseDiskBackupPolicy defines model for DeleteDiskBackupPolicySchedule200ResponseDiskBackupPolicy.
 type DeleteDiskBackupPolicySchedule200ResponseDiskBackupPolicy struct {
-	AutoMoveToTrashAt nullable.Nullable[int]  `json:"auto_move_to_trash_at,omitempty"`
-	Id                *string                 `json:"id,omitempty"`
-	Target            *DiskBackupPolicyTarget `json:"target,omitempty"`
+	AutoMoveToTrashAt nullable.Nullable[int]                    `json:"auto_move_to_trash_at,omitempty"`
+	Id                *string                                   `json:"id,omitempty"`
+	Target            nullable.Nullable[DiskBackupPolicyTarget] `json:"target,omitempty"`
 }
 
 // DeleteDiskPartDataCenter defines model for DeleteDiskPartDataCenter.
@@ -1227,17 +1353,35 @@ type DeleteDiskPartVirtualMachineDisk struct {
 
 // DeleteFileStorageVolume200ResponseFileStorageVolume defines model for DeleteFileStorageVolume200ResponseFileStorageVolume.
 type DeleteFileStorageVolume200ResponseFileStorageVolume struct {
-	Associations *[]string                              `json:"associations,omitempty"`
-	DataCenter   *DeleteFileStorageVolumePartDataCenter `json:"data_center,omitempty"`
-	Id           *string                                `json:"id,omitempty"`
-	Name         *string                                `json:"name,omitempty"`
+	Associations *[]string `json:"associations,omitempty"`
+
+	// AtimeUpdate Only available on Generation 2 file storage volumes. Whether file access times are updated.
+	AtimeUpdate nullable.Nullable[bool]                `json:"atime_update,omitempty"`
+	DataCenter  *DeleteFileStorageVolumePartDataCenter `json:"data_center,omitempty"`
+	Id          *string                                `json:"id,omitempty"`
+	Name        *string                                `json:"name,omitempty"`
+
+	// NfsAllSquash Only available on Generation 2 file storage volumes. Whether all NFS users are mapped to anonymous users.
+	NfsAllSquash nullable.Nullable[bool] `json:"nfs_all_squash,omitempty"`
+
+	// NfsAnonGid Only available on Generation 2 file storage volumes. The anonymous NFS group ID.
+	NfsAnonGid nullable.Nullable[int] `json:"nfs_anon_gid,omitempty"`
+
+	// NfsAnonUid Only available on Generation 2 file storage volumes. The anonymous NFS user ID.
+	NfsAnonUid nullable.Nullable[int] `json:"nfs_anon_uid,omitempty"`
 
 	// NfsLocation The NFS location of where to mount the volume from.
 	NfsLocation nullable.Nullable[string] `json:"nfs_location,omitempty"`
 
+	// NfsRootSquash Only available on Generation 2 file storage volumes. Whether NFS root users are mapped to anonymous users.
+	NfsRootSquash nullable.Nullable[bool] `json:"nfs_root_squash,omitempty"`
+
 	// Size The size of the volume in bytes.
 	Size  nullable.Nullable[int]      `json:"size,omitempty"`
 	State *FileStorageVolumeStateEnum `json:"state,omitempty"`
+
+	// TechnologyGeneration The file storage technology generation.
+	TechnologyGeneration *int `json:"technology_generation,omitempty"`
 }
 
 // DeleteFileStorageVolumePartDataCenter defines model for DeleteFileStorageVolumePartDataCenter.
@@ -1280,6 +1424,7 @@ type DeleteSecurityGroupsRulesSecurityGroupRule200ResponseSecurityGroupRule stru
 // DeleteVirtualMachine200ResponseVirtualMachine defines model for DeleteVirtualMachine200ResponseVirtualMachine.
 type DeleteVirtualMachine200ResponseVirtualMachine struct {
 	AttachedIso         nullable.Nullable[ISO]                             `json:"attached_iso,omitempty"`
+	CloudInit           nullable.Nullable[CloudInit]                       `json:"cloud_init,omitempty"`
 	CpuCores            nullable.Nullable[int]                             `json:"cpu_cores,omitempty"`
 	CreatedAt           *int                                               `json:"created_at,omitempty"`
 	Description         nullable.Nullable[string]                          `json:"description,omitempty"`
@@ -1297,6 +1442,8 @@ type DeleteVirtualMachine200ResponseVirtualMachine struct {
 	Organization        *Organization                                      `json:"organization,omitempty"`
 	Package             nullable.Nullable[VirtualMachinePackage]           `json:"package,omitempty"`
 	State               *VirtualMachineStateEnum                           `json:"state,omitempty"`
+	Suspended           *bool                                              `json:"suspended,omitempty"`
+	SuspendedAt         nullable.Nullable[int]                             `json:"suspended_at,omitempty"`
 	TagNames            *[]string                                          `json:"tag_names,omitempty"`
 	Tags                *[]Tag                                             `json:"tags,omitempty"`
 	UseDedicatedCpus    nullable.Nullable[bool]                            `json:"use_dedicated_cpus,omitempty"`
@@ -1419,8 +1566,13 @@ type DiskArguments struct {
 
 // DiskBackupPolicyArguments defines model for DiskBackupPolicyArguments.
 type DiskBackupPolicyArguments struct {
-	Retention *int               `json:"retention,omitempty"`
-	Schedule  *ScheduleArguments `json:"schedule,omitempty"`
+	// Description Optional description to help identify the backup policy.
+	Description *string `json:"description,omitempty"`
+
+	// GlobalPolicy When true the policy applies to all disks in the organisation. The target argument becomes optional when this is set.
+	GlobalPolicy *bool              `json:"global_policy,omitempty"`
+	Retention    *int               `json:"retention,omitempty"`
+	Schedule     *ScheduleArguments `json:"schedule,omitempty"`
 }
 
 // DiskBackupPolicyLookup defines model for DiskBackupPolicyLookup.
@@ -1439,6 +1591,14 @@ type DiskBackupPolicyTarget struct {
 // DiskBackupPolicyTarget_Target defines model for DiskBackupPolicyTarget.Target.
 type DiskBackupPolicyTarget_Target struct {
 	union json.RawMessage
+}
+
+// DiskBackupPolicyTargetArguments defines model for DiskBackupPolicyTargetArguments.
+type DiskBackupPolicyTargetArguments struct {
+	Disk *DiskLookup `json:"disk,omitempty"`
+
+	// VirtualMachine All 'virtual_machine[]' params are mutually exclusive, only one can be provided.
+	VirtualMachine *VirtualMachineLookup `json:"virtual_machine,omitempty"`
 }
 
 // DiskBusEnum defines model for DiskBusEnum.
@@ -1506,6 +1666,7 @@ type DiskStateEnum string
 // DiskTemplate defines model for DiskTemplate.
 type DiskTemplate struct {
 	Description     nullable.Nullable[string]              `json:"description,omitempty"`
+	EndOfLife       nullable.Nullable[int]                 `json:"end_of_life,omitempty"`
 	Id              *string                                `json:"id,omitempty"`
 	LatestVersion   nullable.Nullable[DiskTemplateVersion] `json:"latest_version,omitempty"`
 	Name            *string                                `json:"name,omitempty"`
@@ -1547,11 +1708,26 @@ type DiskTemplateVersionNotFoundEnum string
 type FileStorageVolumeArguments struct {
 	Associations *[]string `json:"associations,omitempty"`
 
+	// AtimeUpdate Only available on Generation 2 file storage volumes. Whether file access times are updated.
+	AtimeUpdate *bool `json:"atime_update,omitempty"`
+
 	// DataCenter All 'data_center[]' params are mutually exclusive, only one can be provided.
 	DataCenter *DataCenterLookup `json:"data_center,omitempty"`
 
 	// Name Unique name to help identify the volume.
 	Name *string `json:"name,omitempty"`
+
+	// NfsAllSquash Only available on Generation 2 file storage volumes. Whether all NFS users are mapped to anonymous users.
+	NfsAllSquash *bool `json:"nfs_all_squash,omitempty"`
+
+	// NfsAnonGid Only available on Generation 2 file storage volumes. The anonymous NFS group ID.
+	NfsAnonGid *int `json:"nfs_anon_gid,omitempty"`
+
+	// NfsAnonUid Only available on Generation 2 file storage volumes. The anonymous NFS user ID.
+	NfsAnonUid *int `json:"nfs_anon_uid,omitempty"`
+
+	// NfsRootSquash Only available on Generation 2 file storage volumes. Whether NFS root users are mapped to anonymous users.
+	NfsRootSquash *bool `json:"nfs_root_squash,omitempty"`
 }
 
 // FileStorageVolumeLookup defines model for FileStorageVolumeLookup.
@@ -1707,27 +1883,32 @@ type GetDisk200ResponseDisk struct {
 
 // GetDiskBackupPolicy200ResponseDiskBackupPolicy defines model for GetDiskBackupPolicy200ResponseDiskBackupPolicy.
 type GetDiskBackupPolicy200ResponseDiskBackupPolicy struct {
-	AutoMoveToTrashAt nullable.Nullable[int]  `json:"auto_move_to_trash_at,omitempty"`
-	Id                *string                 `json:"id,omitempty"`
-	Retention         *int                    `json:"retention,omitempty"`
-	Schedule          *Schedule               `json:"schedule,omitempty"`
-	Target            *DiskBackupPolicyTarget `json:"target,omitempty"`
-	TotalSize         *float32                `json:"total_size,omitempty"`
+	AutoMoveToTrashAt nullable.Nullable[int]                    `json:"auto_move_to_trash_at,omitempty"`
+	Description       nullable.Nullable[string]                 `json:"description,omitempty"`
+	GlobalPolicy      *bool                                     `json:"global_policy,omitempty"`
+	Id                *string                                   `json:"id,omitempty"`
+	Retention         *int                                      `json:"retention,omitempty"`
+	Schedule          *Schedule                                 `json:"schedule,omitempty"`
+	Target            nullable.Nullable[DiskBackupPolicyTarget] `json:"target,omitempty"`
+	TotalSize         *float32                                  `json:"total_size,omitempty"`
 }
 
 // GetDiskDiskBackupPolicies200ResponseDiskBackupPolicies defines model for GetDiskDiskBackupPolicies200ResponseDiskBackupPolicies.
 type GetDiskDiskBackupPolicies200ResponseDiskBackupPolicies struct {
-	Id        *string                                `json:"id,omitempty"`
-	Retention *int                                   `json:"retention,omitempty"`
-	Schedule  *GetDiskDiskBackupPoliciesPartSchedule `json:"schedule,omitempty"`
-	Target    *DiskBackupPolicyTarget                `json:"target,omitempty"`
-	TotalSize *float32                               `json:"total_size,omitempty"`
+	Description nullable.Nullable[string]                 `json:"description,omitempty"`
+	Id          *string                                   `json:"id,omitempty"`
+	Retention   *int                                      `json:"retention,omitempty"`
+	Schedule    *GetDiskDiskBackupPoliciesPartSchedule    `json:"schedule,omitempty"`
+	Target      nullable.Nullable[DiskBackupPolicyTarget] `json:"target,omitempty"`
+	TotalSize   *float32                                  `json:"total_size,omitempty"`
 }
 
 // GetDiskDiskBackupPoliciesPartSchedule defines model for GetDiskDiskBackupPoliciesPartSchedule.
 type GetDiskDiskBackupPoliciesPartSchedule struct {
-	Interval         *ScheduleIntervalTypeEnum `json:"interval,omitempty"`
-	NextInvocationAt *int                      `json:"next_invocation_at,omitempty"`
+	Interval *ScheduleIntervalTypeEnum `json:"interval,omitempty"`
+
+	// NextInvocationAt When this schedule will next fire.
+	NextInvocationAt *int `json:"next_invocation_at,omitempty"`
 }
 
 // GetDiskPartDataCenter defines model for GetDiskPartDataCenter.
@@ -1754,6 +1935,7 @@ type GetDiskPartVirtualMachineDisk struct {
 // GetDiskTemplate200ResponseDiskTemplate defines model for GetDiskTemplate200ResponseDiskTemplate.
 type GetDiskTemplate200ResponseDiskTemplate struct {
 	Description     nullable.Nullable[string]                           `json:"description,omitempty"`
+	EndOfLife       nullable.Nullable[int]                              `json:"end_of_life,omitempty"`
 	Id              *string                                             `json:"id,omitempty"`
 	LatestVersion   nullable.Nullable[GetDiskTemplatePartLatestVersion] `json:"latest_version,omitempty"`
 	Name            *string                                             `json:"name,omitempty"`
@@ -1817,17 +1999,35 @@ type GetDiskTemplateVersions200ResponseDiskTemplateVersions struct {
 
 // GetFileStorageVolume200ResponseFileStorageVolume defines model for GetFileStorageVolume200ResponseFileStorageVolume.
 type GetFileStorageVolume200ResponseFileStorageVolume struct {
-	Associations *[]string                           `json:"associations,omitempty"`
-	DataCenter   *GetFileStorageVolumePartDataCenter `json:"data_center,omitempty"`
-	Id           *string                             `json:"id,omitempty"`
-	Name         *string                             `json:"name,omitempty"`
+	Associations *[]string `json:"associations,omitempty"`
+
+	// AtimeUpdate Only available on Generation 2 file storage volumes. Whether file access times are updated.
+	AtimeUpdate nullable.Nullable[bool]             `json:"atime_update,omitempty"`
+	DataCenter  *GetFileStorageVolumePartDataCenter `json:"data_center,omitempty"`
+	Id          *string                             `json:"id,omitempty"`
+	Name        *string                             `json:"name,omitempty"`
+
+	// NfsAllSquash Only available on Generation 2 file storage volumes. Whether all NFS users are mapped to anonymous users.
+	NfsAllSquash nullable.Nullable[bool] `json:"nfs_all_squash,omitempty"`
+
+	// NfsAnonGid Only available on Generation 2 file storage volumes. The anonymous NFS group ID.
+	NfsAnonGid nullable.Nullable[int] `json:"nfs_anon_gid,omitempty"`
+
+	// NfsAnonUid Only available on Generation 2 file storage volumes. The anonymous NFS user ID.
+	NfsAnonUid nullable.Nullable[int] `json:"nfs_anon_uid,omitempty"`
 
 	// NfsLocation The NFS location of where to mount the volume from.
 	NfsLocation nullable.Nullable[string] `json:"nfs_location,omitempty"`
 
+	// NfsRootSquash Only available on Generation 2 file storage volumes. Whether NFS root users are mapped to anonymous users.
+	NfsRootSquash nullable.Nullable[bool] `json:"nfs_root_squash,omitempty"`
+
 	// Size The size of the volume in bytes.
 	Size  nullable.Nullable[int]      `json:"size,omitempty"`
 	State *FileStorageVolumeStateEnum `json:"state,omitempty"`
+
+	// TechnologyGeneration The file storage technology generation.
+	TechnologyGeneration *int `json:"technology_generation,omitempty"`
 }
 
 // GetFileStorageVolumePartDataCenter defines model for GetFileStorageVolumePartDataCenter.
@@ -1988,6 +2188,9 @@ type GetOrganizationAvailableNetworks200ResponseNetworks struct {
 	Id        *string                   `json:"id,omitempty"`
 	Name      *string                   `json:"name,omitempty"`
 	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+
+	// Vlan The underlying VLAN ID given to this network. Internal use only.
+	Vlan nullable.Nullable[int] `json:"vlan,omitempty"`
 }
 
 // GetOrganizationAvailableNetworks200ResponseVirtualNetworks defines model for GetOrganizationAvailableNetworks200ResponseVirtualNetworks.
@@ -2016,17 +2219,20 @@ type GetOrganizationCertificates200ResponseCertificates struct {
 
 // GetOrganizationDiskBackupPolicies200ResponseDiskBackupPolicies defines model for GetOrganizationDiskBackupPolicies200ResponseDiskBackupPolicies.
 type GetOrganizationDiskBackupPolicies200ResponseDiskBackupPolicies struct {
-	Id        *string                                        `json:"id,omitempty"`
-	Retention *int                                           `json:"retention,omitempty"`
-	Schedule  *GetOrganizationDiskBackupPoliciesPartSchedule `json:"schedule,omitempty"`
-	Target    *DiskBackupPolicyTarget                        `json:"target,omitempty"`
-	TotalSize *float32                                       `json:"total_size,omitempty"`
+	Description nullable.Nullable[string]                      `json:"description,omitempty"`
+	Id          *string                                        `json:"id,omitempty"`
+	Retention   *int                                           `json:"retention,omitempty"`
+	Schedule    *GetOrganizationDiskBackupPoliciesPartSchedule `json:"schedule,omitempty"`
+	Target      nullable.Nullable[DiskBackupPolicyTarget]      `json:"target,omitempty"`
+	TotalSize   *float32                                       `json:"total_size,omitempty"`
 }
 
 // GetOrganizationDiskBackupPoliciesPartSchedule defines model for GetOrganizationDiskBackupPoliciesPartSchedule.
 type GetOrganizationDiskBackupPoliciesPartSchedule struct {
-	Interval         *ScheduleIntervalTypeEnum `json:"interval,omitempty"`
-	NextInvocationAt *int                      `json:"next_invocation_at,omitempty"`
+	Interval *ScheduleIntervalTypeEnum `json:"interval,omitempty"`
+
+	// NextInvocationAt When this schedule will next fire.
+	NextInvocationAt *int `json:"next_invocation_at,omitempty"`
 }
 
 // GetOrganizationDiskTemplates200ResponseDiskTemplates defines model for GetOrganizationDiskTemplates200ResponseDiskTemplates.
@@ -2076,17 +2282,35 @@ type GetOrganizationDisksPartVirtualMachineDisk struct {
 
 // GetOrganizationFileStorageVolumes200ResponseFileStorageVolumes defines model for GetOrganizationFileStorageVolumes200ResponseFileStorageVolumes.
 type GetOrganizationFileStorageVolumes200ResponseFileStorageVolumes struct {
-	Associations *[]string                                        `json:"associations,omitempty"`
-	DataCenter   *GetOrganizationFileStorageVolumesPartDataCenter `json:"data_center,omitempty"`
-	Id           *string                                          `json:"id,omitempty"`
-	Name         *string                                          `json:"name,omitempty"`
+	Associations *[]string `json:"associations,omitempty"`
+
+	// AtimeUpdate Only available on Generation 2 file storage volumes. Whether file access times are updated.
+	AtimeUpdate nullable.Nullable[bool]                          `json:"atime_update,omitempty"`
+	DataCenter  *GetOrganizationFileStorageVolumesPartDataCenter `json:"data_center,omitempty"`
+	Id          *string                                          `json:"id,omitempty"`
+	Name        *string                                          `json:"name,omitempty"`
+
+	// NfsAllSquash Only available on Generation 2 file storage volumes. Whether all NFS users are mapped to anonymous users.
+	NfsAllSquash nullable.Nullable[bool] `json:"nfs_all_squash,omitempty"`
+
+	// NfsAnonGid Only available on Generation 2 file storage volumes. The anonymous NFS group ID.
+	NfsAnonGid nullable.Nullable[int] `json:"nfs_anon_gid,omitempty"`
+
+	// NfsAnonUid Only available on Generation 2 file storage volumes. The anonymous NFS user ID.
+	NfsAnonUid nullable.Nullable[int] `json:"nfs_anon_uid,omitempty"`
 
 	// NfsLocation The NFS location of where to mount the volume from.
 	NfsLocation nullable.Nullable[string] `json:"nfs_location,omitempty"`
 
+	// NfsRootSquash Only available on Generation 2 file storage volumes. Whether NFS root users are mapped to anonymous users.
+	NfsRootSquash nullable.Nullable[bool] `json:"nfs_root_squash,omitempty"`
+
 	// Size The size of the volume in bytes.
 	Size  nullable.Nullable[int]      `json:"size,omitempty"`
 	State *FileStorageVolumeStateEnum `json:"state,omitempty"`
+
+	// TechnologyGeneration The file storage technology generation.
+	TechnologyGeneration *int `json:"technology_generation,omitempty"`
 }
 
 // GetOrganizationFileStorageVolumesPartDataCenter defines model for GetOrganizationFileStorageVolumesPartDataCenter.
@@ -2259,6 +2483,9 @@ type GetVMNIVMNIPartIPAddresses struct {
 type GetVMNIVMNIPartNetwork struct {
 	Id   *string `json:"id,omitempty"`
 	Name *string `json:"name,omitempty"`
+
+	// Vlan The underlying VLAN ID given to this network. Internal use only.
+	Vlan nullable.Nullable[int] `json:"vlan,omitempty"`
 }
 
 // GetVMNIVMNIPartSpeedProfile defines model for GetVMNIVMNIPartSpeedProfile.
@@ -2283,6 +2510,7 @@ type GetVMNIVMNIPartVirtualNetwork struct {
 // GetVirtualMachine200ResponseVirtualMachine defines model for GetVirtualMachine200ResponseVirtualMachine.
 type GetVirtualMachine200ResponseVirtualMachine struct {
 	AttachedIso         nullable.Nullable[ISO]                          `json:"attached_iso,omitempty"`
+	CloudInit           nullable.Nullable[CloudInit]                    `json:"cloud_init,omitempty"`
 	CpuCores            nullable.Nullable[int]                          `json:"cpu_cores,omitempty"`
 	CreatedAt           *int                                            `json:"created_at,omitempty"`
 	Description         nullable.Nullable[string]                       `json:"description,omitempty"`
@@ -2300,6 +2528,8 @@ type GetVirtualMachine200ResponseVirtualMachine struct {
 	Organization        *Organization                                   `json:"organization,omitempty"`
 	Package             nullable.Nullable[VirtualMachinePackage]        `json:"package,omitempty"`
 	State               *VirtualMachineStateEnum                        `json:"state,omitempty"`
+	Suspended           *bool                                           `json:"suspended,omitempty"`
+	SuspendedAt         nullable.Nullable[int]                          `json:"suspended_at,omitempty"`
 	TagNames            *[]string                                       `json:"tag_names,omitempty"`
 	Tags                *[]Tag                                          `json:"tags,omitempty"`
 	UseDedicatedCpus    nullable.Nullable[bool]                         `json:"use_dedicated_cpus,omitempty"`
@@ -2308,17 +2538,20 @@ type GetVirtualMachine200ResponseVirtualMachine struct {
 
 // GetVirtualMachineDiskBackupPolicies200ResponseDiskBackupPolicies defines model for GetVirtualMachineDiskBackupPolicies200ResponseDiskBackupPolicies.
 type GetVirtualMachineDiskBackupPolicies200ResponseDiskBackupPolicies struct {
-	Id        *string                                          `json:"id,omitempty"`
-	Retention *int                                             `json:"retention,omitempty"`
-	Schedule  *GetVirtualMachineDiskBackupPoliciesPartSchedule `json:"schedule,omitempty"`
-	Target    *DiskBackupPolicyTarget                          `json:"target,omitempty"`
-	TotalSize *float32                                         `json:"total_size,omitempty"`
+	Description nullable.Nullable[string]                        `json:"description,omitempty"`
+	Id          *string                                          `json:"id,omitempty"`
+	Retention   *int                                             `json:"retention,omitempty"`
+	Schedule    *GetVirtualMachineDiskBackupPoliciesPartSchedule `json:"schedule,omitempty"`
+	Target      nullable.Nullable[DiskBackupPolicyTarget]        `json:"target,omitempty"`
+	TotalSize   *float32                                         `json:"total_size,omitempty"`
 }
 
 // GetVirtualMachineDiskBackupPoliciesPartSchedule defines model for GetVirtualMachineDiskBackupPoliciesPartSchedule.
 type GetVirtualMachineDiskBackupPoliciesPartSchedule struct {
-	Interval         *ScheduleIntervalTypeEnum `json:"interval,omitempty"`
-	NextInvocationAt *int                      `json:"next_invocation_at,omitempty"`
+	Interval *ScheduleIntervalTypeEnum `json:"interval,omitempty"`
+
+	// NextInvocationAt When this schedule will next fire.
+	NextInvocationAt *int `json:"next_invocation_at,omitempty"`
 }
 
 // GetVirtualMachineDisks200ResponseDisks defines model for GetVirtualMachineDisks200ResponseDisks.
@@ -2386,14 +2619,19 @@ type GetVirtualMachineNetworkInterfaces200ResponseVirtualMachineNetworkInterface
 
 // GetVirtualMachineNetworkInterfacesPartIPAddresses defines model for GetVirtualMachineNetworkInterfacesPartIPAddresses.
 type GetVirtualMachineNetworkInterfacesPartIPAddresses struct {
-	Address *string `json:"address,omitempty"`
-	Id      *string `json:"id,omitempty"`
+	Address         *string `json:"address,omitempty"`
+	AddressWithMask *string `json:"address_with_mask,omitempty"`
+	Id              *string `json:"id,omitempty"`
+	ReverseDns      *string `json:"reverse_dns,omitempty"`
 }
 
 // GetVirtualMachineNetworkInterfacesPartNetwork defines model for GetVirtualMachineNetworkInterfacesPartNetwork.
 type GetVirtualMachineNetworkInterfacesPartNetwork struct {
 	Id   *string `json:"id,omitempty"`
 	Name *string `json:"name,omitempty"`
+
+	// Vlan The underlying VLAN ID given to this network. Internal use only.
+	Vlan nullable.Nullable[int] `json:"vlan,omitempty"`
 }
 
 // GetVirtualMachineNetworkInterfacesPartVirtualNetwork defines model for GetVirtualMachineNetworkInterfacesPartVirtualNetwork.
@@ -2462,6 +2700,7 @@ type IPAddress struct {
 	Label           nullable.Nullable[string] `json:"label,omitempty"`
 	Network         *Network                  `json:"network,omitempty"`
 	ReverseDns      *string                   `json:"reverse_dns,omitempty"`
+	Subnet          *Subnet                   `json:"subnet,omitempty"`
 	Vip             *bool                     `json:"vip,omitempty"`
 }
 
@@ -2499,16 +2738,6 @@ type ISO struct {
 	Id              *string                            `json:"id,omitempty"`
 	Name            *string                            `json:"name,omitempty"`
 	OperatingSystem nullable.Nullable[OperatingSystem] `json:"operating_system,omitempty"`
-}
-
-// IdentityNotLinkedToWebSessionEnum defines model for IdentityNotLinkedToWebSessionEnum.
-type IdentityNotLinkedToWebSessionEnum string
-
-// IdentityNotLinkedToWebSessionSchema The authenticated identity is not linked to a web session
-type IdentityNotLinkedToWebSessionSchema struct {
-	Code        *IdentityNotLinkedToWebSessionEnum `json:"code,omitempty"`
-	Description *string                            `json:"description,omitempty"`
-	Detail      *map[string]interface{}            `json:"detail,omitempty"`
 }
 
 // IntegerOrUnlimited defines model for IntegerOrUnlimited.
@@ -2704,7 +2933,7 @@ type LocationRequiredSchema struct {
 // ManagedOrganizationRequiredEnum defines model for ManagedOrganizationRequiredEnum.
 type ManagedOrganizationRequiredEnum string
 
-// ManagedOrganizationRequiredSchema Only managed organizations can be deleted using this endpoint
+// ManagedOrganizationRequiredSchema Only managed organizations can be updated using this endpoint
 type ManagedOrganizationRequiredSchema struct {
 	Code        *ManagedOrganizationRequiredEnum `json:"code,omitempty"`
 	Description *string                          `json:"description,omitempty"`
@@ -2726,6 +2955,9 @@ type Network struct {
 	Id        *string                   `json:"id,omitempty"`
 	Name      *string                   `json:"name,omitempty"`
 	Permalink nullable.Nullable[string] `json:"permalink,omitempty"`
+
+	// Vlan The underlying VLAN ID given to this network. Internal use only.
+	Vlan nullable.Nullable[int] `json:"vlan,omitempty"`
 }
 
 // NetworkErrorEnum defines model for NetworkErrorEnum.
@@ -2928,8 +3160,9 @@ type ObjectStorageAccountSuspendedSchema struct {
 // ObjectStorageBucket defines model for ObjectStorageBucket.
 type ObjectStorageBucket struct {
 	AccessControlList *ObjectStorageBucketAccessControlList `json:"access_control_list,omitempty"`
+	CorsOrigins       *[]string                             `json:"cors_origins,omitempty"`
 	CreatedAt         *int                                  `json:"created_at,omitempty"`
-	CustomDomain      nullable.Nullable[string]             `json:"custom_domain,omitempty"`
+	CustomDomains     *[]string                             `json:"custom_domains,omitempty"`
 	Label             nullable.Nullable[string]             `json:"label,omitempty"`
 	Name              *string                               `json:"name,omitempty"`
 	ObjectCount       nullable.Nullable[int]                `json:"object_count,omitempty"`
@@ -2971,6 +3204,7 @@ type ObjectStorageBucketAccessControlList struct {
 // ObjectStorageBucketArguments defines model for ObjectStorageBucketArguments.
 type ObjectStorageBucketArguments struct {
 	AccessControlList *ObjectStorageBucketACLArguments `json:"access_control_list,omitempty"`
+	CorsOrigins       *[]string                        `json:"cors_origins,omitempty"`
 
 	// Label Optional alternative name/comment.
 	Label *string `json:"label,omitempty"`
@@ -3069,6 +3303,21 @@ type OneOfAPIAuthenticator403Response struct {
 	union json.RawMessage
 }
 
+// OneOfArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res defines model for OneOfArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res.
+type OneOfArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res struct {
+	union json.RawMessage
+}
+
+// OneOfContainerRegistryRegionNotFoundOrganizationNotFound404Res defines model for OneOfContainerRegistryRegionNotFoundOrganizationNotFound404Res.
+type OneOfContainerRegistryRegionNotFoundOrganizationNotFound404Res struct {
+	union json.RawMessage
+}
+
+// OneOfContainerRegistryRegionNotFoundRepositoryNotFound404Res defines model for OneOfContainerRegistryRegionNotFoundRepositoryNotFound404Res.
+type OneOfContainerRegistryRegionNotFoundRepositoryNotFound404Res struct {
+	union json.RawMessage
+}
+
 // OneOfDataCenterNotFoundOrganizationNotFound404Res defines model for OneOfDataCenterNotFoundOrganizationNotFound404Res.
 type OneOfDataCenterNotFoundOrganizationNotFound404Res struct {
 	union json.RawMessage
@@ -3094,8 +3343,8 @@ type OneOfDiskNotFoundVirtualMachineNotFound404Res struct {
 	union json.RawMessage
 }
 
-// OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res defines model for OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res.
-type OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res struct {
+// OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res defines model for OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res.
+type OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res struct {
 	union json.RawMessage
 }
 
@@ -3116,11 +3365,6 @@ type OneOfIPAlreadyAllocatedInvalidIP422Res struct {
 
 // OneOfIPAlreadyAllocatedNoInterfaceAvailable422Res defines model for OneOfIPAlreadyAllocatedNoInterfaceAvailable422Res.
 type OneOfIPAlreadyAllocatedNoInterfaceAvailable422Res struct {
-	union json.RawMessage
-}
-
-// OneOfIdentityNotLinkedToWebSession400Res defines model for OneOfIdentityNotLinkedToWebSession400Res.
-type OneOfIdentityNotLinkedToWebSession400Res struct {
 	union json.RawMessage
 }
 
@@ -3239,6 +3483,11 @@ type OneOfPermissionDenied403Res struct {
 	union json.RawMessage
 }
 
+// OneOfPermissionDeniedVirtualMachineSuspended403Res defines model for OneOfPermissionDeniedVirtualMachineSuspended403Res.
+type OneOfPermissionDeniedVirtualMachineSuspended403Res struct {
+	union json.RawMessage
+}
+
 // OneOfPolicyNotAvailableForManagedOrganizations400Res defines model for OneOfPolicyNotAvailableForManagedOrganizations400Res.
 type OneOfPolicyNotAvailableForManagedOrganizations400Res struct {
 	union json.RawMessage
@@ -3256,6 +3505,11 @@ type OneOfUnassignedDiskValidationError422Res struct {
 
 // OneOfVirtualMachineNotFoundVirtualMachinePackageNotFound404Res defines model for OneOfVirtualMachineNotFoundVirtualMachinePackageNotFound404Res.
 type OneOfVirtualMachineNotFoundVirtualMachinePackageNotFound404Res struct {
+	union json.RawMessage
+}
+
+// OneOfVirtualMachineSuspended403Res defines model for OneOfVirtualMachineSuspended403Res.
+type OneOfVirtualMachineSuspended403Res struct {
 	union json.RawMessage
 }
 
@@ -3286,6 +3540,14 @@ type OperatingSystemNotFoundSchema struct {
 	Detail      *map[string]interface{}      `json:"detail,omitempty"`
 }
 
+// OperationNotSupported defines model for OperationNotSupported.
+type OperationNotSupported struct {
+	Message nullable.Nullable[string] `json:"message,omitempty"`
+}
+
+// OperationNotSupportedEnum defines model for OperationNotSupportedEnum.
+type OperationNotSupportedEnum string
+
 // Organization defines model for Organization.
 type Organization struct {
 	ActivatedAt          nullable.Nullable[int]          `json:"activated_at,omitempty"`
@@ -3306,6 +3568,7 @@ type Organization struct {
 	Postcode             nullable.Nullable[string]       `json:"postcode,omitempty"`
 	SubDomain            *string                         `json:"sub_domain,omitempty"`
 	Suspended            *bool                           `json:"suspended,omitempty"`
+	Uuid                 *string                         `json:"uuid,omitempty"`
 	VatNumber            nullable.Nullable[string]       `json:"vat_number,omitempty"`
 }
 
@@ -3317,6 +3580,7 @@ type OrganizationDeletionStep struct {
 
 // OrganizationDeletionSteps defines model for OrganizationDeletionSteps.
 type OrganizationDeletionSteps struct {
+	BillingEventsProcessed      *OrganizationDeletionStep `json:"billing_events_processed,omitempty"`
 	DiskBackupPolicies          *OrganizationDeletionStep `json:"disk_backup_policies,omitempty"`
 	DiskTemplates               *OrganizationDeletionStep `json:"disk_templates,omitempty"`
 	Disks                       *OrganizationDeletionStep `json:"disks,omitempty"`
@@ -3376,6 +3640,8 @@ type OrganizationPolicy struct {
 	AllowSuspension                 *bool               `json:"allow_suspension,omitempty"`
 	FlexibleVirtualMachineResources *bool               `json:"flexible_virtual_machine_resources,omitempty"`
 	MaximumCertificates             *IntegerOrUnlimited `json:"maximum_certificates,omitempty"`
+	MaximumCreditBalance            *DecimalOrUnlimited `json:"maximum_credit_balance,omitempty"`
+	MaximumDebtOnResourceCreation   *DecimalOrUnlimited `json:"maximum_debt_on_resource_creation,omitempty"`
 	MaximumDiskSize                 *IntegerOrUnlimited `json:"maximum_disk_size,omitempty"`
 	MaximumDiskSpace                *IntegerOrUnlimited `json:"maximum_disk_space,omitempty"`
 	MaximumDnsZones                 *IntegerOrUnlimited `json:"maximum_dns_zones,omitempty"`
@@ -3438,10 +3704,14 @@ type PatchDisk200ResponseDisk struct {
 
 // PatchDiskBackupPolicy200ResponseDiskBackupPolicy defines model for PatchDiskBackupPolicy200ResponseDiskBackupPolicy.
 type PatchDiskBackupPolicy200ResponseDiskBackupPolicy struct {
-	Id        *string                 `json:"id,omitempty"`
-	Retention *int                    `json:"retention,omitempty"`
-	Schedule  *map[string]interface{} `json:"schedule,omitempty"`
-	Target    *DiskBackupPolicyTarget `json:"target,omitempty"`
+	AutoMoveToTrashAt nullable.Nullable[int]                    `json:"auto_move_to_trash_at,omitempty"`
+	Description       nullable.Nullable[string]                 `json:"description,omitempty"`
+	GlobalPolicy      *bool                                     `json:"global_policy,omitempty"`
+	Id                *string                                   `json:"id,omitempty"`
+	Retention         *int                                      `json:"retention,omitempty"`
+	Schedule          *Schedule                                 `json:"schedule,omitempty"`
+	Target            nullable.Nullable[DiskBackupPolicyTarget] `json:"target,omitempty"`
+	TotalSize         *float32                                  `json:"total_size,omitempty"`
 }
 
 // PatchDiskPartDataCenter defines model for PatchDiskPartDataCenter.
@@ -3467,17 +3737,35 @@ type PatchDiskPartVirtualMachineDisk struct {
 
 // PatchFileStorageVolume200ResponseFileStorageVolume defines model for PatchFileStorageVolume200ResponseFileStorageVolume.
 type PatchFileStorageVolume200ResponseFileStorageVolume struct {
-	Associations *[]string                             `json:"associations,omitempty"`
-	DataCenter   *PatchFileStorageVolumePartDataCenter `json:"data_center,omitempty"`
-	Id           *string                               `json:"id,omitempty"`
-	Name         *string                               `json:"name,omitempty"`
+	Associations *[]string `json:"associations,omitempty"`
+
+	// AtimeUpdate Only available on Generation 2 file storage volumes. Whether file access times are updated.
+	AtimeUpdate nullable.Nullable[bool]               `json:"atime_update,omitempty"`
+	DataCenter  *PatchFileStorageVolumePartDataCenter `json:"data_center,omitempty"`
+	Id          *string                               `json:"id,omitempty"`
+	Name        *string                               `json:"name,omitempty"`
+
+	// NfsAllSquash Only available on Generation 2 file storage volumes. Whether all NFS users are mapped to anonymous users.
+	NfsAllSquash nullable.Nullable[bool] `json:"nfs_all_squash,omitempty"`
+
+	// NfsAnonGid Only available on Generation 2 file storage volumes. The anonymous NFS group ID.
+	NfsAnonGid nullable.Nullable[int] `json:"nfs_anon_gid,omitempty"`
+
+	// NfsAnonUid Only available on Generation 2 file storage volumes. The anonymous NFS user ID.
+	NfsAnonUid nullable.Nullable[int] `json:"nfs_anon_uid,omitempty"`
 
 	// NfsLocation The NFS location of where to mount the volume from.
 	NfsLocation nullable.Nullable[string] `json:"nfs_location,omitempty"`
 
+	// NfsRootSquash Only available on Generation 2 file storage volumes. Whether NFS root users are mapped to anonymous users.
+	NfsRootSquash nullable.Nullable[bool] `json:"nfs_root_squash,omitempty"`
+
 	// Size The size of the volume in bytes.
 	Size  nullable.Nullable[int]      `json:"size,omitempty"`
 	State *FileStorageVolumeStateEnum `json:"state,omitempty"`
+
+	// TechnologyGeneration The file storage technology generation.
+	TechnologyGeneration *int `json:"technology_generation,omitempty"`
 }
 
 // PatchFileStorageVolumePartDataCenter defines model for PatchFileStorageVolumePartDataCenter.
@@ -3575,6 +3863,7 @@ type PatchSecurityGroupsRulesSecurityGroupRulePartSecurityGroup struct {
 // PatchVirtualMachine200ResponseVirtualMachine defines model for PatchVirtualMachine200ResponseVirtualMachine.
 type PatchVirtualMachine200ResponseVirtualMachine struct {
 	AttachedIso         nullable.Nullable[ISO]                            `json:"attached_iso,omitempty"`
+	CloudInit           nullable.Nullable[CloudInit]                      `json:"cloud_init,omitempty"`
 	CpuCores            nullable.Nullable[int]                            `json:"cpu_cores,omitempty"`
 	CreatedAt           *int                                              `json:"created_at,omitempty"`
 	Description         nullable.Nullable[string]                         `json:"description,omitempty"`
@@ -3592,6 +3881,8 @@ type PatchVirtualMachine200ResponseVirtualMachine struct {
 	Organization        *Organization                                     `json:"organization,omitempty"`
 	Package             nullable.Nullable[VirtualMachinePackage]          `json:"package,omitempty"`
 	State               *VirtualMachineStateEnum                          `json:"state,omitempty"`
+	Suspended           *bool                                             `json:"suspended,omitempty"`
+	SuspendedAt         nullable.Nullable[int]                            `json:"suspended_at,omitempty"`
 	TagNames            *[]string                                         `json:"tag_names,omitempty"`
 	Tags                *[]Tag                                            `json:"tags,omitempty"`
 	UseDedicatedCpus    nullable.Nullable[bool]                           `json:"use_dedicated_cpus,omitempty"`
@@ -3653,21 +3944,24 @@ type PolicyLimitWithoutCurrent struct {
 
 // PolicyLimits defines model for PolicyLimits.
 type PolicyLimits struct {
-	Certificates           *PolicyLimit               `json:"certificates,omitempty"`
-	DiskIops               *PolicyLimitWithoutCurrent `json:"disk_iops,omitempty"`
-	DiskSpace              *PolicyLimit               `json:"disk_space,omitempty"`
-	DnsZones               *PolicyLimit               `json:"dns_zones,omitempty"`
-	FileStorageVolumes     *PolicyLimit               `json:"file_storage_volumes,omitempty"`
-	Isos                   *PolicyLimit               `json:"isos,omitempty"`
-	LoadBalancers          *PolicyLimit               `json:"load_balancers,omitempty"`
-	ManagedOrganizations   *PolicyLimit               `json:"managed_organizations,omitempty"`
-	NetworkSpeed           *PolicyLimitWithoutCurrent `json:"network_speed,omitempty"`
-	SecurityGroups         *PolicyLimit               `json:"security_groups,omitempty"`
-	UnallocatedIpAddresses *PolicyLimit               `json:"unallocated_ip_addresses,omitempty"`
-	UninvoicedBalance      *FinancialPolicyLimit      `json:"uninvoiced_balance,omitempty"`
-	VirtualMachineMemory   *PolicyLimit               `json:"virtual_machine_memory,omitempty"`
-	VirtualMachines        *PolicyLimit               `json:"virtual_machines,omitempty"`
-	VirtualNetworks        *PolicyLimit               `json:"virtual_networks,omitempty"`
+	Certificates                  *PolicyLimit               `json:"certificates,omitempty"`
+	CreditBalance                 *FinancialPolicyLimit      `json:"credit_balance,omitempty"`
+	DebtOnResourceCreation        *FinancialPolicyLimit      `json:"debt_on_resource_creation,omitempty"`
+	DiskIops                      *PolicyLimitWithoutCurrent `json:"disk_iops,omitempty"`
+	DiskSpace                     *PolicyLimit               `json:"disk_space,omitempty"`
+	DnsZones                      *PolicyLimit               `json:"dns_zones,omitempty"`
+	FileStorageVolumes            *PolicyLimit               `json:"file_storage_volumes,omitempty"`
+	Isos                          *PolicyLimit               `json:"isos,omitempty"`
+	LoadBalancers                 *PolicyLimit               `json:"load_balancers,omitempty"`
+	ManagedOrganizations          *PolicyLimit               `json:"managed_organizations,omitempty"`
+	MaximumContainerRegistrySpace *PolicyLimit               `json:"maximum_container_registry_space,omitempty"`
+	NetworkSpeed                  *PolicyLimitWithoutCurrent `json:"network_speed,omitempty"`
+	SecurityGroups                *PolicyLimit               `json:"security_groups,omitempty"`
+	UnallocatedIpAddresses        *PolicyLimit               `json:"unallocated_ip_addresses,omitempty"`
+	UninvoicedBalance             *FinancialPolicyLimit      `json:"uninvoiced_balance,omitempty"`
+	VirtualMachineMemory          *PolicyLimit               `json:"virtual_machine_memory,omitempty"`
+	VirtualMachines               *PolicyLimit               `json:"virtual_machines,omitempty"`
+	VirtualNetworks               *PolicyLimit               `json:"virtual_networks,omitempty"`
 }
 
 // PolicyNotAvailableForManagedOrganizationsEnum defines model for PolicyNotAvailableForManagedOrganizationsEnum.
@@ -3796,12 +4090,14 @@ type PostDiskDetachPartVirtualMachineDisk struct {
 
 // PostDiskDiskBackupPolicies200ResponseDiskBackupPolicy defines model for PostDiskDiskBackupPolicies200ResponseDiskBackupPolicy.
 type PostDiskDiskBackupPolicies200ResponseDiskBackupPolicy struct {
-	AutoMoveToTrashAt nullable.Nullable[int]  `json:"auto_move_to_trash_at,omitempty"`
-	Id                *string                 `json:"id,omitempty"`
-	Retention         *int                    `json:"retention,omitempty"`
-	Schedule          *Schedule               `json:"schedule,omitempty"`
-	Target            *DiskBackupPolicyTarget `json:"target,omitempty"`
-	TotalSize         *float32                `json:"total_size,omitempty"`
+	AutoMoveToTrashAt nullable.Nullable[int]                    `json:"auto_move_to_trash_at,omitempty"`
+	Description       nullable.Nullable[string]                 `json:"description,omitempty"`
+	GlobalPolicy      *bool                                     `json:"global_policy,omitempty"`
+	Id                *string                                   `json:"id,omitempty"`
+	Retention         *int                                      `json:"retention,omitempty"`
+	Schedule          *Schedule                                 `json:"schedule,omitempty"`
+	Target            nullable.Nullable[DiskBackupPolicyTarget] `json:"target,omitempty"`
+	TotalSize         *float32                                  `json:"total_size,omitempty"`
 }
 
 // PostDiskUnassign200ResponseDisk defines model for PostDiskUnassign200ResponseDisk.
@@ -3877,6 +4173,18 @@ type PostLoadBalancerRulesPartLoadBalancer struct {
 	Name *string `json:"name,omitempty"`
 }
 
+// PostOrganizationDiskBackupPolicies200ResponseDiskBackupPolicy defines model for PostOrganizationDiskBackupPolicies200ResponseDiskBackupPolicy.
+type PostOrganizationDiskBackupPolicies200ResponseDiskBackupPolicy struct {
+	AutoMoveToTrashAt nullable.Nullable[int]                    `json:"auto_move_to_trash_at,omitempty"`
+	Description       nullable.Nullable[string]                 `json:"description,omitempty"`
+	GlobalPolicy      *bool                                     `json:"global_policy,omitempty"`
+	Id                *string                                   `json:"id,omitempty"`
+	Retention         *int                                      `json:"retention,omitempty"`
+	Schedule          *Schedule                                 `json:"schedule,omitempty"`
+	Target            nullable.Nullable[DiskBackupPolicyTarget] `json:"target,omitempty"`
+	TotalSize         *float32                                  `json:"total_size,omitempty"`
+}
+
 // PostOrganizationDisks201ResponseDisk defines model for PostOrganizationDisks201ResponseDisk.
 type PostOrganizationDisks201ResponseDisk struct {
 	BusType            nullable.Nullable[DiskBusEnum]                                 `json:"bus_type,omitempty"`
@@ -3916,17 +4224,35 @@ type PostOrganizationDisksPartVirtualMachineDisk struct {
 
 // PostOrganizationFileStorageVolumes201ResponseFileStorageVolume defines model for PostOrganizationFileStorageVolumes201ResponseFileStorageVolume.
 type PostOrganizationFileStorageVolumes201ResponseFileStorageVolume struct {
-	Associations *[]string                                         `json:"associations,omitempty"`
-	DataCenter   *PostOrganizationFileStorageVolumesPartDataCenter `json:"data_center,omitempty"`
-	Id           *string                                           `json:"id,omitempty"`
-	Name         *string                                           `json:"name,omitempty"`
+	Associations *[]string `json:"associations,omitempty"`
+
+	// AtimeUpdate Only available on Generation 2 file storage volumes. Whether file access times are updated.
+	AtimeUpdate nullable.Nullable[bool]                           `json:"atime_update,omitempty"`
+	DataCenter  *PostOrganizationFileStorageVolumesPartDataCenter `json:"data_center,omitempty"`
+	Id          *string                                           `json:"id,omitempty"`
+	Name        *string                                           `json:"name,omitempty"`
+
+	// NfsAllSquash Only available on Generation 2 file storage volumes. Whether all NFS users are mapped to anonymous users.
+	NfsAllSquash nullable.Nullable[bool] `json:"nfs_all_squash,omitempty"`
+
+	// NfsAnonGid Only available on Generation 2 file storage volumes. The anonymous NFS group ID.
+	NfsAnonGid nullable.Nullable[int] `json:"nfs_anon_gid,omitempty"`
+
+	// NfsAnonUid Only available on Generation 2 file storage volumes. The anonymous NFS user ID.
+	NfsAnonUid nullable.Nullable[int] `json:"nfs_anon_uid,omitempty"`
 
 	// NfsLocation The NFS location of where to mount the volume from.
 	NfsLocation nullable.Nullable[string] `json:"nfs_location,omitempty"`
 
+	// NfsRootSquash Only available on Generation 2 file storage volumes. Whether NFS root users are mapped to anonymous users.
+	NfsRootSquash nullable.Nullable[bool] `json:"nfs_root_squash,omitempty"`
+
 	// Size The size of the volume in bytes.
 	Size  nullable.Nullable[int]      `json:"size,omitempty"`
 	State *FileStorageVolumeStateEnum `json:"state,omitempty"`
+
+	// TechnologyGeneration The file storage technology generation.
+	TechnologyGeneration *int `json:"technology_generation,omitempty"`
 }
 
 // PostOrganizationFileStorageVolumesPartDataCenter defines model for PostOrganizationFileStorageVolumesPartDataCenter.
@@ -4042,12 +4368,14 @@ type PostVirtualMachineConsoleSessionsPartVirtualMachine struct {
 
 // PostVirtualMachineDiskBackupPolicies200ResponseDiskBackupPolicy defines model for PostVirtualMachineDiskBackupPolicies200ResponseDiskBackupPolicy.
 type PostVirtualMachineDiskBackupPolicies200ResponseDiskBackupPolicy struct {
-	AutoMoveToTrashAt nullable.Nullable[int]  `json:"auto_move_to_trash_at,omitempty"`
-	Id                *string                 `json:"id,omitempty"`
-	Retention         *int                    `json:"retention,omitempty"`
-	Schedule          *Schedule               `json:"schedule,omitempty"`
-	Target            *DiskBackupPolicyTarget `json:"target,omitempty"`
-	TotalSize         *float32                `json:"total_size,omitempty"`
+	AutoMoveToTrashAt nullable.Nullable[int]                    `json:"auto_move_to_trash_at,omitempty"`
+	Description       nullable.Nullable[string]                 `json:"description,omitempty"`
+	GlobalPolicy      *bool                                     `json:"global_policy,omitempty"`
+	Id                *string                                   `json:"id,omitempty"`
+	Retention         *int                                      `json:"retention,omitempty"`
+	Schedule          *Schedule                                 `json:"schedule,omitempty"`
+	Target            nullable.Nullable[DiskBackupPolicyTarget] `json:"target,omitempty"`
+	TotalSize         *float32                                  `json:"total_size,omitempty"`
 }
 
 // PostVirtualMachineNetworkInterfaceAllocateIP200ResponseVirtualMachineNetworkInterface defines model for PostVirtualMachineNetworkInterfaceAllocateIP200ResponseVirtualMachineNetworkInterface.
@@ -4428,6 +4756,16 @@ type RecordContentAttributesForVirtualMachine struct {
 	VirtualMachine nullable.Nullable[string] `json:"virtual_machine,omitempty"`
 }
 
+// RepositoryNotFoundEnum defines model for RepositoryNotFoundEnum.
+type RepositoryNotFoundEnum string
+
+// RepositoryNotFoundSchema No container registry repository was found matching any of the criteria provided in the arguments.
+type RepositoryNotFoundSchema struct {
+	Code        *RepositoryNotFoundEnum `json:"code,omitempty"`
+	Description *string                 `json:"description,omitempty"`
+	Detail      *map[string]interface{} `json:"detail,omitempty"`
+}
+
 // ResizeMethodEnum defines model for ResizeMethodEnum.
 type ResizeMethodEnum string
 
@@ -4454,19 +4792,31 @@ type SSHKeyNotFoundEnum string
 
 // Schedule defines model for Schedule.
 type Schedule struct {
-	Frequency        *int                      `json:"frequency,omitempty"`
-	Interval         *ScheduleIntervalTypeEnum `json:"interval,omitempty"`
-	Minute           *int                      `json:"minute,omitempty"`
-	NextInvocationAt *int                      `json:"next_invocation_at,omitempty"`
-	Time             *int                      `json:"time,omitempty"`
+	// Frequency How often the schedule repeats within the given interval.
+	Frequency *int                      `json:"frequency,omitempty"`
+	Interval  *ScheduleIntervalTypeEnum `json:"interval,omitempty"`
+
+	// Minute The minute within the hour at which the schedule triggers (0–59). This value is server-assigned when not provided at creation time.
+	Minute *int `json:"minute,omitempty"`
+
+	// NextInvocationAt When this schedule will next fire.
+	NextInvocationAt *int `json:"next_invocation_at,omitempty"`
+
+	// Time The sub-interval offset whose meaning depends on the interval: unused for hourly; hour of day (0–23) for daily; day of week (0 = Sunday, 6 = Saturday) for weekly; day of month (1–28) for monthly.
+	Time *int `json:"time,omitempty"`
 }
 
 // ScheduleArguments defines model for ScheduleArguments.
 type ScheduleArguments struct {
+	// Frequency How often the schedule repeats within the given interval (e.g. every 2 hours for hourly).
 	Frequency *int                      `json:"frequency,omitempty"`
 	Interval  *ScheduleIntervalTypeEnum `json:"interval,omitempty"`
-	Minute    *int                      `json:"minute,omitempty"`
-	Time      *int                      `json:"time,omitempty"`
+
+	// Minute The minute within the hour at which the schedule triggers (0–59). When omitted the server assigns a random value to spread load; read the value back from the response to avoid state drift.
+	Minute *int `json:"minute,omitempty"`
+
+	// Time The sub-interval offset whose meaning depends on the chosen interval: unused for hourly; hour of day (0–23) for daily; day of week (0 = Sunday, 6 = Saturday) for weekly; day of month (1–28) for monthly.
+	Time *int `json:"time,omitempty"`
 }
 
 // ScheduleIntervalTypeEnum defines model for ScheduleIntervalTypeEnum.
@@ -4556,6 +4906,16 @@ type SpeedProfileAlreadyAssignedEnum string
 
 // StorageSpeedEnum defines model for StorageSpeedEnum.
 type StorageSpeedEnum string
+
+// Subnet defines model for Subnet.
+type Subnet struct {
+	Address  *string `json:"address,omitempty"`
+	Billable *bool   `json:"billable,omitempty"`
+	Gateway  *string `json:"gateway,omitempty"`
+	Id       *string `json:"id,omitempty"`
+	Mask     *int    `json:"mask,omitempty"`
+	Version  *int    `json:"version,omitempty"`
+}
 
 // Tag defines model for Tag.
 type Tag struct {
@@ -4718,6 +5078,7 @@ type ValidationErrorSchema struct {
 // VirtualMachine defines model for VirtualMachine.
 type VirtualMachine struct {
 	AttachedIso         nullable.Nullable[ISO]                   `json:"attached_iso,omitempty"`
+	CloudInit           nullable.Nullable[CloudInit]             `json:"cloud_init,omitempty"`
 	CpuCores            nullable.Nullable[int]                   `json:"cpu_cores,omitempty"`
 	CreatedAt           *int                                     `json:"created_at,omitempty"`
 	Description         nullable.Nullable[string]                `json:"description,omitempty"`
@@ -4735,6 +5096,8 @@ type VirtualMachine struct {
 	Organization        *Organization                            `json:"organization,omitempty"`
 	Package             nullable.Nullable[VirtualMachinePackage] `json:"package,omitempty"`
 	State               *VirtualMachineStateEnum                 `json:"state,omitempty"`
+	Suspended           *bool                                    `json:"suspended,omitempty"`
+	SuspendedAt         nullable.Nullable[int]                   `json:"suspended_at,omitempty"`
 	TagNames            *[]string                                `json:"tag_names,omitempty"`
 	Tags                *[]Tag                                   `json:"tags,omitempty"`
 	UseDedicatedCpus    nullable.Nullable[bool]                  `json:"use_dedicated_cpus,omitempty"`
@@ -4743,7 +5106,8 @@ type VirtualMachine struct {
 
 // VirtualMachineArguments defines model for VirtualMachineArguments.
 type VirtualMachineArguments struct {
-	Description *string `json:"description,omitempty"`
+	CloudInit   *CloudInitArguments `json:"cloud_init,omitempty"`
+	Description *string             `json:"description,omitempty"`
 
 	// GpuType All 'gpu_type[]' params are mutually exclusive, only one can be provided.
 	GpuType  *GPUTypeLookup             `json:"gpu_type,omitempty"`
@@ -4940,6 +5304,16 @@ type VirtualMachinePackageNotFoundSchema struct {
 // VirtualMachineStateEnum defines model for VirtualMachineStateEnum.
 type VirtualMachineStateEnum string
 
+// VirtualMachineSuspendedEnum defines model for VirtualMachineSuspendedEnum.
+type VirtualMachineSuspendedEnum string
+
+// VirtualMachineSuspendedSchema A virtual machine was found from the arguments provided but it is suspended
+type VirtualMachineSuspendedSchema struct {
+	Code        *VirtualMachineSuspendedEnum `json:"code,omitempty"`
+	Description *string                      `json:"description,omitempty"`
+	Detail      *map[string]interface{}      `json:"detail,omitempty"`
+}
+
 // VirtualNetwork defines model for VirtualNetwork.
 type VirtualNetwork struct {
 	DataCenter *DataCenter `json:"data_center,omitempty"`
@@ -5036,12 +5410,21 @@ type AddressListNotFoundResponse struct {
 	Detail      *map[string]interface{}  `json:"detail,omitempty"`
 }
 
+// ArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res defines model for ArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res.
+type ArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res = OneOfArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res
+
 // CertificateNotFoundResponse defines model for CertificateNotFoundResponse.
 type CertificateNotFoundResponse struct {
 	Code        *CertificateNotFoundEnum `json:"code,omitempty"`
 	Description *string                  `json:"description,omitempty"`
 	Detail      *map[string]interface{}  `json:"detail,omitempty"`
 }
+
+// ContainerRegistryRegionNotFoundOrganizationNotFound404Res defines model for ContainerRegistryRegionNotFoundOrganizationNotFound404Res.
+type ContainerRegistryRegionNotFoundOrganizationNotFound404Res = OneOfContainerRegistryRegionNotFoundOrganizationNotFound404Res
+
+// ContainerRegistryRegionNotFoundRepositoryNotFound404Res defines model for ContainerRegistryRegionNotFoundRepositoryNotFound404Res.
+type ContainerRegistryRegionNotFoundRepositoryNotFound404Res = OneOfContainerRegistryRegionNotFoundRepositoryNotFound404Res
 
 // ContinuousManagementDisabledResponse defines model for ContinuousManagementDisabledResponse.
 type ContinuousManagementDisabledResponse struct {
@@ -5163,8 +5546,8 @@ type FileStorageVolumeNotFoundResponse struct {
 	Detail      *map[string]interface{}        `json:"detail,omitempty"`
 }
 
-// FlexibleResourcesUnavailableToOrganizationPermissionDenied403Res defines model for FlexibleResourcesUnavailableToOrganizationPermissionDenied403Res.
-type FlexibleResourcesUnavailableToOrganizationPermissionDenied403Res = OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res
+// FlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res defines model for FlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res.
+type FlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res = OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res
 
 // GPUTypeNotFoundResponse defines model for GPUTypeNotFoundResponse.
 type GPUTypeNotFoundResponse struct {
@@ -5192,9 +5575,6 @@ type IPAlreadyAllocatedInvalidIP422Res = OneOfIPAlreadyAllocatedInvalidIP422Res
 // IPAlreadyAllocatedNoInterfaceAvailable422Res defines model for IPAlreadyAllocatedNoInterfaceAvailable422Res.
 type IPAlreadyAllocatedNoInterfaceAvailable422Res = OneOfIPAlreadyAllocatedNoInterfaceAvailable422Res
 
-// IdentityNotLinkedToWebSession400Res defines model for IdentityNotLinkedToWebSession400Res.
-type IdentityNotLinkedToWebSession400Res = OneOfIdentityNotLinkedToWebSession400Res
-
 // InterfaceNotFoundNetworkNotFoundVirtualMachineNotFound404Res defines model for InterfaceNotFoundNetworkNotFoundVirtualMachineNotFound404Res.
 type InterfaceNotFoundNetworkNotFoundVirtualMachineNotFound404Res = OneOfInterfaceNotFoundNetworkNotFoundVirtualMachineNotFound404Res
 
@@ -5220,6 +5600,13 @@ type LoadBalancerRuleNotFoundResponse struct {
 
 // LocationRequiredOneSystemDiskRequiredValidationError422Res defines model for LocationRequiredOneSystemDiskRequiredValidationError422Res.
 type LocationRequiredOneSystemDiskRequiredValidationError422Res = OneOfLocationRequiredOneSystemDiskRequiredValidationError422Res
+
+// ManagedOrganizationRequiredResponse defines model for ManagedOrganizationRequiredResponse.
+type ManagedOrganizationRequiredResponse struct {
+	Code        *ManagedOrganizationRequiredEnum `json:"code,omitempty"`
+	Description *string                          `json:"description,omitempty"`
+	Detail      *map[string]interface{}          `json:"detail,omitempty"`
+}
 
 // MultipleObjectStorageBucketsFoundResponse defines model for MultipleObjectStorageBucketsFoundResponse.
 type MultipleObjectStorageBucketsFoundResponse struct {
@@ -5333,6 +5720,13 @@ type OperatingSystemNotFoundResponse struct {
 	Detail      *map[string]interface{}      `json:"detail,omitempty"`
 }
 
+// OperationNotSupportedResponse defines model for OperationNotSupportedResponse.
+type OperationNotSupportedResponse struct {
+	Code        *OperationNotSupportedEnum `json:"code,omitempty"`
+	Description *string                    `json:"description,omitempty"`
+	Detail      *OperationNotSupported     `json:"detail,omitempty"`
+}
+
 // OrganizationLimitReachedValidationError422Res defines model for OrganizationLimitReachedValidationError422Res.
 type OrganizationLimitReachedValidationError422Res = OneOfOrganizationLimitReachedValidationError422Res
 
@@ -5354,6 +5748,9 @@ type OrganizationNotFoundResponse struct {
 
 // PermissionDenied403Res defines model for PermissionDenied403Res.
 type PermissionDenied403Res = OneOfPermissionDenied403Res
+
+// PermissionDeniedVirtualMachineSuspended403Res defines model for PermissionDeniedVirtualMachineSuspended403Res.
+type PermissionDeniedVirtualMachineSuspended403Res = OneOfPermissionDeniedVirtualMachineSuspended403Res
 
 // PolicyNotAvailableForManagedOrganizations400Res defines model for PolicyNotAvailableForManagedOrganizations400Res.
 type PolicyNotAvailableForManagedOrganizations400Res = OneOfPolicyNotAvailableForManagedOrganizations400Res
@@ -5507,6 +5904,9 @@ type VirtualMachinePackageNotFoundResponse struct {
 	Detail      *map[string]interface{}            `json:"detail,omitempty"`
 }
 
+// VirtualMachineSuspended403Res defines model for VirtualMachineSuspended403Res.
+type VirtualMachineSuspended403Res = OneOfVirtualMachineSuspended403Res
+
 // VirtualNetworkNotFoundResponse defines model for VirtualNetworkNotFoundResponse.
 type VirtualNetworkNotFoundResponse struct {
 	Code        *VirtualNetworkNotFoundEnum `json:"code,omitempty"`
@@ -5607,9 +6007,95 @@ type PostApiTokenRegenerateSecretJSONBody struct {
 	ApiToken APITokenLookup `json:"api_token"`
 }
 
+// DeleteCertificateJSONBody defines parameters for DeleteCertificate.
+type DeleteCertificateJSONBody struct {
+	Certificate CertificateLookup `json:"certificate"`
+}
+
 // GetCertificateParams defines parameters for GetCertificate.
 type GetCertificateParams struct {
 	CertificateId *string `form:"certificate[id],omitempty" json:"certificate[id],omitempty"`
+}
+
+// PostCertificateIssueJSONBody defines parameters for PostCertificateIssue.
+type PostCertificateIssueJSONBody struct {
+	Certificate CertificateLookup `json:"certificate"`
+}
+
+// PostCertificateResetTokenJSONBody defines parameters for PostCertificateResetToken.
+type PostCertificateResetTokenJSONBody struct {
+	Certificate CertificateLookup `json:"certificate"`
+}
+
+// DeleteContainerRegistryArtifactJSONBody defines parameters for DeleteContainerRegistryArtifact.
+type DeleteContainerRegistryArtifactJSONBody struct {
+	// Artifact All 'artifact[]' params are mutually exclusive, only one can be provided.
+	Artifact ContainerRegistryArtifactLookup `json:"artifact"`
+	Region   ContainerRegistryRegionLookup   `json:"region"`
+
+	// Repository All 'repository[]' params are mutually exclusive, only one can be provided.
+	Repository ContainerRegistryRepositoryLookup `json:"repository"`
+}
+
+// GetContainerRegistryArtifactParams defines parameters for GetContainerRegistryArtifact.
+type GetContainerRegistryArtifactParams struct {
+	// RegionId The region in which the artifact to be returned exists.
+	RegionId *string `form:"region[id],omitempty" json:"region[id],omitempty"`
+
+	// RepositoryId The repository in which the artifact to be returned exists.
+	//
+	//  All 'repository[]' params are mutually exclusive, only one can be provided.
+	RepositoryId *string `form:"repository[id],omitempty" json:"repository[id],omitempty"`
+
+	// RepositoryName The repository in which the artifact to be returned exists.
+	//
+	//  All 'repository[]' params are mutually exclusive, only one can be provided.
+	RepositoryName *string `form:"repository[name],omitempty" json:"repository[name],omitempty"`
+
+	// ArtifactId The artifact to be returned.
+	//
+	//  All 'artifact[]' params are mutually exclusive, only one can be provided.
+	ArtifactId *string `form:"artifact[id],omitempty" json:"artifact[id],omitempty"`
+
+	// ArtifactDigest The artifact to be returned.
+	//
+	//  All 'artifact[]' params are mutually exclusive, only one can be provided.
+	ArtifactDigest *string `form:"artifact[digest],omitempty" json:"artifact[digest],omitempty"`
+
+	// ArtifactTag The artifact to be returned.
+	//
+	//  All 'artifact[]' params are mutually exclusive, only one can be provided.
+	ArtifactTag *string `form:"artifact[tag],omitempty" json:"artifact[tag],omitempty"`
+}
+
+// DeleteContainerRegistryRepositoryJSONBody defines parameters for DeleteContainerRegistryRepository.
+type DeleteContainerRegistryRepositoryJSONBody struct {
+	Region ContainerRegistryRegionLookup `json:"region"`
+
+	// Repository All 'repository[]' params are mutually exclusive, only one can be provided.
+	Repository ContainerRegistryRepositoryLookup `json:"repository"`
+}
+
+// GetContainerRegistryRepositoryArtifactsParams defines parameters for GetContainerRegistryRepositoryArtifacts.
+type GetContainerRegistryRepositoryArtifactsParams struct {
+	// RegionId The region in which the artifacts exists.
+	RegionId *string `form:"region[id],omitempty" json:"region[id],omitempty"`
+
+	// RepositoryId The repository for which the artifacts should be returned.
+	//
+	//  All 'repository[]' params are mutually exclusive, only one can be provided.
+	RepositoryId *string `form:"repository[id],omitempty" json:"repository[id],omitempty"`
+
+	// RepositoryName The repository for which the artifacts should be returned.
+	//
+	//  All 'repository[]' params are mutually exclusive, only one can be provided.
+	RepositoryName *string `form:"repository[name],omitempty" json:"repository[name],omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
 // GetCountriesParams defines parameters for GetCountries.
@@ -5967,9 +6453,6 @@ type GetGpuTypeParams struct {
 	GpuTypePermalink *string `form:"gpu_type[permalink],omitempty" json:"gpu_type[permalink],omitempty"`
 }
 
-// PostInvalidateLinkedWebSessionJSONBody defines parameters for PostInvalidateLinkedWebSession.
-type PostInvalidateLinkedWebSessionJSONBody = interface{}
-
 // DeleteIpAddressJSONBody defines parameters for DeleteIpAddress.
 type DeleteIpAddressJSONBody struct {
 	// IpAddress All 'ip_address[]' params are mutually exclusive, only one can be provided.
@@ -6085,6 +6568,15 @@ type PatchLoadBalancersRulesLoadBalancerRuleJSONBody struct {
 type DeleteOrganizationJSONBody struct {
 	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
 	Organization OrganizationLookup `json:"organization"`
+}
+
+// PatchOrganizationJSONBody defines parameters for PatchOrganization.
+type PatchOrganizationJSONBody struct {
+	Name *string `json:"name,omitempty"`
+
+	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
+	Organization OrganizationLookup `json:"organization"`
+	SubDomain    *string            `json:"sub_domain,omitempty"`
 }
 
 // GetNetworkParams defines parameters for GetNetwork.
@@ -6296,6 +6788,35 @@ type GetOrganizationCertificatesParams struct {
 	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
+// PostOrganizationCertificatesJSONBody defines parameters for PostOrganizationCertificates.
+type PostOrganizationCertificatesJSONBody struct {
+	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
+	Organization OrganizationLookup   `json:"organization"`
+	Properties   CertificateArguments `json:"properties"`
+}
+
+// GetOrganizationContainerRegistryRepositoriesParams defines parameters for GetOrganizationContainerRegistryRepositories.
+type GetOrganizationContainerRegistryRepositoriesParams struct {
+	// RegionId The region for which to return repositories.
+	RegionId *string `form:"region[id],omitempty" json:"region[id],omitempty"`
+
+	// OrganizationId The organization for which to return repositories.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
+	OrganizationId *string `form:"organization[id],omitempty" json:"organization[id],omitempty"`
+
+	// OrganizationSubDomain The organization for which to return repositories.
+	//
+	//  All 'organization[]' params are mutually exclusive, only one can be provided.
+	OrganizationSubDomain *string `form:"organization[sub_domain],omitempty" json:"organization[sub_domain],omitempty"`
+
+	// Page The page number to request. If not provided, the first page will be returned.
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
+
+	// PerPage The number of items to return per page. If not provided, the default value will be used.
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
+}
+
 // GetOrganizationDeletionStepsParams defines parameters for GetOrganizationDeletionSteps.
 type GetOrganizationDeletionStepsParams struct {
 	// OrganizationId All 'organization[]' params are mutually exclusive, only one can be provided.
@@ -6322,6 +6843,14 @@ type GetOrganizationDiskBackupPoliciesParams struct {
 
 	// PerPage The number of items to return per page. If not provided, the default value will be used.
 	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
+}
+
+// PostOrganizationDiskBackupPoliciesJSONBody defines parameters for PostOrganizationDiskBackupPolicies.
+type PostOrganizationDiskBackupPoliciesJSONBody struct {
+	// Organization All 'organization[]' params are mutually exclusive, only one can be provided.
+	Organization OrganizationLookup               `json:"organization"`
+	Properties   DiskBackupPolicyArguments        `json:"properties"`
+	Target       *DiskBackupPolicyTargetArguments `json:"target,omitempty"`
 }
 
 // GetOrganizationDiskIoProfilesParams defines parameters for GetOrganizationDiskIoProfiles.
@@ -6882,7 +7411,8 @@ type GetOrganizationVirtualMachinesParams struct {
 
 // PostOrganizationVirtualMachinesBuildJSONBody defines parameters for PostOrganizationVirtualMachinesBuild.
 type PostOrganizationVirtualMachinesBuildJSONBody struct {
-	Annotations *[]KeyValue `json:"annotations,omitempty"`
+	Annotations *[]KeyValue         `json:"annotations,omitempty"`
+	CloudInit   *CloudInitArguments `json:"cloud_init,omitempty"`
 
 	// DataCenter All 'data_center[]' params are mutually exclusive, only one can be provided.
 	DataCenter *DataCenterLookup `json:"data_center,omitempty"`
@@ -7390,6 +7920,21 @@ type PatchApiTokenJSONRequestBody PatchApiTokenJSONBody
 // PostApiTokenRegenerateSecretJSONRequestBody defines body for PostApiTokenRegenerateSecret for application/json ContentType.
 type PostApiTokenRegenerateSecretJSONRequestBody PostApiTokenRegenerateSecretJSONBody
 
+// DeleteCertificateJSONRequestBody defines body for DeleteCertificate for application/json ContentType.
+type DeleteCertificateJSONRequestBody DeleteCertificateJSONBody
+
+// PostCertificateIssueJSONRequestBody defines body for PostCertificateIssue for application/json ContentType.
+type PostCertificateIssueJSONRequestBody PostCertificateIssueJSONBody
+
+// PostCertificateResetTokenJSONRequestBody defines body for PostCertificateResetToken for application/json ContentType.
+type PostCertificateResetTokenJSONRequestBody PostCertificateResetTokenJSONBody
+
+// DeleteContainerRegistryArtifactJSONRequestBody defines body for DeleteContainerRegistryArtifact for application/json ContentType.
+type DeleteContainerRegistryArtifactJSONRequestBody DeleteContainerRegistryArtifactJSONBody
+
+// DeleteContainerRegistryRepositoryJSONRequestBody defines body for DeleteContainerRegistryRepository for application/json ContentType.
+type DeleteContainerRegistryRepositoryJSONRequestBody DeleteContainerRegistryRepositoryJSONBody
+
 // DeleteDiskBackupPolicyJSONRequestBody defines body for DeleteDiskBackupPolicy for application/json ContentType.
 type DeleteDiskBackupPolicyJSONRequestBody DeleteDiskBackupPolicyJSONBody
 
@@ -7450,9 +7995,6 @@ type DeleteFileStorageVolumeJSONRequestBody DeleteFileStorageVolumeJSONBody
 // PatchFileStorageVolumeJSONRequestBody defines body for PatchFileStorageVolume for application/json ContentType.
 type PatchFileStorageVolumeJSONRequestBody PatchFileStorageVolumeJSONBody
 
-// PostInvalidateLinkedWebSessionJSONRequestBody defines body for PostInvalidateLinkedWebSession for application/json ContentType.
-type PostInvalidateLinkedWebSessionJSONRequestBody = PostInvalidateLinkedWebSessionJSONBody
-
 // DeleteIpAddressJSONRequestBody defines body for DeleteIpAddress for application/json ContentType.
 type DeleteIpAddressJSONRequestBody DeleteIpAddressJSONBody
 
@@ -7480,6 +8022,9 @@ type PatchLoadBalancersRulesLoadBalancerRuleJSONRequestBody PatchLoadBalancersRu
 // DeleteOrganizationJSONRequestBody defines body for DeleteOrganization for application/json ContentType.
 type DeleteOrganizationJSONRequestBody DeleteOrganizationJSONBody
 
+// PatchOrganizationJSONRequestBody defines body for PatchOrganization for application/json ContentType.
+type PatchOrganizationJSONRequestBody PatchOrganizationJSONBody
+
 // DeleteObjectStorageAccessKeyJSONRequestBody defines body for DeleteObjectStorageAccessKey for application/json ContentType.
 type DeleteObjectStorageAccessKeyJSONRequestBody DeleteObjectStorageAccessKeyJSONBody
 
@@ -7506,6 +8051,12 @@ type PostOrganizationAddressListsJSONRequestBody PostOrganizationAddressListsJSO
 
 // PostOrganizationApiTokensJSONRequestBody defines body for PostOrganizationApiTokens for application/json ContentType.
 type PostOrganizationApiTokensJSONRequestBody PostOrganizationApiTokensJSONBody
+
+// PostOrganizationCertificatesJSONRequestBody defines body for PostOrganizationCertificates for application/json ContentType.
+type PostOrganizationCertificatesJSONRequestBody PostOrganizationCertificatesJSONBody
+
+// PostOrganizationDiskBackupPoliciesJSONRequestBody defines body for PostOrganizationDiskBackupPolicies for application/json ContentType.
+type PostOrganizationDiskBackupPoliciesJSONRequestBody PostOrganizationDiskBackupPoliciesJSONBody
 
 // PostOrganizationDisksJSONRequestBody defines body for PostOrganizationDisks for application/json ContentType.
 type PostOrganizationDisksJSONRequestBody PostOrganizationDisksJSONBody
@@ -7917,6 +8468,218 @@ func (t OneOfAPIAuthenticator403Response) MarshalJSON() ([]byte, error) {
 }
 
 func (t *OneOfAPIAuthenticator403Response) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsContainerRegistryRegionNotFoundSchema returns the union data inside the OneOfArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res as a ContainerRegistryRegionNotFoundSchema
+func (t OneOfArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res) AsContainerRegistryRegionNotFoundSchema() (ContainerRegistryRegionNotFoundSchema, error) {
+	var body ContainerRegistryRegionNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromContainerRegistryRegionNotFoundSchema overwrites any union data inside the OneOfArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res as the provided ContainerRegistryRegionNotFoundSchema
+func (t *OneOfArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res) FromContainerRegistryRegionNotFoundSchema(v ContainerRegistryRegionNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeContainerRegistryRegionNotFoundSchema performs a merge with any union data inside the OneOfArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res, using the provided ContainerRegistryRegionNotFoundSchema
+func (t *OneOfArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res) MergeContainerRegistryRegionNotFoundSchema(v ContainerRegistryRegionNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsRepositoryNotFoundSchema returns the union data inside the OneOfArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res as a RepositoryNotFoundSchema
+func (t OneOfArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res) AsRepositoryNotFoundSchema() (RepositoryNotFoundSchema, error) {
+	var body RepositoryNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromRepositoryNotFoundSchema overwrites any union data inside the OneOfArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res as the provided RepositoryNotFoundSchema
+func (t *OneOfArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res) FromRepositoryNotFoundSchema(v RepositoryNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeRepositoryNotFoundSchema performs a merge with any union data inside the OneOfArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res, using the provided RepositoryNotFoundSchema
+func (t *OneOfArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res) MergeRepositoryNotFoundSchema(v RepositoryNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsArtifactNotFoundSchema returns the union data inside the OneOfArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res as a ArtifactNotFoundSchema
+func (t OneOfArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res) AsArtifactNotFoundSchema() (ArtifactNotFoundSchema, error) {
+	var body ArtifactNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromArtifactNotFoundSchema overwrites any union data inside the OneOfArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res as the provided ArtifactNotFoundSchema
+func (t *OneOfArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res) FromArtifactNotFoundSchema(v ArtifactNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeArtifactNotFoundSchema performs a merge with any union data inside the OneOfArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res, using the provided ArtifactNotFoundSchema
+func (t *OneOfArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res) MergeArtifactNotFoundSchema(v ArtifactNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t OneOfArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *OneOfArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsContainerRegistryRegionNotFoundSchema returns the union data inside the OneOfContainerRegistryRegionNotFoundOrganizationNotFound404Res as a ContainerRegistryRegionNotFoundSchema
+func (t OneOfContainerRegistryRegionNotFoundOrganizationNotFound404Res) AsContainerRegistryRegionNotFoundSchema() (ContainerRegistryRegionNotFoundSchema, error) {
+	var body ContainerRegistryRegionNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromContainerRegistryRegionNotFoundSchema overwrites any union data inside the OneOfContainerRegistryRegionNotFoundOrganizationNotFound404Res as the provided ContainerRegistryRegionNotFoundSchema
+func (t *OneOfContainerRegistryRegionNotFoundOrganizationNotFound404Res) FromContainerRegistryRegionNotFoundSchema(v ContainerRegistryRegionNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeContainerRegistryRegionNotFoundSchema performs a merge with any union data inside the OneOfContainerRegistryRegionNotFoundOrganizationNotFound404Res, using the provided ContainerRegistryRegionNotFoundSchema
+func (t *OneOfContainerRegistryRegionNotFoundOrganizationNotFound404Res) MergeContainerRegistryRegionNotFoundSchema(v ContainerRegistryRegionNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsOrganizationNotFoundSchema returns the union data inside the OneOfContainerRegistryRegionNotFoundOrganizationNotFound404Res as a OrganizationNotFoundSchema
+func (t OneOfContainerRegistryRegionNotFoundOrganizationNotFound404Res) AsOrganizationNotFoundSchema() (OrganizationNotFoundSchema, error) {
+	var body OrganizationNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromOrganizationNotFoundSchema overwrites any union data inside the OneOfContainerRegistryRegionNotFoundOrganizationNotFound404Res as the provided OrganizationNotFoundSchema
+func (t *OneOfContainerRegistryRegionNotFoundOrganizationNotFound404Res) FromOrganizationNotFoundSchema(v OrganizationNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeOrganizationNotFoundSchema performs a merge with any union data inside the OneOfContainerRegistryRegionNotFoundOrganizationNotFound404Res, using the provided OrganizationNotFoundSchema
+func (t *OneOfContainerRegistryRegionNotFoundOrganizationNotFound404Res) MergeOrganizationNotFoundSchema(v OrganizationNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t OneOfContainerRegistryRegionNotFoundOrganizationNotFound404Res) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *OneOfContainerRegistryRegionNotFoundOrganizationNotFound404Res) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsContainerRegistryRegionNotFoundSchema returns the union data inside the OneOfContainerRegistryRegionNotFoundRepositoryNotFound404Res as a ContainerRegistryRegionNotFoundSchema
+func (t OneOfContainerRegistryRegionNotFoundRepositoryNotFound404Res) AsContainerRegistryRegionNotFoundSchema() (ContainerRegistryRegionNotFoundSchema, error) {
+	var body ContainerRegistryRegionNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromContainerRegistryRegionNotFoundSchema overwrites any union data inside the OneOfContainerRegistryRegionNotFoundRepositoryNotFound404Res as the provided ContainerRegistryRegionNotFoundSchema
+func (t *OneOfContainerRegistryRegionNotFoundRepositoryNotFound404Res) FromContainerRegistryRegionNotFoundSchema(v ContainerRegistryRegionNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeContainerRegistryRegionNotFoundSchema performs a merge with any union data inside the OneOfContainerRegistryRegionNotFoundRepositoryNotFound404Res, using the provided ContainerRegistryRegionNotFoundSchema
+func (t *OneOfContainerRegistryRegionNotFoundRepositoryNotFound404Res) MergeContainerRegistryRegionNotFoundSchema(v ContainerRegistryRegionNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsRepositoryNotFoundSchema returns the union data inside the OneOfContainerRegistryRegionNotFoundRepositoryNotFound404Res as a RepositoryNotFoundSchema
+func (t OneOfContainerRegistryRegionNotFoundRepositoryNotFound404Res) AsRepositoryNotFoundSchema() (RepositoryNotFoundSchema, error) {
+	var body RepositoryNotFoundSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromRepositoryNotFoundSchema overwrites any union data inside the OneOfContainerRegistryRegionNotFoundRepositoryNotFound404Res as the provided RepositoryNotFoundSchema
+func (t *OneOfContainerRegistryRegionNotFoundRepositoryNotFound404Res) FromRepositoryNotFoundSchema(v RepositoryNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeRepositoryNotFoundSchema performs a merge with any union data inside the OneOfContainerRegistryRegionNotFoundRepositoryNotFound404Res, using the provided RepositoryNotFoundSchema
+func (t *OneOfContainerRegistryRegionNotFoundRepositoryNotFound404Res) MergeRepositoryNotFoundSchema(v RepositoryNotFoundSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t OneOfContainerRegistryRegionNotFoundRepositoryNotFound404Res) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *OneOfContainerRegistryRegionNotFoundRepositoryNotFound404Res) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }
@@ -8335,22 +9098,22 @@ func (t *OneOfDiskNotFoundVirtualMachineNotFound404Res) UnmarshalJSON(b []byte) 
 	return err
 }
 
-// AsUnauthorizedNetworkForAPITokenSchema returns the union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res as a UnauthorizedNetworkForAPITokenSchema
-func (t OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) AsUnauthorizedNetworkForAPITokenSchema() (UnauthorizedNetworkForAPITokenSchema, error) {
+// AsUnauthorizedNetworkForAPITokenSchema returns the union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res as a UnauthorizedNetworkForAPITokenSchema
+func (t OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res) AsUnauthorizedNetworkForAPITokenSchema() (UnauthorizedNetworkForAPITokenSchema, error) {
 	var body UnauthorizedNetworkForAPITokenSchema
 	err := json.Unmarshal(t.union, &body)
 	return body, err
 }
 
-// FromUnauthorizedNetworkForAPITokenSchema overwrites any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res as the provided UnauthorizedNetworkForAPITokenSchema
-func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) FromUnauthorizedNetworkForAPITokenSchema(v UnauthorizedNetworkForAPITokenSchema) error {
+// FromUnauthorizedNetworkForAPITokenSchema overwrites any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res as the provided UnauthorizedNetworkForAPITokenSchema
+func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res) FromUnauthorizedNetworkForAPITokenSchema(v UnauthorizedNetworkForAPITokenSchema) error {
 	b, err := json.Marshal(v)
 	t.union = b
 	return err
 }
 
-// MergeUnauthorizedNetworkForAPITokenSchema performs a merge with any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res, using the provided UnauthorizedNetworkForAPITokenSchema
-func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) MergeUnauthorizedNetworkForAPITokenSchema(v UnauthorizedNetworkForAPITokenSchema) error {
+// MergeUnauthorizedNetworkForAPITokenSchema performs a merge with any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res, using the provided UnauthorizedNetworkForAPITokenSchema
+func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res) MergeUnauthorizedNetworkForAPITokenSchema(v UnauthorizedNetworkForAPITokenSchema) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -8361,22 +9124,22 @@ func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) 
 	return err
 }
 
-// AsInvalidAPITokenSchema returns the union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res as a InvalidAPITokenSchema
-func (t OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) AsInvalidAPITokenSchema() (InvalidAPITokenSchema, error) {
+// AsInvalidAPITokenSchema returns the union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res as a InvalidAPITokenSchema
+func (t OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res) AsInvalidAPITokenSchema() (InvalidAPITokenSchema, error) {
 	var body InvalidAPITokenSchema
 	err := json.Unmarshal(t.union, &body)
 	return body, err
 }
 
-// FromInvalidAPITokenSchema overwrites any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res as the provided InvalidAPITokenSchema
-func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) FromInvalidAPITokenSchema(v InvalidAPITokenSchema) error {
+// FromInvalidAPITokenSchema overwrites any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res as the provided InvalidAPITokenSchema
+func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res) FromInvalidAPITokenSchema(v InvalidAPITokenSchema) error {
 	b, err := json.Marshal(v)
 	t.union = b
 	return err
 }
 
-// MergeInvalidAPITokenSchema performs a merge with any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res, using the provided InvalidAPITokenSchema
-func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) MergeInvalidAPITokenSchema(v InvalidAPITokenSchema) error {
+// MergeInvalidAPITokenSchema performs a merge with any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res, using the provided InvalidAPITokenSchema
+func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res) MergeInvalidAPITokenSchema(v InvalidAPITokenSchema) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -8387,22 +9150,22 @@ func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) 
 	return err
 }
 
-// AsInvalidCapabilitiesTokenSchema returns the union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res as a InvalidCapabilitiesTokenSchema
-func (t OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) AsInvalidCapabilitiesTokenSchema() (InvalidCapabilitiesTokenSchema, error) {
+// AsInvalidCapabilitiesTokenSchema returns the union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res as a InvalidCapabilitiesTokenSchema
+func (t OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res) AsInvalidCapabilitiesTokenSchema() (InvalidCapabilitiesTokenSchema, error) {
 	var body InvalidCapabilitiesTokenSchema
 	err := json.Unmarshal(t.union, &body)
 	return body, err
 }
 
-// FromInvalidCapabilitiesTokenSchema overwrites any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res as the provided InvalidCapabilitiesTokenSchema
-func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) FromInvalidCapabilitiesTokenSchema(v InvalidCapabilitiesTokenSchema) error {
+// FromInvalidCapabilitiesTokenSchema overwrites any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res as the provided InvalidCapabilitiesTokenSchema
+func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res) FromInvalidCapabilitiesTokenSchema(v InvalidCapabilitiesTokenSchema) error {
 	b, err := json.Marshal(v)
 	t.union = b
 	return err
 }
 
-// MergeInvalidCapabilitiesTokenSchema performs a merge with any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res, using the provided InvalidCapabilitiesTokenSchema
-func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) MergeInvalidCapabilitiesTokenSchema(v InvalidCapabilitiesTokenSchema) error {
+// MergeInvalidCapabilitiesTokenSchema performs a merge with any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res, using the provided InvalidCapabilitiesTokenSchema
+func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res) MergeInvalidCapabilitiesTokenSchema(v InvalidCapabilitiesTokenSchema) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -8413,22 +9176,22 @@ func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) 
 	return err
 }
 
-// AsScopeNotGrantedErrorSchema returns the union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res as a ScopeNotGrantedErrorSchema
-func (t OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) AsScopeNotGrantedErrorSchema() (ScopeNotGrantedErrorSchema, error) {
+// AsScopeNotGrantedErrorSchema returns the union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res as a ScopeNotGrantedErrorSchema
+func (t OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res) AsScopeNotGrantedErrorSchema() (ScopeNotGrantedErrorSchema, error) {
 	var body ScopeNotGrantedErrorSchema
 	err := json.Unmarshal(t.union, &body)
 	return body, err
 }
 
-// FromScopeNotGrantedErrorSchema overwrites any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res as the provided ScopeNotGrantedErrorSchema
-func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) FromScopeNotGrantedErrorSchema(v ScopeNotGrantedErrorSchema) error {
+// FromScopeNotGrantedErrorSchema overwrites any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res as the provided ScopeNotGrantedErrorSchema
+func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res) FromScopeNotGrantedErrorSchema(v ScopeNotGrantedErrorSchema) error {
 	b, err := json.Marshal(v)
 	t.union = b
 	return err
 }
 
-// MergeScopeNotGrantedErrorSchema performs a merge with any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res, using the provided ScopeNotGrantedErrorSchema
-func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) MergeScopeNotGrantedErrorSchema(v ScopeNotGrantedErrorSchema) error {
+// MergeScopeNotGrantedErrorSchema performs a merge with any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res, using the provided ScopeNotGrantedErrorSchema
+func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res) MergeScopeNotGrantedErrorSchema(v ScopeNotGrantedErrorSchema) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -8439,22 +9202,48 @@ func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) 
 	return err
 }
 
-// AsPermissionDeniedSchema returns the union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res as a PermissionDeniedSchema
-func (t OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) AsPermissionDeniedSchema() (PermissionDeniedSchema, error) {
+// AsVirtualMachineSuspendedSchema returns the union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res as a VirtualMachineSuspendedSchema
+func (t OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res) AsVirtualMachineSuspendedSchema() (VirtualMachineSuspendedSchema, error) {
+	var body VirtualMachineSuspendedSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromVirtualMachineSuspendedSchema overwrites any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res as the provided VirtualMachineSuspendedSchema
+func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res) FromVirtualMachineSuspendedSchema(v VirtualMachineSuspendedSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeVirtualMachineSuspendedSchema performs a merge with any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res, using the provided VirtualMachineSuspendedSchema
+func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res) MergeVirtualMachineSuspendedSchema(v VirtualMachineSuspendedSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsPermissionDeniedSchema returns the union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res as a PermissionDeniedSchema
+func (t OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res) AsPermissionDeniedSchema() (PermissionDeniedSchema, error) {
 	var body PermissionDeniedSchema
 	err := json.Unmarshal(t.union, &body)
 	return body, err
 }
 
-// FromPermissionDeniedSchema overwrites any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res as the provided PermissionDeniedSchema
-func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) FromPermissionDeniedSchema(v PermissionDeniedSchema) error {
+// FromPermissionDeniedSchema overwrites any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res as the provided PermissionDeniedSchema
+func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res) FromPermissionDeniedSchema(v PermissionDeniedSchema) error {
 	b, err := json.Marshal(v)
 	t.union = b
 	return err
 }
 
-// MergePermissionDeniedSchema performs a merge with any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res, using the provided PermissionDeniedSchema
-func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) MergePermissionDeniedSchema(v PermissionDeniedSchema) error {
+// MergePermissionDeniedSchema performs a merge with any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res, using the provided PermissionDeniedSchema
+func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res) MergePermissionDeniedSchema(v PermissionDeniedSchema) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -8465,22 +9254,22 @@ func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) 
 	return err
 }
 
-// AsFlexibleResourcesUnavailableToOrganizationSchema returns the union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res as a FlexibleResourcesUnavailableToOrganizationSchema
-func (t OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) AsFlexibleResourcesUnavailableToOrganizationSchema() (FlexibleResourcesUnavailableToOrganizationSchema, error) {
+// AsFlexibleResourcesUnavailableToOrganizationSchema returns the union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res as a FlexibleResourcesUnavailableToOrganizationSchema
+func (t OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res) AsFlexibleResourcesUnavailableToOrganizationSchema() (FlexibleResourcesUnavailableToOrganizationSchema, error) {
 	var body FlexibleResourcesUnavailableToOrganizationSchema
 	err := json.Unmarshal(t.union, &body)
 	return body, err
 }
 
-// FromFlexibleResourcesUnavailableToOrganizationSchema overwrites any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res as the provided FlexibleResourcesUnavailableToOrganizationSchema
-func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) FromFlexibleResourcesUnavailableToOrganizationSchema(v FlexibleResourcesUnavailableToOrganizationSchema) error {
+// FromFlexibleResourcesUnavailableToOrganizationSchema overwrites any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res as the provided FlexibleResourcesUnavailableToOrganizationSchema
+func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res) FromFlexibleResourcesUnavailableToOrganizationSchema(v FlexibleResourcesUnavailableToOrganizationSchema) error {
 	b, err := json.Marshal(v)
 	t.union = b
 	return err
 }
 
-// MergeFlexibleResourcesUnavailableToOrganizationSchema performs a merge with any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res, using the provided FlexibleResourcesUnavailableToOrganizationSchema
-func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) MergeFlexibleResourcesUnavailableToOrganizationSchema(v FlexibleResourcesUnavailableToOrganizationSchema) error {
+// MergeFlexibleResourcesUnavailableToOrganizationSchema performs a merge with any union data inside the OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res, using the provided FlexibleResourcesUnavailableToOrganizationSchema
+func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res) MergeFlexibleResourcesUnavailableToOrganizationSchema(v FlexibleResourcesUnavailableToOrganizationSchema) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -8491,12 +9280,12 @@ func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) 
 	return err
 }
 
-func (t OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) MarshalJSON() ([]byte, error) {
+func (t OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res) MarshalJSON() ([]byte, error) {
 	b, err := t.union.MarshalJSON()
 	return b, err
 }
 
-func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDenied403Res) UnmarshalJSON(b []byte) error {
+func (t *OneOfFlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }
@@ -8745,68 +9534,6 @@ func (t OneOfIPAlreadyAllocatedNoInterfaceAvailable422Res) MarshalJSON() ([]byte
 }
 
 func (t *OneOfIPAlreadyAllocatedNoInterfaceAvailable422Res) UnmarshalJSON(b []byte) error {
-	err := t.union.UnmarshalJSON(b)
-	return err
-}
-
-// AsAPIAuthenticator400Schema returns the union data inside the OneOfIdentityNotLinkedToWebSession400Res as a APIAuthenticator400Schema
-func (t OneOfIdentityNotLinkedToWebSession400Res) AsAPIAuthenticator400Schema() (APIAuthenticator400Schema, error) {
-	var body APIAuthenticator400Schema
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromAPIAuthenticator400Schema overwrites any union data inside the OneOfIdentityNotLinkedToWebSession400Res as the provided APIAuthenticator400Schema
-func (t *OneOfIdentityNotLinkedToWebSession400Res) FromAPIAuthenticator400Schema(v APIAuthenticator400Schema) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeAPIAuthenticator400Schema performs a merge with any union data inside the OneOfIdentityNotLinkedToWebSession400Res, using the provided APIAuthenticator400Schema
-func (t *OneOfIdentityNotLinkedToWebSession400Res) MergeAPIAuthenticator400Schema(v APIAuthenticator400Schema) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
-// AsIdentityNotLinkedToWebSessionSchema returns the union data inside the OneOfIdentityNotLinkedToWebSession400Res as a IdentityNotLinkedToWebSessionSchema
-func (t OneOfIdentityNotLinkedToWebSession400Res) AsIdentityNotLinkedToWebSessionSchema() (IdentityNotLinkedToWebSessionSchema, error) {
-	var body IdentityNotLinkedToWebSessionSchema
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromIdentityNotLinkedToWebSessionSchema overwrites any union data inside the OneOfIdentityNotLinkedToWebSession400Res as the provided IdentityNotLinkedToWebSessionSchema
-func (t *OneOfIdentityNotLinkedToWebSession400Res) FromIdentityNotLinkedToWebSessionSchema(v IdentityNotLinkedToWebSessionSchema) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeIdentityNotLinkedToWebSessionSchema performs a merge with any union data inside the OneOfIdentityNotLinkedToWebSession400Res, using the provided IdentityNotLinkedToWebSessionSchema
-func (t *OneOfIdentityNotLinkedToWebSession400Res) MergeIdentityNotLinkedToWebSessionSchema(v IdentityNotLinkedToWebSessionSchema) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
-func (t OneOfIdentityNotLinkedToWebSession400Res) MarshalJSON() ([]byte, error) {
-	b, err := t.union.MarshalJSON()
-	return b, err
-}
-
-func (t *OneOfIdentityNotLinkedToWebSession400Res) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }
@@ -11147,6 +11874,172 @@ func (t *OneOfPermissionDenied403Res) UnmarshalJSON(b []byte) error {
 	return err
 }
 
+// AsUnauthorizedNetworkForAPITokenSchema returns the union data inside the OneOfPermissionDeniedVirtualMachineSuspended403Res as a UnauthorizedNetworkForAPITokenSchema
+func (t OneOfPermissionDeniedVirtualMachineSuspended403Res) AsUnauthorizedNetworkForAPITokenSchema() (UnauthorizedNetworkForAPITokenSchema, error) {
+	var body UnauthorizedNetworkForAPITokenSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromUnauthorizedNetworkForAPITokenSchema overwrites any union data inside the OneOfPermissionDeniedVirtualMachineSuspended403Res as the provided UnauthorizedNetworkForAPITokenSchema
+func (t *OneOfPermissionDeniedVirtualMachineSuspended403Res) FromUnauthorizedNetworkForAPITokenSchema(v UnauthorizedNetworkForAPITokenSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeUnauthorizedNetworkForAPITokenSchema performs a merge with any union data inside the OneOfPermissionDeniedVirtualMachineSuspended403Res, using the provided UnauthorizedNetworkForAPITokenSchema
+func (t *OneOfPermissionDeniedVirtualMachineSuspended403Res) MergeUnauthorizedNetworkForAPITokenSchema(v UnauthorizedNetworkForAPITokenSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsInvalidAPITokenSchema returns the union data inside the OneOfPermissionDeniedVirtualMachineSuspended403Res as a InvalidAPITokenSchema
+func (t OneOfPermissionDeniedVirtualMachineSuspended403Res) AsInvalidAPITokenSchema() (InvalidAPITokenSchema, error) {
+	var body InvalidAPITokenSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromInvalidAPITokenSchema overwrites any union data inside the OneOfPermissionDeniedVirtualMachineSuspended403Res as the provided InvalidAPITokenSchema
+func (t *OneOfPermissionDeniedVirtualMachineSuspended403Res) FromInvalidAPITokenSchema(v InvalidAPITokenSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeInvalidAPITokenSchema performs a merge with any union data inside the OneOfPermissionDeniedVirtualMachineSuspended403Res, using the provided InvalidAPITokenSchema
+func (t *OneOfPermissionDeniedVirtualMachineSuspended403Res) MergeInvalidAPITokenSchema(v InvalidAPITokenSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsInvalidCapabilitiesTokenSchema returns the union data inside the OneOfPermissionDeniedVirtualMachineSuspended403Res as a InvalidCapabilitiesTokenSchema
+func (t OneOfPermissionDeniedVirtualMachineSuspended403Res) AsInvalidCapabilitiesTokenSchema() (InvalidCapabilitiesTokenSchema, error) {
+	var body InvalidCapabilitiesTokenSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromInvalidCapabilitiesTokenSchema overwrites any union data inside the OneOfPermissionDeniedVirtualMachineSuspended403Res as the provided InvalidCapabilitiesTokenSchema
+func (t *OneOfPermissionDeniedVirtualMachineSuspended403Res) FromInvalidCapabilitiesTokenSchema(v InvalidCapabilitiesTokenSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeInvalidCapabilitiesTokenSchema performs a merge with any union data inside the OneOfPermissionDeniedVirtualMachineSuspended403Res, using the provided InvalidCapabilitiesTokenSchema
+func (t *OneOfPermissionDeniedVirtualMachineSuspended403Res) MergeInvalidCapabilitiesTokenSchema(v InvalidCapabilitiesTokenSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsScopeNotGrantedErrorSchema returns the union data inside the OneOfPermissionDeniedVirtualMachineSuspended403Res as a ScopeNotGrantedErrorSchema
+func (t OneOfPermissionDeniedVirtualMachineSuspended403Res) AsScopeNotGrantedErrorSchema() (ScopeNotGrantedErrorSchema, error) {
+	var body ScopeNotGrantedErrorSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromScopeNotGrantedErrorSchema overwrites any union data inside the OneOfPermissionDeniedVirtualMachineSuspended403Res as the provided ScopeNotGrantedErrorSchema
+func (t *OneOfPermissionDeniedVirtualMachineSuspended403Res) FromScopeNotGrantedErrorSchema(v ScopeNotGrantedErrorSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeScopeNotGrantedErrorSchema performs a merge with any union data inside the OneOfPermissionDeniedVirtualMachineSuspended403Res, using the provided ScopeNotGrantedErrorSchema
+func (t *OneOfPermissionDeniedVirtualMachineSuspended403Res) MergeScopeNotGrantedErrorSchema(v ScopeNotGrantedErrorSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsVirtualMachineSuspendedSchema returns the union data inside the OneOfPermissionDeniedVirtualMachineSuspended403Res as a VirtualMachineSuspendedSchema
+func (t OneOfPermissionDeniedVirtualMachineSuspended403Res) AsVirtualMachineSuspendedSchema() (VirtualMachineSuspendedSchema, error) {
+	var body VirtualMachineSuspendedSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromVirtualMachineSuspendedSchema overwrites any union data inside the OneOfPermissionDeniedVirtualMachineSuspended403Res as the provided VirtualMachineSuspendedSchema
+func (t *OneOfPermissionDeniedVirtualMachineSuspended403Res) FromVirtualMachineSuspendedSchema(v VirtualMachineSuspendedSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeVirtualMachineSuspendedSchema performs a merge with any union data inside the OneOfPermissionDeniedVirtualMachineSuspended403Res, using the provided VirtualMachineSuspendedSchema
+func (t *OneOfPermissionDeniedVirtualMachineSuspended403Res) MergeVirtualMachineSuspendedSchema(v VirtualMachineSuspendedSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsPermissionDeniedSchema returns the union data inside the OneOfPermissionDeniedVirtualMachineSuspended403Res as a PermissionDeniedSchema
+func (t OneOfPermissionDeniedVirtualMachineSuspended403Res) AsPermissionDeniedSchema() (PermissionDeniedSchema, error) {
+	var body PermissionDeniedSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromPermissionDeniedSchema overwrites any union data inside the OneOfPermissionDeniedVirtualMachineSuspended403Res as the provided PermissionDeniedSchema
+func (t *OneOfPermissionDeniedVirtualMachineSuspended403Res) FromPermissionDeniedSchema(v PermissionDeniedSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergePermissionDeniedSchema performs a merge with any union data inside the OneOfPermissionDeniedVirtualMachineSuspended403Res, using the provided PermissionDeniedSchema
+func (t *OneOfPermissionDeniedVirtualMachineSuspended403Res) MergePermissionDeniedSchema(v PermissionDeniedSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t OneOfPermissionDeniedVirtualMachineSuspended403Res) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *OneOfPermissionDeniedVirtualMachineSuspended403Res) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
 // AsAPIAuthenticator400Schema returns the union data inside the OneOfPolicyNotAvailableForManagedOrganizations400Res as a APIAuthenticator400Schema
 func (t OneOfPolicyNotAvailableForManagedOrganizations400Res) AsAPIAuthenticator400Schema() (APIAuthenticator400Schema, error) {
 	var body APIAuthenticator400Schema
@@ -11395,6 +12288,146 @@ func (t *OneOfVirtualMachineNotFoundVirtualMachinePackageNotFound404Res) Unmarsh
 	return err
 }
 
+// AsUnauthorizedNetworkForAPITokenSchema returns the union data inside the OneOfVirtualMachineSuspended403Res as a UnauthorizedNetworkForAPITokenSchema
+func (t OneOfVirtualMachineSuspended403Res) AsUnauthorizedNetworkForAPITokenSchema() (UnauthorizedNetworkForAPITokenSchema, error) {
+	var body UnauthorizedNetworkForAPITokenSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromUnauthorizedNetworkForAPITokenSchema overwrites any union data inside the OneOfVirtualMachineSuspended403Res as the provided UnauthorizedNetworkForAPITokenSchema
+func (t *OneOfVirtualMachineSuspended403Res) FromUnauthorizedNetworkForAPITokenSchema(v UnauthorizedNetworkForAPITokenSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeUnauthorizedNetworkForAPITokenSchema performs a merge with any union data inside the OneOfVirtualMachineSuspended403Res, using the provided UnauthorizedNetworkForAPITokenSchema
+func (t *OneOfVirtualMachineSuspended403Res) MergeUnauthorizedNetworkForAPITokenSchema(v UnauthorizedNetworkForAPITokenSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsInvalidAPITokenSchema returns the union data inside the OneOfVirtualMachineSuspended403Res as a InvalidAPITokenSchema
+func (t OneOfVirtualMachineSuspended403Res) AsInvalidAPITokenSchema() (InvalidAPITokenSchema, error) {
+	var body InvalidAPITokenSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromInvalidAPITokenSchema overwrites any union data inside the OneOfVirtualMachineSuspended403Res as the provided InvalidAPITokenSchema
+func (t *OneOfVirtualMachineSuspended403Res) FromInvalidAPITokenSchema(v InvalidAPITokenSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeInvalidAPITokenSchema performs a merge with any union data inside the OneOfVirtualMachineSuspended403Res, using the provided InvalidAPITokenSchema
+func (t *OneOfVirtualMachineSuspended403Res) MergeInvalidAPITokenSchema(v InvalidAPITokenSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsInvalidCapabilitiesTokenSchema returns the union data inside the OneOfVirtualMachineSuspended403Res as a InvalidCapabilitiesTokenSchema
+func (t OneOfVirtualMachineSuspended403Res) AsInvalidCapabilitiesTokenSchema() (InvalidCapabilitiesTokenSchema, error) {
+	var body InvalidCapabilitiesTokenSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromInvalidCapabilitiesTokenSchema overwrites any union data inside the OneOfVirtualMachineSuspended403Res as the provided InvalidCapabilitiesTokenSchema
+func (t *OneOfVirtualMachineSuspended403Res) FromInvalidCapabilitiesTokenSchema(v InvalidCapabilitiesTokenSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeInvalidCapabilitiesTokenSchema performs a merge with any union data inside the OneOfVirtualMachineSuspended403Res, using the provided InvalidCapabilitiesTokenSchema
+func (t *OneOfVirtualMachineSuspended403Res) MergeInvalidCapabilitiesTokenSchema(v InvalidCapabilitiesTokenSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsScopeNotGrantedErrorSchema returns the union data inside the OneOfVirtualMachineSuspended403Res as a ScopeNotGrantedErrorSchema
+func (t OneOfVirtualMachineSuspended403Res) AsScopeNotGrantedErrorSchema() (ScopeNotGrantedErrorSchema, error) {
+	var body ScopeNotGrantedErrorSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromScopeNotGrantedErrorSchema overwrites any union data inside the OneOfVirtualMachineSuspended403Res as the provided ScopeNotGrantedErrorSchema
+func (t *OneOfVirtualMachineSuspended403Res) FromScopeNotGrantedErrorSchema(v ScopeNotGrantedErrorSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeScopeNotGrantedErrorSchema performs a merge with any union data inside the OneOfVirtualMachineSuspended403Res, using the provided ScopeNotGrantedErrorSchema
+func (t *OneOfVirtualMachineSuspended403Res) MergeScopeNotGrantedErrorSchema(v ScopeNotGrantedErrorSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsVirtualMachineSuspendedSchema returns the union data inside the OneOfVirtualMachineSuspended403Res as a VirtualMachineSuspendedSchema
+func (t OneOfVirtualMachineSuspended403Res) AsVirtualMachineSuspendedSchema() (VirtualMachineSuspendedSchema, error) {
+	var body VirtualMachineSuspendedSchema
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromVirtualMachineSuspendedSchema overwrites any union data inside the OneOfVirtualMachineSuspended403Res as the provided VirtualMachineSuspendedSchema
+func (t *OneOfVirtualMachineSuspended403Res) FromVirtualMachineSuspendedSchema(v VirtualMachineSuspendedSchema) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeVirtualMachineSuspendedSchema performs a merge with any union data inside the OneOfVirtualMachineSuspended403Res, using the provided VirtualMachineSuspendedSchema
+func (t *OneOfVirtualMachineSuspended403Res) MergeVirtualMachineSuspendedSchema(v VirtualMachineSuspendedSchema) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t OneOfVirtualMachineSuspended403Res) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *OneOfVirtualMachineSuspended403Res) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
 const (
 	clientVersion = "0.2.0" // x-release-please-version
 )
@@ -11548,8 +12581,39 @@ type ClientInterface interface {
 
 	PostApiTokenRegenerateSecret(ctx context.Context, body PostApiTokenRegenerateSecretJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DeleteCertificateWithBody request with any body
+	DeleteCertificateWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	DeleteCertificate(ctx context.Context, body DeleteCertificateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetCertificate request
 	GetCertificate(ctx context.Context, params *GetCertificateParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostCertificateIssueWithBody request with any body
+	PostCertificateIssueWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostCertificateIssue(ctx context.Context, body PostCertificateIssueJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostCertificateResetTokenWithBody request with any body
+	PostCertificateResetTokenWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostCertificateResetToken(ctx context.Context, body PostCertificateResetTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteContainerRegistryArtifactWithBody request with any body
+	DeleteContainerRegistryArtifactWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	DeleteContainerRegistryArtifact(ctx context.Context, body DeleteContainerRegistryArtifactJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetContainerRegistryArtifact request
+	GetContainerRegistryArtifact(ctx context.Context, params *GetContainerRegistryArtifactParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteContainerRegistryRepositoryWithBody request with any body
+	DeleteContainerRegistryRepositoryWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	DeleteContainerRegistryRepository(ctx context.Context, body DeleteContainerRegistryRepositoryJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetContainerRegistryRepositoryArtifacts request
+	GetContainerRegistryRepositoryArtifacts(ctx context.Context, params *GetContainerRegistryRepositoryArtifactsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetCountries request
 	GetCountries(ctx context.Context, params *GetCountriesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -11720,11 +12784,6 @@ type ClientInterface interface {
 	// GetGpuType request
 	GetGpuType(ctx context.Context, params *GetGpuTypeParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// PostInvalidateLinkedWebSessionWithBody request with any body
-	PostInvalidateLinkedWebSessionWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	PostInvalidateLinkedWebSession(ctx context.Context, body PostInvalidateLinkedWebSessionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// DeleteIpAddressWithBody request with any body
 	DeleteIpAddressWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -11781,6 +12840,11 @@ type ClientInterface interface {
 	DeleteOrganizationWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	DeleteOrganization(ctx context.Context, body DeleteOrganizationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PatchOrganizationWithBody request with any body
+	PatchOrganizationWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PatchOrganization(ctx context.Context, body PatchOrganizationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetNetwork request
 	GetNetwork(ctx context.Context, params *GetNetworkParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -11863,11 +12927,24 @@ type ClientInterface interface {
 	// GetOrganizationCertificates request
 	GetOrganizationCertificates(ctx context.Context, params *GetOrganizationCertificatesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// PostOrganizationCertificatesWithBody request with any body
+	PostOrganizationCertificatesWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostOrganizationCertificates(ctx context.Context, body PostOrganizationCertificatesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetOrganizationContainerRegistryRepositories request
+	GetOrganizationContainerRegistryRepositories(ctx context.Context, params *GetOrganizationContainerRegistryRepositoriesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetOrganizationDeletionSteps request
 	GetOrganizationDeletionSteps(ctx context.Context, params *GetOrganizationDeletionStepsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetOrganizationDiskBackupPolicies request
 	GetOrganizationDiskBackupPolicies(ctx context.Context, params *GetOrganizationDiskBackupPoliciesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostOrganizationDiskBackupPoliciesWithBody request with any body
+	PostOrganizationDiskBackupPoliciesWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostOrganizationDiskBackupPolicies(ctx context.Context, body PostOrganizationDiskBackupPoliciesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetOrganizationDiskIoProfiles request
 	GetOrganizationDiskIoProfiles(ctx context.Context, params *GetOrganizationDiskIoProfilesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -12519,8 +13596,152 @@ func (c *Client) PostApiTokenRegenerateSecret(ctx context.Context, body PostApiT
 	return c.Client.Do(req)
 }
 
+func (c *Client) DeleteCertificateWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteCertificateRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteCertificate(ctx context.Context, body DeleteCertificateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteCertificateRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetCertificate(ctx context.Context, params *GetCertificateParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetCertificateRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostCertificateIssueWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostCertificateIssueRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostCertificateIssue(ctx context.Context, body PostCertificateIssueJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostCertificateIssueRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostCertificateResetTokenWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostCertificateResetTokenRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostCertificateResetToken(ctx context.Context, body PostCertificateResetTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostCertificateResetTokenRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteContainerRegistryArtifactWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteContainerRegistryArtifactRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteContainerRegistryArtifact(ctx context.Context, body DeleteContainerRegistryArtifactJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteContainerRegistryArtifactRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetContainerRegistryArtifact(ctx context.Context, params *GetContainerRegistryArtifactParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetContainerRegistryArtifactRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteContainerRegistryRepositoryWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteContainerRegistryRepositoryRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteContainerRegistryRepository(ctx context.Context, body DeleteContainerRegistryRepositoryJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteContainerRegistryRepositoryRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetContainerRegistryRepositoryArtifacts(ctx context.Context, params *GetContainerRegistryRepositoryArtifactsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetContainerRegistryRepositoryArtifactsRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -13287,30 +14508,6 @@ func (c *Client) GetGpuType(ctx context.Context, params *GetGpuTypeParams, reqEd
 	return c.Client.Do(req)
 }
 
-func (c *Client) PostInvalidateLinkedWebSessionWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPostInvalidateLinkedWebSessionRequestWithBody(c.Server, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) PostInvalidateLinkedWebSession(ctx context.Context, body PostInvalidateLinkedWebSessionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPostInvalidateLinkedWebSessionRequest(c.Server, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 func (c *Client) DeleteIpAddressWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDeleteIpAddressRequestWithBody(c.Server, contentType, body)
 	if err != nil {
@@ -13565,6 +14762,30 @@ func (c *Client) DeleteOrganizationWithBody(ctx context.Context, contentType str
 
 func (c *Client) DeleteOrganization(ctx context.Context, body DeleteOrganizationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDeleteOrganizationRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchOrganizationWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchOrganizationRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PatchOrganization(ctx context.Context, body PatchOrganizationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchOrganizationRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -13935,6 +15156,42 @@ func (c *Client) GetOrganizationCertificates(ctx context.Context, params *GetOrg
 	return c.Client.Do(req)
 }
 
+func (c *Client) PostOrganizationCertificatesWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostOrganizationCertificatesRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostOrganizationCertificates(ctx context.Context, body PostOrganizationCertificatesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostOrganizationCertificatesRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetOrganizationContainerRegistryRepositories(ctx context.Context, params *GetOrganizationContainerRegistryRepositoriesParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetOrganizationContainerRegistryRepositoriesRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetOrganizationDeletionSteps(ctx context.Context, params *GetOrganizationDeletionStepsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetOrganizationDeletionStepsRequest(c.Server, params)
 	if err != nil {
@@ -13949,6 +15206,30 @@ func (c *Client) GetOrganizationDeletionSteps(ctx context.Context, params *GetOr
 
 func (c *Client) GetOrganizationDiskBackupPolicies(ctx context.Context, params *GetOrganizationDiskBackupPoliciesParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetOrganizationDiskBackupPoliciesRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostOrganizationDiskBackupPoliciesWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostOrganizationDiskBackupPoliciesRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostOrganizationDiskBackupPolicies(ctx context.Context, body PostOrganizationDiskBackupPoliciesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostOrganizationDiskBackupPoliciesRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -16303,6 +17584,46 @@ func NewPostApiTokenRegenerateSecretRequestWithBody(server string, contentType s
 	return req, nil
 }
 
+// NewDeleteCertificateRequest calls the generic DeleteCertificate builder with application/json body
+func NewDeleteCertificateRequest(server string, body DeleteCertificateJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDeleteCertificateRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewDeleteCertificateRequestWithBody generates requests for DeleteCertificate with any type of body
+func NewDeleteCertificateRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/certificates/certificate")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewGetCertificateRequest generates requests for GetCertificate
 func NewGetCertificateRequest(server string, params *GetCertificateParams) (*http.Request, error) {
 	var err error
@@ -16328,6 +17649,408 @@ func NewGetCertificateRequest(server string, params *GetCertificateParams) (*htt
 		if params.CertificateId != nil {
 
 			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "certificate[id]", runtime.ParamLocationQuery, *params.CertificateId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPostCertificateIssueRequest calls the generic PostCertificateIssue builder with application/json body
+func NewPostCertificateIssueRequest(server string, body PostCertificateIssueJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostCertificateIssueRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostCertificateIssueRequestWithBody generates requests for PostCertificateIssue with any type of body
+func NewPostCertificateIssueRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/certificates/certificate/issue")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewPostCertificateResetTokenRequest calls the generic PostCertificateResetToken builder with application/json body
+func NewPostCertificateResetTokenRequest(server string, body PostCertificateResetTokenJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostCertificateResetTokenRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostCertificateResetTokenRequestWithBody generates requests for PostCertificateResetToken with any type of body
+func NewPostCertificateResetTokenRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/certificates/certificate/reset_token")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteContainerRegistryArtifactRequest calls the generic DeleteContainerRegistryArtifact builder with application/json body
+func NewDeleteContainerRegistryArtifactRequest(server string, body DeleteContainerRegistryArtifactJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDeleteContainerRegistryArtifactRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewDeleteContainerRegistryArtifactRequestWithBody generates requests for DeleteContainerRegistryArtifact with any type of body
+func NewDeleteContainerRegistryArtifactRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/container_registry/artifacts/artifact")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetContainerRegistryArtifactRequest generates requests for GetContainerRegistryArtifact
+func NewGetContainerRegistryArtifactRequest(server string, params *GetContainerRegistryArtifactParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/container_registry/artifacts/artifact")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.RegionId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "region[id]", runtime.ParamLocationQuery, *params.RegionId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.RepositoryId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "repository[id]", runtime.ParamLocationQuery, *params.RepositoryId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.RepositoryName != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "repository[name]", runtime.ParamLocationQuery, *params.RepositoryName); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.ArtifactId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "artifact[id]", runtime.ParamLocationQuery, *params.ArtifactId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.ArtifactDigest != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "artifact[digest]", runtime.ParamLocationQuery, *params.ArtifactDigest); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.ArtifactTag != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "artifact[tag]", runtime.ParamLocationQuery, *params.ArtifactTag); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewDeleteContainerRegistryRepositoryRequest calls the generic DeleteContainerRegistryRepository builder with application/json body
+func NewDeleteContainerRegistryRepositoryRequest(server string, body DeleteContainerRegistryRepositoryJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDeleteContainerRegistryRepositoryRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewDeleteContainerRegistryRepositoryRequestWithBody generates requests for DeleteContainerRegistryRepository with any type of body
+func NewDeleteContainerRegistryRepositoryRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/container_registry/repositories/repository")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetContainerRegistryRepositoryArtifactsRequest generates requests for GetContainerRegistryRepositoryArtifacts
+func NewGetContainerRegistryRepositoryArtifactsRequest(server string, params *GetContainerRegistryRepositoryArtifactsParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/container_registry/repositories/repository/artifacts")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.RegionId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "region[id]", runtime.ParamLocationQuery, *params.RegionId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.RepositoryId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "repository[id]", runtime.ParamLocationQuery, *params.RepositoryId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.RepositoryName != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "repository[name]", runtime.ParamLocationQuery, *params.RepositoryName); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Page != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "page", runtime.ParamLocationQuery, *params.Page); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.PerPage != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "per_page", runtime.ParamLocationQuery, *params.PerPage); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -18641,46 +20364,6 @@ func NewGetGpuTypeRequest(server string, params *GetGpuTypeParams) (*http.Reques
 	return req, nil
 }
 
-// NewPostInvalidateLinkedWebSessionRequest calls the generic PostInvalidateLinkedWebSession builder with application/json body
-func NewPostInvalidateLinkedWebSessionRequest(server string, body PostInvalidateLinkedWebSessionJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewPostInvalidateLinkedWebSessionRequestWithBody(server, "application/json", bodyReader)
-}
-
-// NewPostInvalidateLinkedWebSessionRequestWithBody generates requests for PostInvalidateLinkedWebSession with any type of body
-func NewPostInvalidateLinkedWebSessionRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/invalidate_linked_web_session")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
 // NewDeleteIpAddressRequest calls the generic DeleteIpAddress builder with application/json body
 func NewDeleteIpAddressRequest(server string, body DeleteIpAddressJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -19308,6 +20991,46 @@ func NewDeleteOrganizationRequestWithBody(server string, contentType string, bod
 	}
 
 	req, err := http.NewRequest("DELETE", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewPatchOrganizationRequest calls the generic PatchOrganization builder with application/json body
+func NewPatchOrganizationRequest(server string, body PatchOrganizationJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchOrganizationRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPatchOrganizationRequestWithBody generates requests for PatchOrganization with any type of body
+func NewPatchOrganizationRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/managed_organizations/organization")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PATCH", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -20559,6 +22282,159 @@ func NewGetOrganizationCertificatesRequest(server string, params *GetOrganizatio
 	return req, nil
 }
 
+// NewPostOrganizationCertificatesRequest calls the generic PostOrganizationCertificates builder with application/json body
+func NewPostOrganizationCertificatesRequest(server string, body PostOrganizationCertificatesJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostOrganizationCertificatesRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostOrganizationCertificatesRequestWithBody generates requests for PostOrganizationCertificates with any type of body
+func NewPostOrganizationCertificatesRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/organizations/organization/certificates")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetOrganizationContainerRegistryRepositoriesRequest generates requests for GetOrganizationContainerRegistryRepositories
+func NewGetOrganizationContainerRegistryRepositoriesRequest(server string, params *GetOrganizationContainerRegistryRepositoriesParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/organizations/organization/container_registry/repositories")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.RegionId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "region[id]", runtime.ParamLocationQuery, *params.RegionId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.OrganizationId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "organization[id]", runtime.ParamLocationQuery, *params.OrganizationId); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.OrganizationSubDomain != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "organization[sub_domain]", runtime.ParamLocationQuery, *params.OrganizationSubDomain); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Page != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "page", runtime.ParamLocationQuery, *params.Page); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.PerPage != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "per_page", runtime.ParamLocationQuery, *params.PerPage); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetOrganizationDeletionStepsRequest generates requests for GetOrganizationDeletionSteps
 func NewGetOrganizationDeletionStepsRequest(server string, params *GetOrganizationDeletionStepsParams) (*http.Request, error) {
 	var err error
@@ -20717,6 +22593,46 @@ func NewGetOrganizationDiskBackupPoliciesRequest(server string, params *GetOrgan
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewPostOrganizationDiskBackupPoliciesRequest calls the generic PostOrganizationDiskBackupPolicies builder with application/json body
+func NewPostOrganizationDiskBackupPoliciesRequest(server string, body PostOrganizationDiskBackupPoliciesJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostOrganizationDiskBackupPoliciesRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostOrganizationDiskBackupPoliciesRequestWithBody generates requests for PostOrganizationDiskBackupPolicies with any type of body
+func NewPostOrganizationDiskBackupPoliciesRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/organizations/organization/disk_backup_policies")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -26490,8 +28406,39 @@ type ClientWithResponsesInterface interface {
 
 	PostApiTokenRegenerateSecretWithResponse(ctx context.Context, body PostApiTokenRegenerateSecretJSONRequestBody, reqEditors ...RequestEditorFn) (*PostApiTokenRegenerateSecretResponse, error)
 
+	// DeleteCertificateWithBodyWithResponse request with any body
+	DeleteCertificateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteCertificateResponse, error)
+
+	DeleteCertificateWithResponse(ctx context.Context, body DeleteCertificateJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteCertificateResponse, error)
+
 	// GetCertificateWithResponse request
 	GetCertificateWithResponse(ctx context.Context, params *GetCertificateParams, reqEditors ...RequestEditorFn) (*GetCertificateResponse, error)
+
+	// PostCertificateIssueWithBodyWithResponse request with any body
+	PostCertificateIssueWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostCertificateIssueResponse, error)
+
+	PostCertificateIssueWithResponse(ctx context.Context, body PostCertificateIssueJSONRequestBody, reqEditors ...RequestEditorFn) (*PostCertificateIssueResponse, error)
+
+	// PostCertificateResetTokenWithBodyWithResponse request with any body
+	PostCertificateResetTokenWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostCertificateResetTokenResponse, error)
+
+	PostCertificateResetTokenWithResponse(ctx context.Context, body PostCertificateResetTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*PostCertificateResetTokenResponse, error)
+
+	// DeleteContainerRegistryArtifactWithBodyWithResponse request with any body
+	DeleteContainerRegistryArtifactWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteContainerRegistryArtifactResponse, error)
+
+	DeleteContainerRegistryArtifactWithResponse(ctx context.Context, body DeleteContainerRegistryArtifactJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteContainerRegistryArtifactResponse, error)
+
+	// GetContainerRegistryArtifactWithResponse request
+	GetContainerRegistryArtifactWithResponse(ctx context.Context, params *GetContainerRegistryArtifactParams, reqEditors ...RequestEditorFn) (*GetContainerRegistryArtifactResponse, error)
+
+	// DeleteContainerRegistryRepositoryWithBodyWithResponse request with any body
+	DeleteContainerRegistryRepositoryWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteContainerRegistryRepositoryResponse, error)
+
+	DeleteContainerRegistryRepositoryWithResponse(ctx context.Context, body DeleteContainerRegistryRepositoryJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteContainerRegistryRepositoryResponse, error)
+
+	// GetContainerRegistryRepositoryArtifactsWithResponse request
+	GetContainerRegistryRepositoryArtifactsWithResponse(ctx context.Context, params *GetContainerRegistryRepositoryArtifactsParams, reqEditors ...RequestEditorFn) (*GetContainerRegistryRepositoryArtifactsResponse, error)
 
 	// GetCountriesWithResponse request
 	GetCountriesWithResponse(ctx context.Context, params *GetCountriesParams, reqEditors ...RequestEditorFn) (*GetCountriesResponse, error)
@@ -26662,11 +28609,6 @@ type ClientWithResponsesInterface interface {
 	// GetGpuTypeWithResponse request
 	GetGpuTypeWithResponse(ctx context.Context, params *GetGpuTypeParams, reqEditors ...RequestEditorFn) (*GetGpuTypeResponse, error)
 
-	// PostInvalidateLinkedWebSessionWithBodyWithResponse request with any body
-	PostInvalidateLinkedWebSessionWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostInvalidateLinkedWebSessionResponse, error)
-
-	PostInvalidateLinkedWebSessionWithResponse(ctx context.Context, body PostInvalidateLinkedWebSessionJSONRequestBody, reqEditors ...RequestEditorFn) (*PostInvalidateLinkedWebSessionResponse, error)
-
 	// DeleteIpAddressWithBodyWithResponse request with any body
 	DeleteIpAddressWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteIpAddressResponse, error)
 
@@ -26723,6 +28665,11 @@ type ClientWithResponsesInterface interface {
 	DeleteOrganizationWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteOrganizationResponse, error)
 
 	DeleteOrganizationWithResponse(ctx context.Context, body DeleteOrganizationJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteOrganizationResponse, error)
+
+	// PatchOrganizationWithBodyWithResponse request with any body
+	PatchOrganizationWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchOrganizationResponse, error)
+
+	PatchOrganizationWithResponse(ctx context.Context, body PatchOrganizationJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchOrganizationResponse, error)
 
 	// GetNetworkWithResponse request
 	GetNetworkWithResponse(ctx context.Context, params *GetNetworkParams, reqEditors ...RequestEditorFn) (*GetNetworkResponse, error)
@@ -26805,11 +28752,24 @@ type ClientWithResponsesInterface interface {
 	// GetOrganizationCertificatesWithResponse request
 	GetOrganizationCertificatesWithResponse(ctx context.Context, params *GetOrganizationCertificatesParams, reqEditors ...RequestEditorFn) (*GetOrganizationCertificatesResponse, error)
 
+	// PostOrganizationCertificatesWithBodyWithResponse request with any body
+	PostOrganizationCertificatesWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostOrganizationCertificatesResponse, error)
+
+	PostOrganizationCertificatesWithResponse(ctx context.Context, body PostOrganizationCertificatesJSONRequestBody, reqEditors ...RequestEditorFn) (*PostOrganizationCertificatesResponse, error)
+
+	// GetOrganizationContainerRegistryRepositoriesWithResponse request
+	GetOrganizationContainerRegistryRepositoriesWithResponse(ctx context.Context, params *GetOrganizationContainerRegistryRepositoriesParams, reqEditors ...RequestEditorFn) (*GetOrganizationContainerRegistryRepositoriesResponse, error)
+
 	// GetOrganizationDeletionStepsWithResponse request
 	GetOrganizationDeletionStepsWithResponse(ctx context.Context, params *GetOrganizationDeletionStepsParams, reqEditors ...RequestEditorFn) (*GetOrganizationDeletionStepsResponse, error)
 
 	// GetOrganizationDiskBackupPoliciesWithResponse request
 	GetOrganizationDiskBackupPoliciesWithResponse(ctx context.Context, params *GetOrganizationDiskBackupPoliciesParams, reqEditors ...RequestEditorFn) (*GetOrganizationDiskBackupPoliciesResponse, error)
+
+	// PostOrganizationDiskBackupPoliciesWithBodyWithResponse request with any body
+	PostOrganizationDiskBackupPoliciesWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostOrganizationDiskBackupPoliciesResponse, error)
+
+	PostOrganizationDiskBackupPoliciesWithResponse(ctx context.Context, body PostOrganizationDiskBackupPoliciesJSONRequestBody, reqEditors ...RequestEditorFn) (*PostOrganizationDiskBackupPoliciesResponse, error)
 
 	// GetOrganizationDiskIoProfilesWithResponse request
 	GetOrganizationDiskIoProfilesWithResponse(ctx context.Context, params *GetOrganizationDiskIoProfilesParams, reqEditors ...RequestEditorFn) (*GetOrganizationDiskIoProfilesResponse, error)
@@ -27597,6 +29557,37 @@ func (r PostApiTokenRegenerateSecretResponse) StatusCode() int {
 	return 0
 }
 
+type DeleteCertificateResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Certificate Certificate `json:"certificate"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *CertificateNotFoundResponse
+	JSON406 *ObjectInTrashResponse
+	JSON409 *DeletionRestrictedResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteCertificateResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteCertificateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetCertificateResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -27621,6 +29612,196 @@ func (r GetCertificateResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetCertificateResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostCertificateIssueResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Certificate Certificate `json:"certificate"`
+		Task        Task        `json:"task"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *CertificateNotFoundResponse
+	JSON406 *ObjectInTrashTaskQueueingError406Res
+	JSON422 *OperationNotSupportedResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PostCertificateIssueResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostCertificateIssueResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostCertificateResetTokenResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Certificate Certificate `json:"certificate"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *CertificateNotFoundResponse
+	JSON406 *ObjectInTrashResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PostCertificateResetTokenResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostCertificateResetTokenResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteContainerRegistryArtifactResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// Artifact The deleted artifact
+		Artifact ContainerRegistryArtifact `json:"artifact"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *ArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteContainerRegistryArtifactResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteContainerRegistryArtifactResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetContainerRegistryArtifactResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// Artifact The container registry artifact
+		Artifact ContainerRegistryArtifact `json:"artifact"`
+
+		// Blobs The blobs for the artifact
+		Blobs []ContainerRegistryBlob `json:"blobs"`
+
+		// Tags The tags for the artifact
+		Tags []ContainerRegistryTag `json:"tags"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *ArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r GetContainerRegistryArtifactResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetContainerRegistryArtifactResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteContainerRegistryRepositoryResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// Repository The repository being deleted
+		Repository ContainerRegistryRepository `json:"repository"`
+		Task       Task                        `json:"task"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *ContainerRegistryRegionNotFoundRepositoryNotFound404Res
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteContainerRegistryRepositoryResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteContainerRegistryRepositoryResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetContainerRegistryRepositoryArtifactsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// Artifacts The container registry artifacts for the repository
+		Artifacts  []ContainerRegistryArtifact `json:"artifacts"`
+		Pagination PaginationObject            `json:"pagination"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *PermissionDenied403Res
+	JSON404 *ContainerRegistryRegionNotFoundRepositoryNotFound404Res
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r GetContainerRegistryRepositoryArtifactsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetContainerRegistryRepositoryArtifactsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -28316,7 +30497,7 @@ type PostDiskAttachResponse struct {
 		Task Task                          `json:"task"`
 	}
 	JSON400 *APIAuthenticator400Response
-	JSON403 *PermissionDenied403Res
+	JSON403 *PermissionDeniedVirtualMachineSuspended403Res
 	JSON404 *DiskNotFoundResponse
 	JSON406 *ObjectInTrashTaskQueueingError406Res
 	JSON422 *UnassignedDiskResponse
@@ -28349,7 +30530,7 @@ type PostDiskDetachResponse struct {
 		Task Task                          `json:"task"`
 	}
 	JSON400 *APIAuthenticator400Response
-	JSON403 *PermissionDenied403Res
+	JSON403 *PermissionDeniedVirtualMachineSuspended403Res
 	JSON404 *DiskNotFoundResponse
 	JSON406 *ObjectInTrashTaskQueueingError406Res
 	JSON422 *UnassignedDiskResponse
@@ -28963,34 +31144,6 @@ func (r GetGpuTypeResponse) StatusCode() int {
 	return 0
 }
 
-type PostInvalidateLinkedWebSessionResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *struct {
-		Status bool `json:"status"`
-	}
-	JSON400 *IdentityNotLinkedToWebSession400Res
-	JSON403 *APIAuthenticator403Response
-	JSON429 *APIAuthenticator429Response
-	JSON503 *APIAuthenticator503Response
-}
-
-// Status returns HTTPResponse.Status
-func (r PostInvalidateLinkedWebSessionResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r PostInvalidateLinkedWebSessionResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
 type DeleteIpAddressResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -29387,6 +31540,37 @@ func (r DeleteOrganizationResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r DeleteOrganizationResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PatchOrganizationResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Organization Organization `json:"organization"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+	JSON404 *OrganizationNotFoundResponse
+	JSON409 *ManagedOrganizationRequiredResponse
+	JSON422 *ValidationErrorResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchOrganizationResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchOrganizationResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -30042,6 +32226,70 @@ func (r GetOrganizationCertificatesResponse) StatusCode() int {
 	return 0
 }
 
+type PostOrganizationCertificatesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *struct {
+		Certificate Certificate             `json:"certificate"`
+		Task        nullable.Nullable[Task] `json:"task"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *OrganizationNotActivatedPermissionDeniedResourceCreationRestricted403Res
+	JSON404 *OrganizationNotFoundResponse
+	JSON406 *TaskQueueingErrorResponse
+	JSON422 *ValidationErrorResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PostOrganizationCertificatesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostOrganizationCertificatesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetOrganizationContainerRegistryRepositoriesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Pagination PaginationObject `json:"pagination"`
+
+		// Repositories The container registry repositories for the organization
+		Repositories []ContainerRegistryRepository `json:"repositories"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+	JSON404 *ContainerRegistryRegionNotFoundOrganizationNotFound404Res
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r GetOrganizationContainerRegistryRepositoriesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetOrganizationContainerRegistryRepositoriesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetOrganizationDeletionStepsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -30096,6 +32344,37 @@ func (r GetOrganizationDiskBackupPoliciesResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetOrganizationDiskBackupPoliciesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostOrganizationDiskBackupPoliciesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// DiskBackupPolicy The new disk backup policy that has been created
+		DiskBackupPolicy PostOrganizationDiskBackupPolicies200ResponseDiskBackupPolicy `json:"disk_backup_policy"`
+	}
+	JSON400 *APIAuthenticator400Response
+	JSON403 *OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+	JSON404 *OrganizationNotFoundResponse
+	JSON422 *ValidationErrorResponse
+	JSON429 *APIAuthenticator429Response
+	JSON503 *APIAuthenticator503Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PostOrganizationDiskBackupPoliciesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostOrganizationDiskBackupPoliciesResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -30207,7 +32486,7 @@ type PostOrganizationDisksResponse struct {
 		Task Task                                 `json:"task"`
 	}
 	JSON400 *APIAuthenticator400Response
-	JSON403 *OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+	JSON403 *OrganizationNotActivatedPermissionDeniedResourceCreationRestricted403Res
 	JSON404 *OrganizationNotFoundResponse
 	JSON406 *TaskQueueingErrorResponse
 	JSON422 *ValidationErrorResponse
@@ -30425,7 +32704,7 @@ type PostOrganizationIpAddressesResponse struct {
 		IpAddress IPAddress `json:"ip_address"`
 	}
 	JSON400 *APIAuthenticator400Response
-	JSON403 *OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+	JSON403 *OrganizationNotActivatedPermissionDeniedResourceCreationRestricted403Res
 	JSON404 *NetworkNotFoundOrganizationNotFound404Res
 	JSON422 *ValidationErrorResponse
 	JSON429 *APIAuthenticator429Response
@@ -30550,7 +32829,7 @@ type PostOrganizationManagedResponse struct {
 		Organization Organization `json:"organization"`
 	}
 	JSON400 *APIAuthenticator400Response
-	JSON403 *OrganizationNotActivatedOrganizationSuspended403Res
+	JSON403 *OrganizationNotActivatedPermissionDeniedResourceCreationRestricted403Res
 	JSON404 *OrganizationNotFoundResponse
 	JSON422 *OrganizationLimitReachedValidationError422Res
 	JSON429 *APIAuthenticator429Response
@@ -30705,7 +32984,7 @@ type PostOrganizationObjectStorageObjectStorageClusterResponse struct {
 		ObjectStorageAccount ObjectStorageAccount `json:"object_storage_account"`
 	}
 	JSON400 *APIAuthenticator400Response
-	JSON403 *OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+	JSON403 *OrganizationNotActivatedPermissionDeniedResourceCreationRestricted403Res
 	JSON404 *ObjectStorageClusterNotFoundOrganizationNotFound404Res
 	JSON406 *ObjectInTrashTaskQueueingError406Res
 	JSON422 *ValidationErrorResponse
@@ -32041,7 +34320,7 @@ type DeleteVirtualMachineNetworkInterfaceResponse struct {
 		VirtualMachineNetworkInterface DeleteVirtualMachineNetworkInterface200ResponseVirtualMachineNetworkInterface `json:"virtual_machine_network_interface"`
 	}
 	JSON400 *APIAuthenticator400Response
-	JSON403 *APIAuthenticator403Response
+	JSON403 *VirtualMachineSuspended403Res
 	JSON404 *VirtualMachineNetworkInterfaceNotFoundResponse
 	JSON409 *DeletionRestrictedResponse
 	JSON422 *ValidationErrorResponse
@@ -32103,7 +34382,7 @@ type PostVirtualMachineNetworkInterfaceAllocateIpResponse struct {
 		VirtualMachineNetworkInterface PostVirtualMachineNetworkInterfaceAllocateIP200ResponseVirtualMachineNetworkInterface `json:"virtual_machine_network_interface"`
 	}
 	JSON400 *APIAuthenticator400Response
-	JSON403 *APIAuthenticator403Response
+	JSON403 *VirtualMachineSuspended403Res
 	JSON404 *IPAddressNotFoundVirtualMachineNetworkInterfaceNotFound404Res
 	JSON422 *IPAlreadyAllocatedInvalidIP422Res
 	JSON429 *APIAuthenticator429Response
@@ -32134,7 +34413,7 @@ type PostVirtualMachineNetworkInterfaceAllocateNewIpResponse struct {
 		IpAddress IPAddress `json:"ip_address"`
 	}
 	JSON400 *APIAuthenticator400Response
-	JSON403 *PermissionDenied403Res
+	JSON403 *PermissionDeniedVirtualMachineSuspended403Res
 	JSON404 *VirtualMachineNetworkInterfaceNotFoundResponse
 	JSON429 *APIAuthenticator429Response
 	JSON503 *NoAvailableAddresses503Res
@@ -32166,7 +34445,7 @@ type PostVirtualMachineNetworkInterfaceAttachResponse struct {
 		VirtualMachineNetworkInterface PostVirtualMachineNetworkInterfaceAttach200ResponseVirtualMachineNetworkInterface `json:"virtual_machine_network_interface"`
 	}
 	JSON400 *APIAuthenticator400Response
-	JSON403 *PermissionDenied403Res
+	JSON403 *PermissionDeniedVirtualMachineSuspended403Res
 	JSON404 *VirtualMachineNetworkInterfaceNotFoundResponse
 	JSON406 *TaskQueueingErrorResponse
 	JSON422 *VirtualMachineNetworkInterfaceAlreadyAttachedResponse
@@ -32230,7 +34509,7 @@ type PostVirtualMachineNetworkInterfaceDetachResponse struct {
 		VirtualMachineNetworkInterface PostVirtualMachineNetworkInterfaceDetach200ResponseVirtualMachineNetworkInterface `json:"virtual_machine_network_interface"`
 	}
 	JSON400 *APIAuthenticator400Response
-	JSON403 *PermissionDenied403Res
+	JSON403 *PermissionDeniedVirtualMachineSuspended403Res
 	JSON404 *VirtualMachineNetworkInterfaceNotFoundResponse
 	JSON406 *TaskQueueingErrorResponse
 	JSON422 *VirtualMachineNetworkInterfaceAlreadyDetachedResponse
@@ -32262,7 +34541,7 @@ type PatchVirtualMachineNetworkInterfaceUpdateSpeedProfileResponse struct {
 		Task Task `json:"task"`
 	}
 	JSON400 *APIAuthenticator400Response
-	JSON403 *APIAuthenticator403Response
+	JSON403 *VirtualMachineSuspended403Res
 	JSON404 *NetworkSpeedProfileNotFoundVirtualMachineNetworkInterfaceNotFound404Res
 	JSON406 *TaskQueueingErrorResponse
 	JSON422 *SpeedProfileAlreadyAssignedResponse
@@ -32383,7 +34662,7 @@ type DeleteVirtualMachineResponse struct {
 		VirtualMachine DeleteVirtualMachine200ResponseVirtualMachine `json:"virtual_machine"`
 	}
 	JSON400 *APIAuthenticator400Response
-	JSON403 *PermissionDenied403Res
+	JSON403 *PermissionDeniedVirtualMachineSuspended403Res
 	JSON404 *VirtualMachineNotFoundResponse
 	JSON406 *ObjectInTrashResponse
 	JSON429 *APIAuthenticator429Response
@@ -32447,7 +34726,7 @@ type PatchVirtualMachineResponse struct {
 		VirtualMachine PatchVirtualMachine200ResponseVirtualMachine `json:"virtual_machine"`
 	}
 	JSON400 *APIAuthenticator400Response
-	JSON403 *APIAuthenticator403Response
+	JSON403 *VirtualMachineSuspended403Res
 	JSON404 *VirtualMachineNotFoundResponse
 	JSON406 *ObjectInTrashResponse
 	JSON429 *APIAuthenticator429Response
@@ -32478,7 +34757,7 @@ type PostVirtualMachineAllocateIpResponse struct {
 		IpAddress IPAddress `json:"ip_address"`
 	}
 	JSON400 *APIAuthenticator400Response
-	JSON403 *APIAuthenticator403Response
+	JSON403 *VirtualMachineSuspended403Res
 	JSON404 *IPAddressNotFoundVirtualMachineNotFound404Res
 	JSON406 *ObjectInTrashResponse
 	JSON422 *IPAlreadyAllocatedNoInterfaceAvailable422Res
@@ -32509,7 +34788,7 @@ type PostVirtualMachineConsoleSessionsResponse struct {
 		ConsoleSession PostVirtualMachineConsoleSessions201ResponseConsoleSession `json:"console_session"`
 	}
 	JSON400 *APIAuthenticator400Response
-	JSON403 *PermissionDenied403Res
+	JSON403 *PermissionDeniedVirtualMachineSuspended403Res
 	JSON404 *VirtualMachineNotFoundResponse
 	JSON406 *ObjectInTrashVirtualMachineMustBeStarted406Res
 	JSON422 *ValidationErrorResponse
@@ -32636,7 +34915,7 @@ type PutVirtualMachineFlexibleResourcesResponse struct {
 		Task Task `json:"task"`
 	}
 	JSON400 *APIAuthenticator400Response
-	JSON403 *FlexibleResourcesUnavailableToOrganizationPermissionDenied403Res
+	JSON403 *FlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res
 	JSON404 *VirtualMachineNotFoundResponse
 	JSON406 *ObjectInTrashTaskQueueingError406Res
 	JSON429 *APIAuthenticator429Response
@@ -32700,7 +34979,7 @@ type PostVirtualMachineNetworkInterfacesResponse struct {
 		VirtualMachineNetworkInterface PostVirtualMachineNetworkInterfaces200ResponseVirtualMachineNetworkInterface `json:"virtual_machine_network_interface"`
 	}
 	JSON400 *APIAuthenticator400Response
-	JSON403 *APIAuthenticator403Response
+	JSON403 *VirtualMachineSuspended403Res
 	JSON404 *NetworkNotFoundVirtualMachineNotFoundVirtualNetworkNotFound404Res
 	JSON406 *ObjectInTrashResponse
 	JSON422 *ValidationErrorResponse
@@ -32762,7 +35041,7 @@ type PutVirtualMachinePackageResponse struct {
 		Task Task `json:"task"`
 	}
 	JSON400 *APIAuthenticator400Response
-	JSON403 *PermissionDenied403Res
+	JSON403 *PermissionDeniedVirtualMachineSuspended403Res
 	JSON404 *VirtualMachineNotFoundVirtualMachinePackageNotFound404Res
 	JSON406 *ObjectInTrashTaskQueueingError406Res
 	JSON429 *APIAuthenticator429Response
@@ -32792,7 +35071,7 @@ type PostVirtualMachineResetResponse struct {
 		Task PostVirtualMachineReset200ResponseTask `json:"task"`
 	}
 	JSON400 *APIAuthenticator400Response
-	JSON403 *PermissionDenied403Res
+	JSON403 *PermissionDeniedVirtualMachineSuspended403Res
 	JSON404 *VirtualMachineNotFoundResponse
 	JSON406 *ObjectInTrashTaskQueueingError406Res
 	JSON429 *APIAuthenticator429Response
@@ -32822,7 +35101,7 @@ type PostVirtualMachineShutdownResponse struct {
 		Task PostVirtualMachineShutdown200ResponseTask `json:"task"`
 	}
 	JSON400 *APIAuthenticator400Response
-	JSON403 *PermissionDenied403Res
+	JSON403 *PermissionDeniedVirtualMachineSuspended403Res
 	JSON404 *VirtualMachineNotFoundResponse
 	JSON406 *ObjectInTrashTaskQueueingError406Res
 	JSON429 *APIAuthenticator429Response
@@ -32852,7 +35131,7 @@ type PostVirtualMachineStartResponse struct {
 		Task PostVirtualMachineStart200ResponseTask `json:"task"`
 	}
 	JSON400 *APIAuthenticator400Response
-	JSON403 *PermissionDenied403Res
+	JSON403 *PermissionDeniedVirtualMachineSuspended403Res
 	JSON404 *VirtualMachineNotFoundResponse
 	JSON406 *ObjectInTrashTaskQueueingError406Res
 	JSON429 *APIAuthenticator429Response
@@ -32882,7 +35161,7 @@ type PostVirtualMachineStopResponse struct {
 		Task PostVirtualMachineStop200ResponseTask `json:"task"`
 	}
 	JSON400 *APIAuthenticator400Response
-	JSON403 *PermissionDenied403Res
+	JSON403 *PermissionDeniedVirtualMachineSuspended403Res
 	JSON404 *VirtualMachineNotFoundResponse
 	JSON406 *ObjectInTrashTaskQueueingError406Res
 	JSON429 *APIAuthenticator429Response
@@ -33553,6 +35832,51 @@ func (c *ClientWithResponses) PostApiTokenRegenerateSecretWithResponse(ctx conte
 	return res, nil
 }
 
+// DeleteCertificateWithBodyWithResponse request with arbitrary body returning *DeleteCertificateResponse
+func (c *ClientWithResponses) DeleteCertificateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteCertificateResponse, error) {
+	rsp, err := c.DeleteCertificateWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseDeleteCertificateResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) DeleteCertificateWithResponse(ctx context.Context, body DeleteCertificateJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteCertificateResponse, error) {
+	rsp, err := c.DeleteCertificate(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseDeleteCertificateResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
 // GetCertificateWithResponse request returning *GetCertificateResponse
 func (c *ClientWithResponses) GetCertificateWithResponse(ctx context.Context, params *GetCertificateParams, reqEditors ...RequestEditorFn) (*GetCertificateResponse, error) {
 	rsp, err := c.GetCertificate(ctx, params, reqEditors...)
@@ -33561,6 +35885,232 @@ func (c *ClientWithResponses) GetCertificateWithResponse(ctx context.Context, pa
 	}
 
 	res, err := ParseGetCertificateResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PostCertificateIssueWithBodyWithResponse request with arbitrary body returning *PostCertificateIssueResponse
+func (c *ClientWithResponses) PostCertificateIssueWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostCertificateIssueResponse, error) {
+	rsp, err := c.PostCertificateIssueWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostCertificateIssueResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PostCertificateIssueWithResponse(ctx context.Context, body PostCertificateIssueJSONRequestBody, reqEditors ...RequestEditorFn) (*PostCertificateIssueResponse, error) {
+	rsp, err := c.PostCertificateIssue(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostCertificateIssueResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PostCertificateResetTokenWithBodyWithResponse request with arbitrary body returning *PostCertificateResetTokenResponse
+func (c *ClientWithResponses) PostCertificateResetTokenWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostCertificateResetTokenResponse, error) {
+	rsp, err := c.PostCertificateResetTokenWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostCertificateResetTokenResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PostCertificateResetTokenWithResponse(ctx context.Context, body PostCertificateResetTokenJSONRequestBody, reqEditors ...RequestEditorFn) (*PostCertificateResetTokenResponse, error) {
+	rsp, err := c.PostCertificateResetToken(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostCertificateResetTokenResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// DeleteContainerRegistryArtifactWithBodyWithResponse request with arbitrary body returning *DeleteContainerRegistryArtifactResponse
+func (c *ClientWithResponses) DeleteContainerRegistryArtifactWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteContainerRegistryArtifactResponse, error) {
+	rsp, err := c.DeleteContainerRegistryArtifactWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseDeleteContainerRegistryArtifactResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) DeleteContainerRegistryArtifactWithResponse(ctx context.Context, body DeleteContainerRegistryArtifactJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteContainerRegistryArtifactResponse, error) {
+	rsp, err := c.DeleteContainerRegistryArtifact(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseDeleteContainerRegistryArtifactResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// GetContainerRegistryArtifactWithResponse request returning *GetContainerRegistryArtifactResponse
+func (c *ClientWithResponses) GetContainerRegistryArtifactWithResponse(ctx context.Context, params *GetContainerRegistryArtifactParams, reqEditors ...RequestEditorFn) (*GetContainerRegistryArtifactResponse, error) {
+	rsp, err := c.GetContainerRegistryArtifact(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseGetContainerRegistryArtifactResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// DeleteContainerRegistryRepositoryWithBodyWithResponse request with arbitrary body returning *DeleteContainerRegistryRepositoryResponse
+func (c *ClientWithResponses) DeleteContainerRegistryRepositoryWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteContainerRegistryRepositoryResponse, error) {
+	rsp, err := c.DeleteContainerRegistryRepositoryWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseDeleteContainerRegistryRepositoryResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) DeleteContainerRegistryRepositoryWithResponse(ctx context.Context, body DeleteContainerRegistryRepositoryJSONRequestBody, reqEditors ...RequestEditorFn) (*DeleteContainerRegistryRepositoryResponse, error) {
+	rsp, err := c.DeleteContainerRegistryRepository(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseDeleteContainerRegistryRepositoryResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// GetContainerRegistryRepositoryArtifactsWithResponse request returning *GetContainerRegistryRepositoryArtifactsResponse
+func (c *ClientWithResponses) GetContainerRegistryRepositoryArtifactsWithResponse(ctx context.Context, params *GetContainerRegistryRepositoryArtifactsParams, reqEditors ...RequestEditorFn) (*GetContainerRegistryRepositoryArtifactsResponse, error) {
+	rsp, err := c.GetContainerRegistryRepositoryArtifacts(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseGetContainerRegistryRepositoryArtifactsResponse(rsp)
 	if err != nil {
 		return nil, err
 	}
@@ -35005,51 +37555,6 @@ func (c *ClientWithResponses) GetGpuTypeWithResponse(ctx context.Context, params
 	return res, nil
 }
 
-// PostInvalidateLinkedWebSessionWithBodyWithResponse request with arbitrary body returning *PostInvalidateLinkedWebSessionResponse
-func (c *ClientWithResponses) PostInvalidateLinkedWebSessionWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostInvalidateLinkedWebSessionResponse, error) {
-	rsp, err := c.PostInvalidateLinkedWebSessionWithBody(ctx, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-
-	res, err := ParsePostInvalidateLinkedWebSessionResponse(rsp)
-	if err != nil {
-		return nil, err
-	}
-
-	if rsp.StatusCode == http.StatusNotFound {
-		return res, ErrNotFound
-	}
-
-	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
-		return res, ErrRequestFailed
-	}
-
-	return res, nil
-}
-
-func (c *ClientWithResponses) PostInvalidateLinkedWebSessionWithResponse(ctx context.Context, body PostInvalidateLinkedWebSessionJSONRequestBody, reqEditors ...RequestEditorFn) (*PostInvalidateLinkedWebSessionResponse, error) {
-	rsp, err := c.PostInvalidateLinkedWebSession(ctx, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-
-	res, err := ParsePostInvalidateLinkedWebSessionResponse(rsp)
-	if err != nil {
-		return nil, err
-	}
-
-	if rsp.StatusCode == http.StatusNotFound {
-		return res, ErrNotFound
-	}
-
-	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
-		return res, ErrRequestFailed
-	}
-
-	return res, nil
-}
-
 // DeleteIpAddressWithBodyWithResponse request with arbitrary body returning *DeleteIpAddressResponse
 func (c *ClientWithResponses) DeleteIpAddressWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DeleteIpAddressResponse, error) {
 	rsp, err := c.DeleteIpAddressWithBody(ctx, contentType, body, reqEditors...)
@@ -35532,6 +38037,51 @@ func (c *ClientWithResponses) DeleteOrganizationWithResponse(ctx context.Context
 	}
 
 	res, err := ParseDeleteOrganizationResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PatchOrganizationWithBodyWithResponse request with arbitrary body returning *PatchOrganizationResponse
+func (c *ClientWithResponses) PatchOrganizationWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchOrganizationResponse, error) {
+	rsp, err := c.PatchOrganizationWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePatchOrganizationResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PatchOrganizationWithResponse(ctx context.Context, body PatchOrganizationJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchOrganizationResponse, error) {
+	rsp, err := c.PatchOrganization(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePatchOrganizationResponse(rsp)
 	if err != nil {
 		return nil, err
 	}
@@ -36228,6 +38778,74 @@ func (c *ClientWithResponses) GetOrganizationCertificatesWithResponse(ctx contex
 	return res, nil
 }
 
+// PostOrganizationCertificatesWithBodyWithResponse request with arbitrary body returning *PostOrganizationCertificatesResponse
+func (c *ClientWithResponses) PostOrganizationCertificatesWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostOrganizationCertificatesResponse, error) {
+	rsp, err := c.PostOrganizationCertificatesWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostOrganizationCertificatesResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PostOrganizationCertificatesWithResponse(ctx context.Context, body PostOrganizationCertificatesJSONRequestBody, reqEditors ...RequestEditorFn) (*PostOrganizationCertificatesResponse, error) {
+	rsp, err := c.PostOrganizationCertificates(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostOrganizationCertificatesResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// GetOrganizationContainerRegistryRepositoriesWithResponse request returning *GetOrganizationContainerRegistryRepositoriesResponse
+func (c *ClientWithResponses) GetOrganizationContainerRegistryRepositoriesWithResponse(ctx context.Context, params *GetOrganizationContainerRegistryRepositoriesParams, reqEditors ...RequestEditorFn) (*GetOrganizationContainerRegistryRepositoriesResponse, error) {
+	rsp, err := c.GetOrganizationContainerRegistryRepositories(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParseGetOrganizationContainerRegistryRepositoriesResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
 // GetOrganizationDeletionStepsWithResponse request returning *GetOrganizationDeletionStepsResponse
 func (c *ClientWithResponses) GetOrganizationDeletionStepsWithResponse(ctx context.Context, params *GetOrganizationDeletionStepsParams, reqEditors ...RequestEditorFn) (*GetOrganizationDeletionStepsResponse, error) {
 	rsp, err := c.GetOrganizationDeletionSteps(ctx, params, reqEditors...)
@@ -36259,6 +38877,51 @@ func (c *ClientWithResponses) GetOrganizationDiskBackupPoliciesWithResponse(ctx 
 	}
 
 	res, err := ParseGetOrganizationDiskBackupPoliciesResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+// PostOrganizationDiskBackupPoliciesWithBodyWithResponse request with arbitrary body returning *PostOrganizationDiskBackupPoliciesResponse
+func (c *ClientWithResponses) PostOrganizationDiskBackupPoliciesWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostOrganizationDiskBackupPoliciesResponse, error) {
+	rsp, err := c.PostOrganizationDiskBackupPoliciesWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostOrganizationDiskBackupPoliciesResponse(rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	if rsp.StatusCode == http.StatusNotFound {
+		return res, ErrNotFound
+	}
+
+	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
+		return res, ErrRequestFailed
+	}
+
+	return res, nil
+}
+
+func (c *ClientWithResponses) PostOrganizationDiskBackupPoliciesWithResponse(ctx context.Context, body PostOrganizationDiskBackupPoliciesJSONRequestBody, reqEditors ...RequestEditorFn) (*PostOrganizationDiskBackupPoliciesResponse, error) {
+	rsp, err := c.PostOrganizationDiskBackupPolicies(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := ParsePostOrganizationDiskBackupPoliciesResponse(rsp)
 	if err != nil {
 		return nil, err
 	}
@@ -40437,6 +43100,83 @@ func ParsePostApiTokenRegenerateSecretResponse(rsp *http.Response) (*PostApiToke
 	return response, nil
 }
 
+// ParseDeleteCertificateResponse parses an HTTP response from a DeleteCertificateWithResponse call
+func ParseDeleteCertificateResponse(rsp *http.Response) (*DeleteCertificateResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteCertificateResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Certificate Certificate `json:"certificate"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest CertificateNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest ObjectInTrashResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest DeletionRestrictedResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetCertificateResponse parses an HTTP response from a GetCertificateWithResponse call
 func ParseGetCertificateResponse(rsp *http.Response) (*GetCertificateResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -40487,6 +43227,418 @@ func ParseGetCertificateResponse(rsp *http.Response) (*GetCertificateResponse, e
 			return nil, err
 		}
 		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostCertificateIssueResponse parses an HTTP response from a PostCertificateIssueWithResponse call
+func ParsePostCertificateIssueResponse(rsp *http.Response) (*PostCertificateIssueResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostCertificateIssueResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Certificate Certificate `json:"certificate"`
+			Task        Task        `json:"task"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest CertificateNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest ObjectInTrashTaskQueueingError406Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest OperationNotSupportedResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostCertificateResetTokenResponse parses an HTTP response from a PostCertificateResetTokenWithResponse call
+func ParsePostCertificateResetTokenResponse(rsp *http.Response) (*PostCertificateResetTokenResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostCertificateResetTokenResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Certificate Certificate `json:"certificate"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest CertificateNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest ObjectInTrashResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteContainerRegistryArtifactResponse parses an HTTP response from a DeleteContainerRegistryArtifactWithResponse call
+func ParseDeleteContainerRegistryArtifactResponse(rsp *http.Response) (*DeleteContainerRegistryArtifactResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteContainerRegistryArtifactResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// Artifact The deleted artifact
+			Artifact ContainerRegistryArtifact `json:"artifact"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetContainerRegistryArtifactResponse parses an HTTP response from a GetContainerRegistryArtifactWithResponse call
+func ParseGetContainerRegistryArtifactResponse(rsp *http.Response) (*GetContainerRegistryArtifactResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetContainerRegistryArtifactResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// Artifact The container registry artifact
+			Artifact ContainerRegistryArtifact `json:"artifact"`
+
+			// Blobs The blobs for the artifact
+			Blobs []ContainerRegistryBlob `json:"blobs"`
+
+			// Tags The tags for the artifact
+			Tags []ContainerRegistryTag `json:"tags"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ArtifactNotFoundContainerRegistryRegionNotFoundRepositoryNotFound404Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteContainerRegistryRepositoryResponse parses an HTTP response from a DeleteContainerRegistryRepositoryWithResponse call
+func ParseDeleteContainerRegistryRepositoryResponse(rsp *http.Response) (*DeleteContainerRegistryRepositoryResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteContainerRegistryRepositoryResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// Repository The repository being deleted
+			Repository ContainerRegistryRepository `json:"repository"`
+			Task       Task                        `json:"task"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ContainerRegistryRegionNotFoundRepositoryNotFound404Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetContainerRegistryRepositoryArtifactsResponse parses an HTTP response from a GetContainerRegistryRepositoryArtifactsWithResponse call
+func ParseGetContainerRegistryRepositoryArtifactsResponse(rsp *http.Response) (*GetContainerRegistryRepositoryArtifactsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetContainerRegistryRepositoryArtifactsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// Artifacts The container registry artifacts for the repository
+			Artifacts  []ContainerRegistryArtifact `json:"artifacts"`
+			Pagination PaginationObject            `json:"pagination"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest PermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ContainerRegistryRegionNotFoundRepositoryNotFound404Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest APIAuthenticator429Response
@@ -42022,7 +45174,7 @@ func ParsePostDiskAttachResponse(rsp *http.Response) (*PostDiskAttachResponse, e
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest PermissionDenied403Res
+		var dest PermissionDeniedVirtualMachineSuspended403Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -42101,7 +45253,7 @@ func ParsePostDiskDetachResponse(rsp *http.Response) (*PostDiskDetachResponse, e
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest PermissionDenied403Res
+		var dest PermissionDeniedVirtualMachineSuspended403Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -43479,62 +46631,6 @@ func ParseGetGpuTypeResponse(rsp *http.Response) (*GetGpuTypeResponse, error) {
 	return response, nil
 }
 
-// ParsePostInvalidateLinkedWebSessionResponse parses an HTTP response from a PostInvalidateLinkedWebSessionWithResponse call
-func ParsePostInvalidateLinkedWebSessionResponse(rsp *http.Response) (*PostInvalidateLinkedWebSessionResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &PostInvalidateLinkedWebSessionResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest struct {
-			Status bool `json:"status"`
-		}
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest IdentityNotLinkedToWebSession400Res
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON400 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest APIAuthenticator403Response
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON403 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
-		var dest APIAuthenticator429Response
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON429 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
-		var dest APIAuthenticator503Response
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON503 = &dest
-
-	}
-
-	return response, nil
-}
-
 // ParseDeleteIpAddressResponse parses an HTTP response from a DeleteIpAddressWithResponse call
 func ParseDeleteIpAddressResponse(rsp *http.Response) (*DeleteIpAddressResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -44432,6 +47528,83 @@ func ParseDeleteOrganizationResponse(rsp *http.Response) (*DeleteOrganizationRes
 			return nil, err
 		}
 		response.JSON500 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePatchOrganizationResponse parses an HTTP response from a PatchOrganizationWithResponse call
+func ParsePatchOrganizationResponse(rsp *http.Response) (*PatchOrganizationResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchOrganizationResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Organization Organization `json:"organization"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest OrganizationNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ManagedOrganizationRequiredResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
 		var dest APIAuthenticator503Response
@@ -45946,6 +49119,150 @@ func ParseGetOrganizationCertificatesResponse(rsp *http.Response) (*GetOrganizat
 	return response, nil
 }
 
+// ParsePostOrganizationCertificatesResponse parses an HTTP response from a PostOrganizationCertificatesWithResponse call
+func ParsePostOrganizationCertificatesResponse(rsp *http.Response) (*PostOrganizationCertificatesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostOrganizationCertificatesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest struct {
+			Certificate Certificate             `json:"certificate"`
+			Task        nullable.Nullable[Task] `json:"task"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest OrganizationNotActivatedPermissionDeniedResourceCreationRestricted403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest OrganizationNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 406:
+		var dest TaskQueueingErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON406 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetOrganizationContainerRegistryRepositoriesResponse parses an HTTP response from a GetOrganizationContainerRegistryRepositoriesWithResponse call
+func ParseGetOrganizationContainerRegistryRepositoriesResponse(rsp *http.Response) (*GetOrganizationContainerRegistryRepositoriesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetOrganizationContainerRegistryRepositoriesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Pagination PaginationObject `json:"pagination"`
+
+			// Repositories The container registry repositories for the organization
+			Repositories []ContainerRegistryRepository `json:"repositories"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ContainerRegistryRegionNotFoundOrganizationNotFound404Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetOrganizationDeletionStepsResponse parses an HTTP response from a GetOrganizationDeletionStepsWithResponse call
 func ParseGetOrganizationDeletionStepsResponse(rsp *http.Response) (*GetOrganizationDeletionStepsResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -46054,6 +49371,77 @@ func ParseGetOrganizationDiskBackupPoliciesResponse(rsp *http.Response) (*GetOrg
 			return nil, err
 		}
 		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest APIAuthenticator429Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest APIAuthenticator503Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostOrganizationDiskBackupPoliciesResponse parses an HTTP response from a PostOrganizationDiskBackupPoliciesWithResponse call
+func ParsePostOrganizationDiskBackupPoliciesResponse(rsp *http.Response) (*PostOrganizationDiskBackupPoliciesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostOrganizationDiskBackupPoliciesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			// DiskBackupPolicy The new disk backup policy that has been created
+			DiskBackupPolicy PostOrganizationDiskBackupPolicies200ResponseDiskBackupPolicy `json:"disk_backup_policy"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest APIAuthenticator400Response
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest OrganizationNotFoundResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON422 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest APIAuthenticator429Response
@@ -46305,7 +49693,7 @@ func ParsePostOrganizationDisksResponse(rsp *http.Response) (*PostOrganizationDi
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+		var dest OrganizationNotActivatedPermissionDeniedResourceCreationRestricted403Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -46785,7 +50173,7 @@ func ParsePostOrganizationIpAddressesResponse(rsp *http.Response) (*PostOrganiza
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+		var dest OrganizationNotActivatedPermissionDeniedResourceCreationRestricted403Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -47058,7 +50446,7 @@ func ParsePostOrganizationManagedResponse(rsp *http.Response) (*PostOrganization
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest OrganizationNotActivatedOrganizationSuspended403Res
+		var dest OrganizationNotActivatedPermissionDeniedResourceCreationRestricted403Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -47407,7 +50795,7 @@ func ParsePostOrganizationObjectStorageObjectStorageClusterResponse(rsp *http.Re
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest OrganizationNotActivatedOrganizationSuspendedPermissionDenied403Res
+		var dest OrganizationNotActivatedPermissionDeniedResourceCreationRestricted403Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -50355,7 +53743,7 @@ func ParseDeleteVirtualMachineNetworkInterfaceResponse(rsp *http.Response) (*Del
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest APIAuthenticator403Response
+		var dest VirtualMachineSuspended403Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -50497,7 +53885,7 @@ func ParsePostVirtualMachineNetworkInterfaceAllocateIpResponse(rsp *http.Respons
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest APIAuthenticator403Response
+		var dest VirtualMachineSuspended403Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -50568,7 +53956,7 @@ func ParsePostVirtualMachineNetworkInterfaceAllocateNewIpResponse(rsp *http.Resp
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest PermissionDenied403Res
+		var dest PermissionDeniedVirtualMachineSuspended403Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -50634,7 +54022,7 @@ func ParsePostVirtualMachineNetworkInterfaceAttachResponse(rsp *http.Response) (
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest PermissionDenied403Res
+		var dest PermissionDeniedVirtualMachineSuspended403Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -50778,7 +54166,7 @@ func ParsePostVirtualMachineNetworkInterfaceDetachResponse(rsp *http.Response) (
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest PermissionDenied403Res
+		var dest PermissionDeniedVirtualMachineSuspended403Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -50856,7 +54244,7 @@ func ParsePatchVirtualMachineNetworkInterfaceUpdateSpeedProfileResponse(rsp *htt
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest APIAuthenticator403Response
+		var dest VirtualMachineSuspended403Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -51125,7 +54513,7 @@ func ParseDeleteVirtualMachineResponse(rsp *http.Response) (*DeleteVirtualMachin
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest PermissionDenied403Res
+		var dest PermissionDeniedVirtualMachineSuspended403Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -51269,7 +54657,7 @@ func ParsePatchVirtualMachineResponse(rsp *http.Response) (*PatchVirtualMachineR
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest APIAuthenticator403Response
+		var dest VirtualMachineSuspended403Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -51340,7 +54728,7 @@ func ParsePostVirtualMachineAllocateIpResponse(rsp *http.Response) (*PostVirtual
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest APIAuthenticator403Response
+		var dest VirtualMachineSuspended403Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -51417,7 +54805,7 @@ func ParsePostVirtualMachineConsoleSessionsResponse(rsp *http.Response) (*PostVi
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest PermissionDenied403Res
+		var dest PermissionDeniedVirtualMachineSuspended403Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -51716,7 +55104,7 @@ func ParsePutVirtualMachineFlexibleResourcesResponse(rsp *http.Response) (*PutVi
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest FlexibleResourcesUnavailableToOrganizationPermissionDenied403Res
+		var dest FlexibleResourcesUnavailableToOrganizationPermissionDeniedVirtualMachineSuspended403Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -51860,7 +55248,7 @@ func ParsePostVirtualMachineNetworkInterfacesResponse(rsp *http.Response) (*Post
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest APIAuthenticator403Response
+		var dest VirtualMachineSuspended403Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -52008,7 +55396,7 @@ func ParsePutVirtualMachinePackageResponse(rsp *http.Response) (*PutVirtualMachi
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest PermissionDenied403Res
+		var dest PermissionDeniedVirtualMachineSuspended403Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -52078,7 +55466,7 @@ func ParsePostVirtualMachineResetResponse(rsp *http.Response) (*PostVirtualMachi
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest PermissionDenied403Res
+		var dest PermissionDeniedVirtualMachineSuspended403Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -52148,7 +55536,7 @@ func ParsePostVirtualMachineShutdownResponse(rsp *http.Response) (*PostVirtualMa
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest PermissionDenied403Res
+		var dest PermissionDeniedVirtualMachineSuspended403Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -52218,7 +55606,7 @@ func ParsePostVirtualMachineStartResponse(rsp *http.Response) (*PostVirtualMachi
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest PermissionDenied403Res
+		var dest PermissionDeniedVirtualMachineSuspended403Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -52288,7 +55676,7 @@ func ParsePostVirtualMachineStopResponse(rsp *http.Response) (*PostVirtualMachin
 		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest PermissionDenied403Res
+		var dest PermissionDeniedVirtualMachineSuspended403Res
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
