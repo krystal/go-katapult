@@ -10,5 +10,8 @@
       "disk_template": {
         "permalink": "templates/ubuntu-18-04"
       },
+      "cloud_init": {
+        "user_data": "#cloud-config\npackages:\n  - nginx\n"
+      },
       "hostname": "web-3"
     }

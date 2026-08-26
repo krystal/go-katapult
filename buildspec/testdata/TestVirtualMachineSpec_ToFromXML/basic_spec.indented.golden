@@ -6,6 +6,9 @@
       <DiskTemplate>
         <DiskTemplate by="permalink">templates/ubuntu-18-04</DiskTemplate>
       </DiskTemplate>
+      <CloudInit>
+        <UserData>#cloud-config&#xA;packages:&#xA;  - nginx&#xA;</UserData>
+      </CloudInit>
       <Hostname>
         <Hostname>web-3</Hostname>
       </Hostname>

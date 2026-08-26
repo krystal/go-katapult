@@ -1,0 +1,3 @@
+<CloudInit>
+  <UserData>#cloud-config&#xA;runcmd:&#xA;  - echo &#39;one &amp; two &lt; three&#39;&#xA;</UserData>
+</CloudInit>

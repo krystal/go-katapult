@@ -1,0 +1,5 @@
+<VirtualMachineSpec>
+  <Hostname>
+    <Hostname type="random"></Hostname>
+  </Hostname>
+</VirtualMachineSpec>

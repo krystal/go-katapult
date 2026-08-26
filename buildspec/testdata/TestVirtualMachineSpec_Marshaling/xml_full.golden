@@ -12,6 +12,9 @@
     <Option key="foo">bar</Option>
     <Option key="hello">world</Option>
   </DiskTemplate>
+  <CloudInit>
+    <UserData>#cloud-config&#xA;runcmd:&#xA;  - echo &#39;one &amp; two &lt; three&#39;&#xA;</UserData>
+  </CloudInit>
   <SystemDisks>
     <Disk>
       <Name>System Disk</Name>

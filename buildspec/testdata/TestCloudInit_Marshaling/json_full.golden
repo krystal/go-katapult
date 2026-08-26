@@ -1,0 +1,3 @@
+{
+  "user_data": "#cloud-config\nruncmd:\n  - echo 'one \u0026 two \u003c three'\n"
+}

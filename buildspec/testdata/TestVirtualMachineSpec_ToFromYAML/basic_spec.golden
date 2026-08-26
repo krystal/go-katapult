@@ -5,4 +5,9 @@ resources:
     permalink: rock-3
 disk_template:
   permalink: templates/ubuntu-18-04
+cloud_init:
+  user_data: |
+    #cloud-config
+    packages:
+      - nginx
 hostname: web-3
