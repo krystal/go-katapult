@@ -22,6 +22,9 @@ var fixtureVirtualMachineSpecBasicStruct = &VirtualMachineSpec{
 	DiskTemplate: &DiskTemplate{
 		Permalink: "templates/ubuntu-18-04",
 	},
+	CloudInit: &CloudInit{
+		UserData: "#cloud-config\npackages:\n  - nginx\n",
+	},
 }
 
 func TestVirtualMachineSpec_Marshaling(t *testing.T) {
@@ -54,6 +57,11 @@ func TestVirtualMachineSpec_Marshaling(t *testing.T) {
 						{Key: "foo", Value: "bar"},
 						{Key: "hello", Value: "world"},
 					},
+				},
+				CloudInit: &CloudInit{
+					UserData: "#cloud-config\n" +
+						"runcmd:\n" +
+						"  - echo 'one & two < three'\n",
 				},
 				SystemDisks: []*SystemDisk{
 					{
@@ -211,6 +219,45 @@ func TestVirtualMachineSpec_UnmarshalXML(t *testing.T) {
 			want: &VirtualMachineSpec{Name: "database-2"},
 		},
 		{
+			name: "cloud-init user data",
+			xml: undent.String(`
+				<VirtualMachineSpec>
+					<CloudInit>
+						<UserData>#cloud-config
+packages:
+  - nginx</UserData>
+					</CloudInit>
+				</VirtualMachineSpec>`,
+			),
+			want: &VirtualMachineSpec{
+				CloudInit: &CloudInit{
+					UserData: "#cloud-config\npackages:\n  - nginx",
+				},
+			},
+		},
+		{
+			name: "empty cloud-init user data",
+			xml: undent.String(`
+				<VirtualMachineSpec>
+					<CloudInit>
+						<UserData></UserData>
+					</CloudInit>
+				</VirtualMachineSpec>`,
+			),
+			want: &VirtualMachineSpec{},
+		},
+		{
+			name: "whitespace-only cloud-init user data",
+			xml: undent.String(`
+				<VirtualMachineSpec>
+					<CloudInit>
+						<UserData>  &#xA;&#x9;</UserData>
+					</CloudInit>
+				</VirtualMachineSpec>`,
+			),
+			want: &VirtualMachineSpec{},
+		},
+		{
 			name: "plain text entity substitution",
 			xml: undent.String(`
 				<?xml version="1.0"?>
@@ -348,7 +395,7 @@ func TestVirtualMachineSpec_UnmarshalXML(t *testing.T) {
 
 			if tt.wantErr == "" {
 				require.NoError(t, err)
-				assert.Equal(t, "database-2", v.Name)
+				assert.Equal(t, tt.want, v)
 			} else {
 				assert.EqualError(t, err, tt.wantErr)
 			}

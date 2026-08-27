@@ -15,6 +15,11 @@ disk_template:
       value: bar
     - key: hello
       value: world
+cloud_init:
+  user_data: |
+    #cloud-config
+    runcmd:
+      - echo 'one & two < three'
 system_disks:
   - name: System Disk
     size: 10

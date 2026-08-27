@@ -19,22 +19,6 @@ import (
 	"github.com/oapi-codegen/runtime"
 )
 
-// Defines values for CountryNotFoundEnum.
-const (
-	CountryNotFound CountryNotFoundEnum = "country_not_found"
-)
-
-// Defines values for CurrencyNotFoundEnum.
-const (
-	CurrencyNotFound CurrencyNotFoundEnum = "currency_not_found"
-)
-
-// Defines values for CustomerTypeEnum.
-const (
-	Business CustomerTypeEnum = "business"
-	Consumer CustomerTypeEnum = "consumer"
-)
-
 // Defines values for InternalAuthErrorEnum.
 const (
 	InternalAuthErrorEnumInternalAuthError InternalAuthErrorEnum = "internal_auth_error"
@@ -43,21 +27,6 @@ const (
 // Defines values for InvalidCouponCodeEnum.
 const (
 	InvalidCouponCodeEnumInvalidCouponCode InvalidCouponCodeEnum = "invalid_coupon_code"
-)
-
-// Defines values for InvalidEstimateQuantityEnum.
-const (
-	InvalidEstimateQuantityEnumInvalidEstimateQuantity InvalidEstimateQuantityEnum = "invalid_estimate_quantity"
-)
-
-// Defines values for InvalidEstimateResourceEnum.
-const (
-	InvalidEstimateResourceEnumInvalidEstimateResource InvalidEstimateResourceEnum = "invalid_estimate_resource"
-)
-
-// Defines values for MissingResourcesEnum.
-const (
-	MissingResources MissingResourcesEnum = "missing_resources"
 )
 
 // Defines values for PrivacyTypesEnum.
@@ -86,23 +55,6 @@ type Attachment struct {
 	Url      *string `json:"url,omitempty"`
 }
 
-// CountryLookup All 'country[]' params are mutually exclusive, only one can be provided.
-type CountryLookup struct {
-	Id       *string `json:"id,omitempty"`
-	IsoCode2 *string `json:"iso_code2,omitempty"`
-	IsoCode3 *string `json:"iso_code3,omitempty"`
-}
-
-// CountryNotFoundEnum defines model for CountryNotFoundEnum.
-type CountryNotFoundEnum string
-
-// CountryNotFoundSchema No country was found matching any of the criteria provided in the arguments
-type CountryNotFoundSchema struct {
-	Code        *CountryNotFoundEnum    `json:"code,omitempty"`
-	Description *string                 `json:"description,omitempty"`
-	Detail      *map[string]interface{} `json:"detail,omitempty"`
-}
-
 // Currency defines model for Currency.
 type Currency struct {
 	Id      *string `json:"id,omitempty"`
@@ -110,25 +62,6 @@ type Currency struct {
 	Name    *string `json:"name,omitempty"`
 	Symbol  *string `json:"symbol,omitempty"`
 }
-
-// CurrencyLookup All 'currency[]' params are mutually exclusive, only one can be provided.
-type CurrencyLookup struct {
-	Id      *string `json:"id,omitempty"`
-	IsoCode *string `json:"iso_code,omitempty"`
-}
-
-// CurrencyNotFoundEnum defines model for CurrencyNotFoundEnum.
-type CurrencyNotFoundEnum string
-
-// CurrencyNotFoundSchema No currency was found matching any of the criteria provided in the arguments
-type CurrencyNotFoundSchema struct {
-	Code        *CurrencyNotFoundEnum   `json:"code,omitempty"`
-	Description *string                 `json:"description,omitempty"`
-	Detail      *map[string]interface{} `json:"detail,omitempty"`
-}
-
-// CustomerTypeEnum defines model for CustomerTypeEnum.
-type CustomerTypeEnum string
 
 // DataCenter defines model for DataCenter.
 type DataCenter struct {
@@ -162,56 +95,6 @@ type InvalidCouponCode struct {
 // InvalidCouponCodeEnum defines model for InvalidCouponCodeEnum.
 type InvalidCouponCodeEnum string
 
-// InvalidEstimateQuantity defines model for InvalidEstimateQuantity.
-type InvalidEstimateQuantity struct {
-	Resource nullable.Nullable[string] `json:"resource,omitempty"`
-}
-
-// InvalidEstimateQuantityEnum defines model for InvalidEstimateQuantityEnum.
-type InvalidEstimateQuantityEnum string
-
-// InvalidEstimateQuantitySchema The quantity for the provided resource must be greater than zero
-type InvalidEstimateQuantitySchema struct {
-	Code        *InvalidEstimateQuantityEnum `json:"code,omitempty"`
-	Description *string                      `json:"description,omitempty"`
-	Detail      *InvalidEstimateQuantity     `json:"detail,omitempty"`
-}
-
-// InvalidEstimateResource defines model for InvalidEstimateResource.
-type InvalidEstimateResource struct {
-	Resource nullable.Nullable[string] `json:"resource,omitempty"`
-}
-
-// InvalidEstimateResourceEnum defines model for InvalidEstimateResourceEnum.
-type InvalidEstimateResourceEnum string
-
-// InvalidEstimateResourceSchema The provided resource is not valid
-type InvalidEstimateResourceSchema struct {
-	Code        *InvalidEstimateResourceEnum `json:"code,omitempty"`
-	Description *string                      `json:"description,omitempty"`
-	Detail      *InvalidEstimateResource     `json:"detail,omitempty"`
-}
-
-// MissingResourcesEnum defines model for MissingResourcesEnum.
-type MissingResourcesEnum string
-
-// MissingResourcesSchema You must provide at least one resource in the resources array
-type MissingResourcesSchema struct {
-	Code        *MissingResourcesEnum   `json:"code,omitempty"`
-	Description *string                 `json:"description,omitempty"`
-	Detail      *map[string]interface{} `json:"detail,omitempty"`
-}
-
-// OneOfCountryNotFoundCurrencyNotFound404Res defines model for OneOfCountryNotFoundCurrencyNotFound404Res.
-type OneOfCountryNotFoundCurrencyNotFound404Res struct {
-	union json.RawMessage
-}
-
-// OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res defines model for OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res.
-type OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res struct {
-	union json.RawMessage
-}
-
 // PaginationObject defines model for PaginationObject.
 type PaginationObject struct {
 	// CurrentPage The current page
@@ -243,38 +126,6 @@ type PriceVariant struct {
 	Description nullable.Nullable[string] `json:"description,omitempty"`
 	Id          nullable.Nullable[string] `json:"id,omitempty"`
 	Prices      *[]Price                  `json:"prices,omitempty"`
-}
-
-// PricingEstimate defines model for PricingEstimate.
-type PricingEstimate struct {
-	Currency       *Currency                  `json:"currency,omitempty"`
-	PdfUrl         *string                    `json:"pdf_url,omitempty"`
-	PerHour        *float32                   `json:"per_hour,omitempty"`
-	PerHourIncTax  *float32                   `json:"per_hour_inc_tax,omitempty"`
-	PerMonth       *float32                   `json:"per_month,omitempty"`
-	PerMonthIncTax *float32                   `json:"per_month_inc_tax,omitempty"`
-	Resources      *[]PricingEstimateResource `json:"resources,omitempty"`
-	TaxRate        *float32                   `json:"tax_rate,omitempty"`
-}
-
-// PricingEstimateResource defines model for PricingEstimateResource.
-type PricingEstimateResource struct {
-	Description    *string                                  `json:"description,omitempty"`
-	Package        nullable.Nullable[VirtualMachinePackage] `json:"package,omitempty"`
-	PerHour        *float32                                 `json:"per_hour,omitempty"`
-	PerHourEach    *float32                                 `json:"per_hour_each,omitempty"`
-	PerHourIncTax  *float32                                 `json:"per_hour_inc_tax,omitempty"`
-	PerMonth       *float32                                 `json:"per_month,omitempty"`
-	PerMonthEach   *float32                                 `json:"per_month_each,omitempty"`
-	PerMonthIncTax *float32                                 `json:"per_month_inc_tax,omitempty"`
-	Quantity       *int                                     `json:"quantity,omitempty"`
-	Resource       *string                                  `json:"resource,omitempty"`
-}
-
-// PricingEstimateResourceArguments defines model for PricingEstimateResourceArguments.
-type PricingEstimateResourceArguments struct {
-	Quantity *int    `json:"quantity,omitempty"`
-	Resource *string `json:"resource,omitempty"`
 }
 
 // PrivacyTypesEnum defines model for PrivacyTypesEnum.
@@ -343,9 +194,6 @@ type APIAuthenticator429Response struct {
 	Detail      *RateLimitReached     `json:"detail,omitempty"`
 }
 
-// CountryNotFoundCurrencyNotFound404Res defines model for CountryNotFoundCurrencyNotFound404Res.
-type CountryNotFoundCurrencyNotFound404Res = OneOfCountryNotFoundCurrencyNotFound404Res
-
 // InvalidCouponCodeResponse defines model for InvalidCouponCodeResponse.
 type InvalidCouponCodeResponse struct {
 	Code        *InvalidCouponCodeEnum `json:"code,omitempty"`
@@ -353,28 +201,11 @@ type InvalidCouponCodeResponse struct {
 	Detail      *InvalidCouponCode     `json:"detail,omitempty"`
 }
 
-// InvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res defines model for InvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res.
-type InvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res = OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res
-
 // ValidationErrorResponse defines model for ValidationErrorResponse.
 type ValidationErrorResponse struct {
 	Code        *ValidationErrorEnum `json:"code,omitempty"`
 	Description *string              `json:"description,omitempty"`
 	Detail      *ValidationError     `json:"detail,omitempty"`
-}
-
-// PostPricingEstimateJSONBody defines parameters for PostPricingEstimate.
-type PostPricingEstimateJSONBody struct {
-	// Country All 'country[]' params are mutually exclusive, only one can be provided.
-	Country CountryLookup `json:"country"`
-
-	// Currency All 'currency[]' params are mutually exclusive, only one can be provided.
-	Currency CurrencyLookup `json:"currency"`
-
-	// CustomerName The customer's name
-	CustomerName string                             `json:"customer_name"`
-	CustomerType CustomerTypeEnum                   `json:"customer_type"`
-	Resources    []PricingEstimateResourceArguments `json:"resources"`
 }
 
 // PostSignupsJSONBody defines parameters for PostSignups.
@@ -400,161 +231,8 @@ type GetVirtualMachinePackagesParams struct {
 	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 }
 
-// PostPricingEstimateJSONRequestBody defines body for PostPricingEstimate for application/json ContentType.
-type PostPricingEstimateJSONRequestBody PostPricingEstimateJSONBody
-
 // PostSignupsJSONRequestBody defines body for PostSignups for application/json ContentType.
 type PostSignupsJSONRequestBody PostSignupsJSONBody
-
-// AsCurrencyNotFoundSchema returns the union data inside the OneOfCountryNotFoundCurrencyNotFound404Res as a CurrencyNotFoundSchema
-func (t OneOfCountryNotFoundCurrencyNotFound404Res) AsCurrencyNotFoundSchema() (CurrencyNotFoundSchema, error) {
-	var body CurrencyNotFoundSchema
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromCurrencyNotFoundSchema overwrites any union data inside the OneOfCountryNotFoundCurrencyNotFound404Res as the provided CurrencyNotFoundSchema
-func (t *OneOfCountryNotFoundCurrencyNotFound404Res) FromCurrencyNotFoundSchema(v CurrencyNotFoundSchema) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeCurrencyNotFoundSchema performs a merge with any union data inside the OneOfCountryNotFoundCurrencyNotFound404Res, using the provided CurrencyNotFoundSchema
-func (t *OneOfCountryNotFoundCurrencyNotFound404Res) MergeCurrencyNotFoundSchema(v CurrencyNotFoundSchema) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
-// AsCountryNotFoundSchema returns the union data inside the OneOfCountryNotFoundCurrencyNotFound404Res as a CountryNotFoundSchema
-func (t OneOfCountryNotFoundCurrencyNotFound404Res) AsCountryNotFoundSchema() (CountryNotFoundSchema, error) {
-	var body CountryNotFoundSchema
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromCountryNotFoundSchema overwrites any union data inside the OneOfCountryNotFoundCurrencyNotFound404Res as the provided CountryNotFoundSchema
-func (t *OneOfCountryNotFoundCurrencyNotFound404Res) FromCountryNotFoundSchema(v CountryNotFoundSchema) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeCountryNotFoundSchema performs a merge with any union data inside the OneOfCountryNotFoundCurrencyNotFound404Res, using the provided CountryNotFoundSchema
-func (t *OneOfCountryNotFoundCurrencyNotFound404Res) MergeCountryNotFoundSchema(v CountryNotFoundSchema) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
-func (t OneOfCountryNotFoundCurrencyNotFound404Res) MarshalJSON() ([]byte, error) {
-	b, err := t.union.MarshalJSON()
-	return b, err
-}
-
-func (t *OneOfCountryNotFoundCurrencyNotFound404Res) UnmarshalJSON(b []byte) error {
-	err := t.union.UnmarshalJSON(b)
-	return err
-}
-
-// AsMissingResourcesSchema returns the union data inside the OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res as a MissingResourcesSchema
-func (t OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res) AsMissingResourcesSchema() (MissingResourcesSchema, error) {
-	var body MissingResourcesSchema
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromMissingResourcesSchema overwrites any union data inside the OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res as the provided MissingResourcesSchema
-func (t *OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res) FromMissingResourcesSchema(v MissingResourcesSchema) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeMissingResourcesSchema performs a merge with any union data inside the OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res, using the provided MissingResourcesSchema
-func (t *OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res) MergeMissingResourcesSchema(v MissingResourcesSchema) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
-// AsInvalidEstimateResourceSchema returns the union data inside the OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res as a InvalidEstimateResourceSchema
-func (t OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res) AsInvalidEstimateResourceSchema() (InvalidEstimateResourceSchema, error) {
-	var body InvalidEstimateResourceSchema
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromInvalidEstimateResourceSchema overwrites any union data inside the OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res as the provided InvalidEstimateResourceSchema
-func (t *OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res) FromInvalidEstimateResourceSchema(v InvalidEstimateResourceSchema) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeInvalidEstimateResourceSchema performs a merge with any union data inside the OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res, using the provided InvalidEstimateResourceSchema
-func (t *OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res) MergeInvalidEstimateResourceSchema(v InvalidEstimateResourceSchema) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
-// AsInvalidEstimateQuantitySchema returns the union data inside the OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res as a InvalidEstimateQuantitySchema
-func (t OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res) AsInvalidEstimateQuantitySchema() (InvalidEstimateQuantitySchema, error) {
-	var body InvalidEstimateQuantitySchema
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromInvalidEstimateQuantitySchema overwrites any union data inside the OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res as the provided InvalidEstimateQuantitySchema
-func (t *OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res) FromInvalidEstimateQuantitySchema(v InvalidEstimateQuantitySchema) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeInvalidEstimateQuantitySchema performs a merge with any union data inside the OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res, using the provided InvalidEstimateQuantitySchema
-func (t *OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res) MergeInvalidEstimateQuantitySchema(v InvalidEstimateQuantitySchema) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
-func (t OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res) MarshalJSON() ([]byte, error) {
-	b, err := t.union.MarshalJSON()
-	return b, err
-}
-
-func (t *OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res) UnmarshalJSON(b []byte) error {
-	err := t.union.UnmarshalJSON(b)
-	return err
-}
 
 const (
 	clientVersion = "0.2.0" // x-release-please-version
@@ -655,11 +333,6 @@ type ClientInterface interface {
 	// GetDataCenters request
 	GetDataCenters(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// PostPricingEstimateWithBody request with any body
-	PostPricingEstimateWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	PostPricingEstimate(ctx context.Context, body PostPricingEstimateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// GetPricingPrices request
 	GetPricingPrices(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -677,30 +350,6 @@ type ClientInterface interface {
 
 func (c *Client) GetDataCenters(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetDataCentersRequest(c.Server)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) PostPricingEstimateWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPostPricingEstimateRequestWithBody(c.Server, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) PostPricingEstimate(ctx context.Context, body PostPricingEstimateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPostPricingEstimateRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -794,46 +443,6 @@ func NewGetDataCentersRequest(server string) (*http.Request, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	return req, nil
-}
-
-// NewPostPricingEstimateRequest calls the generic PostPricingEstimate builder with application/json body
-func NewPostPricingEstimateRequest(server string, body PostPricingEstimateJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewPostPricingEstimateRequestWithBody(server, "application/json", bodyReader)
-}
-
-// NewPostPricingEstimateRequestWithBody generates requests for PostPricingEstimate with any type of body
-func NewPostPricingEstimateRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/pricing/estimate")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -1041,11 +650,6 @@ type ClientWithResponsesInterface interface {
 	// GetDataCentersWithResponse request
 	GetDataCentersWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetDataCentersResponse, error)
 
-	// PostPricingEstimateWithBodyWithResponse request with any body
-	PostPricingEstimateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostPricingEstimateResponse, error)
-
-	PostPricingEstimateWithResponse(ctx context.Context, body PostPricingEstimateJSONRequestBody, reqEditors ...RequestEditorFn) (*PostPricingEstimateResponse, error)
-
 	// GetPricingPricesWithResponse request
 	GetPricingPricesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetPricingPricesResponse, error)
 
@@ -1081,35 +685,6 @@ func (r GetDataCentersResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetDataCentersResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type PostPricingEstimateResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *struct {
-		// Estimate The estimate, including breakdown, for a Katapult configuration
-		Estimate PricingEstimate `json:"estimate"`
-	}
-	JSON400 *InvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res
-	JSON403 *APIAuthenticator403Response
-	JSON404 *CountryNotFoundCurrencyNotFound404Res
-	JSON429 *APIAuthenticator429Response
-}
-
-// Status returns HTTPResponse.Status
-func (r PostPricingEstimateResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r PostPricingEstimateResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -1271,51 +846,6 @@ func (c *ClientWithResponses) GetDataCentersWithResponse(ctx context.Context, re
 	return res, nil
 }
 
-// PostPricingEstimateWithBodyWithResponse request with arbitrary body returning *PostPricingEstimateResponse
-func (c *ClientWithResponses) PostPricingEstimateWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostPricingEstimateResponse, error) {
-	rsp, err := c.PostPricingEstimateWithBody(ctx, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-
-	res, err := ParsePostPricingEstimateResponse(rsp)
-	if err != nil {
-		return nil, err
-	}
-
-	if rsp.StatusCode == http.StatusNotFound {
-		return res, ErrNotFound
-	}
-
-	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
-		return res, ErrRequestFailed
-	}
-
-	return res, nil
-}
-
-func (c *ClientWithResponses) PostPricingEstimateWithResponse(ctx context.Context, body PostPricingEstimateJSONRequestBody, reqEditors ...RequestEditorFn) (*PostPricingEstimateResponse, error) {
-	rsp, err := c.PostPricingEstimate(ctx, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-
-	res, err := ParsePostPricingEstimateResponse(rsp)
-	if err != nil {
-		return nil, err
-	}
-
-	if rsp.StatusCode == http.StatusNotFound {
-		return res, ErrNotFound
-	}
-
-	if rsp.StatusCode < 200 || rsp.StatusCode >= 300 {
-		return res, ErrRequestFailed
-	}
-
-	return res, nil
-}
-
 // GetPricingPricesWithResponse request returning *GetPricingPricesResponse
 func (c *ClientWithResponses) GetPricingPricesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetPricingPricesResponse, error) {
 	rsp, err := c.GetPricingPrices(ctx, reqEditors...)
@@ -1459,63 +989,6 @@ func ParseGetDataCentersResponse(rsp *http.Response) (*GetDataCentersResponse, e
 			return nil, err
 		}
 		response.JSON403 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
-		var dest APIAuthenticator429Response
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON429 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParsePostPricingEstimateResponse parses an HTTP response from a PostPricingEstimateWithResponse call
-func ParsePostPricingEstimateResponse(rsp *http.Response) (*PostPricingEstimateResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &PostPricingEstimateResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest struct {
-			// Estimate The estimate, including breakdown, for a Katapult configuration
-			Estimate PricingEstimate `json:"estimate"`
-		}
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest InvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON400 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
-		var dest APIAuthenticator403Response
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON403 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
-		var dest CountryNotFoundCurrencyNotFound404Res
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
 		var dest APIAuthenticator429Response

@@ -1,1 +1,1 @@
-{"data_center":{"id":"dc_0KVdXStXduYtcypG"},"resources":{"package":{"permalink":"rock-3"}},"disk_template":{"permalink":"templates/ubuntu-18-04"},"hostname":"web-3"}
+{"data_center":{"id":"dc_0KVdXStXduYtcypG"},"resources":{"package":{"permalink":"rock-3"}},"disk_template":{"permalink":"templates/ubuntu-18-04"},"cloud_init":{"user_data":"#cloud-config\npackages:\n  - nginx\n"},"hostname":"web-3"}

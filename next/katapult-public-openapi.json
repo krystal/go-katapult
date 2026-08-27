@@ -1,10 +1,10 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "x-katapult-version": "2.68.0",
+    "x-katapult-version": "3.17.0",
     "version": "1.0.0",
-    "title": "Katapult Public API",
-    "description": "Welcome to the documentation for the Katapult Public API"
+    "title": "Krystal Cloud Public API",
+    "description": "Welcome to the documentation for the Krystal Cloud Public API"
   },
   "externalDocs": {
     "description": "Katapult API Documentation",
@@ -92,88 +92,6 @@
           },
           "403": {
             "$ref": "#/components/responses/APIAuthenticator403Response"
-          },
-          "429": {
-            "$ref": "#/components/responses/APIAuthenticator429Response"
-          }
-        }
-      }
-    },
-    "/pricing/estimate": {
-      "post": {
-        "operationId": "post:pricing_estimate",
-        "summary": "Generate pricing estimate",
-        "description": "Return an estimate and breakdown of the cost of a configuration",
-        "tags": [
-          "Pricing"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "customer_name": {
-                    "type": "string",
-                    "description": "The customer's name"
-                  },
-                  "resources": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/PricingEstimateResourceArguments"
-                    }
-                  },
-                  "customer_type": {
-                    "$ref": "#/components/schemas/CustomerTypeEnum"
-                  },
-                  "currency": {
-                    "$ref": "#/components/schemas/CurrencyLookup"
-                  },
-                  "country": {
-                    "$ref": "#/components/schemas/CountryLookup"
-                  }
-                },
-                "required": [
-                  "customer_name",
-                  "resources",
-                  "customer_type",
-                  "currency",
-                  "country"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return an estimate and breakdown of the cost of a configuration",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "estimate": {
-                      "description": "The estimate, including breakdown, for a Katapult configuration",
-                      "allOf": [
-                        {
-                          "$ref": "#/components/schemas/PricingEstimate"
-                        }
-                      ]
-                    }
-                  },
-                  "required": [
-                    "estimate"
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/InvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res"
-          },
-          "403": {
-            "$ref": "#/components/responses/APIAuthenticator403Response"
-          },
-          "404": {
-            "$ref": "#/components/responses/CountryNotFoundCurrencyNotFound404Res"
           },
           "429": {
             "$ref": "#/components/responses/APIAuthenticator429Response"
@@ -551,131 +469,30 @@
           }
         }
       },
-      "PricingEstimateResourceArguments": {
+      "PaginationObject": {
         "type": "object",
         "properties": {
-          "resource": {
-            "type": "string"
+          "current_page": {
+            "type": "integer",
+            "description": "The current page"
           },
-          "quantity": {
-            "type": "integer"
-          }
-        }
-      },
-      "CustomerTypeEnum": {
-        "type": "string",
-        "enum": [
-          "consumer",
-          "business"
-        ]
-      },
-      "CurrencyLookup": {
-        "description": "All 'currency[]' params are mutually exclusive, only one can be provided.",
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "iso_code": {
-            "type": "string"
-          }
-        }
-      },
-      "CountryLookup": {
-        "description": "All 'country[]' params are mutually exclusive, only one can be provided.",
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "iso_code2": {
-            "type": "string"
-          },
-          "iso_code3": {
-            "type": "string"
-          }
-        }
-      },
-      "PricingEstimate": {
-        "properties": {
-          "resources": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PricingEstimateResource"
-            }
-          },
-          "per_month": {
-            "type": "number",
-            "format": "float"
-          },
-          "per_month_inc_tax": {
-            "type": "number",
-            "format": "float"
-          },
-          "per_hour": {
-            "type": "number",
-            "format": "float"
-          },
-          "per_hour_inc_tax": {
-            "type": "number",
-            "format": "float"
-          },
-          "currency": {
-            "$ref": "#/components/schemas/Currency"
-          },
-          "tax_rate": {
-            "type": "number",
-            "format": "float"
-          },
-          "pdf_url": {
-            "type": "string"
-          }
-        },
-        "type": "object"
-      },
-      "PricingEstimateResource": {
-        "type": "object",
-        "properties": {
-          "resource": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "quantity": {
-            "type": "integer"
-          },
-          "per_month": {
-            "type": "number",
-            "format": "float"
-          },
-          "per_month_inc_tax": {
-            "type": "number",
-            "format": "float"
-          },
-          "per_month_each": {
-            "type": "number",
-            "format": "float"
-          },
-          "per_hour": {
-            "type": "number",
-            "format": "float"
-          },
-          "per_hour_inc_tax": {
-            "type": "number",
-            "format": "float"
-          },
-          "per_hour_each": {
-            "type": "number",
-            "format": "float"
-          },
-          "package": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/VirtualMachinePackage"
-              }
-            ],
+          "total_pages": {
+            "type": "integer",
+            "description": "The total number of pages",
             "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "description": "The total number of items across all pages",
+            "nullable": true
+          },
+          "per_page": {
+            "type": "integer",
+            "description": "The number of items per page"
+          },
+          "large_set": {
+            "type": "boolean",
+            "description": "Is this a large set and therefore the total number of records cannot be returned?"
           }
         }
       },
@@ -764,179 +581,6 @@
           },
           "name": {
             "type": "string"
-          }
-        }
-      },
-      "MissingResourcesEnum": {
-        "type": "string",
-        "enum": [
-          "missing_resources"
-        ]
-      },
-      "MissingResourcesSchema": {
-        "type": "object",
-        "description": "You must provide at least one resource in the resources array",
-        "properties": {
-          "code": {
-            "$ref": "#/components/schemas/MissingResourcesEnum"
-          },
-          "description": {
-            "type": "string"
-          },
-          "detail": {
-            "type": "object"
-          }
-        }
-      },
-      "InvalidEstimateResource": {
-        "type": "object",
-        "properties": {
-          "resource": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "InvalidEstimateResourceEnum": {
-        "type": "string",
-        "enum": [
-          "invalid_estimate_resource"
-        ]
-      },
-      "InvalidEstimateResourceSchema": {
-        "type": "object",
-        "description": "The provided resource is not valid",
-        "properties": {
-          "code": {
-            "$ref": "#/components/schemas/InvalidEstimateResourceEnum"
-          },
-          "description": {
-            "type": "string"
-          },
-          "detail": {
-            "$ref": "#/components/schemas/InvalidEstimateResource"
-          }
-        }
-      },
-      "InvalidEstimateQuantity": {
-        "type": "object",
-        "properties": {
-          "resource": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "InvalidEstimateQuantityEnum": {
-        "type": "string",
-        "enum": [
-          "invalid_estimate_quantity"
-        ]
-      },
-      "InvalidEstimateQuantitySchema": {
-        "type": "object",
-        "description": "The quantity for the provided resource must be greater than zero",
-        "properties": {
-          "code": {
-            "$ref": "#/components/schemas/InvalidEstimateQuantityEnum"
-          },
-          "description": {
-            "type": "string"
-          },
-          "detail": {
-            "$ref": "#/components/schemas/InvalidEstimateQuantity"
-          }
-        }
-      },
-      "OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res": {
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/MissingResourcesSchema"
-          },
-          {
-            "$ref": "#/components/schemas/InvalidEstimateResourceSchema"
-          },
-          {
-            "$ref": "#/components/schemas/InvalidEstimateQuantitySchema"
-          }
-        ]
-      },
-      "CurrencyNotFoundEnum": {
-        "type": "string",
-        "enum": [
-          "currency_not_found"
-        ]
-      },
-      "CurrencyNotFoundSchema": {
-        "type": "object",
-        "description": "No currency was found matching any of the criteria provided in the arguments",
-        "properties": {
-          "code": {
-            "$ref": "#/components/schemas/CurrencyNotFoundEnum"
-          },
-          "description": {
-            "type": "string"
-          },
-          "detail": {
-            "type": "object"
-          }
-        }
-      },
-      "CountryNotFoundEnum": {
-        "type": "string",
-        "enum": [
-          "country_not_found"
-        ]
-      },
-      "CountryNotFoundSchema": {
-        "type": "object",
-        "description": "No country was found matching any of the criteria provided in the arguments",
-        "properties": {
-          "code": {
-            "$ref": "#/components/schemas/CountryNotFoundEnum"
-          },
-          "description": {
-            "type": "string"
-          },
-          "detail": {
-            "type": "object"
-          }
-        }
-      },
-      "OneOfCountryNotFoundCurrencyNotFound404Res": {
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/CurrencyNotFoundSchema"
-          },
-          {
-            "$ref": "#/components/schemas/CountryNotFoundSchema"
-          }
-        ]
-      },
-      "PaginationObject": {
-        "type": "object",
-        "properties": {
-          "current_page": {
-            "type": "integer",
-            "description": "The current page"
-          },
-          "total_pages": {
-            "type": "integer",
-            "description": "The total number of pages",
-            "nullable": true
-          },
-          "total": {
-            "type": "integer",
-            "description": "The total number of items across all pages",
-            "nullable": true
-          },
-          "per_page": {
-            "type": "integer",
-            "description": "The number of items per page"
-          },
-          "large_set": {
-            "type": "boolean",
-            "description": "Is this a large set and therefore the total number of records cannot be returned?"
           }
         }
       },
@@ -1035,26 +679,6 @@
                   "$ref": "#/components/schemas/RateLimitReached"
                 }
               }
-            }
-          }
-        }
-      },
-      "InvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res": {
-        "description": "400 error response",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/OneOfInvalidEstimateQuantityInvalidEstimateResourceMissingResources400Res"
-            }
-          }
-        }
-      },
-      "CountryNotFoundCurrencyNotFound404Res": {
-        "description": "404 error response",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/OneOfCountryNotFoundCurrencyNotFound404Res"
             }
           }
         }

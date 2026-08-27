@@ -26,6 +26,9 @@
       }
     ]
   },
+  "cloud_init": {
+    "user_data": "#cloud-config\nruncmd:\n  - echo 'one \u0026 two \u003c three'\n"
+  },
   "system_disks": [
     {
       "name": "System Disk",

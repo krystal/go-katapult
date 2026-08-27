@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"io"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -17,6 +18,7 @@ type VirtualMachineSpec struct {
 	DataCenter        *DataCenter         `json:"data_center,omitempty" yaml:"data_center,omitempty"`
 	Resources         *Resources          `json:"resources,omitempty" yaml:"resources,omitempty"`
 	DiskTemplate      *DiskTemplate       `json:"disk_template,omitempty" yaml:"disk_template,omitempty"`
+	CloudInit         *CloudInit          `json:"cloud_init,omitempty" yaml:"cloud_init,omitempty"`
 	SystemDisks       []*SystemDisk       `json:"system_disks,omitempty" yaml:"system_disks,omitempty"`
 	SharedDisks       []*SharedDisk       `json:"shared_disks,omitempty" yaml:"shared_disks,omitempty"`
 	NetworkInterfaces []*NetworkInterface `json:"network_interfaces,omitempty" yaml:"network_interfaces,omitempty"`
@@ -117,6 +119,10 @@ func (s *VirtualMachineSpec) MarshalXML(
 		ISO:            s.ISO,
 	}
 
+	if s.CloudInit != nil && strings.TrimSpace(s.CloudInit.UserData) != "" {
+		x.CloudInit = s.CloudInit
+	}
+
 	if len(s.SystemDisks) > 0 {
 		x.SystemDisks = &xmlSystemDisks{
 			SystemDisks: s.SystemDisks,
@@ -181,6 +187,10 @@ func (s *VirtualMachineSpec) UnmarshalXML(
 		ISO:            x.ISO,
 	}
 
+	if x.CloudInit != nil && strings.TrimSpace(x.CloudInit.UserData) != "" {
+		v.CloudInit = x.CloudInit
+	}
+
 	if x.SystemDisks != nil {
 		v.SystemDisks = x.SystemDisks.SystemDisks
 	}
@@ -219,6 +229,7 @@ type xmlVirtualMachineSpec struct {
 	DataCenter        *DataCenter           `xml:",omitempty"`
 	Resources         *Resources            `xml:",omitempty"`
 	DiskTemplate      *DiskTemplate         `xml:",omitempty"`
+	CloudInit         *CloudInit            `xml:",omitempty"`
 	SystemDisks       *xmlSystemDisks       `xml:",omitempty"`
 	SharedDisks       *xmlSharedDisks       `xml:",omitempty"`
 	NetworkInterfaces *xmlNetworkInterfaces `xml:",omitempty"`
