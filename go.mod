@@ -2,7 +2,7 @@ module github.com/krystal/go-katapult
 
 go 1.21.0
 
-toolchain go1.23.2
+toolchain go1.23.12
 
 require (
 	github.com/augurysys/timestamp v0.3.2

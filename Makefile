@@ -7,20 +7,11 @@ ifdef VERBOSE
 V = -v
 endif
 
-#
-# Environment
-#
-
-BINDIR := bin
-TOOLDIR := $(BINDIR)/tools
-
 # Global environment variables for all targets
 SHELL ?= /bin/bash
 SHELL := env \
 	GO111MODULE=on \
-	GOBIN=$(CURDIR)/$(TOOLDIR) \
 	CGO_ENABLED=1 \
-	PATH='$(CURDIR)/$(BINDIR):$(CURDIR)/$(TOOLDIR):$(PATH)' \
 	$(SHELL)
 
 #
@@ -29,27 +20,6 @@ SHELL := env \
 
 # Default target
 .DEFAULT_GOAL := test
-
-#
-# Tools
-#
-
-# external tool
-define tool # 1: binary-name, 2: go-import-path
-TOOLS += $(TOOLDIR)/$(1)
-
-$(TOOLDIR)/$(1): Makefile
-	GOBIN="$(CURDIR)/$(TOOLDIR)" go install "$(2)"
-endef
-
-$(eval $(call tool,godoc,golang.org/x/tools/cmd/godoc@latest))
-$(eval $(call tool,gofumpt,mvdan.cc/gofumpt@latest))
-$(eval $(call tool,goimports,golang.org/x/tools/cmd/goimports@latest))
-$(eval $(call tool,golangci-lint,github.com/golangci/golangci-lint/cmd/golangci-lint@v1.62))
-$(eval $(call tool,gomod,github.com/Helcaraxan/gomod@latest))
-
-.PHONY: tools
-tools: $(TOOLS)
 
 #
 # Development
@@ -61,7 +31,7 @@ TESTTARGET ?= ./...
 
 .PHONY: clean
 clean:
-	rm -f $(BINS) $(TOOLS)
+	rm -rf ./bin/tools
 	rm -f ./coverage.out ./go.mod.tidy-check ./go.sum.tidy-check
 
 .PHONY: clean-golden
@@ -78,12 +48,29 @@ test-deps:
 	@$(MAKE) test TESTTARGET=all
 
 .PHONY: lint
-lint: $(TOOLDIR)/golangci-lint
+lint:
 	golangci-lint $(V) run --timeout=5m
 
 .PHONY: format
-format: $(TOOLDIR)/goimports $(TOOLDIR)/gofumpt
-	goimports -w . && gofumpt -w .
+format:
+	git ls-files -z -- '*.go' ':(exclude)next/**/*.go' | xargs -0 goimports -w
+	git ls-files -z -- '*.go' ':(exclude)next/**/*.go' | xargs -0 gofumpt -w
+
+.PHONY: format-check
+format-check:
+	@unformatted="$$( \
+		{ \
+			git ls-files -z -- '*.go' ':(exclude)next/**/*.go' | \
+				xargs -0 goimports -l; \
+			git ls-files -z -- '*.go' ':(exclude)next/**/*.go' | \
+				xargs -0 gofumpt -l; \
+		} | sort -u \
+	)"; \
+	if [ -n "$$unformatted" ]; then \
+		echo "Go files need formatting:" >&2; \
+		echo "$$unformatted" >&2; \
+		exit 1; \
+	fi
 
 .SILENT: bench
 .PHONY: bench
@@ -110,7 +97,9 @@ check-generate:
 	$(eval CHKDIR := $(shell mktemp -d))
 	cp -a . "$(CHKDIR)"
 	make -C "$(CHKDIR)/" generate
-	( diff -rN "$(CURDIR)" "$(CHKDIR)" && rm -rf "$(CHKDIR)" ) || \
+	( diff -rN -x .git -x bin -x coverage.out \
+		-x go.mod.tidy-check -x go.sum.tidy-check \
+		"$(CURDIR)" "$(CHKDIR)" && rm -rf "$(CHKDIR)" ) || \
 		( rm -rf "$(CHKDIR)" && exit 1 )
 
 .PHONY: generate-next
@@ -174,7 +163,7 @@ deps-update:
 	go get -u -t ./...
 
 .PHONY: deps-analyze
-deps-analyze: $(TOOLDIR)/gomod
+deps-analyze:
 	gomod analyze
 
 .PHONY: tidy
@@ -185,24 +174,9 @@ tidy:
 verify:
 	go mod verify
 
-.SILENT: check-tidy
 .PHONY: check-tidy
 check-tidy:
-	cp go.mod go.mod.tidy-check
-	cp go.sum go.sum.tidy-check
-	go mod tidy
-	( \
-		diff go.mod go.mod.tidy-check && \
-		diff go.sum go.sum.tidy-check && \
-		rm -f go.mod go.sum && \
-		mv go.mod.tidy-check go.mod && \
-		mv go.sum.tidy-check go.sum \
-	) || ( \
-		rm -f go.mod go.sum && \
-		mv go.mod.tidy-check go.mod && \
-		mv go.sum.tidy-check go.sum; \
-		exit 1 \
-	)
+	go mod tidy -diff
 
 #
 # Documentation
@@ -210,6 +184,6 @@ check-tidy:
 
 # Serve docs
 .PHONY: docs
-docs: $(TOOLDIR)/godoc
-	$(info serviing docs on http://127.0.0.1:6060/pkg/$(GOMODNAME)/)
+docs:
+	$(info serving docs on http://127.0.0.1:6060/pkg/$(GOMODNAME)/)
 	@godoc -http=127.0.0.1:6060

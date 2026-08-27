@@ -16,9 +16,6 @@
   <a href="https://github.com/krystal/go-katapult/actions">
     <img src="https://img.shields.io/github/actions/workflow/status/krystal/go-katapult/ci.yml?logo=github" alt="Actions Status">
   </a>
-  <a href="https://codeclimate.com/github/krystal/go-katapult">
-    <img src="https://img.shields.io/codeclimate/coverage/krystal/go-katapult.svg?logo=code%20climate" alt="Coverage">
-  </a>
   <a href="https://github.com/krystal/go-katapult/commits/main">
     <img src="https://img.shields.io/github/last-commit/krystal/go-katapult.svg?style=flat&logo=github&logoColor=white"
 alt="GitHub last commit">
@@ -47,7 +44,19 @@ Documentation:
 - [API Documentation](https://developers.katapult.io/api/docs/latest/)
 - [Katapult Documentation](https://docs.katapult.io/)
 
+## Development
 
+[Mise](https://mise.jdx.dev/) installs the locked Go toolchain and development
+tools when a task runs.
+
+```sh
+mise run setup
+mise run check
+mise run verify
+```
+
+Run `mise tasks` to list focused formatting, linting, testing, generation,
+dependency, and workflow tasks.
 
 # Experimental "next" Client 
 A more feature complete client is being generated in the `next` package.
@@ -75,5 +84,3 @@ res, err := client.GetDataCenterDefaultNetworkWithResponse(ctx,
 	},
 )
 ```
-
-
