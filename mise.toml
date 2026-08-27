@@ -1,0 +1,129 @@
+#schema: https://mise.jdx.dev/schema/mise.json
+
+[settings]
+lockfile = true
+minimum_release_age = "7d"
+task.run_auto_install = true
+
+[tools]
+actionlint = "1"
+gofumpt = "0"
+golangci-lint = "1.62.2"
+pinact = "4"
+zizmor = "1"
+"go:github.com/Helcaraxan/gomod" = "0.7.1"
+"go:golang.org/x/tools/cmd/godoc" = "0.1.0-deprecated"
+"go:golang.org/x/tools/cmd/goimports" = "0"
+# Keep Go last so separately managed Go CLI tools take precedence on PATH.
+go = "1.23"
+
+[tasks.setup]
+description = "Set up Go dependencies and development tooling"
+depends = ["deps:download"]
+
+[tasks.clean]
+description = "Remove generated development files"
+run = "make clean"
+
+[tasks.format]
+description = "Format Go files"
+run = "make format"
+
+[tasks."format:check"]
+description = "Check Go formatting"
+run = "make format-check"
+
+[tasks.lint]
+description = "Lint Go code"
+run = "make lint"
+
+[tasks.test]
+description = "Run race-enabled Go tests"
+run = "make test"
+
+[tasks.coverage]
+description = "Run tests and generate coverage"
+run = "make cov"
+
+[tasks.generate]
+description = "Generate Go sources"
+run = "make generate"
+
+[tasks."generate:check"]
+description = "Check generated Go sources"
+run = "make check-generate"
+
+[tasks."schemas:check"]
+description = "Check bundled Katapult API schemas"
+run = "make check-schemas"
+
+[tasks."deps:analyze"]
+description = "Analyze Go module dependencies"
+run = "make deps-analyze"
+
+[tasks."deps:download"]
+description = "Download Go module dependencies"
+run = "make deps"
+
+[tasks."deps:tidy"]
+description = "Check that Go module files are tidy"
+run = "make check-tidy"
+
+[tasks."deps:verify"]
+description = "Verify downloaded Go module hashes"
+run = "make verify"
+
+[tasks.docs]
+description = "Serve Go package documentation"
+run = "make docs"
+
+[tasks."workflows:actionlint"]
+description = "Lint GitHub Actions workflows"
+run = "actionlint"
+
+[tasks."workflows:pinact"]
+description = "Check GitHub Actions pins and release age"
+run = "pinact run --check --verify --verify-min-age"
+
+[tasks."workflows:pinact-offline"]
+description = "Check GitHub Actions pins without network access"
+run = "pinact run --fix=false --no-api"
+
+[tasks."workflows:zizmor"]
+description = "Audit GitHub Actions workflows"
+run = "zizmor --offline ."
+
+[tasks."workflows:check"]
+description = "Validate GitHub Actions workflows and action pins"
+depends = ["workflows:actionlint", "workflows:pinact", "workflows:zizmor"]
+
+[tasks."workflows:quick"]
+description = "Validate GitHub Actions workflows without network access"
+depends = [
+  "workflows:actionlint",
+  "workflows:pinact-offline",
+  "workflows:zizmor",
+]
+
+[tasks."workflows:update"]
+description = "Update GitHub Actions pins"
+run = "pinact run --update --verify --verify-min-age"
+
+[tasks."tools:update"]
+description = "Update locked development tools"
+run = "mise lock --bump"
+
+[tasks.check]
+description = "Run fast local validation"
+depends = [
+  "deps:tidy",
+  "deps:verify",
+  "format:check",
+  "lint",
+  "test",
+  "workflows:quick",
+]
+
+[tasks.verify]
+description = "Run broad pre-handoff validation"
+depends = ["check", "generate:check", "workflows:pinact"]
