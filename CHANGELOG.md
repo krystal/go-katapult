@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.14](https://github.com/krystal/go-katapult/compare/v0.2.13...v0.2.14) (2026-08-27)
+
+
+### Features
+
+* support cloud-init user data ([#181](https://github.com/krystal/go-katapult/issues/181)) ([b7537f0](https://github.com/krystal/go-katapult/commit/b7537f028dcbab399ac0d16b26f0334b3d6d4710))
+
 ## [0.2.13](https://github.com/krystal/go-katapult/compare/v0.2.12...v0.2.13) (2024-11-29)
 
 
