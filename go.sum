@@ -1,8 +1,8 @@
 github.com/RaveNoX/go-jsoncommentstrip v1.0.0/go.mod h1:78ihd09MekBnJnxpICcwzCMzGrKSKYe4AqU6PDYYpjk=
 github.com/apapsch/go-jsonmerge/v2 v2.0.0 h1:axGnT1gRIfimI7gJifB699GoE/oq+F2MU7Dml6nw9rQ=
 github.com/apapsch/go-jsonmerge/v2 v2.0.0/go.mod h1:lvDnEdqiQrp0O42VQGgmlKpxL1AP2+08jFMw88y4klk=
-github.com/augurysys/timestamp v0.3.2 h1:XalB++9y/ocSnghyNgJXs9KvTNBGduz9Sm8jBkL3e1M=
-github.com/augurysys/timestamp v0.3.2/go.mod h1:YTTgyUjblbfWOBkqUyprzvMEpJmT0Mgt6yGBQDzAyC0=
+github.com/augurysys/timestamp v0.4.5 h1:TVve9azFtQrCZ7OfFZlI4PpNKfmNBhDe8tT9S/y6y5I=
+github.com/augurysys/timestamp v0.4.5/go.mod h1:/fCYf+lEr2C9C05/+tsUP8HYtj4WXiaAgL/giT9ro4w=
 github.com/bmatcuk/doublestar v1.1.1/go.mod h1:UD6OnuiIn0yFxxA2le/rnRU1G4RaI4UvFv1sNto9p6w=
 github.com/dave/jennifer v1.6.0 h1:MQ/6emI2xM7wt0tJzJzyUik2Q3Tcn2eE0vtYgh4GPVI=
 github.com/dave/jennifer v1.6.0/go.mod h1:AxTG893FiZKqxy3FP1kL80VMshSMuz2G+EgvszgGRnk=
